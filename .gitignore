@@ -66,6 +66,9 @@ ehthumbs.db
 # Folder config file
 Desktop.ini
 
+# bak
+*~
+
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
@@ -77,3 +80,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+

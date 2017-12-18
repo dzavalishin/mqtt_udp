@@ -1,0 +1,34 @@
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <locale.h>
+#include <fcntl.h>
+#include <errno.h>
+
+#include "mqtt_udp_local.h"
+
+
+int mqtt_udp_socket(void)
+{
+    int fd;
+
+    if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+    {
+        perror("socket");
+        //exit(1);
+        return -1;
+    }
+
+    {
+        int broadcast=1;
+        setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
+    }
+
+    return fd;
+}
+
