@@ -32,3 +32,22 @@ int mqtt_udp_socket(void)
     return fd;
 }
 
+int mqtt_udp_bind( int fd )
+{
+    struct sockaddr_in srcaddr;
+
+    memset(&srcaddr, 0, sizeof(srcaddr));
+
+    srcaddr.sin_family = AF_INET;
+    srcaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    srcaddr.sin_port = htons(MQTT_PORT);
+
+    return bind(fd, (struct sockaddr *) &srcaddr, sizeof(srcaddr));
+/*
+    if (bind(fd, (struct sockaddr *) &srcaddr, sizeof(srcaddr)) < 0) {
+        perror("bind");
+        exit(1);
+    }
+*/
+}
+

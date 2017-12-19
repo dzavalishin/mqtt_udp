@@ -17,7 +17,12 @@
 
 int main(int argc, char *argv[])
 {
-    int fd;
+    int loop = 0;
+
+    if( argc == 2 && (0==strcmp(argv[1], "-f")) )
+        loop++;
+
+    int fd, rc;
     unsigned char buf[BUFLEN];
 
     fd = mqtt_udp_socket();
@@ -27,36 +32,45 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    memset(buf, 0, sizeof(buf));
-
-    int rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN );
-
-
-    printf("Recieved!\n");
-
-
-
-    for (int i=0; i<BUFLEN;i++)
-    {
-        printf("0x%x ", buf[i]);
+    rc = mqtt_udp_bind( fd );
+    if(rc) {
+        perror("bind");
+        exit(1);
     }
-    printf("\n");
 
-    for (int i=0; i<BUFLEN;i++)
-    {
-        printf("%c", ((buf[i] > ' ') && (buf[i] < 0x7F)) ? buf[i] : '.'   );
-    }
-    printf("\n");
+    do {
+
+        memset(buf, 0, sizeof(buf));
+        rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN );
+
+#if 0
+        printf("Recieved!\n");
 
 
-    char topic[BUFLEN];
-    char value[BUFLEN];
 
-    rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
-    if( rc )
-        printf("not parsed\n");
-    else
-        printf("'%s' = '%s'\n", topic, value );
+        for (int i=0; i<BUFLEN;i++)
+        {
+            printf("0x%x ", buf[i]);
+        }
+        printf("\n");
+
+        for (int i=0; i<BUFLEN;i++)
+        {
+            printf("%c", ((buf[i] > ' ') && (buf[i] < 0x7F)) ? buf[i] : '.'   );
+        }
+        printf("\n");
+#endif
+
+        char topic[BUFLEN];
+        char value[BUFLEN];
+
+        rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
+        if( rc )
+            printf("not parsed\n");
+        else
+            printf("'%s' = '%s'\n", topic, value );
+
+    } while(loop);
 
     return 0;
 }

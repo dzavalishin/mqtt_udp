@@ -18,7 +18,7 @@
 int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen )
 {
     struct sockaddr_in addr;
-
+/*
     {
         struct sockaddr_in srcaddr;
 
@@ -33,7 +33,7 @@ int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen )
             exit(1);
         }
     }
-
+*/
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     //addr.sin_addr.s_addr = inet_addr(IP);

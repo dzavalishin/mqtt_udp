@@ -5,6 +5,7 @@
 
 
 int mqtt_udp_socket(void);
+int mqtt_udp_bind( int fd ); // prepare to receive data
 
 int mqtt_udp_send( int fd, char *topic, char *data );
 
