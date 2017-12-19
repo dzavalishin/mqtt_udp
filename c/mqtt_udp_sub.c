@@ -49,5 +49,14 @@ int main(int argc, char *argv[])
     printf("\n");
 
 
+    char topic[BUFLEN];
+    char value[BUFLEN];
+
+    rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
+    if( rc )
+        printf("not parsed\n");
+    else
+        printf("'%s' = '%s'\n", topic, value );
+
     return 0;
 }

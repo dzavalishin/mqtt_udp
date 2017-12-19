@@ -95,6 +95,8 @@ def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     send_udp_message( msg.topic, msg.payload )
 
+
+
 def mqtt_thread():
         client = mqtt.Client()
         client.on_connect = on_connect
