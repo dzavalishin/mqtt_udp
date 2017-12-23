@@ -1,0 +1,5 @@
+setup.py
+mqttudp.egg-info/PKG-INFO
+mqttudp.egg-info/SOURCES.txt
+mqttudp.egg-info/dependency_links.txt
+mqttudp.egg-info/top_level.txt
