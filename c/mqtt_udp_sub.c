@@ -12,6 +12,8 @@
 
 #include "mqtt_udp_local.h"
 
+static void dump( const char *buf );
+
 
 #define BUFLEN 64
 
@@ -46,19 +48,6 @@ int main(int argc, char *argv[])
 #if 0
         printf("Recieved!\n");
 
-
-
-        for (int i=0; i<BUFLEN;i++)
-        {
-            printf("0x%x ", buf[i]);
-        }
-        printf("\n");
-
-        for (int i=0; i<BUFLEN;i++)
-        {
-            printf("%c", ((buf[i] > ' ') && (buf[i] < 0x7F)) ? buf[i] : '.'   );
-        }
-        printf("\n");
 #endif
 
         char topic[BUFLEN];
@@ -66,7 +55,10 @@ int main(int argc, char *argv[])
 
         rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
         if( rc )
+        {
             printf("not parsed\n");
+            dump(buf);
+        }
         else
             printf("'%s' = '%s'\n", topic, value );
 
@@ -74,3 +66,20 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+
+static void dump( const char *buf )
+{
+    for (int i=0; i<BUFLEN;i++)
+    {
+        printf("0x%x ", buf[i]);
+    }
+    printf("\n");
+
+    for (int i=0; i<BUFLEN;i++)
+    {
+        printf("%c", ((buf[i] > ' ') && (buf[i] < 0x7F)) ? buf[i] : '.'   );
+    }
+    printf("\n");
+}
+

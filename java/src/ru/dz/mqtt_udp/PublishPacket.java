@@ -3,14 +3,14 @@ package ru.dz.mqtt_udp;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-public class PublishPacket implements IPacket {
+import ru.dz.mqtt_udp.util.GenericPacket;
+
+public class PublishPacket extends GenericPacket {
 
 	private String topic;
 	private byte[] value;
 
 	public PublishPacket(byte[] raw) {
-		// TODO Auto-generated constructor stub
-
 		int tlen = IPacket.decodeTopicLen( raw );
 
 		topic = new String(raw, 2, tlen, Charset.forName(MQTT_CHARSET));
