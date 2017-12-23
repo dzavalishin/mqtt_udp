@@ -74,11 +74,13 @@ public interface IPacket {
 	}
 
 	
-	public static byte[] encodeTotalLength(byte[] pkt) {
+	public static byte[] encodeTotalLength(byte[] pkt, int packetType) {
 		int data_len = pkt.length;
 		
-		byte[] buf = new byte[3]; // can't sent very long packets over UDP, 16 bytes are surely ok
-		int bp = 0;
+		byte[] buf = new byte[4]; // can't sent very long packets over UDP, 16 bytes are surely ok
+		int bp = 1;
+		
+		buf[0] = (byte) packetType;
 		
 	    do 
 	    {

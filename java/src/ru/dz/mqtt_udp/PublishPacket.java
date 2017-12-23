@@ -62,7 +62,7 @@ public class PublishPacket extends GenericPacket {
 		System.arraycopy(tbytes, 0, pkt, 2, tbytes.length);
 		System.arraycopy(value, 0, pkt, tbytes.length + 2, value.length );
 		
-		return IPacket.encodeTotalLength(pkt);
+		return IPacket.encodeTotalLength(pkt, IPacket.PT_PUBLISH);
 	}
 
 }
