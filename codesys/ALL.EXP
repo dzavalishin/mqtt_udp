@@ -1,0 +1,5426 @@
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION AVG_SANE_TEMP : REAL
+
+VAR_INPUT
+	Ta, Tb : REAL;
+END_VAR
+
+VAR
+	Ta_SANE, Tb_SANE : BOOL;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+Ta_SANE := IS_SANE_TEMP( Ta );
+Tb_SANE := IS_SANE_TEMP( Tb );
+
+IF Ta_SANE AND NOT Tb_SANE THEN
+	AVG_SANE_TEMP := Ta;
+	RETURN;
+END_IF;
+
+IF Tb_SANE AND NOT Ta_SANE THEN
+	AVG_SANE_TEMP := Tb;
+	RETURN;
+END_IF;
+
+IF Ta_SANE AND Tb_SANE THEN
+	AVG_SANE_TEMP :=  (Ta + Tb) / 2;
+	RETURN;
+END_IF;
+
+
+	AVG_SANE_TEMP := SANE_TEMP_MIN-100; (* Surely insane low value *)
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION AVG_SANE_TEMP3 : REAL
+
+VAR_INPUT
+	Ta, Tb, Tc : REAL;
+END_VAR
+
+VAR
+	Ta_SANE, Tb_SANE, Tc_SANE : BOOL;
+	Sum	: REAL;
+	Count	: INT;
+END_VAR
+
+(* @END_DECLARATION := '0' *)
+
+Ta_SANE := IS_SANE_TEMP( Ta );
+Tb_SANE := IS_SANE_TEMP( Tb );
+Tc_SANE := IS_SANE_TEMP( Tb );
+
+Sum := 0;
+Count :=0;
+
+IF Ta_SANE THEN
+	Sum := Sum + Ta;
+	Count := Count + 1;
+END_IF;
+
+IF Tb_SANE THEN
+	Sum := Sum + Tb;
+	Count := Count + 1;
+END_IF;
+
+IF Tc_SANE THEN
+	Sum := Sum + Tc;
+	Count := Count + 1;
+END_IF;
+
+IF Count <= 0 THEN
+	AVG_SANE_TEMP3 := -100; (* Surely insane low value *)
+	RETURN;
+END_IF
+
+AVG_SANE_TEMP3 := Sum / Count;
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION DALLAS_CONV : REAL
+
+VAR_INPUT
+	T	: WORD;
+END_VAR
+
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+
+DALLAS_CONV := WORD_TO_REAL(T) / 16.0;
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION HUMID_CONV : REAL
+
+VAR_INPUT
+	V_In		:	REAL;
+
+	Zero_Off	:	REAL;
+	Slope		:	REAL;
+END_VAR
+
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+	HUMID_CONV := (V_In - Zero_Off) / Slope;
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION INT_LIMIT_VALUE : INT
+VAR_INPUT
+	V : INT;
+	MIN_V: INT;
+	MAX_V: INT;
+END_VAR
+
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+IF V > MAX_V THEN
+	V := MAX_V;
+END_IF
+
+IF V < MIN_V THEN
+	V := MIN_V;
+END_IF
+
+INT_LIMIT_VALUE := V;
+
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION IS_SANE_TEMP : BOOL
+
+VAR_INPUT
+	T : REAL;
+END_VAR
+
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+IF (T < SANE_TEMP_MIN) OR (T > SANE_TEMP_MAX) THEN
+	IS_SANE_TEMP := FALSE;
+ELSE
+	IS_SANE_TEMP := TRUE;
+END_IF
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION LIMIT_VALUE : REAL
+VAR_INPUT
+	V : REAL;
+	MIN_V: REAL;
+	MAX_V: REAL;
+END_VAR
+
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+IF V > MAX_V THEN
+	V := MAX_V;
+END_IF
+
+IF V < MIN_V THEN
+	V := MIN_V;
+END_IF
+
+LIMIT_VALUE := V;
+
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION MIN_SANE_TEMP : REAL
+
+VAR_INPUT
+	Ta, Tb : REAL;
+END_VAR
+
+VAR
+	Ta_SANE, Tb_SANE : BOOL;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+Ta_SANE := IS_SANE_TEMP( Ta );
+Tb_SANE := IS_SANE_TEMP( Tb );
+
+IF Ta_SANE AND NOT Tb_SANE THEN
+	MIN_SANE_TEMP := Ta;
+	RETURN;
+END_IF;
+
+IF Tb_SANE AND NOT Ta_SANE THEN
+	MIN_SANE_TEMP := Tb;
+	RETURN;
+END_IF;
+
+IF Ta_SANE AND Tb_SANE THEN
+	MIN_SANE_TEMP := MIN( Ta, Tb );
+	RETURN;
+END_IF;
+
+
+	MIN_SANE_TEMP := SANE_TEMP_MIN-100; (* Surely insane low value *)
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/Conv' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION Word4Fract : REAL
+VAR_INPUT
+	IN : WORD;
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+Word4Fract := WORD_TO_REAL(IN) / 16.0;
+
+
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/HTTP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK HTTP_CLIENT
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+
+VAR
+
+	m_dnSocket		:	DINT	:= SOCKET_INVALID;
+(*	m_SAddress		:	SOCKADDRESS; *)
+
+	m_error			:	INT		:= 0;
+
+(*	o_dnRes			:	DINT; *)
+
+	state				:	INT		:= 0;
+
+	CONNECT		:	HTTP_CONNECT;
+
+END_VAR
+
+VAR CONSTANT
+	wOutPort: INT := 8080;
+
+	yOutAddr1: BYTE := 192;
+	yOutAddr2: BYTE := 168;
+	yOutAddr3: BYTE := 1;
+	yOutAddr4: BYTE := 141;
+(*	yOutAddr4: BYTE := 100; *)
+
+(*
+	yOutAddr4: BYTE := 192;
+	yOutAddr3: BYTE := 168;
+	yOutAddr2: BYTE := 1;
+	yOutAddr1: BYTE := 100;
+*)
+
+	request: STRING := 'GET / HTTP/1.0$R$L$R$L';
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+
+	IF m_dnSocket = SOCKET_INVALID THEN
+
+		CONNECT(  yOutAddr1:= yOutAddr1, yOutAddr2 := yOutAddr2, yOutAddr3 := yOutAddr3, yOutAddr4 := yOutAddr4, wOutPort := wOutPort, m_dnSocket := m_dnSocket, m_error := m_error  );
+		RETURN; (* this shit needs some timeout between connect and send! *)
+
+	END_IF
+
+
+	CASE state  OF
+
+	0:	HTTP_SEND_REAL( m_dnSocket, 'Current_Children_Floor_Temp', GLOBAL_Current_Children_Floor_Temp );
+	1:	HTTP_SEND_REAL( m_dnSocket, 'Current_Children_Air_Temp', GLOBAL_Current_Children_Air_Temp );
+
+	2:	HTTP_SEND_REAL( m_dnSocket, 'Current_Dinner_Floor_Temp', GLOBAL_Current_Dinner_Floor_Temp );
+	3:	HTTP_SEND_REAL( m_dnSocket, 'Current_Dinner_Air_Temp', GLOBAL_Current_Dinner_Air_Temp );
+
+	4:	HTTP_SEND_REAL( m_dnSocket, 'Current_Bath_Air_Temp', GLOBAL_Current_Bath_Air_Temp );
+	5:	HTTP_SEND_REAL( m_dnSocket, 'Current_Bath_Floor_Temp', GLOBAL_Current_Bath_Floor_Temp );
+
+	6:	HTTP_SEND_REAL( m_dnSocket, 'Current_Entrance_Air_Temp', GLOBAL_Current_Entrance_Air_Temp );
+	7:	HTTP_SEND_REAL( m_dnSocket, 'Current_Entrance_Floor_Temp', GLOBAL_Current_Entrance_Floor_Temp );
+
+	8:	HTTP_SEND_REAL( m_dnSocket, 'Current_Bath_Tube_Temp', GLOBAL_Current_Bath_Tube_Temp );
+
+	9:	HTTP_SEND_REAL( m_dnSocket, 	'Current_Bath_Air_Humid', GLOBAL_Current_Bath_Air_Humid );
+
+	10:	HTTP_SEND_REAL( m_dnSocket, 	'Current_Outdoor_Air_Temp', GLOBAL_Current_Outdoor_Air_Temp );
+
+	11:	HTTP_SEND_REAL( m_dnSocket, 	'Current_Dinner_Air_Bottom_Temp', GLOBAL_Current_Dinner_Air_Bottom_Temp );
+	12:	HTTP_SEND_REAL( m_dnSocket, 	'Current_Dinner_Air_Middle_Temp', GLOBAL_Current_Dinner_Air_Middle_Temp );
+
+	13:	HTTP_SEND_REAL( m_dnSocket, 	'Current_Kitchen_Air_Ceiling_Temp', GLOBAL_Current_Kitchen_Air_Ceiling_Temp );
+
+	14:	HTTP_SEND_REAL( m_dnSocket, 	'Current_Badroom_Air_Temp', GLOBAL_Current_Badroom_Air_Temp );
+
+	ELSE
+		state := -1;
+
+		HTTP_SEND_REAL( m_dnSocket, 'Target_Room_Temp', GLOBAL_Target_Room_Temp );
+
+
+	END_CASE
+
+	state := state + 1;
+
+	SysSockClose ( m_dnSocket );
+	m_dnSocket := SOCKET_INVALID;
+
+
+	m_error := 0;
+
+
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/HTTP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM TCP_POLL
+
+VAR
+
+	HC		: HTTP_CLIENT;
+
+END_VAR
+
+(* @END_DECLARATION := '0' *)
+
+
+IF TRUE THEN
+	HC();
+END_IF
+
+END_PROGRAM
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/IO' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK DZ1W_READER
+
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+
+	sensor_temp : ARRAY [0..15] OF REAL;
+
+END_VAR
+
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+
+sensor_temp[0] := Word4Fract( sensor_id0 );
+sensor_temp[1] := Word4Fract( sensor_id1);
+sensor_temp[2] := Word4Fract( sensor_id2);
+sensor_temp[3] := Word4Fract( sensor_id3);
+sensor_temp[4] := Word4Fract( sensor_id4);
+sensor_temp[5] := Word4Fract( sensor_id5);
+sensor_temp[6] := Word4Fract( sensor_id6);
+sensor_temp[7] := Word4Fract( sensor_id7);
+
+(*
+sensor_temp[8] := Word4Fract( sensor_id8);
+sensor_temp[9] := Word4Fract( sensor_id9);
+sensor_temp[10] := Word4Fract( sensor_id10);
+sensor_temp[11] := Word4Fract( sensor_id11);
+sensor_temp[12] := Word4Fract( sensor_id12);
+sensor_temp[13] := Word4Fract( sensor_id13);
+sensor_temp[13] := Word4Fract( sensor_id14);
+sensor_temp[15] := Word4Fract( sensor_id15);
+*)
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/IO' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK GET_DATA
+
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+	z033_temperature_set: WORD;
+	z033_humidity_set: WORD;
+	z033_room_temp: WORD;
+	z033_mode: WORD;
+	z033_vent_speed: WORD;
+	z033_vent_auto: BOOL;
+	z033_mode_vent: BOOL;
+	z033_mode_heat: BOOL;
+	z033_mode_cool: BOOL;
+	z033_mode_humid: BOOL;
+	z033_mode_dry: BOOL;
+	mva_temperature: ARRAY[0..7] OF REAL;
+END_VAR
+
+VAR
+     TEMP_REAL : REAL;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+
+(* Gather all the data we need as input *)
+
+
+(* Read from Z033 - check 'changed' bit first *)
+
+IF (z033_errmode11c_in AND 16#1000) <> 0 THEN
+
+	z033_errmode11c_out := 0; (* reset 'changed' bit and error state - TODO if we will use error state - handle it here too *)
+
+	(* TODO read if we are initing *)
+
+
+END_IF
+
+	(* TODO read if changed, see above *)
+
+
+	z033_mode := z033_mode114_in;
+	z033_temperature_set := z033_temperature115_in; (* z033_temperature115_out := z033_temperature115_in; *)
+	z033_humidity_set := z033_hum116_in;
+	z033_room_temp	:= z033_room_temp117_in;
+
+	z033_vent_speed := SHR( z033_mode, 1 ) AND 2#111;
+	z033_vent_auto := (SHR( z033_mode, 3 ) AND 2#1) <> 0;
+
+	z033_mode_vent := (SHR( z033_mode, 4 ) AND 2#1) <> 0;
+	z033_mode_heat := (SHR( z033_mode, 5 ) AND 2#1) <> 0;
+	z033_mode_cool := (SHR( z033_mode, 6 ) AND 2#1) <> 0;
+	z033_mode_humid := (SHR( z033_mode, 7 ) AND 2#1) <> 0;
+	z033_mode_dry := (SHR( z033_mode, 8 ) AND 2#1) <> 0;
+
+	(* GLOBAL_Current_Dinner_Air_Temp := MIN_SANE_TEMP( z033_room_temp / 10.0, MVA0_t5 ) ; *)
+	(* 0t5 = kitchen ceiling sensor, 1t5 = near floor down the window dinner room sensor *)
+
+	(* GLOBAL_Current_Dinner_Air_Temp := MIN_SANE_TEMP( z033_room_temp / 10.0, MIN_SANE_TEMP( MVA0_t5, mva1_t3 ) ) ; *)
+	GLOBAL_Current_Dinner_Air_Temp := AVG_SANE_TEMP3( z033_room_temp / 10.0, MVA0_t5, mva1_t3 );
+
+	GLOBAL_Current_Dinner_Air_Bottom_Temp	:=	mva1_t3;
+	GLOBAL_Current_Dinner_Air_Middle_Temp	:=	z033_room_temp / 10.0;
+	GLOBAL_Current_Kitchen_Air_Ceiling_Temp	:=	MVA0_t5;
+	GLOBAL_Current_Guest_Air_Temp := AVG_SANE_TEMP( mva2_t0, mva2_t1 ) ; (* guest room floor and ceiling (fire sensor) *)
+
+	(* GLOBAL_Target_Room_Temp := z033_temperature_set; *)
+
+	mva_temperature[0] := mva0_t0; (* 1/2 children floor *)
+	mva_temperature[1] := mva0_t1; (* 1/2 children floor *)
+	mva_temperature[2] := mva0_t2;	(* dinner floor *)
+	mva_temperature[3] := mva0_t3;	(* entrance floor *)
+	mva_temperature[4] := mva0_t4;	(* bath floor *)
+	mva_temperature[5] := mva0_t5; (* Kitchen ceiling *)
+	mva_temperature[6] := mva0_t6;
+	mva_temperature[7] := mva0_t7; (* server room (equipment closet) top *)
+
+
+
+	GLOBAL_Current_Children_Floor_Temp	:= MAX( mva0_t0, mva0_t1 );
+	GLOBAL_Current_Dinner_Floor_Temp		:= mva0_t2;
+	GLOBAL_Current_Entrance_Floor_Temp	:= mva0_t3;
+	GLOBAL_Current_Bath_Floor_Temp		:= mva0_t4;
+
+	GLOBAL_Current_Entrance_Air_Temp		:= MIN_SANE_TEMP( mva0_t7, mva0_t6 ); (* mva0_t7; (* currently in equipment closet *) *)
+
+	GLOBAL_Current_Children_Air_Temp		:= MIN_SANE_TEMP( mva1_t0, mva1_t1 );
+
+	GLOBAL_Current_Badroom_Air_Temp		:= mva1_t2;
+
+	GLOBAL_Current_Bath_Air_Temp			:= 	mva1_t6;
+	GLOBAL_Current_Bath_Tube_Temp		:= 	mva1_t7;
+
+	TEMP_REAL	:= HUMID_CONV( V_In := mva1_t4 * 4 / 100, Zero_Off := 0.842, Slope := 0.031 );
+
+	(* Sometimes we get insane value *)
+	(* Assign sane data only *)
+	IF (TEMP_REAL > 5) AND (TEMP_REAL < 95) THEN
+		GLOBAL_Current_Bath_Air_Humid			:= LIMIT_VALUE( TEMP_REAL, 0, 100 );
+	END_IF
+
+	GLOBAL_Current_Outdoor_Air_Temp		:= mva1_t5;
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/IO' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK Z033_INIT
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+(*	SysRtcGetTime: DATE_AND_TIME; *)
+
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+	(* Set mode - const *)
+
+	(*z033_Setup112 := 16#445B; *)
+	z033_Setup112 :=
+		2#111 OR (* vent speeds *)
+		2#1000 OR (* Fan speed msg *)
+		2#10000 OR (* Auto msg *)
+		(* 2#1111100000 OR (* Possible modes *) *)
+		2#0001100000 OR (* Heat or vent modes *)
+		2#1110000000000 OR (* temp measure points *)
+		(* 2#1110000000000000 (* hum measure points *) *)
+		   2#0100000000000000 (* hum measure points - just ROOM *)
+		;
+
+	z033_Setup113 := 16#0714;
+
+	z033_mode114_out := 2#01010001;
+
+	z033_errmode11c_out := 0;
+
+(*
+	now := SysRtcGetTime();
+*)
+
+
+
+
+
+
+
+
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/IO' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK Z033_WRITER
+
+VAR_INPUT
+	Enforce : BOOL := FALSE;
+
+	z033_vent_speed: WORD;
+	z033_vent_auto: BOOL := TRUE;
+	z033_mode_vent: BOOL;
+	z033_mode_heat: BOOL := TRUE;
+	z033_mode_cool: BOOL;
+	z033_mode_humid: BOOL;
+	z033_mode_dry: BOOL;
+
+
+
+	(* z033_floor_temp: REAL; *)
+	z033_outdoor_hum: REAL;
+	z033_room_hum: REAL;
+	z033_air_hum: REAL;
+END_VAR
+
+VAR_OUTPUT
+END_VAR
+
+VAR
+	z033_mode: WORD;
+	z033_mode_old: WORD;
+	TEMP: WORD;
+	z033_outdoor_hum119_out_old: WORD;
+	z033_room_hum11a_out_old: WORD;
+	z033_air_hum11b_out_old: WORD;
+
+	z033_floor_temp118_out_old: REAL;
+	z033_air_temp_117_out_old: REAL;
+
+	GLOBAL_Target_Room_Temp_old: WORD;
+
+	GLOBAL_Target_Room_Humid_old : WORD;
+	GLOBAL_Current_Bath_Air_Humid_old: WORD;
+
+	(* Set actual date and time *)
+
+	(* z033_DateTime, Minutes, Hours, WeekDay: WORD; *)
+
+	z033_DateTime				: WORD;
+	systime						: SysTime64;
+	now							: SystemTimeDate;
+	TimeReader					: CurTimeEx;
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+(* Write current values to Z033 panel *)
+
+	z033_mode := 1; (* lower bit - panel is on *)
+
+	z033_mode := z033_mode OR SHL(z033_vent_speed AND 2#111, 1);
+
+	IF z033_vent_auto THEN
+		z033_mode := z033_mode OR 2#10000;
+	END_IF
+
+	IF z033_mode_vent THEN
+		z033_mode := z033_mode OR 2#100000;
+	END_IF
+
+	IF z033_mode_heat THEN
+		z033_mode := z033_mode OR 2#1000000;
+	END_IF
+
+	IF z033_mode_cool THEN
+		z033_mode := z033_mode OR 2#10000000;
+	END_IF
+
+	IF z033_mode_humid THEN
+		z033_mode := z033_mode OR 2#100000000;
+	END_IF
+
+	IF z033_mode_dry THEN
+		z033_mode := z033_mode OR 2#1000000000;
+	END_IF
+
+
+	IF z033_mode <> z033_mode_old THEN
+		z033_mode114_out := z033_mode;
+		z033_mode_old := z033_mode;
+	END_IF
+
+(*
+	TEMP := REAL_TO_WORD( z033_outdoor_hum * 10 );
+
+	IF TEMP <> z033_outdoor_hum119_out_old THEN
+		z033_outdoor_hum119_out := TEMP;
+		z033_outdoor_hum119_out_old := TEMP;
+	END_IF
+
+
+	TEMP := REAL_TO_WORD( z033_room_hum * 10 );
+
+	IF TEMP <> z033_room_hum11a_out_old THEN
+		z033_room_hum11a_out := TEMP;
+		z033_room_hum11a_out_old := TEMP;
+	END_IF
+
+
+
+	TEMP := REAL_TO_WORD( z033_air_hum * 10 );
+
+	IF TEMP <> z033_air_hum11b_out_old THEN
+		z033_air_hum11b_out := TEMP;
+		z033_air_hum11b_out_old := TEMP;
+	END_IF
+*)
+
+	IF z033_floor_temp118_out_old <> GLOBAL_Current_Dinner_Floor_Temp THEN
+		z033_floor_temp118_out := REAL_TO_WORD( GLOBAL_Current_Dinner_Floor_Temp * 10 );
+		z033_floor_temp118_out_old := GLOBAL_Current_Dinner_Floor_Temp;
+	END_IF
+
+	(* temp off - wrong
+	IF z033_temperature115_out_old <> GLOBAL_Current_Dinner_Air_Temp THEN
+		z033_temperature115_out := REAL_TO_WORD( GLOBAL_Current_Dinner_Air_Temp * 10 );
+		z033_temperature115_out_old := GLOBAL_Current_Dinner_Air_Temp;
+	END_IF
+	*)
+
+	(* temp replacement *)
+	IF z033_air_temp_117_out_old <> GLOBAL_Current_Entrance_Air_Temp THEN
+		z033_air_temp_117_out := REAL_TO_WORD( GLOBAL_Current_Entrance_Air_Temp * 10 );
+		z033_air_temp_117_out_old := GLOBAL_Current_Entrance_Air_Temp;
+	END_IF
+
+
+
+
+
+	TEMP := REAL_TO_WORD( GLOBAL_Target_Room_Temp  );
+
+	IF TEMP <> GLOBAL_Target_Room_Temp_old THEN
+		z033_temperature115_out := TEMP;
+		GLOBAL_Target_Room_Temp_old := TEMP;
+	END_IF
+
+
+	(* Humidity *)
+
+	TEMP := REAL_TO_WORD( GLOBAL_Target_Room_Humid  );
+
+	(* hum target *)
+	IF TEMP <> GLOBAL_Target_Room_Humid_old THEN
+		z033_hum116_out := TEMP;
+		GLOBAL_Target_Room_Humid_old := TEMP;
+	END_IF
+
+
+
+	TEMP := REAL_TO_WORD( GLOBAL_Current_Bath_Air_Humid  );
+
+	IF TEMP <> GLOBAL_Current_Bath_Air_Humid_old THEN
+		z033_room_hum11a_out := TEMP * 10;
+		GLOBAL_Current_Bath_Air_Humid_old := TEMP;
+	END_IF
+
+
+	(* Set actual date and time *)
+
+	now.Day :=0;
+	now.DayOfWeek :=0;
+	now.dwHighMsec :=0;
+	now.dwLowMSecs :=0;
+	now.Milliseconds :=0;
+	now.Minute :=0;
+	now.Second :=0;
+	now.Hour :=0;
+	now.Year :=0;
+	now.Month :=0;
+
+	systime.ulHigh :=0;
+	systime.ulLow :=0;
+
+	TimeReader( SystemTime := systime, TimeDate:= now );
+
+
+	z033_DateTime := 0;
+
+	z033_DateTime := 	UINT_TO_WORD(now.Hour) AND 2#011111;
+
+
+(*
+	z033_DateTime := 	z033_DateTime OR ( SHL( UINT_TO_WORD(now.Minute) ,5) AND 2#011111100000 );
+	z033_DateTime := 	z033_DateTime OR ( SHL( UINT_TO_WORD(now.DayOfWeek-1),11) AND 2#011100000000000 );
+*)
+	z033_DateTime := 	z033_DateTime OR ( SHL( 2#0111111 AND UINT_TO_WORD(now.Minute) ,5)  );
+	z033_DateTime := 	z033_DateTime OR ( SHL( 2#0000111 AND UINT_TO_WORD(now.DayOfWeek-1),11)  );
+
+
+
+	z033_clock11d_out := z033_DateTime;
+
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK MAKE_MQTT_PKT
+VAR_INPUT
+	topic : STRING;
+	data : STRING;
+END_VAR
+
+VAR_OUTPUT
+	buf :	STRING;
+	len : 	DINT;
+END_VAR
+
+VAR
+(*	blen :	DINT; *)
+	tlen :	DINT;
+	dlen :	DINT;
+	total : 	DINT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+	tlen := LEN(topic);
+	dlen :=LEN(data);
+
+	INSERT( buf, '$30', 0 ); (* 'publish' pkt type *)
+
+	total := tlen + dlen + 2; (* packet size *)
+
+	tlen := SHR( tlen, 8 ) ;
+
+	buf := CONCAT( buf, CHR_TO_STRING( DINT_TO_BYTE( SHR( tlen, 8 ) ) )  );
+	buf := CONCAT( buf, CHR_TO_STRING( DINT_TO_BYTE( tlen ) ) );
+
+	buf := CONCAT( buf, topic );
+	buf := CONCAT( buf, data );
+
+	(* MAKE_MQTT_PKT := buf; *)
+
+	LEN := total + 2; (* ERROR - supposed that pkt len < 128 and len is one byte *)
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM MQTT_MAIN
+
+VAR
+
+	SocketHandle: 	DINT	:= SOCKET_INVALID; (* descriptor of open Socket *)
+	addr:				SOCKADDRESS;
+	flags:				DINT := 0;
+	(*buf:				STRING;
+	pkt_size:			DINT := 0;*)
+
+	pkt :				MAKE_MQTT_PKT;
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+RETURN; (* turn off *)
+
+IF SocketHandle <> SOCKET_INVALID THEN
+	SocketHandle := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
+END_IF
+
+IF SocketHandle <> SOCKET_INVALID THEN
+	RETURN;
+END_IF
+
+addr.sin_family := SOCKET_AF_INET;
+addr.sin_port :=1883; (* MQTT UDP *)
+addr.sin_addr := SOCKET_INADDR_BROADCAST;
+
+pkt( topic := 'plc_topic', data := 'plc_val' );
+
+SysSockSendTo( SocketHandle, ADR(pkt.buf), pkt.LEN, flags, ADR(addr),   SIZEOF(addr)  );
+
+END_PROGRAM
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION PACK_LEN : STRING
+VAR_INPUT
+	data_len : DINT;
+END_VAR
+VAR
+	out : STRING := '';
+	b : BYTE;
+END_VAR
+(* @END_DECLARATION := '0' *)
+WHILE TRUE DO
+
+
+        B := DINT_TO_BYTE( data_len MOD 128 );
+        data_len := data_len / 128;
+
+        IF data_len > 0 THEN
+            B := B OR DINT_TO_BYTE( 16#80 );
+	END_IF
+
+        out := CONCAT( out, CHR_TO_STRING(b) );
+
+        IF( data_len = 0 ) THEN
+		EXIT;
+	END_IF
+END_WHILE
+
+PACK_LEN := out;
+
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/PID-PWM' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK DUAL_PID
+
+VAR_INPUT
+	Target			: REAL;		(* Уставка, target ROOM temperature value to achieve *)
+	Current		: REAL;		(* Current measured ROOM temperature value *)
+
+	Floor			: REAL;		(* Current measured FLOOR temperature value *)
+	Limited		: REAL := 33;	(* Maximum FLOOR temperature value not to overcome*)
+
+
+END_VAR
+
+VAR_OUTPUT
+
+	FLOOR_DUTY				: INT;		(* Duty cycle for floor heater *)
+	RADIATOR_DUTY				: INT;		(* Duty cycle for wall radiator *)
+
+END_VAR
+
+VAR
+
+	LINEAR			: INT;
+	INTEGRAL			: REAL;		(* +- 1000 *)
+	DIFFERENTIAL 	: REAL;		(* +- 100 *)
+	DUTY				: INT;		(* Duty cycle - total *)
+
+	Diff_Timer			: INT;
+	Diff_Prev_Temp	: REAL		:= -1000;
+	Diff_Temp_Delta	: REAL;		(* Difference of temperature in one minute *)
+	Diff_Sane 			: BOOL;
+
+END_VAR
+
+
+VAR CONSTANT
+
+	ONLY_RADIATOR_DUTY_LIMIT	: INT := 20;
+
+	Diff_Timer_Time					: INT := 120;
+
+END_VAR
+
+(* @END_DECLARATION := '0' *)
+
+(*
+
+	Actually we have TWO regulators here, one is PID (or PI) - for room temperature,
+	and one is simple limiting for floor temperature.
+
+*)
+
+	(* room temp seems to be insane, use floor temp instead *)
+	IF Current < 1 THEN
+		Current := Floor;
+	END_IF
+
+
+
+
+	LINEAR := REAL_TO_INT(  (Target - Current) * 100 / 4 ); (* 4 degrees of difference mean 100% of power *)
+	LINEAR := REAL_TO_INT( LIMIT_VALUE( LINEAR, -100, 100) );
+
+	(* Integral part *)
+
+	INTEGRAL := INTEGRAL + (LINEAR / 2500.0); (* integration time about 0,65 hr *)
+
+	INTEGRAL := LIMIT_VALUE( INTEGRAL, -100, 100 );
+
+	(* Diff part *)
+
+	Diff_Sane := TRUE;
+
+	Diff_Timer := Diff_Timer + 1;
+	IF Diff_Timer >= Diff_Timer_Time THEN
+		Diff_Timer := 0;
+
+		IF NOT IS_SANE_TEMP( Diff_Prev_Temp ) THEN
+			Diff_Sane := FALSE;
+		END_IF
+
+		Diff_Temp_Delta := Current - Diff_Prev_Temp;
+		Diff_Prev_Temp := Current;
+
+	END_IF
+
+	IF NOT Diff_Sane THEN
+		Diff_Temp_Delta := 0;
+	END_IF
+
+	(* MINUS 0.5 degree per 2 minutes is 400% of power *)
+	DIFFERENTIAL := - Diff_Temp_Delta * 200 * 4;
+
+	(* Limit diff part to 60% *)
+	DIFFERENTIAL := LIMIT_VALUE( DIFFERENTIAL, 0, 60 );
+
+	(* Common total integral + linear *)
+
+	DUTY := LINEAR +  REAL_TO_INT (INTEGRAL/2); (* max integral part is 50% *)
+
+	(* Just up - we're heating only *)
+
+	DUTY := INT_LIMIT_VALUE( DUTY, 0, 100 );
+
+
+	(* Radiator has 100% of integral part so that when we have major warmth loss we compensate it mostly with radiator *)
+	RADIATOR_DUTY := DUTY + REAL_TO_INT (INTEGRAL/2);
+
+
+	IF DUTY < ONLY_RADIATOR_DUTY_LIMIT THEN
+		FLOOR_DUTY := 0;
+	ELSE
+		FLOOR_DUTY := (( DUTY- ONLY_RADIATOR_DUTY_LIMIT) * 100) / (100 - ONLY_RADIATOR_DUTY_LIMIT);
+	END_IF
+
+
+(*
+	FLOOR_DUTY := DUTY;
+	RADIATOR_DUTY := DUTY;
+*)
+
+	(* Add differential part just to floor power *)
+	FLOOR_DUTY := FLOOR_DUTY + REAL_TO_INT(  DIFFERENTIAL );
+
+
+	FLOOR_DUTY := INT_LIMIT_VALUE( FLOOR_DUTY, 0, 100 );
+	RADIATOR_DUTY := INT_LIMIT_VALUE( RADIATOR_DUTY, 0, 100 );
+
+
+	(* Simple FLOOR temp limit *)
+
+	IF Floor > Limited THEN
+		FLOOR_DUTY := 0;
+	END_IF
+
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/PID-PWM' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK FLOOR_PID
+
+VAR_INPUT
+	Target			: REAL;		(* Уставка, target ROOM temperature value to achieve *)
+	Current		: REAL;		(* Current measured ROOM temperature value *)
+
+	Floor			: REAL;		(* Current measured FLOOR temperature value *)
+	Limited		: REAL := 35;	(* maximum FLOOR temperature value not to overcome*)
+
+
+END_VAR
+
+VAR_OUTPUT
+
+	DUTY				: INT;		(* Duty cycle for heater *)
+
+END_VAR
+
+VAR
+
+	TMP				: INT;
+(*
+	INTEGRAL			: INT;
+*)
+END_VAR
+
+
+(* @END_DECLARATION := '0' *)
+
+(*
+
+	Actually we have TWO regulators here, one is PID (or PI) - for room temperature,
+	and one is simple limiting for floor temperature.
+
+*)
+
+	(* room temp seems to be insane, use floor temp instead *)
+	IF Current < 1 THEN
+		Current := Floor;
+	END_IF
+
+
+	(* Simple FLOOR temp limit *)
+
+	IF Floor > Limited THEN
+		DUTY := 0;
+		RETURN;
+	END_IF
+
+	(* TEMPORARY IMPL! *)
+
+	IF Current > Target THEN
+		DUTY := 0;
+		RETURN;
+	END_IF
+
+	TMP := REAL_TO_INT(  (Target - Current) * 100 / 4 ); (* 4 degrees of difference mean 100% of power *)
+
+	IF TMP < 0 THEN
+		TMP := 0;
+	END_IF
+
+	IF TMP > 100 THEN
+		TMP := 100;
+	END_IF
+
+	DUTY := TMP;
+
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/PID-PWM' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK PWM
+
+VAR_INPUT
+	DUTY 			: UINT;				(* 0-99, percent *)
+	HI_VOLTAGE	: BOOL := FALSE; (* By default assume the heater is connected all the time *)
+(*
+	CYCLE_TIME	: TIME := t#10s;
+*)
+
+	PHASE_SHIFT	:	INT := 0;
+
+END_VAR
+
+VAR_OUTPUT
+	OUT_ON				: BOOL := FALSE;
+	LOAD_DETECTED	: BOOL := FALSE;
+END_VAR
+
+VAR
+	On_Count				: INT := 0;
+
+	Call_Count 			: INT := 0;
+	Check_Load_Count	: INT := 0;	(* Once a while we do check for load to be connected *)
+
+	Blinker					: BLINK;
+	Blink_Once			: BOOL := FALSE;
+END_VAR
+
+VAR CONSTANT
+	Check_Load_Count_Limit	: INT := 128;
+	Cycle_Steps					: INT := 10;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+(*
+
+We assume that load (actual heater) can be disconnected with a wall switch.
+We detect such a situation by turning power off and measuring voltage on heater.
+(There must be a resistor over a relay contacts to provide some voltage)
+
+HI_VOLTAGE is just for that.
+
+*)
+
+	(* Once a second *)
+
+(* Called once a second anyway
+	Blinker( TimeLow := t#0.5s, TimeHigh := t#0.5s, Enable := TRUE );
+
+	IF NOT Blinker.OUT THEN
+		Blink_Once := FALSE;
+		RETURN;
+	END_IF
+
+	IF Blink_Once THEN
+		RETURN;
+	END_IF
+
+	Blink_Once := TRUE;
+*)
+	(* Ok, next second came, do some task *)
+
+	Call_Count := Call_Count + 1;  (* Count seconds *)
+
+	IF NOT OUT_ON THEN (* Check for load *)
+		Check_Load_Count := 0; (* No need to turn off - already off *)
+		LOAD_DETECTED := NOT HI_VOLTAGE;
+	END_IF
+
+	Check_Load_Count := Check_Load_Count + 1;
+
+	IF Check_Load_Count > Check_Load_Count_Limit THEN
+		Check_Load_Count := 0;
+		(* Override output to be off so that we will check if load is connected on next iteration *)
+		OUT_ON := FALSE;
+		RETURN;
+	END_IF
+
+
+	IF Call_Count > (Cycle_Steps-1 + PHASE_SHIFT) THEN
+		Call_Count := 0 + PHASE_SHIFT;
+		On_Count := (DUTY * Cycle_Steps) / 100;
+	END_IF
+
+	IF On_Count > 0 THEN
+		OUT_ON := TRUE;
+		On_Count := On_Count - 1;
+	ELSE
+		OUT_ON := FALSE;
+	END_IF
+
+
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/PID-PWM' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK RADIATOR_PWM
+
+(**
+ *		Thermal radiator actuator PWM drive.	Works with 24v SR actuator, normally open.
+ *
+ *		It seems that actuator really works within 0-20% of duty cycle, which means 80-100% for us.
+**)
+
+
+VAR_INPUT
+	DUTY 				:	UINT;				(* 0-99, percent *)
+	PHASE_SHIFT	:	INT		:= 0;
+	ACTIVE			:	BOOL	:= TRUE;
+
+END_VAR
+
+VAR_OUTPUT
+	OUT_ON				: BOOL := FALSE;
+END_VAR
+
+VAR
+	On_Count				: INT := 0;
+	Call_Count 			: INT := 0;
+
+	Real_Duty				: INT := 0;
+
+	Blinker					: BLINK;
+	Blink_Once			: BOOL := FALSE;
+END_VAR
+
+VAR CONSTANT
+	Cycle_Steps					: INT := 500; (* we need 500 sec cycle for radiator actuator *)
+END_VAR
+(* @END_DECLARATION := '0' *)
+	(* Must be called once a second *)
+	Call_Count := Call_Count + 1;  (* Count seconds *)
+
+	(*Real_Duty := REAL_TO_INT( LIMIT_VALUE( (DUTY / 2) + 50, 0, 100 ) ); *)
+	Real_Duty := REAL_TO_INT( DUTY );
+
+	IF Call_Count > (Cycle_Steps-1 + PHASE_SHIFT) THEN
+		Call_Count := 0 + PHASE_SHIFT;
+		On_Count := (Real_Duty * Cycle_Steps) / 100;
+	END_IF
+
+	IF On_Count > 0 THEN
+		OUT_ON := TRUE;
+		On_Count := On_Count - 1;
+	ELSE
+		OUT_ON := FALSE;
+	END_IF
+
+
+
+END_FUNCTION_BLOCK
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM ONCE_A_SECOND_PRG
+
+VAR
+
+	FLOOR_ENTRANCE		: FLOOR_PID;
+	FLOOR_BATH				: FLOOR_PID;
+	(*FLOOR_DINNER			: FLOOR_PID;*)
+	DINNER_PID			: DUAL_PID;
+	(*FLOOR_CHILDREN		: FLOOR_PID;*)
+	CHILDREN_PID			: DUAL_PID;
+	GUEST_PID			: DUAL_PID;
+
+	PWM_ENTRANCE		: PWM;
+	PWM_BATH				: PWM;
+	PWM_DINNER			: PWM;
+	PWM_CHILDREN			: PWM;
+
+(*	PWM_DINNER_RADIATOR		: PWM; *)
+	PWM_DINNER_RADIATOR		: RADIATOR_PWM;
+	PWM_GUEST_RADIATOR		: RADIATOR_PWM;
+	PWM_CHILDREN_RADIATOR	: RADIATOR_PWM;
+
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+
+	(* Must be called once a second! *)
+
+
+
+	(* Entrance *)
+
+	FLOOR_ENTRANCE( Target := GLOBAL_Target_Room_Temp, Current := GLOBAL_Current_Entrance_Air_Temp, Floor := GLOBAL_Current_Entrance_Floor_Temp );
+
+	PWM_ENTRANCE( DUTY := FLOOR_ENTRANCE.DUTY, PHASE_SHIFT := 0 );
+
+	HEAT_ENTRANCE_OUT := PWM_ENTRANCE.OUT_ON;
+
+
+
+	(* Bath *)
+
+	FLOOR_BATH( Target := GLOBAL_Target_Room_Temp, Current := GLOBAL_Current_Bath_Air_Temp, Floor := GLOBAL_Current_Bath_Floor_Temp );
+
+	PWM_BATH( DUTY := FLOOR_BATH.DUTY, PHASE_SHIFT := 2 );
+
+	HEAT_BATH_OUT := PWM_BATH.OUT_ON;
+
+
+	(* Dinner *)
+
+(*
+	FLOOR_DINNER( Target := GLOBAL_Target_Room_Temp, Current := GLOBAL_Current_Dinner_Air_Temp, Floor := GLOBAL_Current_Dinner_Floor_Temp );
+*)
+	DINNER_PID( Target := GLOBAL_Target_Room_Temp, Current := GLOBAL_Current_Dinner_Air_Temp, Floor := GLOBAL_Current_Dinner_Floor_Temp );
+
+	PWM_DINNER( DUTY := DINNER_PID.FLOOR_DUTY, PHASE_SHIFT := 4 );
+
+	PWM_DINNER_RADIATOR( DUTY := DINNER_PID.RADIATOR_DUTY, PHASE_SHIFT := 0 );
+
+	HEAT_DINNER_OUT := PWM_DINNER.OUT_ON;
+
+	RADIATOR_DINNER_OUT := NOT PWM_DINNER_RADIATOR.OUT_ON; (* Naive impl - just control radiator just like floor *)
+
+	(* Guest - no hot floor *)
+
+	GUEST_PID( Target := GLOBAL_Target_Room_Temp, Current := GLOBAL_Current_Guest_Air_Temp, Floor := 50 ); (* no floor, give insane input value *)
+	PWM_GUEST_RADIATOR( DUTY := GUEST_PID.RADIATOR_DUTY, PHASE_SHIFT := 0 );
+	RADIATOR_GUEST_OUT := NOT PWM_GUEST_RADIATOR.OUT_ON; (* Naive impl - just control radiator just like floor *)
+
+	(* Children *)
+
+	(* FLOOR_CHILDREN( Target := GLOBAL_Target_Room_Temp, Current := GLOBAL_Current_CHILDREN_Air_Temp, Floor := GLOBAL_Current_CHILDREN_Floor_Temp ); *)
+
+	CHILDREN_PID(        Target := GLOBAL_Target_Room_Temp, Current := GLOBAL_Current_CHILDREN_Air_Temp, Floor := GLOBAL_Current_CHILDREN_Floor_Temp );
+
+	(*PWM_CHILDREN( DUTY := FLOOR_CHILDREN.DUTY, PHASE_SHIFT := 6 );*)
+	PWM_CHILDREN( DUTY := CHILDREN_PID.FLOOR_DUTY, PHASE_SHIFT := 6 );
+
+
+	PWM_CHILDREN_RADIATOR( DUTY := CHILDREN_PID.RADIATOR_DUTY, PHASE_SHIFT := 0 );
+
+	HEAT_CHILDREN_OUT := PWM_CHILDREN.OUT_ON;
+
+	RADIATOR_CHILDREN_NEAR_OUT := NOT PWM_CHILDREN_RADIATOR.OUT_ON;
+
+
+
+
+
+END_PROGRAM
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM PLC_PRG
+VAR
+
+	Need_init: BOOL := TRUE;
+
+
+	Zinit:		Z033_INIT;
+	Reader:	GET_DATA;
+
+	z033Write:	Z033_WRITER;
+
+	Read1W: DZ1W_READER;
+
+	z033_temperature_set_old	: WORD;
+	Uplink_Target_Temp_old		: WORD;
+
+	z033_humidity_set_old		: WORD;
+	Uplink_Target_Humid_old	: WORD;
+
+
+
+END_VAR
+
+(*
+VAR RETAIN PERSISTENT
+	GLOBAL_Target_Room_Temp: REAL;
+END_VAR
+*)
+(* @END_DECLARATION := '0' *)
+IF Need_init THEN
+
+
+	z033_cmd := 255;
+	z033_special_cmd := 255;
+
+	mva8_0_cmd := 255;
+	mva8_1_cmd := 255;
+	mva8_2_cmd := 255;
+
+	dz1w_cmd := 255;
+
+	Zinit();
+	z033Write();
+
+	z033_temperature115_out := REAL_TO_WORD( GLOBAL_Target_Room_Temp );
+	z033_hum116_out := REAL_TO_WORD( GLOBAL_Target_Room_Humid );
+
+
+	Need_init := FALSE;
+END_IF
+
+(* TODO check if z033 really needs even parity. reprogram? *)
+
+
+	Reader();
+	Read1W();
+
+	(* temp set *)
+
+	IF (Reader.z033_temperature_set > SANE_TEMP_MIN) AND (Reader.z033_temperature_set < SANE_TEMP_MAX) AND (z033_temperature_set_old <> Reader.z033_temperature_set) THEN
+		GLOBAL_Target_Room_Temp := Reader.z033_temperature_set;
+		z033_temperature_set_old := Reader.z033_temperature_set;
+
+		z033_temperature115_out := Reader.z033_temperature_set;
+
+		Uplink_Target_Temp := REAL_TO_BYTE( GLOBAL_Target_Room_Temp );
+		Uplink_Target_Temp_old := Uplink_Target_Temp;
+	END_IF
+
+	IF Uplink_Target_Temp_old <> Uplink_Target_Temp THEN
+		GLOBAL_Target_Room_Temp := Uplink_Target_Temp;
+		Uplink_Target_Temp_old := Uplink_Target_Temp;
+	END_IF
+
+	(* Fix crazy valiues *)
+
+	IF GLOBAL_Target_Room_Temp < SANE_TEMP_MIN THEN
+		GLOBAL_Target_Room_Temp := SANE_TEMP_MIN;
+	END_IF
+
+	IF GLOBAL_Target_Room_Temp > SANE_TEMP_MAX THEN
+		GLOBAL_Target_Room_Temp := SANE_TEMP_MAX;
+	END_IF
+
+
+	(* humidity set *)
+
+
+
+	IF (Reader.z033_humidity_set > SANE_HUMID_MIN) AND (Reader.z033_humidity_set < SANE_HUMID_MAX) AND (z033_humidity_set_old <> Reader.z033_humidity_set) THEN
+		GLOBAL_Target_Room_Humid := Reader.z033_humidity_set;
+		z033_humidity_set_old := Reader.z033_humidity_set;
+
+		z033_hum116_out:= Reader.z033_humidity_set;
+
+		Uplink_Target_Humid := REAL_TO_BYTE( GLOBAL_Target_Room_Humid );
+		Uplink_Target_Humid_old := Uplink_Target_Humid;
+	END_IF
+
+	IF Uplink_Target_Humid_old <> Uplink_Target_Humid THEN
+		GLOBAL_Target_Room_Humid := Uplink_Target_Humid;
+		Uplink_Target_Humid_old := Uplink_Target_Humid;
+	END_IF
+
+	(* Fix crazy valiues *)
+
+	IF GLOBAL_Target_Room_Humid < SANE_HUMID_MIN THEN
+		GLOBAL_Target_Room_Humid := SANE_HUMID_MIN;
+	END_IF
+
+	IF GLOBAL_Target_Room_Humid > SANE_HUMID_MAX THEN
+		GLOBAL_Target_Room_Humid := SANE_HUMID_MAX;
+	END_IF
+
+
+	(* TODO no net vars now, do it some other way *)
+	(* Lower HUMIDITY in bathroom, if too high * )
+
+	IF GLOBAL_Current_Bath_Air_Humid > GLOBAL_Target_Room_Humid THEN
+
+		(* +10% of humidity = 100% of ventilation power *)
+		Net_Ventilation_Request_Percent := REAL_TO_INT( MIN( 99, (GLOBAL_Current_Bath_Air_Humid - GLOBAL_Target_Room_Humid) * 10 ) );
+
+	ELSE
+		Net_Ventilation_Request_Percent := 0;
+	END_IF
+	*)
+
+
+
+
+
+	z033Write();
+
+END_PROGRAM
+
+(* @PATH := '' *)
+
+VISUALISATION Dinner _VISU_TYPES : 1,1
+_BG_BMP : ''
+_TEXT : 3
+_PAINTZOOM : 100
+
+_TREND : ''
+_POS : 10,10,1281,731,645,370
+_DSP : ''
+_ACCESSLEVELS : 2,2,2,2,2,2,2,2
+_COLORS : 16777215,0,16777215,0
+_TRENDBASICS : 0,1,1
+_HAXIS : 200,7200000,600000,300000,600000,2000
+_DATETIME : 'HH$':$'mm$':$'ss','dd$'-$'MM$'-$'yyyy'
+_USEDATETIME : 1,0
+_TEXT : 0,16,700,0,0,0,204
+_FONT : 'Arial'
+_HASSYMBOLBAR : 0
+_VARIABLES : '',''
+_TRENDLINE : 2,1,8421631
+_VAXIS : '0.000000;100.000000;10.000000;5.000000;10.000000;10.000000;'
+_DIRECTION : 0
+_TEXT : 0,16,700,0,0,0,204
+_FONT : 'Arial'
+_HASSYMBOLBAR : 0
+_VARIABLES : '',''
+_TRENDLINE : 3,1,12632256
+_TRENDCURVE : 0,0,0,3
+_BITMAP : ''
+_TOLERANCE : 255,7
+_TOLERANCE : 16711680,2
+_VARINFOLIST : 4
+_LINE : 0,4227327
+_VARIABLES : 'ONCE_A_SECOND_PRG.DINNER_PID.RADIATOR_DUTY',''
+_LINE : 0,255
+_VARIABLES : 'ONCE_A_SECOND_PRG.DINNER_PID.FLOOR_DUTY',''
+_LINE : 0,16711935
+_VARIABLES : '.GLOBAL_Current_Dinner_Floor_Temp',''
+_LINE : 0,65280
+_VARIABLES : '.GLOBAL_Current_Dinner_Air_Temp',''
+_TRENDDATABASE : 1
+_DATABASETYPE : 'filesystem'
+_DATABASENAME : ''
+_DATABASEPATHS : '','dinner_duty'
+_DATABASEVARIABLE : ''
+_DATABASEFILEHANDLING : 4,100
+(* @TREND_COLOR_FLAGS := '_NOCOLORS : 1,1' *)
+(* @TREND_FONT_FLAGS_VAXIS := '_FONT : 2,0,0,1,33,2,8' *)
+(* @TREND_FONT_FLAGS_HAXIS := '_FONT : 2,0,0,1,33,2,8' *)
+_KEYINFOLIST : 0
+END_VISUALISATION
+
+(* @PATH := '' *)
+
+VISUALISATION INPUTS _VISU_TYPES : 1,1
+_BG_BMP : ''
+_TEXT : 1
+_PAINTZOOM : 100
+
+_TREND : ''
+_POS : 50,40,1391,141,720,90
+_DSP : ''
+_ACCESSLEVELS : 2,2,2,2,2,2,2,2
+_COLORS : 16777215,0,16777215,0
+_TRENDBASICS : 0,1,0
+_HAXIS : 60000,3600000,600000,300000,2000,600000
+_DATETIME : 'HH$':$'mm$':$'ss','dd$'-$'MM$'-$'yyyy'
+_USEDATETIME : 1,0
+_TEXT : 0,16,700,0,0,0,204
+_FONT : 'Arial'
+_HASSYMBOLBAR : 0
+_VARIABLES : '',''
+_TRENDLINE : 2,1,8421631
+_VAXIS : '0.000000;10.000000;1.000000;0.500000;1.000000;1.000000;'
+_DIRECTION : 0
+_TEXT : 0,16,700,0,0,0,204
+_FONT : 'Arial'
+_HASSYMBOLBAR : 0
+_VARIABLES : '',''
+_TRENDLINE : 2,1,8421504
+_TRENDCURVE : 0,0,0,3
+_BITMAP : ''
+_TOLERANCE : 255,7
+_TOLERANCE : 16711680,2
+_VARINFOLIST : 2
+_LINE : 0,4227327
+_VARIABLES : 'GLOBAL_Current_Entrance_Air_Temp','air'
+_LINE : 0,65408
+_VARIABLES : 'GLOBAL_Current_Entrance_Floor_Temp','floor'
+_TRENDDATABASE : 0
+(* @TREND_COLOR_FLAGS := '_NOCOLORS : 1,1' *)
+(* @TREND_FONT_FLAGS_VAXIS := '_FONT : 2,0,0,1,33,2,8' *)
+(* @TREND_FONT_FLAGS_HAXIS := '_FONT : 2,0,0,1,33,2,8' *)
+_KEYINFOLIST : 0
+END_VISUALISATION
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @GLOBAL_VARIABLE_LIST := 'Global_Variables' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+VAR_GLOBAL RETAIN PERSISTENT
+
+
+	GLOBAL_Target_Room_Temp				: REAL := 26;
+	GLOBAL_Target_Room_Humid				: REAL := 30;
+
+	GLOBAL_Current_Entrance_Air_Temp		: REAL	:= 0;
+	GLOBAL_Current_Entrance_Floor_Temp	: REAL := 100;
+
+	GLOBAL_Current_Bath_Air_Temp			: REAL	:= 0;
+	GLOBAL_Current_Bath_Floor_Temp		: REAL := 100;
+
+	GLOBAL_Current_Bath_Tube_Temp		: REAL := 0;
+
+	GLOBAL_Current_Dinner_Air_Temp			: REAL	:= 0;		(* Composite made of 3 sensors, used to control floor *)
+	GLOBAL_Current_Dinner_Floor_Temp		: REAL := 100;
+
+	GLOBAL_Current_Dinner_Air_Bottom_Temp			: REAL	:= 0; (* Bottom sensor, near the radiator *)
+	GLOBAL_Current_Dinner_Air_Middle_Temp			: REAL	:= 0; (* Middle sensor, in the z033 panel, 1 degree step *)
+
+	GLOBAL_Current_Guest_Air_Temp			: REAL := 0;
+
+	GLOBAL_Current_Kitchen_Air_Ceiling_Temp			: REAL	:= 0; (* Ceiling sensor, in the fire sensor, kitchen *)
+
+	GLOBAL_Current_Children_Air_Temp		: REAL	:= 0;
+	GLOBAL_Current_Children_Floor_Temp	: REAL := 100;
+
+	GLOBAL_Current_Badroom_Air_Temp		: REAL	:= 0;
+
+	GLOBAL_Current_Bath_Air_Humid			: REAL := 0;
+
+	GLOBAL_Current_Outdoor_Air_Temp		: REAL := 0;
+
+
+END_VAR
+
+
+
+VAR_GLOBAL CONSTANT
+	SANE_TEMP_MIN: REAL := 10;		(*Minimum temp value assumed to be sane*)
+	SANE_TEMP_MAX: REAL := 40;		(*Maximum temp value assumed to be sane*)
+
+	SANE_HUMID_MIN:	WORD		:= 15;
+	SANE_HUMID_MAX:	WORD		:= 55;
+
+END_VAR
+(* @OBJECT_END := 'Global_Variables' *)
+(* @CONNECTIONS := Global_Variables
+FILENAME : ''
+FILETIME : 0
+EXPORT : 0
+NUMOFCONNECTIONS : 0
+*)
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @GLOBAL_VARIABLE_LIST := 'Variable_Configuration' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+VAR_CONFIG
+END_VAR
+
+(* @OBJECT_END := 'Variable_Configuration' *)
+(* @CONNECTIONS := Variable_Configuration
+FILENAME : ''
+FILETIME : 0
+EXPORT : 0
+NUMOFCONNECTIONS : 0
+*)
+
+PLC_CONFIGURATION
+_GLOBAL
+_VERSION: 3
+_AUTOADR: 1
+_CHECKADR: 1
+_SAVECONFIGFILESINPROJECT: 0
+_END_GLOBAL
+
+_MODULE: '3S'
+_SECTION_NAME: 'Root'
+_INDEX_IN_PARENT: '-1'
+_MODULE_NAME: 'PLC110_30'
+_NODE_ID: -1
+_IECIN: %IB0
+_IECOUT: %QB0
+_IECDIAG: %MB0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1'
+_PARAM 2: 0, '1000'
+_PARAM 3: 0, '6'
+_END_PARAMETER
+
+_MODULE: '3S'
+_SECTION_NAME: 'I_SIMPLE_INPUT'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Fast discrete inputs'
+_NODE_ID: 0
+_IECIN: %IB0
+_IECOUT: %QB0
+_IECDIAG: %MB0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '10'
+_PARAM 9: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'BitInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Discrete input 1'
+_CHANNEL_MODE: 'I'
+_IECADR: %IX0.0
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'BitInput'
+_INDEX_IN_PARENT: '2'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Discrete input 2'
+_CHANNEL_MODE: 'I'
+_IECADR: %IX0.1
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID130'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Discrete inputs - 16'
+_NODE_ID: 1
+_IECIN: %IB1
+_IECOUT: %QB1
+_IECDIAG: %MB1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1'
+_PARAM 9: 0, 'No'
+_PARAM 10: 0, '16'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ByteInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: '8 discrete inputs'
+_CHANNEL_MODE: 'I'
+_IECADR: %IB1.0
+_BIT 0: %IX1.0.0 '' 'Bit 0'
+_BIT 1: %IX1.0.1 '' 'Bit 1'
+_BIT 2: %IX1.0.2 '' 'Bit 2'
+_BIT 3: %IX1.0.3 '' 'Bit 3'
+_BIT 4: %IX1.0.4 '' 'Bit 4'
+_BIT 5: %IX1.0.5 '' 'Bit 5'
+_BIT 6: %IX1.0.6 '' 'Bit 6'
+_BIT 7: %IX1.0.7 '' 'Bit 7'
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'ByteInput'
+_INDEX_IN_PARENT: '2'
+_SYMBOLIC_NAME: ''
+_COMMENT: '8 discrete inputs'
+_CHANNEL_MODE: 'I'
+_IECADR: %IB1.1
+_BIT 0: %IX1.1.0 '' 'Bit 0'
+_BIT 1: %IX1.1.1 '' 'Bit 1'
+_BIT 2: %IX1.1.2 '' 'Bit 2'
+_BIT 3: %IX1.1.3 '' 'Bit 3'
+_BIT 4: %IX1.1.4 '' 'Bit 4'
+_BIT 5: %IX1.1.5 '' 'Bit 5'
+_BIT 6: %IX1.1.6 '' 'Bit 6'
+_BIT 7: %IX1.1.7 '' 'Bit 7'
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'OWEN_ID570'
+_INDEX_IN_PARENT: '3'
+_MODULE_NAME: 'Fast discrete outputs'
+_NODE_ID: 2
+_IECIN: %IB2
+_IECOUT: %QB2
+_IECDIAG: %MB2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, 'FALSE'
+_PARAM 2: 0, 'FALSE'
+_PARAM 3: 0, 'FALSE'
+_PARAM 4: 0, 'FALSE'
+_PARAM 10: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'BitOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'RADIATOR_GUEST_OUT'
+_COMMENT: 'Fast discrete output 1 - radiator, guest room, 1 = OFF!'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QX2.0
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'BitOutput'
+_INDEX_IN_PARENT: '2'
+_SYMBOLIC_NAME: 'RADIATOR_CHILDREN_NEAR_OUT'
+_COMMENT: 'Fast discrete output 2, radiator, children room, near the door, 1 = OFF'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QX2.1
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'BitOutput'
+_INDEX_IN_PARENT: '3'
+_SYMBOLIC_NAME: 'RADIATOR_BEDROOM_OUT'
+_COMMENT: 'Fast discrete output 3'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QX2.2
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'BitOutput'
+_INDEX_IN_PARENT: '4'
+_SYMBOLIC_NAME: 'RADIATOR_DINNER_OUT'
+_COMMENT: 'Fast discrete output 4 - dinner room radiator PWM, 0 = ON, 1 = OFF'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QX2.3
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID131'
+_INDEX_IN_PARENT: '4'
+_MODULE_NAME: 'Discrete outputs - 8'
+_NODE_ID: 3
+_IECIN: %IB3
+_IECOUT: %QB3
+_IECDIAG: %MB3
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '0'
+_PARAM 4: 0, 'No'
+_PARAM 5: 0, '10'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ByteOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: '8 discrete outputs'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QB3.0
+_BIT 0: %QX3.0.0 '' 'Bit 0'
+_BIT 1: %QX3.0.1 '' 'Bit 1'
+_BIT 2: %QX3.0.2 '' 'Bit 2'
+_BIT 3: %QX3.0.3 '' 'Bit 3'
+_BIT 4: %QX3.0.4 'HEAT_CHILDREN_OUT' 'Bit 4'
+_BIT 5: %QX3.0.5 'HEAT_BATH_OUT' 'Bit 5'
+_BIT 6: %QX3.0.6 'HEAT_DINNER_OUT' 'Bit 6'
+_BIT 7: %QX3.0.7 'HEAT_ENTRANCE_OUT' 'Bit 7'
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID103'
+_INDEX_IN_PARENT: '5'
+_MODULE_NAME: 'Special input'
+_NODE_ID: 4
+_IECIN: %IB4
+_IECOUT: %QB4
+_IECDIAG: %MB4
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1000'
+_PARAM 2: 0, '1'
+_PARAM 3: 0, '400'
+_PARAM 4: 0, '3000'
+_PARAM 5: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'BitInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Special input'
+_CHANNEL_MODE: 'I'
+_IECADR: %IX4.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID104'
+_INDEX_IN_PARENT: '6'
+_MODULE_NAME: 'Special output'
+_NODE_ID: 5
+_IECIN: %IB5
+_IECOUT: %QB5
+_IECDIAG: %MB5
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, 'No'
+_PARAM 2: 0, '1'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'BitOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Special output'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QX5.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'MODBUS_MASTER_ID450'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'ModBus (Master)'
+_NODE_ID: 6
+_IECIN: %IB6
+_IECOUT: %QB6
+_IECDIAG: %MB6
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'DWordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Last address'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QD6.0
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '2'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Last error'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW6.1
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'COM1_USART'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'RS-485-1'
+_NODE_ID: 0
+_IECIN: %IB6.0
+_IECOUT: %QB6.0
+_IECDIAG: %MB6.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '11520'
+_PARAM 2: 0, 'NO PARITY CHECK'
+_PARAM 3: 0, '8 bits'
+_PARAM 4: 0, 'One stop bit'
+_PARAM 5: 0, 'RS485'
+_PARAM 6: 0, 'ASCII'
+_PARAM 7: 0, '0'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2050'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'OWEN_MVA8'
+_NODE_ID: 1
+_IECIN: %IB6.1
+_IECOUT: %QB6.1
+_IECDIAG: %MB6.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '10:0:0:223'
+_PARAM 2: 0, '30'
+_PARAM 3: 0, '502'
+_PARAM 4: 0, 'Serial'
+_PARAM 5: 0, '80'
+_PARAM 6: 0, 'By poll time'
+_PARAM 7: 0, '400'
+_PARAM 8: 0, 'No'
+_PARAM 9: 0, '0'
+_PARAM 10: 0, 'Trace_mode'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ComChannel'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva8_0_cmd'
+_COMMENT: 'Command (0xff - Start)'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QB6.1.0
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2066'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Cycle time measuring on input 1'
+_NODE_ID: 0
+_IECIN: %IB6.1.0
+_IECOUT: %QB6.1.0
+_IECDIAG: %MB6.1.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '3'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.0.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2067'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Value in input 1'
+_NODE_ID: 1
+_IECIN: %IB6.1.1
+_IECOUT: %QB6.1.1
+_IECDIAG: %MB6.1.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '4'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t0'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.1.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2068'
+_INDEX_IN_PARENT: '3'
+_MODULE_NAME: 'Cycle time measuring on input 2'
+_NODE_ID: 2
+_IECIN: %IB6.1.2
+_IECOUT: %QB6.1.2
+_IECDIAG: %MB6.1.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '9'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.2.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2069'
+_INDEX_IN_PARENT: '4'
+_MODULE_NAME: 'Value in input 2'
+_NODE_ID: 3
+_IECIN: %IB6.1.3
+_IECOUT: %QB6.1.3
+_IECDIAG: %MB6.1.3
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '10'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t1'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.3.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2070'
+_INDEX_IN_PARENT: '5'
+_MODULE_NAME: 'Cycle time measuring on input 3'
+_NODE_ID: 4
+_IECIN: %IB6.1.4
+_IECOUT: %QB6.1.4
+_IECDIAG: %MB6.1.4
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '15'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.4.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2071'
+_INDEX_IN_PARENT: '6'
+_MODULE_NAME: 'Value in input 3'
+_NODE_ID: 5
+_IECIN: %IB6.1.5
+_IECOUT: %QB6.1.5
+_IECDIAG: %MB6.1.5
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t2'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.5.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2072'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'Cycle time measuring on input 4'
+_NODE_ID: 6
+_IECIN: %IB6.1.6
+_IECOUT: %QB6.1.6
+_IECDIAG: %MB6.1.6
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '21'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.6.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2073'
+_INDEX_IN_PARENT: '8'
+_MODULE_NAME: 'Value in input 4'
+_NODE_ID: 7
+_IECIN: %IB6.1.7
+_IECOUT: %QB6.1.7
+_IECDIAG: %MB6.1.7
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '22'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t3'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.7.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2074'
+_INDEX_IN_PARENT: '9'
+_MODULE_NAME: 'Cycle time measuring on input 5'
+_NODE_ID: 8
+_IECIN: %IB6.1.8
+_IECOUT: %QB6.1.8
+_IECDIAG: %MB6.1.8
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '27'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.8.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2075'
+_INDEX_IN_PARENT: '10'
+_MODULE_NAME: 'Value in input 5'
+_NODE_ID: 9
+_IECIN: %IB6.1.9
+_IECOUT: %QB6.1.9
+_IECDIAG: %MB6.1.9
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '28'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t4'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.9.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2076'
+_INDEX_IN_PARENT: '11'
+_MODULE_NAME: 'Cycle time measuring on input 6'
+_NODE_ID: 10
+_IECIN: %IB6.1.10
+_IECOUT: %QB6.1.10
+_IECDIAG: %MB6.1.10
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '33'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.10.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2077'
+_INDEX_IN_PARENT: '12'
+_MODULE_NAME: 'Value in input 6'
+_NODE_ID: 11
+_IECIN: %IB6.1.11
+_IECOUT: %QB6.1.11
+_IECDIAG: %MB6.1.11
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '34'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t5'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.11.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2078'
+_INDEX_IN_PARENT: '13'
+_MODULE_NAME: 'Cycle time measuring on input 7'
+_NODE_ID: 12
+_IECIN: %IB6.1.12
+_IECOUT: %QB6.1.12
+_IECDIAG: %MB6.1.12
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '39'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.12.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2079'
+_INDEX_IN_PARENT: '14'
+_MODULE_NAME: 'Value in input 7'
+_NODE_ID: 13
+_IECIN: %IB6.1.13
+_IECOUT: %QB6.1.13
+_IECDIAG: %MB6.1.13
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '40'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t6'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.13.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2080'
+_INDEX_IN_PARENT: '15'
+_MODULE_NAME: 'Cycle time measuring on input 8'
+_NODE_ID: 14
+_IECIN: %IB6.1.14
+_IECOUT: %QB6.1.14
+_IECDIAG: %MB6.1.14
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '45'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.1.14.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2081'
+_INDEX_IN_PARENT: '16'
+_MODULE_NAME: 'Value in input 8'
+_NODE_ID: 15
+_IECIN: %IB6.1.15
+_IECOUT: %QB6.1.15
+_IECDIAG: %MB6.1.15
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '46'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva0_t7'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.1.15.0
+_END_CHANNEL
+_END_MODULE
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2050'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'OWEN_MVA8'
+_NODE_ID: 2
+_IECIN: %IB6.2
+_IECOUT: %QB6.2
+_IECDIAG: %MB6.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '10:0:0:223'
+_PARAM 2: 0, '30'
+_PARAM 3: 0, '502'
+_PARAM 4: 0, 'Serial'
+_PARAM 5: 0, '88'
+_PARAM 6: 0, 'By poll time'
+_PARAM 7: 0, '400'
+_PARAM 8: 0, 'No'
+_PARAM 9: 0, '0'
+_PARAM 10: 0, 'Trace_mode'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ComChannel'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva8_1_cmd'
+_COMMENT: 'Command (0xff - Start)'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QB6.2.0
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2066'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Cycle time measuring on input 1'
+_NODE_ID: 0
+_IECIN: %IB6.2.0
+_IECOUT: %QB6.2.0
+_IECDIAG: %MB6.2.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '3'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.0.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2067'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Value in input 1'
+_NODE_ID: 1
+_IECIN: %IB6.2.1
+_IECOUT: %QB6.2.1
+_IECDIAG: %MB6.2.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '4'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t0'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.1.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2068'
+_INDEX_IN_PARENT: '3'
+_MODULE_NAME: 'Cycle time measuring on input 2'
+_NODE_ID: 2
+_IECIN: %IB6.2.2
+_IECOUT: %QB6.2.2
+_IECDIAG: %MB6.2.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '9'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.2.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2069'
+_INDEX_IN_PARENT: '4'
+_MODULE_NAME: 'Value in input 2'
+_NODE_ID: 3
+_IECIN: %IB6.2.3
+_IECOUT: %QB6.2.3
+_IECDIAG: %MB6.2.3
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '10'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t1'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.3.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2070'
+_INDEX_IN_PARENT: '5'
+_MODULE_NAME: 'Cycle time measuring on input 3'
+_NODE_ID: 4
+_IECIN: %IB6.2.4
+_IECOUT: %QB6.2.4
+_IECDIAG: %MB6.2.4
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '15'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.4.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2071'
+_INDEX_IN_PARENT: '6'
+_MODULE_NAME: 'Value in input 3'
+_NODE_ID: 5
+_IECIN: %IB6.2.5
+_IECOUT: %QB6.2.5
+_IECDIAG: %MB6.2.5
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t2'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.5.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2072'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'Cycle time measuring on input 4'
+_NODE_ID: 6
+_IECIN: %IB6.2.6
+_IECOUT: %QB6.2.6
+_IECDIAG: %MB6.2.6
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '21'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.6.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2073'
+_INDEX_IN_PARENT: '8'
+_MODULE_NAME: 'Value in input 4'
+_NODE_ID: 7
+_IECIN: %IB6.2.7
+_IECOUT: %QB6.2.7
+_IECDIAG: %MB6.2.7
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '22'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t3'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.7.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2074'
+_INDEX_IN_PARENT: '9'
+_MODULE_NAME: 'Cycle time measuring on input 5'
+_NODE_ID: 8
+_IECIN: %IB6.2.8
+_IECOUT: %QB6.2.8
+_IECDIAG: %MB6.2.8
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '27'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.8.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2075'
+_INDEX_IN_PARENT: '10'
+_MODULE_NAME: 'Value in input 5'
+_NODE_ID: 9
+_IECIN: %IB6.2.9
+_IECOUT: %QB6.2.9
+_IECDIAG: %MB6.2.9
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '28'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t4'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.9.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2076'
+_INDEX_IN_PARENT: '11'
+_MODULE_NAME: 'Cycle time measuring on input 6'
+_NODE_ID: 10
+_IECIN: %IB6.2.10
+_IECOUT: %QB6.2.10
+_IECDIAG: %MB6.2.10
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '33'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.10.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2077'
+_INDEX_IN_PARENT: '12'
+_MODULE_NAME: 'Value in input 6'
+_NODE_ID: 11
+_IECIN: %IB6.2.11
+_IECOUT: %QB6.2.11
+_IECDIAG: %MB6.2.11
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '34'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t5'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.11.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2078'
+_INDEX_IN_PARENT: '13'
+_MODULE_NAME: 'Cycle time measuring on input 7'
+_NODE_ID: 12
+_IECIN: %IB6.2.12
+_IECOUT: %QB6.2.12
+_IECDIAG: %MB6.2.12
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '39'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.12.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2079'
+_INDEX_IN_PARENT: '14'
+_MODULE_NAME: 'Value in input 7'
+_NODE_ID: 13
+_IECIN: %IB6.2.13
+_IECOUT: %QB6.2.13
+_IECDIAG: %MB6.2.13
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '40'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t6'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.13.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2080'
+_INDEX_IN_PARENT: '15'
+_MODULE_NAME: 'Cycle time measuring on input 8'
+_NODE_ID: 14
+_IECIN: %IB6.2.14
+_IECOUT: %QB6.2.14
+_IECDIAG: %MB6.2.14
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '45'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.2.14.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2081'
+_INDEX_IN_PARENT: '16'
+_MODULE_NAME: 'Value in input 8'
+_NODE_ID: 15
+_IECIN: %IB6.2.15
+_IECOUT: %QB6.2.15
+_IECDIAG: %MB6.2.15
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '46'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva1_t7'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.2.15.0
+_END_CHANNEL
+_END_MODULE
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2050'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'OWEN_MVA8'
+_NODE_ID: 3
+_IECIN: %IB6.3
+_IECOUT: %QB6.3
+_IECDIAG: %MB6.3
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: 'МВА2 - 110.8A'
+
+_PARAMETER
+_PARAM 1: 0, '10:0:0:223'
+_PARAM 2: 0, '30'
+_PARAM 3: 0, '502'
+_PARAM 4: 0, 'Serial'
+_PARAM 5: 0, '96'
+_PARAM 6: 0, 'By poll time'
+_PARAM 7: 0, '400'
+_PARAM 8: 0, 'No'
+_PARAM 9: 0, '0'
+_PARAM 10: 0, 'Trace_mode'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ComChannel'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva8_2_cmd'
+_COMMENT: 'Command (0xff - Start)'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QB6.3.0
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2066'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Cycle time measuring on input 1'
+_NODE_ID: 0
+_IECIN: %IB6.3.0
+_IECOUT: %QB6.3.0
+_IECDIAG: %MB6.3.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '3'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.0.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2067'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Value in input 1'
+_NODE_ID: 1
+_IECIN: %IB6.3.1
+_IECOUT: %QB6.3.1
+_IECDIAG: %MB6.3.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '4'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t0'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.1.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2068'
+_INDEX_IN_PARENT: '3'
+_MODULE_NAME: 'Cycle time measuring on input 2'
+_NODE_ID: 2
+_IECIN: %IB6.3.2
+_IECOUT: %QB6.3.2
+_IECDIAG: %MB6.3.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '9'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.2.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2069'
+_INDEX_IN_PARENT: '4'
+_MODULE_NAME: 'Value in input 2'
+_NODE_ID: 3
+_IECIN: %IB6.3.3
+_IECOUT: %QB6.3.3
+_IECDIAG: %MB6.3.3
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '10'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t1'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.3.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2070'
+_INDEX_IN_PARENT: '5'
+_MODULE_NAME: 'Cycle time measuring on input 3'
+_NODE_ID: 4
+_IECIN: %IB6.3.4
+_IECOUT: %QB6.3.4
+_IECDIAG: %MB6.3.4
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '15'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.4.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2071'
+_INDEX_IN_PARENT: '6'
+_MODULE_NAME: 'Value in input 3'
+_NODE_ID: 5
+_IECIN: %IB6.3.5
+_IECOUT: %QB6.3.5
+_IECDIAG: %MB6.3.5
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t2'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.5.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2072'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'Cycle time measuring on input 4'
+_NODE_ID: 6
+_IECIN: %IB6.3.6
+_IECOUT: %QB6.3.6
+_IECDIAG: %MB6.3.6
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '21'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.6.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2073'
+_INDEX_IN_PARENT: '8'
+_MODULE_NAME: 'Value in input 4'
+_NODE_ID: 7
+_IECIN: %IB6.3.7
+_IECOUT: %QB6.3.7
+_IECDIAG: %MB6.3.7
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '22'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t3'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.7.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2074'
+_INDEX_IN_PARENT: '9'
+_MODULE_NAME: 'Cycle time measuring on input 5'
+_NODE_ID: 8
+_IECIN: %IB6.3.8
+_IECOUT: %QB6.3.8
+_IECDIAG: %MB6.3.8
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '27'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.8.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2075'
+_INDEX_IN_PARENT: '10'
+_MODULE_NAME: 'Value in input 5'
+_NODE_ID: 9
+_IECIN: %IB6.3.9
+_IECOUT: %QB6.3.9
+_IECDIAG: %MB6.3.9
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '28'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t4'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.9.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2076'
+_INDEX_IN_PARENT: '11'
+_MODULE_NAME: 'Cycle time measuring on input 6'
+_NODE_ID: 10
+_IECIN: %IB6.3.10
+_IECOUT: %QB6.3.10
+_IECDIAG: %MB6.3.10
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '33'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.10.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2077'
+_INDEX_IN_PARENT: '12'
+_MODULE_NAME: 'Value in input 6'
+_NODE_ID: 11
+_IECIN: %IB6.3.11
+_IECOUT: %QB6.3.11
+_IECDIAG: %MB6.3.11
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '34'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t5'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.11.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2078'
+_INDEX_IN_PARENT: '13'
+_MODULE_NAME: 'Cycle time measuring on input 7'
+_NODE_ID: 12
+_IECIN: %IB6.3.12
+_IECOUT: %QB6.3.12
+_IECDIAG: %MB6.3.12
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '39'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.12.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2079'
+_INDEX_IN_PARENT: '14'
+_MODULE_NAME: 'Value in input 7'
+_NODE_ID: 13
+_IECIN: %IB6.3.13
+_IECOUT: %QB6.3.13
+_IECDIAG: %MB6.3.13
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '40'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t6'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.13.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2080'
+_INDEX_IN_PARENT: '15'
+_MODULE_NAME: 'Cycle time measuring on input 8'
+_NODE_ID: 14
+_IECIN: %IB6.3.14
+_IECOUT: %QB6.3.14
+_IECDIAG: %MB6.3.14
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '45'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW6.3.14.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2081'
+_INDEX_IN_PARENT: '16'
+_MODULE_NAME: 'Value in input 8'
+_NODE_ID: 15
+_IECIN: %IB6.3.15
+_IECOUT: %QB6.3.15
+_IECDIAG: %MB6.3.15
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '46'
+_PARAM 2: 0, 'Command Read (03)'
+_PARAM 7: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'FloatInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'mva2_t7'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %ID6.3.15.0
+_END_CHANNEL
+_END_MODULE
+_END_MODULE
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'MODBUS_MASTER_ID450'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'ModBus (Master)'
+_NODE_ID: 7
+_IECIN: %IB7
+_IECOUT: %QB7
+_IECDIAG: %MB7
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: 'Z033 control panel'
+
+_PARAMETER
+_PARAM 1: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'DWordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Last address'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QD7.0
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '2'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Last error'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.1
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'COM3_USART'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'RS-485-2'
+_NODE_ID: 0
+_IECIN: %IB7.0
+_IECOUT: %QB7.0
+_IECDIAG: %MB7.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '9600'
+_PARAM 2: 0, 'NO PARITY CHECK'
+_PARAM 3: 0, '8 bits'
+_PARAM 4: 0, 'One stop bit'
+_PARAM 5: 0, 'RS485'
+_PARAM 6: 0, 'RTU'
+_PARAM 7: 0, '0'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2000'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Universal Modbus device'
+_NODE_ID: 1
+_IECIN: %IB7.1
+_IECOUT: %QB7.1
+_IECDIAG: %MB7.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: 'Z033 Output'
+
+_PARAMETER
+_PARAM 1: 0, '10:0:0:223'
+_PARAM 2: 0, '150'
+_PARAM 3: 0, '502'
+_PARAM 4: 0, 'Serial'
+_PARAM 5: 0, '16'
+_PARAM 6: 0, 'By value change'
+_PARAM 7: 0, '200'
+_PARAM 8: 0, 'No'
+_PARAM 9: 0, '0'
+_PARAM 10: 0, 'Trace_mode'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ComChannel'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_special_cmd'
+_COMMENT: 'Command (0xff - Start)'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QB7.1.0
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 0
+_IECIN: %IB7.1.0
+_IECOUT: %QB7.1.0
+_IECDIAG: %MB7.1.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#116'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_hum116_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.1.0.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 1
+_IECIN: %IB7.1.1
+_IECOUT: %QB7.1.1
+_IECDIAG: %MB7.1.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#115'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_temperature115_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.1.1.0
+_END_CHANNEL
+_END_MODULE
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2000'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Universal Modbus device'
+_NODE_ID: 2
+_IECIN: %IB7.2
+_IECOUT: %QB7.2
+_IECDIAG: %MB7.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: 'Z033 panel'
+
+_PARAMETER
+_PARAM 1: 0, '10:0:0:223'
+_PARAM 2: 0, '150'
+_PARAM 3: 0, '502'
+_PARAM 4: 0, 'Serial'
+_PARAM 5: 0, '16'
+_PARAM 6: 0, 'Both'
+_PARAM 7: 0, '200'
+_PARAM 8: 0, 'No'
+_PARAM 9: 0, '0'
+_PARAM 10: 0, 'Trace_mode'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ComChannel'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_cmd'
+_COMMENT: 'Command (0xff - Start)'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QB7.2.0
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 0
+_IECIN: %IB7.2.0
+_IECOUT: %QB7.2.0
+_IECDIAG: %MB7.2.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#112'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_Setup112'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.0.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 1
+_IECIN: %IB7.2.1
+_IECOUT: %QB7.2.1
+_IECDIAG: %MB7.2.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#113'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_Setup113'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.1.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 2
+_IECIN: %IB7.2.2
+_IECOUT: %QB7.2.2
+_IECDIAG: %MB7.2.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#114'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_mode114_in'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW7.2.2.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 3
+_IECIN: %IB7.2.3
+_IECOUT: %QB7.2.3
+_IECDIAG: %MB7.2.3
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#114'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_mode114_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.3.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 4
+_IECIN: %IB7.2.4
+_IECOUT: %QB7.2.4
+_IECDIAG: %MB7.2.4
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#115'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_temperature115_in'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW7.2.4.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 5
+_IECIN: %IB7.2.5
+_IECOUT: %QB7.2.5
+_IECDIAG: %MB7.2.5
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#116'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_hum116_in'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW7.2.5.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 6
+_IECIN: %IB7.2.6
+_IECOUT: %QB7.2.6
+_IECDIAG: %MB7.2.6
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#117'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_room_temp117_in'
+_COMMENT: 'temp measured by panel, no set'
+_CHANNEL_MODE: 'I'
+_IECADR: %IW7.2.6.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 7
+_IECIN: %IB7.2.7
+_IECOUT: %QB7.2.7
+_IECDIAG: %MB7.2.7
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#118'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_floor_temp118_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.7.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 8
+_IECIN: %IB7.2.8
+_IECOUT: %QB7.2.8
+_IECDIAG: %MB7.2.8
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#119'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_outdoor_hum119_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.8.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 9
+_IECIN: %IB7.2.9
+_IECOUT: %QB7.2.9
+_IECDIAG: %MB7.2.9
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#11A'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_room_hum11a_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.9.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 10
+_IECIN: %IB7.2.10
+_IECOUT: %QB7.2.10
+_IECDIAG: %MB7.2.10
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#11B'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_air_hum11b_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.10.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 11
+_IECIN: %IB7.2.11
+_IECOUT: %QB7.2.11
+_IECDIAG: %MB7.2.11
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#11c'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_errmode11c_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.11.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 12
+_IECIN: %IB7.2.12
+_IECOUT: %QB7.2.12
+_IECDIAG: %MB7.2.12
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#11D'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_clock11d_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.12.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 13
+_IECIN: %IB7.2.13
+_IECOUT: %QB7.2.13
+_IECDIAG: %MB7.2.13
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#11C'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_errmode11c_in'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW7.2.13.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2004'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register output module'
+_NODE_ID: 14
+_IECIN: %IB7.2.14
+_IECOUT: %QB7.2.14
+_IECDIAG: %MB7.2.14
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '16#117'
+_PARAM 2: 0, 'Preset singl register (0x06)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'z033_air_temp_117_out'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW7.2.14.0
+_END_CHANNEL
+_END_MODULE
+_END_MODULE
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID003'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'Button'
+_NODE_ID: 8
+_IECIN: %IB8
+_IECOUT: %QB8
+_IECDIAG: %MB8
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_CHANNEL
+_SECTION_NAME: 'BitInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Button Start/Stop'
+_CHANNEL_MODE: 'I'
+_IECADR: %IX8.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'MODBUS_ID400'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'ModBus (slave)'
+_NODE_ID: 9
+_IECIN: %IB9
+_IECOUT: %QB9
+_IECDIAG: %MB9
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: 'Uplink to OpenHUB'
+
+_PARAMETER
+_PARAM 1: 0, '1'
+_PARAM 2: 0, 'No'
+_END_PARAMETER
+
+_MODULE: '3S'
+_SECTION_NAME: 'MODBUS_ID302'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Modbus'
+_NODE_ID: 0
+_IECIN: %IB9.0
+_IECOUT: %QB9.0
+_IECDIAG: %MB9.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_MODULE: '3S'
+_SECTION_NAME: 'TCP_ID221'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'TCP'
+_NODE_ID: 0
+_IECIN: %IB9.0.0
+_IECOUT: %QB9.0.0
+_IECDIAG: %MB9.0.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '502'
+_PARAM 2: 0, 'No'
+_END_PARAMETER
+_END_MODULE
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'Register'
+_INDEX_IN_PARENT: '3'
+_MODULE_NAME: '2 byte'
+_NODE_ID: 1
+_IECIN: %IB9.1
+_IECOUT: %QB9.1
+_IECDIAG: %MB9.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'Uplink_Target_Temp'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW9.1.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'Register'
+_INDEX_IN_PARENT: '3'
+_MODULE_NAME: '2 byte'
+_NODE_ID: 2
+_IECIN: %IB9.2
+_IECOUT: %QB9.2
+_IECDIAG: %MB9.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'Uplink_Target_Humid'
+_COMMENT: ''
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW9.2.0
+_END_CHANNEL
+_END_MODULE
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'MODBUS_MASTER_ID450'
+_INDEX_IN_PARENT: '7'
+_MODULE_NAME: 'ModBus (Master)'
+_NODE_ID: 10
+_IECIN: %IB10
+_IECOUT: %QB10
+_IECDIAG: %MB10
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: 'To DZ1W OneWire server'
+
+_PARAMETER
+_PARAM 1: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'DWordOutput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Last address'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QD10.0
+_END_CHANNEL
+
+_CHANNEL
+_SECTION_NAME: 'WordOutput'
+_INDEX_IN_PARENT: '2'
+_SYMBOLIC_NAME: ''
+_COMMENT: 'Last error'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QW10.1
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'DEBUG_USART'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Debug RS-232'
+_NODE_ID: 0
+_IECIN: %IB10.0
+_IECOUT: %QB10.0
+_IECDIAG: %MB10.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '11520'
+_PARAM 2: 0, 'NO PARITY CHECK'
+_PARAM 3: 0, '8 bits'
+_PARAM 4: 0, 'One stop bit'
+_PARAM 5: 0, 'RS232'
+_PARAM 6: 0, 'ASCII'
+_PARAM 7: 0, '0'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2000'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Universal Modbus device'
+_NODE_ID: 1
+_IECIN: %IB10.1
+_IECOUT: %QB10.1
+_IECDIAG: %MB10.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: 'DZ1W'
+
+_PARAMETER
+_PARAM 1: 0, '192:168:88:130'
+_PARAM 2: 0, '150'
+_PARAM 3: 0, '502'
+_PARAM 4: 0, 'TCP'
+_PARAM 5: 0, '1'
+_PARAM 6: 0, 'By poll time'
+_PARAM 7: 0, '2000'
+_PARAM 8: 0, 'No'
+_PARAM 9: 0, '0'
+_PARAM 10: 0, 'Trace_mode'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'ComChannel'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'dz1w_cmd'
+_COMMENT: 'Command (0xff - Start)'
+_CHANNEL_MODE: 'Q'
+_IECADR: %QB10.1.0
+_END_CHANNEL
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 0
+_IECIN: %IB10.1.0
+_IECOUT: %QB10.1.0
+_IECDIAG: %MB10.1.0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1024'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id0'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.0.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 1
+_IECIN: %IB10.1.1
+_IECOUT: %QB10.1.1
+_IECDIAG: %MB10.1.1
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1025'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id1'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.1.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 2
+_IECIN: %IB10.1.2
+_IECOUT: %QB10.1.2
+_IECDIAG: %MB10.1.2
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1026'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id2'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.2.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 3
+_IECIN: %IB10.1.3
+_IECOUT: %QB10.1.3
+_IECDIAG: %MB10.1.3
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1027'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id3'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.3.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 4
+_IECIN: %IB10.1.4
+_IECOUT: %QB10.1.4
+_IECDIAG: %MB10.1.4
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1028'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id4'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.4.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 5
+_IECIN: %IB10.1.5
+_IECOUT: %QB10.1.5
+_IECDIAG: %MB10.1.5
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1029'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id5'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.5.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 6
+_IECIN: %IB10.1.6
+_IECOUT: %QB10.1.6
+_IECDIAG: %MB10.1.6
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1030'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id6'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.6.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 7
+_IECIN: %IB10.1.7
+_IECOUT: %QB10.1.7
+_IECDIAG: %MB10.1.7
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1031'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id7'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.7.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 8
+_IECIN: %IB10.1.8
+_IECOUT: %QB10.1.8
+_IECDIAG: %MB10.1.8
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1032'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id8'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.8.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 9
+_IECIN: %IB10.1.9
+_IECOUT: %QB10.1.9
+_IECDIAG: %MB10.1.9
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1033'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id9'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.9.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 10
+_IECIN: %IB10.1.10
+_IECOUT: %QB10.1.10
+_IECDIAG: %MB10.1.10
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '1034'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'sensor_id10'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.10.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 11
+_IECIN: %IB10.1.11
+_IECOUT: %QB10.1.11
+_IECDIAG: %MB10.1.11
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '2048'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'seq_sensor_0'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.11.0
+_END_CHANNEL
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'ID2003'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'Register input module'
+_NODE_ID: 12
+_IECIN: %IB10.1.12
+_IECOUT: %QB10.1.12
+_IECDIAG: %MB10.1.12
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_PARAMETER
+_PARAM 1: 0, '2049'
+_PARAM 2: 0, 'Read holding Registers  (0x03)'
+_PARAM 8: 0, 'No'
+_END_PARAMETER
+
+_CHANNEL
+_SECTION_NAME: 'WordInput'
+_INDEX_IN_PARENT: '1'
+_SYMBOLIC_NAME: 'seq_sensor_1'
+_COMMENT: ''
+_CHANNEL_MODE: 'I'
+_IECADR: %IW10.1.12.0
+_END_CHANNEL
+_END_MODULE
+_END_MODULE
+_END_MODULE
+_END_MODULE
+PLC_END
+
+
+RESOURCE
+
+TASK OnceASecond (PRIORITY := 1, INTERVAL := T#1s0ms);
+ONCE_A_SECOND_PRG();
+{Additional_info : 1,0,0,0,1,4294967295}
+END_TASK
+
+TASK HTTP_POLLER (PRIORITY := 5, INTERVAL := T#1s0ms);
+TCP_POLL();
+{Additional_info : 1,0,0,0,1,4294967295}
+END_TASK
+
+TASK Main (PRIORITY := 2, INTERVAL := T#50ms);
+PLC_PRG();
+{Additional_info : 1,0,0,0,1,4294967295}
+END_TASK
+
+TASK MQTT (PRIORITY := 4, INTERVAL := T#1s0ms);
+MQTT_MAIN();
+{Additional_info : 1,0,0,0,1,4294967295}
+END_TASK
+{event_task : 'start','Called when program starts','','FUNCTION systemevent: DWORD$R$NVAR_INPUT$R$N$TdwEvent: INT;$R$N$TdwFilter: INT;$R$N$TdwOwner: INT;$R$NEND_VAR$R$N'}{event_task_info : 0,1,27833}
+{event_task : 'stop','Called when program stops','','FUNCTION systemevent: DWORD$R$NVAR_INPUT$R$N$TdwEvent: INT;$R$N$TdwFilter: INT;$R$N$TdwOwner: INT;$R$NEND_VAR$R$N'}{event_task_info : 0,2,27833}
+{event_task : 'before_reset','Called before reset takes place','','FUNCTION systemevent: DWORD$R$NVAR_INPUT$R$N$TdwEvent: INT;$R$N$TdwFilter: INT;$R$N$TdwOwner: INT;$R$NEND_VAR$R$N'}{event_task_info : 0,3,27833}
+{event_task : 'after_reset','Called after reset took place','','FUNCTION systemevent: DWORD$R$NVAR_INPUT$R$N$TdwEvent: INT;$R$N$TdwFilter: INT;$R$N$TdwOwner: INT;$R$NEND_VAR$R$N'}{event_task_info : 0,4,27833}
+{event_task : 'debug_loop','Debug loop at breakpoint','','FUNCTION systemevent: DWORD$R$NVAR_INPUT$R$N$TdwEvent: INT;$R$N$TdwFilter: INT;$R$N$TdwOwner: INT;$R$NEND_VAR$R$N'}{event_task_info : 0,31,27833}
+{event_task : 'Timer','Timer(20mks)(only in PLC110)','','FUNCTION systemevent: DWORD$R$NVAR_INPUT$R$N$TdwEvent: INT;$R$N$TdwFilter: INT;$R$N$TdwOwner: INT;$R$NEND_VAR$R$N'}{event_task_info : 0,1000,27833}
+
+END_RESOURCE
+
+
+_ALARMCONFIG
+_ALARMCONFIGNEXTTEXTID : 10002
+_ALARMCONFIGFORMATS : 'HH$':$'mm$':$'ss','dd$'-$'MM$'-$'yyyy'
+_ALARMCLASSLIST : 1
+_ALARMCLASSID : 0
+_ALARMCLASSACKTYPE : 0
+_ALARMCLASSNAME : 'DEFAULT'
+_ALARMCLASSDESCRIPTION : ''
+_ALARMCLASSBGCOLORS : 16777215,16777215,16777215
+_ALARMCLASSTEXTCOLORS : 3394560,255,16711680
+_ALARMCLASSBITMAPS : '','',''
+_ALARMACTIONLIST : 0
+(* @ALARMCLASSRESETCOLORS := '_ALARMCLASSRESETCOLORS: 33023,16777215' *)
+(* @ALARMCLASSRESETBITMAP := '_ALARMCLASSRESETBITMAP: $'$'' *)
+_ALARMGROUPLISTNAME : 'Система'
+_ALARMGROUPPATH : 'Система'
+_ALARMGROUPLIST : 0
+_VISUALSETTINGSFLAGS : 0,0,0,0
+_VISUALSETTINGSFLAGS : '','',''
+_VISUALSETTINGSDYNTEXTFILECOUNT : 0
+
+(* @ALARMCONFIGFLAGS := '_ALARMCONFIGFLAGS: 4' *)
+(* @ALARMCONFIGGLOBALDB_STR := '_ALARMCONFIGGLOBALDB_STRINGS: $'$',$'$',$'$',$'$'' *)
+(* @ALARMCONFIGGLOBALDB_NUM := '_ALARMCONFIGGLOBALDB_NUMBERS: 0,0' *)
+_END_ALARMCONFIG
+
+
+LIBRARY
+ANALYZATION.LIB 5.10.99 08:05:06
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 2
+AnalyzeExpression: 0
+AppendErrorString: 0
+NumOfGVLs: 1
+Globale_Variablen: 0
+END_LIBRARY
+
+LIBRARY
+G:\owen\dz_smarthome_lib.lib 9.5.15 16:30:44
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 3
+HTTP_CONNECT: 2048
+HTTP_SEND_REAL: 2048
+HTTP_SEND_VAR: 2048
+NumOfGVLs: 1
+Global_Variables: 2048
+END_LIBRARY
+
+LIBRARY
+G:\owen\lib\oscat_basic_333.lib 19.12.17 20:17:33
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 545
+_ARRAY_ABS: 2048
+_ARRAY_ADD: 2048
+_ARRAY_INIT: 2048
+_ARRAY_MEDIAN: 2048
+_ARRAY_MUL: 2048
+_ARRAY_SHUFFLE: 2048
+_ARRAY_SORT: 2048
+_BUFFER_CLEAR: 2048
+_BUFFER_INIT: 2048
+_BUFFER_INSERT: 2048
+_BUFFER_UPPERCASE: 2048
+_RMP_B: 2048
+_RMP_NEXT: 2048
+_RMP_W: 2048
+_STRING_TO_BUFFER: 2048
+A_TRIG: 2048
+ACOSH: 2048
+ACOTH: 2048
+AGDF: 2048
+AIN: 2048
+AIN1: 2048
+ALARM_2: 2048
+AOUT: 2048
+AOUT1: 2048
+ARRAY_AVG: 2048
+ARRAY_GAV: 2048
+ARRAY_HAV: 2048
+ARRAY_MAX: 2048
+ARRAY_MIN: 2048
+ARRAY_SDV: 2048
+ARRAY_SPR: 2048
+ARRAY_SUM: 2048
+ARRAY_TREND: 2048
+ARRAY_VAR: 2048
+ASINH: 2048
+ASTRO: 2048
+ATAN2: 2048
+ATANH: 2048
+B_TRIG: 2048
+BAND_B: 2048
+BAR_GRAPH: 2048
+BCDC_TO_INT: 2048
+BETA: 2048
+BFT_TO_MS: 2048
+BIN_TO_BYTE: 2048
+BIN_TO_DWORD: 2048
+BINOM: 2048
+BIT_COUNT: 2048
+BIT_LOAD_B: 2048
+BIT_LOAD_B2: 2048
+BIT_LOAD_DW: 2048
+BIT_LOAD_DW2: 2048
+BIT_LOAD_W: 2048
+BIT_LOAD_W2: 2048
+BIT_OF_DWORD: 2048
+BIT_TOGGLE_B: 2048
+BIT_TOGGLE_DW: 2048
+BIT_TOGGLE_W: 2048
+BUFFER_COMP: 2048
+BUFFER_SEARCH: 2048
+BUFFER_TO_STRING: 2048
+BYTE_OF_BIT: 2048
+BYTE_OF_DWORD: 2048
+BYTE_TO_BITS: 2048
+BYTE_TO_GRAY: 2048
+BYTE_TO_RANGE: 2048
+BYTE_TO_STRB: 2048
+BYTE_TO_STRH: 2048
+C_TO_F: 2048
+C_TO_K: 2048
+CABS: 2048
+CACOS: 2048
+CACOSH: 2048
+CADD: 2048
+CALENDAR_CALC: 2048
+CALIBRATE: 2048
+CAPITALIZE: 2048
+CARG: 2048
+CASIN: 2048
+CASINH: 2048
+CATAN: 2048
+CATANH: 2048
+CAUCHY: 2048
+CAUCHYCD: 2048
+CCON: 2048
+CCOS: 2048
+CCOSH: 2048
+CDIV: 2048
+CEIL: 2048
+CEIL2: 2048
+CEXP: 2048
+CHARCODE: 2048
+CHARNAME: 2048
+CHECK_PARITY: 2048
+CHK_REAL: 2048
+CHR_TO_STRING: 2048
+CINV: 2048
+CIRCLE_A: 2048
+CIRCLE_C: 2048
+CIRCLE_SEG: 2048
+CLEAN: 2048
+CLICK_CNT: 2048
+CLICK_DEC: 2048
+CLK_DIV: 2048
+CLK_N: 2048
+CLK_PRG: 2048
+CLK_PULSE: 2048
+CLOG: 2048
+CMP: 2048
+CMUL: 2048
+CODE: 2048
+CONE_V: 2048
+CONTROL_SET1: 2048
+CONTROL_SET2: 2048
+COSH: 2048
+COTH: 2048
+COUNT_BR: 2048
+COUNT_CHAR: 2048
+COUNT_DR: 2048
+COUNT_SUBSTRING: 2048
+CPOL: 2048
+CPOW: 2048
+CRC_GEN: 2048
+CSET: 2048
+CSIN: 2048
+CSINH: 2048
+CSQRT: 2048
+CSUB: 2048
+CTAN: 2048
+CTANH: 2048
+CTRL_IN: 2048
+CTRL_OUT: 2048
+CTRL_PI: 2048
+CTRL_PID: 2048
+CTRL_PWM: 2048
+CYCLE_4: 2048
+CYCLE_TIME: 2048
+D_TRIG: 2048
+D_TRUNC: 2048
+DATE_ADD: 2048
+DAY_OF_DATE: 2048
+DAY_OF_MONTH: 2048
+DAY_OF_WEEK: 2048
+DAY_OF_YEAR: 2048
+DAY_TO_TIME: 2048
+DAYS_DELTA: 2048
+DAYS_IN_MONTH: 2048
+DAYS_IN_YEAR: 2048
+DCF77: 2048
+DEAD_BAND: 2048
+DEAD_BAND_A: 2048
+DEAD_ZONE: 2048
+DEAD_ZONE2: 2048
+DEC1: 2048
+DEC_2: 2048
+DEC_4: 2048
+DEC_8: 2048
+DEC_TO_BYTE: 2048
+DEC_TO_DWORD: 2048
+DEC_TO_INT: 2048
+DEG: 2048
+DEG_TO_DIR: 2048
+DEL_CHARS: 2048
+DELAY: 2048
+DELAY_4: 2048
+DIFFER: 2048
+DIR_TO_DEG: 2048
+DRIVER_1: 2048
+DRIVER_4: 2048
+DRIVER_4C: 2048
+DST: 2048
+DT2_TO_SDT: 2048
+DT_SIMU: 2048
+DT_TO_SDT: 2048
+DT_TO_STRF: 2048
+DW_TO_REAL: 2048
+DWORD_OF_BYTE: 2048
+DWORD_OF_WORD: 2048
+DWORD_TO_STRB: 2048
+DWORD_TO_STRF: 2048
+DWORD_TO_STRH: 2048
+EASTER: 2048
+ELLIPSE_A: 2048
+ELLIPSE_C: 2048
+ENERGY: 2048
+ERF: 2048
+ERFC: 2048
+ESR_COLLECT: 2048
+ESR_MON_B8: 2048
+ESR_MON_R4: 2048
+ESR_MON_X8: 2048
+EVEN: 2048
+EVENTS: 2048
+EXEC: 2048
+EXP10: 2048
+EXPN: 2048
+F_LIN: 2048
+F_LIN2: 2048
+F_POLY: 2048
+F_POWER: 2048
+F_QUAD: 2048
+F_TO_C: 2048
+F_TO_OM: 2048
+F_TO_PT: 2048
+FACT: 2048
+FADE: 2048
+FF_D2E: 2048
+FF_D4E: 2048
+FF_DRE: 2048
+FF_JKE: 2048
+FF_RSE: 2048
+FIB: 2048
+FIFO_16: 2048
+FIFO_32: 2048
+FILL: 2048
+FILTER_DW: 2048
+FILTER_I: 2048
+FILTER_MAV_DW: 2048
+FILTER_MAV_W: 2048
+FILTER_W: 2048
+FILTER_WAV: 2048
+FIND_CHAR: 2048
+FIND_CTRL: 2048
+FIND_NONUM: 2048
+FIND_NUM: 2048
+FINDB: 2048
+FINDB_NONUM: 2048
+FINDB_NUM: 2048
+FINDP: 2048
+FIX: 2048
+FLOAT_TO_REAL: 2048
+FLOOR: 2048
+FLOOR2: 2048
+FLOW_CONTROL: 2048
+FLOW_METER: 2048
+FRACT: 2048
+FRMP_B: 2048
+FSTRING_TO_BYTE: 2048
+FSTRING_TO_DT: 2048
+FSTRING_TO_DWORD: 2048
+FSTRING_TO_MONTH: 2048
+FSTRING_TO_WEEK: 2048
+FSTRING_TO_WEEKDAY: 2048
+FT_AVG: 2048
+FT_DERIV: 2048
+FT_IMP: 2048
+FT_INT: 2048
+FT_INT2: 2048
+FT_MIN_MAX: 2048
+FT_PD: 2048
+FT_PDT1: 2048
+FT_PI: 2048
+FT_PID: 2048
+FT_PIDW: 2048
+FT_PIDWL: 2048
+FT_PIW: 2048
+FT_PIWL: 2048
+FT_Profile: 2048
+FT_PT1: 2048
+FT_PT2: 2048
+FT_RMP: 2048
+FT_TN16: 2048
+FT_TN64: 2048
+FT_TN8: 2048
+GAMMA: 2048
+GAUSS: 2048
+GAUSSCD: 2048
+GCD: 2048
+GDF: 2048
+GEN_BIT: 2048
+GEN_PULSE: 2048
+GEN_PW2: 2048
+GEN_RDM: 2048
+GEN_RDT: 2048
+GEN_RMP: 2048
+GEN_SIN: 2048
+GEN_SQ: 2048
+GEN_SQR: 2048
+GEO_TO_DEG: 2048
+GOLD: 2048
+GRAY_TO_BYTE: 2048
+HEX_TO_BYTE: 2048
+HEX_TO_DWORD: 2048
+HOLIDAY: 2048
+HOUR: 2048
+HOUR_OF_DT: 2048
+HOUR_TO_TIME: 2048
+HOUR_TO_TOD: 2048
+HYPOT: 2048
+HYST: 2048
+HYST_1: 2048
+HYST_2: 2048
+HYST_3: 2048
+INC: 2048
+INC1: 2048
+INC2: 2048
+INC_DEC: 2048
+INT_TO_BCDC: 2048
+INTEGRATE: 2048
+INTERLOCK: 2048
+INTERLOCK_4: 2048
+INV: 2048
+IS_ALNUM: 2048
+IS_ALPHA: 2048
+IS_CC: 2048
+IS_CTRL: 2048
+IS_HEX: 2048
+IS_LOWER: 2048
+IS_NCC: 2048
+IS_NUM: 2048
+IS_SORTED: 2048
+IS_UPPER: 2048
+ISC_ALPHA: 2048
+ISC_CTRL: 2048
+ISC_HEX: 2048
+ISC_LOWER: 2048
+ISC_NUM: 2048
+ISC_UPPER: 2048
+JD2000: 2048
+K_TO_C: 2048
+KMH_TO_MS: 2048
+LAMBERT_W: 2048
+LANGEVIN: 2048
+LEAP_DAY: 2048
+LEAP_OF_DATE: 2048
+LEAP_YEAR: 2048
+LENGTH: 2048
+LINEAR_INT: 2048
+LIST_ADD: 2048
+LIST_CLEAN: 2048
+LIST_GET: 2048
+LIST_INSERT: 2048
+LIST_LEN: 2048
+LIST_NEXT: 2048
+LIST_RETRIEVE: 2048
+LIST_RETRIEVE_LAST: 2048
+LOWERCASE: 2048
+LTCH: 2048
+LTCH_4: 2048
+LTIME_TO_UTC: 2048
+M_D: 2048
+M_T: 2048
+M_TX: 2048
+MANUAL: 2048
+MANUAL_1: 2048
+MANUAL_2: 2048
+MANUAL_4: 2048
+MATRIX: 2048
+MAX3: 2048
+MESSAGE_4R: 2048
+MESSAGE_8: 2048
+METER: 2048
+METER_STAT: 2048
+MID3: 2048
+MIN3: 2048
+MINUTE: 2048
+MINUTE_OF_DT: 2048
+MINUTE_TO_TIME: 2048
+MIRROR: 2048
+MIX: 2048
+MODR: 2048
+MONTH_BEGIN: 2048
+MONTH_END: 2048
+MONTH_OF_DATE: 2048
+MONTH_TO_STRING: 2048
+MS_TO_BFT: 2048
+MS_TO_KMH: 2048
+MUL_ADD: 2048
+MULTI_IN: 2048
+MULTIME: 2048
+MUX_2: 2048
+MUX_4: 2048
+MUX_R2: 2048
+MUX_R4: 2048
+NEGX: 2048
+OCT_TO_BYTE: 2048
+OCT_TO_DWORD: 2048
+OFFSET: 2048
+OFFSET2: 2048
+OM_TO_F: 2048
+ONTIME: 2048
+OSCAT_VERSION: 2048
+OVERRIDE: 2048
+PARITY: 2048
+PARSET: 2048
+PARSET2: 2048
+PERIOD: 2048
+PERIOD2: 2048
+PIN_CODE: 2048
+POLYNOM_INT: 2048
+PRESSURE: 2048
+PT_TO_F: 2048
+PWM_DC: 2048
+PWM_PW: 2048
+R2_ABS: 2048
+R2_ADD: 2048
+R2_ADD2: 2048
+R2_MUL: 2048
+R2_SET: 2048
+RAD: 2048
+RANGE_TO_BYTE: 2048
+RANGE_TO_WORD: 2048
+RDM: 2048
+RDM2: 2048
+RDMDW: 2048
+REAL_TO_DW: 2048
+REAL_TO_FRAC: 2048
+REAL_TO_STRF: 2048
+REFLECT: 2048
+REFRACTION: 2048
+REPLACE_ALL: 2048
+REPLACE_CHARS: 2048
+REPLACE_UML: 2048
+RES_NI: 2048
+RES_NTC: 2048
+RES_PT: 2048
+RES_SI: 2048
+REVERSE: 2048
+RMP_B: 2048
+RMP_SOFT: 2048
+RMP_W: 2048
+RND: 2048
+ROUND: 2048
+RTC_2: 2048
+RTC_MS: 2048
+SCALE: 2048
+SCALE_B: 2048
+SCALE_B2: 2048
+SCALE_B4: 2048
+SCALE_B8: 2048
+SCALE_D: 2048
+SCALE_R: 2048
+SCALE_X2: 2048
+SCALE_X4: 2048
+SCALE_X8: 2048
+SCHEDULER: 2048
+SCHEDULER_2: 2048
+SDT_TO_DATE: 2048
+SDT_TO_DT: 2048
+SDT_TO_TOD: 2048
+SECOND: 2048
+SECOND_OF_DT: 2048
+SECOND_TO_TIME: 2048
+SEL2_OF_3: 2048
+SEL2_OF_3B: 2048
+SELECT_8: 2048
+SENSOR_INT: 2048
+SEQUENCE_4: 2048
+SEQUENCE_64: 2048
+SEQUENCE_8: 2048
+SET_DATE: 2048
+SET_DT: 2048
+SET_TOD: 2048
+SGN: 2048
+SH: 2048
+SH_1: 2048
+SH_2: 2048
+SH_T: 2048
+SHL1: 2048
+SHR1: 2048
+SHR_4E: 2048
+SHR_4UDE: 2048
+SHR_8PLE: 2048
+SHR_8UDE: 2048
+SIGMOID: 2048
+SIGN_I: 2048
+SIGN_R: 2048
+SIGNAL: 2048
+SIGNAL_4: 2048
+SINC: 2048
+SINH: 2048
+SPEED: 2048
+SPHERE_V: 2048
+SQRTN: 2048
+SRAMP: 2048
+STACK_16: 2048
+STACK_32: 2048
+STAIR: 2048
+STAIR2: 2048
+STATUS_TO_ESR: 2048
+STORE_8: 2048
+SUN_MIDDAY: 2048
+SUN_POS: 2048
+SUN_TIME: 2048
+SWAP_BYTE: 2048
+SWAP_BYTE2: 2048
+T_PLC_MS: 2048
+T_PLC_US: 2048
+TANC: 2048
+TANH: 2048
+TC_MS: 2048
+TC_S: 2048
+TC_US: 2048
+TEMP_NI: 2048
+TEMP_NTC: 2048
+TEMP_PT: 2048
+TEMP_SI: 2048
+TEMPERATURE: 2048
+TICKER: 2048
+TIMECHECK: 2048
+TMAX: 2048
+TMIN: 2048
+TO_LOWER: 2048
+TO_UML: 2048
+TO_UPPER: 2048
+TOF_1: 2048
+TOGGLE: 2048
+TONOF: 2048
+TP_1: 2048
+TP_1D: 2048
+TP_X: 2048
+TREND: 2048
+TREND_DW: 2048
+TRIANGLE_A: 2048
+TRIM: 2048
+TRIM1: 2048
+TRIME: 2048
+TUNE: 2048
+TUNE2: 2048
+UPPERCASE: 2048
+UTC_TO_LTIME: 2048
+V3_ABS: 2048
+V3_ADD: 2048
+V3_ANG: 2048
+V3_DPRO: 2048
+V3_NORM: 2048
+V3_NUL: 2048
+V3_PAR: 2048
+V3_REV: 2048
+V3_SMUL: 2048
+V3_SUB: 2048
+V3_XANG: 2048
+V3_XPRO: 2048
+V3_YANG: 2048
+V3_ZANG: 2048
+WEEKDAY_TO_STRING: 2048
+WINDOW: 2048
+WINDOW2: 2048
+WORD_OF_BYTE: 2048
+WORD_OF_DWORD: 2048
+WORD_TO_RANGE: 2048
+WORK_WEEK: 2048
+YEAR_BEGIN: 2048
+YEAR_END: 2048
+YEAR_OF_DATE: 2048
+NumOfGVLs: 3
+Constants: 4096
+Globale_Variablen: 4096
+Setup_Data: 4096
+END_LIBRARY
+
+LIBRARY
+IECSFC.LIB 13.4.06 14:51:28
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 1
+SFCActionControl: 0
+NumOfGVLs: 1
+Globale_Variablen: 0
+END_LIBRARY
+
+LIBRARY
+STANDARD.LIB 4.10.05 10:14:46
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 21
+CONCAT: 0
+CTD: 0
+CTU: 0
+CTUD: 0
+DELETE: 0
+F_TRIG: 0
+FIND: 0
+INSERT: 0
+LEFT: 0
+LEN: 0
+MID: 0
+R_TRIG: 0
+REPLACE: 0
+RIGHT: 0
+RS: 0
+RTC: 0
+SEMA: 0
+SR: 0
+TOF: 0
+TON: 0
+TP: 0
+NumOfGVLs: 0
+END_LIBRARY
+
+LIBRARY
+SysLibSockets.lib 20.2.06 13:31:14
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 25
+SysSockAccept: 0
+SysSockBind: 0
+SysSockClose: 0
+SysSockConnect: 0
+SysSockCreate: 0
+SysSockGetHostByName: 0
+SysSockGetHostName: 0
+SysSockGetLastError: 2048
+SysSockGetOption: 0
+SysSockHtonl: 0
+SysSockHtons: 0
+SysSockInetAddr: 0
+SysSockInetNtoa: 0
+SysSockIoctl: 0
+SysSockListen: 0
+SysSockNtohl: 0
+SysSockNtohs: 0
+SysSockRecv: 0
+SysSockRecvFrom: 0
+SysSockSelect: 0
+SysSockSend: 0
+SysSockSendTo: 0
+SysSockSetIPAddress: 0
+SysSockSetOption: 0
+SysSockShutdown: 0
+NumOfGVLs: 1
+Globale_Variablen: 0
+END_LIBRARY
+
+LIBRARY
+SysLibTime.lib 20.2.06 13:31:16
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 2
+CurTime: 0
+CurTimeEx: 0
+NumOfGVLs: 1
+Globale_Variablen: 0
+END_LIBRARY
+
+LIBRARY
+Util.lib 18.5.10 14:14:28
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 24
+BCD_TO_INT: 2048
+BLINK: 2048
+CHARCURVE: 2048
+DERIVATIVE: 2048
+EXTRACT: 2048
+FREQ_MEASURE: 2048
+GEN: 2048
+HYSTERESIS: 2048
+INT_TO_BCD: 2048
+INTEGRAL: 2048
+LIMITALARM: 2048
+LIN_TRAFO: 2048
+PACK: 2048
+PD: 2048
+PID: 2048
+PID_FIXCYCLE: 2048
+PUTBIT: 2048
+RAMP_INT: 2048
+RAMP_REAL: 2048
+STATISTICS_INT: 2048
+STATISTICS_REAL: 2048
+UNPACK: 2048
+VARIANCE: 2048
+Version_Util: 2048
+NumOfGVLs: 1
+Globale_Variablen: 0
+END_LIBRARY
+
+
+
+_WORKSPACE
+_GLOBALVISUALSETTINGS
+_VISUALSETTINGSFLAGS : 0,0,0,0
+_VISUALSETTINGSFLAGS : '','',''
+_VISUALSETTINGSDYNTEXTFILECOUNT : 0
+_VISUALBITMAPLISTCOUNT : 0
+_END_GLOBALVISUALSETTINGS
+_END_WORKSPACE

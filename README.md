@@ -8,9 +8,10 @@ But it can be even simpler and still be very usable.
 Broadcasting MQTT Publish packets with UDP is 
 
 * extremely simple
+* extremely fast, minimap possible latency
 * excludes broker (which is single point of failure)
 * lowers network traffic (each masurement is sent exactly once to all) 
-* reasonably reliable if we use it for sensors, which usually resend data every few seconds or so
+* reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)
 * can be supported even on a hardware which can not support TCP - in fact, only UDP send is required
 
 Here is a simplest MQTT/UDP implementation in some popular programming languages.
@@ -22,3 +23,8 @@ If you want to help a project, feel free to:
 * Extend your favorite broker or IoT system with MQTT/UDP support
 
 It is really easy.
+
+Reasons to avoid MQTT/UDP:
+
+* You need to transfer long payloads. On some systems size of UDP datagram is limited.
+* You need to know if datagram was delivered for sure. It is impossible with UDP.
