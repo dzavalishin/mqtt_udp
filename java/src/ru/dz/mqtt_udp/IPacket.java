@@ -66,7 +66,7 @@ public interface IPacket {
 	{
 	    int ret = 0;
 
-	    ret = (pkt[0] << 8) | pkt[1];
+	    ret = (pkt[1] << 8) | pkt[0];
 
 	    ret &= 0xFFFF;
 	    

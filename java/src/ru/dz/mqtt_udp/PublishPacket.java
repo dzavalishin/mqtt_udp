@@ -15,7 +15,9 @@ public class PublishPacket extends GenericPacket {
 
 		topic = new String(raw, 2, tlen, Charset.forName(MQTT_CHARSET));
 		
-		System.arraycopy( raw, tlen+2, value, 0, raw.length - tlen -2 );
+		int vlen = raw.length - tlen - 2;		
+		value = new byte[vlen];	
+		System.arraycopy( raw, tlen+2, value, 0, vlen );
 	}
 
 	
@@ -65,4 +67,10 @@ public class PublishPacket extends GenericPacket {
 		return IPacket.encodeTotalLength(pkt, IPacket.PT_PUBLISH);
 	}
 
+	@Override
+	public String toString() {		
+		return String.format("MQTT/UDP PUBLISH '%s'='%s'", getTopic(), getValueString() );
+	}
+	
+	
 }
