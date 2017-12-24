@@ -1,5 +1,5 @@
 '''
-Created on 24 дек. 2017 г.
+Created on 24.12.2017
 
 @author: dz
 '''
@@ -50,10 +50,10 @@ class bidirectional(object):
         
         
     def broker_to_udp(self, topic, value):
-        return self.bidir_lock(self, topic, value, "to_udp")
+        return self.bidir_lock( topic, value, "to_udp")
     
     def udp_to_broker(self, topic, value):
-        return self.bidir_lock(self, topic, value, "from_udp")
+        return self.bidir_lock( topic, value, "from_udp")
         
         
         

@@ -11,7 +11,9 @@ import sys
 sys.path.append('..')
 
 import threading
+import mqttudp.pub
 import mqttudp.sub
+import mqttudp.interlock
 import paho.mqtt.client as broker
 
 SUBSCRIBE_TOPIC="#"
@@ -29,9 +31,11 @@ def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
     client.subscribe(SUBSCRIBE_TOPIC)
 
 def on_message(client, userdata, msg):  # @UnusedVariable
-    print(msg.topic+" "+str(msg.payload))
     if ilock.broker_to_udp(msg.topic, msg.value):
         mqttudp.pub.send( udp_send_socket, msg.topic, msg.payload )
+        print("To UDP: "+msg.topic+"="+str(msg.payload))
+    else:
+        print("BLOCKED to UDP: "+msg.topic+"="+str(msg.payload))
 
 
 
@@ -49,9 +53,11 @@ def udp_listen_thread(bclient):
         if last.has_key(topic) and last[topic] == value:
             continue
         last[topic] = value
-        print topic+"="+value
         if ilock.udp_to_broker(topic, value):
             bclient.publish(topic, value, qos=0)
+            print "From UDP: "+topic+"="+value
+        else:
+            print "BLOCKED from UDP: "+topic+"="+value
 
 
 
@@ -63,8 +69,8 @@ if __name__ == "__main__":
     bclient.connect(MQTT_BROKER_HOST, 1883, 60)
     print("connected", bclient)
 
-    blt = threading.Thread(target=broker_listen_thread, args=(bclient))
-    ult = threading.Thread(target=udp_listen_thread, args=(bclient))
+    blt = threading.Thread(target=broker_listen_thread, args=(bclient,))
+    ult = threading.Thread(target=udp_listen_thread, args=(bclient,))
 
     blt.start()
     ult.start()
