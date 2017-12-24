@@ -5,7 +5,7 @@ import defs
 
 # simplest entry point, but recreates socket every time
 
-def send(topic, payload=b''):
+def send_once(topic, payload=b''):
     if isinstance(topic, unicode):
         topic = topic.encode('utf-8')
 

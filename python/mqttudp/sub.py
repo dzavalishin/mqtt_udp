@@ -1,12 +1,10 @@
 #!/bin/python
 
-import struct
+#import struct
 import socket
 
 import defs
 
-#BIND_IP = "127.0.0.1"
-#BIND_IP = "255.255.255.255"
 BIND_IP = "0.0.0.0"
 #BIND_IP = socket.INADDR_ANY
 
@@ -42,16 +40,17 @@ def parse_packet(pkt):
         
     total_len, pkt = unpack_remaining_length(pkt[1:])
 
-    #topic_len = struct.unpack("!H",pkt[:2])
-    #topic_len = 0
-    topic_len = (ord(pkt[1]) & 0xFF) | ((ord(pkt[0]) << 8) & 0xFF)
-    
-    topic = pkt[2:topic_len+2].encode('UTF-8')
-    
+    topic_len = (ord(pkt[1]) & 0xFF) | ((ord(pkt[0]) << 8) & 0xFF)   
+    topic = pkt[2:topic_len+2].encode('UTF-8')    
     value = pkt[topic_len+2:].encode('UTF-8')
     
-    print topic+"="+value
+    #TODO use total_len
     
-s = make_recv_socket()
-pkt = recv_udp_packet(s)    
-parse_packet(pkt)
+    return topic,value
+    
+if __name__ == "__main__":
+    s = make_recv_socket()
+    while True:
+        pkt = recv_udp_packet(s)    
+        topic,value = parse_packet(pkt)
+        print topic+"="+value
