@@ -42,7 +42,7 @@ public class Main extends Application {
 
 			// setting the stage
 			primaryStage.setScene( scene );
-			primaryStage.setTitle( "Hello World Demo" );
+			primaryStage.setTitle( "MQTT/UDP Traffic Viewer" );
 			primaryStage.show();
 
 		} catch(Exception e) {
