@@ -29,7 +29,7 @@ def on_message(client, userdata, msg):
 
 
 
-def mqtt_thread():
+def broker_listen_thread():
         client = mqtt.Client()
         client.on_connect = on_connect
         client.on_message = on_message
@@ -53,7 +53,7 @@ def writer():
 
 # init threads
 t1 = threading.Thread(target=writer, args=())
-t2 = threading.Thread(target=mqtt_thread, args=())
+t2 = threading.Thread(target=broker_listen_thread, args=())
 
 # start threads
 t1.start()

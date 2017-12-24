@@ -4,6 +4,7 @@
 import socket
 
 import defs
+from array import array
 
 BIND_IP = "0.0.0.0"
 #BIND_IP = socket.INADDR_ANY
@@ -50,7 +51,18 @@ def parse_packet(pkt):
     
 if __name__ == "__main__":
     s = make_recv_socket()
+    last = {}
     while True:
         pkt = recv_udp_packet(s)    
         topic,value = parse_packet(pkt)
+        if last.has_key(topic) and last[topic] == value:
+            continue
+        last[topic] = value
         print topic+"="+value
+
+
+
+
+
+
+

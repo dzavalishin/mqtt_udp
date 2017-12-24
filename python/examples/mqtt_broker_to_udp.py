@@ -1,16 +1,16 @@
 #!/bin/python
 
 '''
-	This program will subsribe to all the topics on a given
+	This program will subscribe to all the topics on a given
 	MQTT broker and pump all the updates to MQTT/UDP environment
 '''
 
-# for not installed package to work
+# will work even if package is not installed 
 import sys
 sys.path.append('..')
 
 import threading
-import paho.mqtt.client as mqtt
+import paho.mqtt.client as broker
 import mqttudp.pub
 
 SUBSCRIBE_TOPIC="#"
@@ -24,14 +24,14 @@ udp_socket = mqttudp.pub.make_send_socket()
 
 
 # The callback for when the client receives a CONNACK response from the server.
-def on_connect(client, userdata, rc, unkn):
+def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
     print("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     client.subscribe(SUBSCRIBE_TOPIC)
 
 # The callback for when a PUBLISH message is received from the server.
-def on_message(client, userdata, msg):
+def on_message(client, userdata, msg):  # @UnusedVariable
     print(msg.topic+" "+str(msg.payload))
 
     # if you send just one message per invocation, this call is simpler
@@ -42,8 +42,8 @@ def on_message(client, userdata, msg):
 
 
 
-def mqtt_thread():
-        client = mqtt.Client()
+def broker_listen_thread():
+        client = broker.Client()
         client.on_connect = on_connect
         client.on_message = on_message
 
@@ -54,9 +54,9 @@ def mqtt_thread():
 
 
 if __name__ == "__main__":
-    mt = threading.Thread(target=mqtt_thread, args=())
-    mt.start()
-    mt.join()
+    blt = threading.Thread(target=broker_listen_thread, args=())
+    blt.start()
+    blt.join()
 
 
 
