@@ -1,3 +1,5 @@
+#!/bin/python
+
 from setuptools import setup, find_packages
 
 setup(
@@ -8,13 +10,11 @@ setup(
     author='Dmitry Zavalishin',
     author_email='dz@dz.ru',
     url='https://github.com/dzavalishin/mqtt_udp',
-    #namespace_packages=['home'],                                                                      # line 8
     packages=find_packages(),
     #platforms='any',
     #zip_safe=False,
     include_package_data=True,
-    #dependency_links=['git+ssh://git@git.home.com/app-admintools@v0.1#egg=admintools-0.1'],           # line 13
-    #install_requires=['admintools==0.1'],                                                             # line 14
+    #install_requires=['admintools==0.1'],
     classifiers=[
         #'Development Status :: 5 - Production/Stable',
         'Development Status :: 4 - Beta',
@@ -25,7 +25,7 @@ setup(
         'Topic :: Internet :: MQTT',
         'Topic :: Internet :: IoT',
     ],
-    #data_files=[
-    #      ('/path/to/icons', ['myApp/icons/a.ico', 'myApp/icons/e.ico'])
-    #],
+    #data_files=[(
+    #      '/path/to/icons', ['myApp/icons/a.ico', 'myApp/icons/e.ico']
+    #)],
 )

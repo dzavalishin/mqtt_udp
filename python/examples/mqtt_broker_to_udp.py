@@ -1,9 +1,23 @@
 #!/bin/python
 
+'''
+	This program will subsribe to all the topics on a given
+	MQTT broker and pump all the updates to MQTT/UDP environment
+'''
+
+# for not installed package to work
+import sys
+sys.path.append('..')
+
 import threading
 import paho.mqtt.client as mqtt
 import mqttudp.pub
 
+SUBSCRIBE_TOPIC="#"
+#SUBSCRIBE_TOPIC="$SYS/#"
+
+MQTT_BROKER_HOST="smart."
+#MQTT_BROKER_HOST="iot.eclipse.org"
 
 udp_socket = mqttudp.pub.make_send_socket()
 
@@ -14,8 +28,7 @@ def on_connect(client, userdata, rc, unkn):
     print("Connected with result code "+str(rc))
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe("#")
-    #client.subscribe("$SYS/#")
+    client.subscribe(SUBSCRIBE_TOPIC)
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -34,36 +47,16 @@ def mqtt_thread():
         client.on_connect = on_connect
         client.on_message = on_message
 
-#        client.connect("iot.eclipse.org", 1883, 60)
-        client.connect("smart.", 1883, 60)
+        client.connect(MQTT_BROKER_HOST, 1883, 60)
         print("connected", client)
 
-# Blocking call that processes network traffic, dispatches callbacks and
-# handles reconnecting.
-# Other loop*() functions are available that give a threaded interface and a
-# manual interface.
         client.loop_forever()
 
-def writer():
-    print "thread 1"
 
-# init events
-#e1 = threading.Event()
-#e2 = threading.Event()
-
-# init threads
-t1 = threading.Thread(target=writer, args=())
-t2 = threading.Thread(target=mqtt_thread, args=())
-
-# start threads
-t1.start()
-t2.start()
-
-#e1.set() # initiate the first event
-
-# join threads to the main thread
-t1.join()
-t2.join()
+if __name__ == "__main__":
+    mt = threading.Thread(target=mqtt_thread, args=())
+    mt.start()
+    mt.join()
 
 
 

@@ -27,11 +27,20 @@ def send(topic, payload=b''):
     if isinstance(payload, unicode):
         payload = payload.encode('utf-8')
 
-	mqttudp.pub.send(topic, payload)
-
     pkt = make_packet(topic, payload)
     send_udp_packet(pkt)
 
+# simplest entry point, but recreates socket every time
+
+def send( udp_socket, topic, payload=b''):
+    if isinstance(topic, unicode):
+        topic = topic.encode('utf-8')
+
+    if isinstance(payload, unicode):
+        payload = payload.encode('utf-8')
+
+    pkt = make_packet(topic, payload)
+    udp_socket.sendto( pkt, ("255.255.255.255", 1883) )
 
 
 def make_send_socket():
