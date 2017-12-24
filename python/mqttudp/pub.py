@@ -1,22 +1,7 @@
 import struct
 import socket
 
-# Message types
-CONNECT = 0x10
-CONNACK = 0x20
-PUBLISH = 0x30
-PUBACK = 0x40
-PUBREC = 0x50
-PUBREL = 0x60
-PUBCOMP = 0x70
-SUBSCRIBE = 0x80
-SUBACK = 0x90
-UNSUBSCRIBE = 0xA0
-UNSUBACK = 0xB0
-PINGREQ = 0xC0
-PINGRESP = 0xD0
-DISCONNECT = 0xE0
-
+import defs
 
 # simplest entry point, but recreates socket every time
 
@@ -81,7 +66,7 @@ def make_packet(topic, payload=b''):
     # we assume that topic and payload are already properly encoded
     assert not isinstance(topic, unicode) and not isinstance(payload, unicode) and payload is not None
 
-    command = PUBLISH
+    command = defs.PUBLISH
     packet = bytearray()
     packet.append(command)
 
