@@ -8,13 +8,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.stage.Stage;
 import ru.dz.mqtt_udp.IPacket;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -22,6 +26,7 @@ import javafx.scene.layout.VBox;
 
 
 public class Main extends Application {
+	private static final int DEFAULT_WIDTH = 1000;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -38,19 +43,32 @@ public class Main extends Application {
 
 			MenuBar menu = makeMenu();
 			HBox content = makeContent();
+			content.setFillHeight(true);
 			HBox log = makeLog();
+			log.setFillHeight(true);
 
-			//content.setPrefWidth(800);
-			//log.setPrefWidth(800);
-
+			/*
 			VBox vbox = new VBox(menu,content,log);
+			vbox.setFillWidth(true);
 			AnchorPane pane = new AnchorPane(vbox);
-
 			Scene scene = new Scene( pane );
+			*/
+			
+			SplitPane sp = new SplitPane(content,log);
+			sp.setOrientation(Orientation.VERTICAL);
+			sp.setDividerPositions(0.7f);
+			SplitPane.setResizableWithParent(content, true);
+			SplitPane.setResizableWithParent(log, true);
+			
+			VBox vbox = new VBox(menu,sp);
+			vbox.setFillWidth(true);
+			
+			Scene scene = new Scene( vbox );
 
 			// setting the stage
 			primaryStage.setScene( scene );
-			primaryStage.setTitle( "MQTT/UDP Traffic Viewer" );
+			primaryStage.setTitle( "MQTT/UDP Traffic Viewer" );			
+			primaryStage.setOnCloseRequest(e -> { Platform.exit(); System.exit(0);} );
 			primaryStage.show();
 
 		} catch(Exception e) {
@@ -69,7 +87,7 @@ public class Main extends Application {
 	private HBox makeLog() {
 		ListView<TopicItem> listv = new ListView<TopicItem>();
 		listv.setItems(logItems);
-		listv.setPrefWidth(800);
+		listv.setPrefWidth(DEFAULT_WIDTH);
 
 		HBox hbox = new HBox(listv);
 
@@ -80,6 +98,7 @@ public class Main extends Application {
 		ListView<ru.dz.mqtt.viewer.TopicItem> listv = makeListView();
 
 		HBox hbox = new HBox(listv);
+		hbox.setFillHeight(true);
 
 		return hbox;
 	}
@@ -89,8 +108,14 @@ public class Main extends Application {
 		Menu fileMenu = new Menu("File");
 
 
-		Menu serverMenu = new Menu("Server");
-		MenuBar mb = new MenuBar(fileMenu,serverMenu);
+		CheckMenuItem updateMenuItem = new CheckMenuItem("Update");
+		
+
+		Menu displayMenu = new Menu("Display");
+		//displayMenu.addEventHandler(eventType, eventHandler);
+
+		
+		MenuBar mb = new MenuBar(fileMenu,displayMenu);
 		return mb;
 	}
 
@@ -101,25 +126,38 @@ public class Main extends Application {
 
 
 	private ObservableList<TopicItem> listItems =FXCollections.observableArrayList();
-	private void setListItem(TopicItem i)
+	private void setListItem(TopicItem item)
 	{
+		/*
 		//listItems.add(i);
 		listItems.forEach(
 				ti -> {
-					if(ti.getTopic() == i.getTopic())
+					if(ti.getTopic() == item.getTopic())
 						listItems.remove(ti);
 				}
 
 				);
+		*/
+		int nItems = listItems.size();
+		for( int j = 0; j < nItems; j++ )
+		{
+			TopicItem ci = listItems.get(j);
+			if(ci.getTopic().equals(item.getTopic()) )
+			{
+				listItems.remove(j);
+				listItems.add(j, item);
+				return;
+			}
+		}
 		
-		listItems.add(0, i);
+		listItems.add(0, item);
 	}
 
 
 	private ListView<TopicItem> makeListView() {
 		ListView<TopicItem> lv = new ListView<TopicItem>();
-		lv.setPrefWidth(800);
-
+		lv.setPrefWidth(DEFAULT_WIDTH);
+		
 		//ObservableSet<TopicItem> items = FXCollections.emptyObservableSet();
 
 
