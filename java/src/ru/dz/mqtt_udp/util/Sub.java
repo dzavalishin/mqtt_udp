@@ -1,38 +1,32 @@
 package ru.dz.mqtt_udp.util;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.SocketException;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
 import ru.dz.mqtt_udp.PublishPacket;
+import ru.dz.mqtt_udp.SubServer;
 
-public class Sub {
+public class Sub extends SubServer 
+{
 
 	public static void main(String[] args) throws SocketException, IOException, MqttProtocolException 
 	{
+		Sub srv = new Sub();
+		
 		if( args.length == 1 && args[0].equalsIgnoreCase("-f"))
 		{
-			loop();
+			srv.loop();
 			System.exit(0);
 		}
 		
 		IPacket p = GenericPacket.recv();
-		processPacket(p);
+		srv.processPacket(p);
 	}
 
-	private static void loop() throws IOException, MqttProtocolException {
-		DatagramSocket s = GenericPacket.recvSocket();
-		
-		while(true)
-		{
-			IPacket p = GenericPacket.recv(s);
-			processPacket(p);
-		}
-	}
-
-	private static void processPacket(IPacket p) {
+	@Override
+	protected void processPacket(IPacket p) {
 		System.out.println(p);
 		
 		if (p instanceof PublishPacket) {
