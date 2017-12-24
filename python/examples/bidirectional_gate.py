@@ -26,12 +26,13 @@ udp_send_socket = mqttudp.pub.make_send_socket()
 
 ilock = mqttudp.interlock.bidirectional(5)
 
-def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
+def broker_on_connect(client, userdata, rc, unkn):  # @UnusedVariable
     print("Connected with result code "+str(rc))
     client.subscribe(SUBSCRIBE_TOPIC)
 
-def on_message(client, userdata, msg):  # @UnusedVariable
-    if ilock.broker_to_udp(msg.topic, msg.value):
+def broker_on_message(client, userdata, msg):  # @UnusedVariable
+    #print( msg )
+    if ilock.broker_to_udp(msg.topic, msg.payload):
         mqttudp.pub.send( udp_send_socket, msg.topic, msg.payload )
         print("To UDP: "+msg.topic+"="+str(msg.payload))
     else:
@@ -63,8 +64,8 @@ def udp_listen_thread(bclient):
 
 if __name__ == "__main__":
     bclient = broker.Client()
-    #client.on_connect = on_connect
-    #client.on_message = on_message
+    bclient.on_connect = broker_on_connect
+    bclient.on_message = broker_on_message
 
     bclient.connect(MQTT_BROKER_HOST, 1883, 60)
     print("connected", bclient)
