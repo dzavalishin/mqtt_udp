@@ -3,10 +3,13 @@ package ru.dz.mqtt.viewer;
 import java.net.URL;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import ru.dz.mqtt_udp.IPacket;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -35,7 +38,12 @@ public class Main extends Application {
 
 			MenuBar menu = makeMenu();
 			HBox content = makeContent();
-			VBox vbox = new VBox(menu,content);
+			HBox log = makeLog();
+
+			//content.setPrefWidth(800);
+			//log.setPrefWidth(800);
+
+			VBox vbox = new VBox(menu,content,log);
 			AnchorPane pane = new AnchorPane(vbox);
 
 			Scene scene = new Scene( pane );
@@ -48,6 +56,24 @@ public class Main extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private ObservableList<TopicItem> logItems = FXCollections.observableArrayList ();
+	private void addLogItem(TopicItem i)
+	{
+		logItems.add(i);
+		if( logItems.size() > 400 )
+			logItems.remove(0);
+	}
+
+	private HBox makeLog() {
+		ListView<TopicItem> listv = new ListView<TopicItem>();
+		listv.setItems(logItems);
+		listv.setPrefWidth(800);
+
+		HBox hbox = new HBox(listv);
+
+		return hbox;
 	}
 
 	private HBox makeContent() {
@@ -73,21 +99,46 @@ public class Main extends Application {
 	}
 
 
+
+	private ObservableList<TopicItem> listItems =FXCollections.observableArrayList();
+	private void setListItem(TopicItem i)
+	{
+		//listItems.add(i);
+		listItems.forEach(
+				ti -> {
+					if(ti.getTopic() == i.getTopic())
+						listItems.remove(ti);
+				}
+
+				);
+		
+		listItems.add(0, i);
+	}
+
+
 	private ListView<TopicItem> makeListView() {
 		ListView<TopicItem> lv = new ListView<TopicItem>();
+		lv.setPrefWidth(800);
 
-		ObservableList<TopicItem> items =FXCollections.observableArrayList (
-				new TopicItem( "A" ),
-				new TopicItem( "B" ), 
-				new TopicItem( "C" ), 
-				new TopicItem( "D" )
-				);
+		//ObservableSet<TopicItem> items = FXCollections.emptyObservableSet();
 
-		lv.setItems(items);
+
+
+		lv.setItems(listItems);
 
 		MqttUdpDataSource ds = new MqttUdpDataSource();
-		ds.setSink(ti -> items.add(ti));
-		
+		ds.setSink(ti -> { 
+			Platform.runLater(new Runnable(){
+				@Override
+				public void run() {
+					setListItem(ti); 
+					addLogItem(ti); 
+				}
+			});
+
+
+		});
+
 		return lv;
 	}
 

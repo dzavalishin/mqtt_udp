@@ -19,4 +19,7 @@ public class TopicItem {
 	public String toString() {
 		return topic+"="+value;
 	}
+
+	public String getTopic() {		return topic;	}
+	public String getValue() {		return value;	}
 }
