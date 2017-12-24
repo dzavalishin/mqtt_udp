@@ -25,7 +25,8 @@ def send( udp_socket, topic, payload=b''):
         payload = payload.encode('utf-8')
 
     pkt = make_packet(topic, payload)
-    udp_socket.sendto( pkt, ("255.255.255.255", 1883) )
+    #udp_socket.sendto( pkt, ("255.255.255.255", 1883) )
+    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
 def make_send_socket():
@@ -36,7 +37,7 @@ def make_send_socket():
 
 def send_udp_packet(pkt):
     udp_socket = make_send_socket()
-    udp_socket.sendto( pkt, ("255.255.255.255", 1883) )
+    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
     udp_socket.close()
 
 
