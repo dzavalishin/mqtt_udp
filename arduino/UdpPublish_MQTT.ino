@@ -98,9 +98,8 @@ int mqtt_udp_send( int fd, char *topic, char *data )
     bp += used;
 
 
-    int net_tlen = htons( tlen );
-    *bp++ = (net_tlen >>8) & 0xFF;
-    *bp++ = net_tlen & 0xFF;
+    *bp++ = (tlen >>8) & 0xFF;
+    *bp++ = tlen & 0xFF;
     blen -= 2;
 
     //NB! Must be UTF-8
