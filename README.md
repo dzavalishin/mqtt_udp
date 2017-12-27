@@ -18,6 +18,10 @@ MQTT/UDP is
 * can be supported even on a hardware which can not support TCP - in fact, only UDP send is required
 * Zero configuration - a sensor node needs no setup, it just broadcasts its data.
 
+For further reading:
+
+* [MQTT topologies](./dox/Topologies.md)
+
 This repository contains
 
 * A simplest MQTT/UDP implementation in some popular programming languages.
