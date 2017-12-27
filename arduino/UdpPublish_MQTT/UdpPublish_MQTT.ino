@@ -40,7 +40,7 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
   success = udp.write( data, len );
   success = udp.endPacket();
   udp.stop();
-  Serial.println("sent");
+  Serial.println("sent!");
   return 0;
 }
 

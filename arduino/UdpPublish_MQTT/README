@@ -1,0 +1,5 @@
+
+This example uses https://github.com/UIPEthernet/UIPEthernet library 
+for UDP/IP stack.
+
+Please add include files from ../../c
