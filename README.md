@@ -1,6 +1,8 @@
 # mqtt_udp
 Simpified version of MQTT over UDP
 
+[See Russian version / Русская версия здесь](./README.ru.md)
+
 MQTT is a cute simple protocol well suited for IoT and similar things.
 
 But it can be even simpler and still be very usable: MQTT/UDP is
