@@ -1,1 +1,4 @@
 Not finished
+
+Supposed to be standalone Lua implementation and WireShark Lua protocol
+dissolver to be able to dump MQTT/UDP packets.

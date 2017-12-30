@@ -1,5 +1,7 @@
 #!/usr/bin/lua
 
+local mqlib = require("mqtt_udp_lib")
+
 local socket = require("socket")
 
 udp = socket.udp()
