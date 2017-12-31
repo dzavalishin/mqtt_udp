@@ -10,17 +10,19 @@ merely an MQTT Publish packets broadcast over an UDP.
 
 MQTT/UDP is 
 
-* extremely simple
-* extremely fast, minimap possible latency
-* excludes broker (which is single point of failure)
-* lowers network traffic (each masurement is sent exactly once to all) 
-* reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)
-* can be supported even on a hardware which can not support TCP - in fact, only UDP send is required
+* Extremely simple
+* Extremely fast, minimap possible latency
+* Excludes broker (which is single point of failure)
+* Lowers network traffic (each masurement is sent exactly once to all) 
+* Reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)
+* Can be supported even on a hardware which can not support TCP - in fact, only UDP send is required
 * Zero configuration - a sensor node needs no setup, it just broadcasts its data.
+* With some extension can be used on simplex channels and/or channels with native broadcast ability (radio,RS485)
 
 For further reading:
 
-* [MQTT topologies](./dox/Topologies.md)
+* [MQTT/UDP Wiki](../../wiki)
+* [MQTT/UDP Topologies](./dox/Topologies.md)
 
 This repository contains
 
@@ -33,6 +35,7 @@ If you want to help a project, feel free to:
 * Add implementation in your favorite programming language
 * Write a bridge to classic MQTT protocol (we have very simple one here written in Python)
 * Extend your favorite MQTT broker or IoT system (OpenHAB?) with MQTT/UDP support
+* Check MQTT/UDP specification/implementation against MQTT spec. We must be compatible where possible.
 
 It is really easy.
 
