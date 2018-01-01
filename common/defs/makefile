@@ -2,7 +2,7 @@
 
 FN=mqtt_udp_defs
 
-OUT=$(FN).java $(FN).h $(FN).py
+OUT=$(FN).java $(FN).h $(FN).py $(FN).lua
 
 goal:: $(OUT)
 
@@ -30,4 +30,7 @@ $(FN).py: $(FN).definitions  inc_txt2python/*
 	$(CPP) -Iinc_txt2python $(FN).definitions $@.1
 	sed 's/----/\#/' $@.1 > $@
 	-rm $@.1
+
+$(FN).lua: $(FN).definitions  inc_txt2lua/*
+	$(CPP) -Iinc_txt2lua $(FN).definitions $@
 
