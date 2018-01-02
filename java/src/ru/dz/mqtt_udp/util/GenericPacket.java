@@ -13,7 +13,7 @@ import ru.dz.mqtt_udp.MqttProtocolException;
 
 public abstract class GenericPacket implements IPacket {
 
-	private static final int  MQTT_PORT = 1883;
+	//private static final int  MQTT_PORT = 1883;
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
 	public static DatagramSocket sendSocket() throws SocketException
@@ -25,7 +25,7 @@ public abstract class GenericPacket implements IPacket {
 
 	public static DatagramSocket recvSocket() throws SocketException
 	{
-		DatagramSocket s = new DatagramSocket(MQTT_PORT);
+		DatagramSocket s = new DatagramSocket(mqtt_udp_defs.MQTT_PORT);
 		//s.setBroadcast(true);
 		return s;
 	}
@@ -42,7 +42,7 @@ public abstract class GenericPacket implements IPacket {
 		byte[] pkt = toBytes();
 		
 		InetAddress address = InetAddress.getByAddress(broadcast);
-		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, MQTT_PORT);
+		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
 		s.send(p);
 	}
 

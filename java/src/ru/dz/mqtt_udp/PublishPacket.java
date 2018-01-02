@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import ru.dz.mqtt_udp.util.GenericPacket;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class PublishPacket extends GenericPacket {
 
@@ -64,7 +65,8 @@ public class PublishPacket extends GenericPacket {
 		System.arraycopy(tbytes, 0, pkt, 2, tbytes.length);
 		System.arraycopy(value, 0, pkt, tbytes.length + 2, value.length );
 		
-		return IPacket.encodeTotalLength(pkt, IPacket.PT_PUBLISH);
+		//return IPacket.encodeTotalLength(pkt, IPacket.PT_PUBLISH);
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBLISH );
 	}
 
 	@Override

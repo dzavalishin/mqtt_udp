@@ -1,7 +1,9 @@
 package ru.dz.mqtt_udp;
 
-public interface IPacket {
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
+public interface IPacket {
+/*
 	public static final int PT_CONNECT = 0x10;
 	public static final int PT_CONNACK = 0x20;
 	public static final int PT_PUBLISH = 0x30;
@@ -16,7 +18,7 @@ public interface IPacket {
 	public static final int PT_PINGREQ = 0xC0;
 	public static final int PT_PINGRESP = 0xD0;
 	public static final int PT_DISCONNECT = 0xE0;
-
+*/
 	public static final String MQTT_CHARSET = "UTF-8";
 
 
@@ -52,7 +54,8 @@ public interface IPacket {
 	    
 		switch(raw[0])
 		{
-		case PT_PUBLISH:
+		//case PT_PUBLISH:
+		case mqtt_udp_defs.PTYPE_PUBLISH:
 			return new PublishPacket(sub);
 			
 		default:
