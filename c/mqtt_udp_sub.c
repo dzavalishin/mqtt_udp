@@ -10,7 +10,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "mqtt_udp_local.h"
+#include "mqtt_udp.h"
 
 static void dump( const char *buf );
 

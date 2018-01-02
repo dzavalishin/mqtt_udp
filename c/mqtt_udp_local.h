@@ -4,11 +4,7 @@
 #include "mqtt_udp.h"
 #include "mqtt_udp_defs.h"
 
-//#define PTYPE_PUBLISH 0x30
-
-
-//#define MQTT_PORT    1883
-
+#error don't use me anymore
 
 
 int mqtt_udp_send_pkt( int fd, char *data, size_t len );
