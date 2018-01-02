@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     printf("will publish '%s' to topic '%s'", value, topic );
 
     fd = mqtt_udp_socket();
-    int rc = mqtt_udp_send( fd, topic, value );
+    int rc = mqtt_udp_send_publish( fd, topic, value );
 
     if( rc )
         printf("error %d", rc);

@@ -37,8 +37,15 @@ static int pack_len( char *buf, int *blen, int *used, int data_len )
     }
 }
 
-
+// ----------------------------------------------------
+// Make and send PUBLISH packet
+// ----------------------------------------------------
 int mqtt_udp_send( int fd, char *topic, char *data )
+{
+    return mqtt_udp_send_publish( fd, topic, data );
+}
+
+int mqtt_udp_send_publish( int fd, char *topic, char *data )
 {
     unsigned char buf[BUFLEN];
 

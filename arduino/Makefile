@@ -3,7 +3,8 @@
 
 SRC=../c
 LIB=MQTT_UDP/
-FILES=mqtt_udp.h mqtt_udp_local.h mqtt_udp_send.c
+#FILES=mqtt_udp.h mqtt_udp_local.h mqtt_udp_send.c
+FILES=mqtt_udp.h mqtt_udp_defs.h mqtt_udp_send.c
 
 SRCFILES += $(patsubst %,$(SRC)/%,$(FILES))
 

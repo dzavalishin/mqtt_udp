@@ -27,7 +27,7 @@ void setup() {
 void loop() {
 
   //int rc = 
-  mqtt_udp_send( 0, "From", "Arduino1" );
+  mqtt_udp_send( 0, "From", "Arduino2" );
   delay(1000);
   return;
 }
@@ -43,84 +43,6 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
   return 0;
 }
 
-#if 0
-
-
-#define BUFLEN 512
-
-
-
-static int pack_len( char *buf, int *blen, int *used, int data_len )
-{
-    *used = 0;
-    while( 1 )
-    {
-        if( *blen <= 0 ) return 1;
-
-        int byte = data_len % 128;
-        data_len /= 128;
-
-        if( data_len > 0 )
-            byte |= 0x80;
-
-        *buf++ = byte;
-        (*blen)--;
-        (*used)++;
-
-        if( data_len == 0 ) return 0;
-    }
-}
-
-
-int mqtt_udp_send( int fd, char *topic, char *data )
-{
-    unsigned char buf[BUFLEN];
-
-    int tlen = strlen(topic);
-    int dlen = strlen(data);
-
-    int blen = sizeof(buf);
-    unsigned char *bp = buf;
-
-    *bp++ = PTYPE_PUBLISH;
-    blen--;
-
-    int total = tlen + dlen + 2; // packet size
-    if( total > blen )
-        return 1;
-
-    //int size = total+1;
-
-    int used = 0;
-    int rc = pack_len( (char *)bp, &blen, &used, total );
-    if( rc ) return rc;
-
-    bp += used;
-
-
-    *bp++ = (tlen >>8) & 0xFF;
-    *bp++ = tlen & 0xFF;
-    blen -= 2;
-
-    //NB! Must be UTF-8
-    while( tlen-- > 0 )
-    {
-        if( blen <= 0 ) return 1;
-        *bp++ = *topic++;
-        blen--;
-    }
-
-    while( dlen-- > 0 )
-    {
-        if( blen <= 0 ) return 1;
-        *bp++ = *data++;
-        blen--;
-    }
-
-    return mqtt_udp_send_pkt( fd, (char *)buf, bp-buf );
-}
-
-#endif
 
 
 
