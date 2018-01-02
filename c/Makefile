@@ -8,7 +8,7 @@ run::
 	./mqtt_udp_sub
 
 clean::
-	rm *.o
+	-rm *.o *.exe
 
 OBJS=udp_send_pkt.o mqtt_udp.o 
 

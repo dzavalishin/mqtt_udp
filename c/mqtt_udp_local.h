@@ -2,12 +2,12 @@
 #define MQTT_UDP_LOCAL_H
 
 #include "mqtt_udp.h"
+#include "mqtt_udp_defs.h"
+
+//#define PTYPE_PUBLISH 0x30
 
 
-#define PTYPE_PUBLISH 0x30
-
-
-#define MQTT_PORT    1883
+//#define MQTT_PORT    1883
 
 
 
