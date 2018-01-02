@@ -1,6 +1,8 @@
+
 package ru.dz.mqtt_udp.util;
 
 /* This code is generated, do not change */
 
-public class defs {
+public class mqtt_udp_defs {
 
+#define id(parm_name,parm_val)  public static final int parm_name = parm_val;

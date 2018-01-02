@@ -7,16 +7,15 @@ OUT=$(FN).java $(FN).h $(FN).py $(FN).lua
 goal:: $(OUT)
 
 CPP=cpp -P -C
-#CPP=cpp32 -q 
+SENDTO=cp $@ 
 
 clean:
 	rm $(OUT)
 
+
 $(FN).java: $(FN).definitions  inc_txt2java/*
 	$(CPP) -Iinc_txt2java $(FN).definitions $@
-#	cp $@ $(realpath $(PHANTOM_HOME)/tools/pdb/src/phantom/code/opcode_ids.java)
-#	cp $@ $(realpath $(PHANTOM_HOME)/tools/plc/src/phantom/code/opcode_ids.java)
-#	cp $@ $(realpath $(PHANTOM_HOME)/plc/src/phantom/code/opcode_ids.java)
+	$(SENDTO) ../../java/src/ru/dz/mqtt_udp/util/
 
 
 $(FN).h: $(FN).definitions  inc_txt2c/*
@@ -24,12 +23,14 @@ $(FN).h: $(FN).definitions  inc_txt2c/*
 	sed 's/const unsigned char/#define/' $@.1 > $@.2
 	sed 's/=/ /' $@.2 | sed 's/;/ /' > $@
 	-rm $@.1 $@.2
+	$(SENDTO) ../../c/
 
 
 $(FN).py: $(FN).definitions  inc_txt2python/*
 	$(CPP) -Iinc_txt2python $(FN).definitions $@.1
 	sed 's/----/\#/' $@.1 > $@
 	-rm $@.1
+	$(SENDTO) ../../python/mqttudp/
 
 $(FN).lua: $(FN).definitions  inc_txt2lua/*
 	$(CPP) -Iinc_txt2lua $(FN).definitions $@
