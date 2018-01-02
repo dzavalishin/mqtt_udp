@@ -84,6 +84,35 @@ def make_packet(topic, payload=b''):
 
     return packet
 
+#
+# Ping support
+#
+
+def make_ping_packet():
+    command = defs.PTYPE_PINGREQ
+    packet = bytearray()
+    packet.append(command)
+    pack_remaining_length(packet, 0)
+    return packet
+
+
+def send_ping(udp_socket):
+    pkt = make_ping_packet()
+    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+
+def make_ping_responce_packet():
+    command = defs.PTYPE_PINGREQ
+    packet = bytearray()
+    packet.append(command)
+    pack_remaining_length(packet, 0)
+    return packet
+
+
+def send_ping_responce(udp_socket,addr):
+    pkt = make_ping_responce_packet()
+    udp_socket.sendto( pkt, (addr, defs.MQTT_PORT) )
+
+
 if __name__ == "__main__":
 	import sys
 	send_once(sys.argv[1], sys.argv[2])

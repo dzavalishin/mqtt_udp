@@ -32,6 +32,7 @@ def unpack_remaining_length(pkt):
             break
     return remaining_length, pkt
 
+'''
 def parse_packet(pkt):
     if ord(pkt[0]) != defs.PTYPE_PUBLISH:
         print( "Unknown packet type" )
@@ -49,20 +50,49 @@ def parse_packet(pkt):
     #TODO use total_len
     
     return topic,value
+'''
+
+def parse_packet(pkt):
+    if ord(pkt[0]) == defs.PTYPE_PUBLISH:
+        
+        total_len, pkt = unpack_remaining_length(pkt[1:])
+
+        topic_len = (ord(pkt[1]) & 0xFF) | ((ord(pkt[0]) << 8) & 0xFF)   
+        topic = pkt[2:topic_len+2].encode('UTF-8')    
+        value = pkt[topic_len+2:].encode('UTF-8')
+    
+        #TODO use total_len
+    
+        return "publish",topic,value
+
+    if ord(pkt[0]) == defs.PTYPE_PINGREQ:
+        return "pingreq","",""
+
+    if ord(pkt[0]) == defs.PTYPE_PINGRESP:
+        return "pingresp","",""
+
+    print( "Unknown packet type" )
+    #print( pkt.type() )
+    for b in pkt:
+        print ord(b)
+    return
+
     
 if __name__ == "__main__":
     s = make_recv_socket()
     last = {}
     while True:
         pkt = recv_udp_packet(s)    
-        topic,value = parse_packet(pkt)
+        ptype,topic,value = parse_packet(pkt)
         #if last.has_key(topic) and last[topic] == value:
         #    continue
-        last[topic] = value
-        print topic+"="+value
-
-
-
+        if ptype == "publish":
+            last[topic] = value
+            print topic+"="+value
+        if ptype == "pingreq":
+            print ptype
+        if ptype == "pingresp":
+            print ptype
 
 
 
