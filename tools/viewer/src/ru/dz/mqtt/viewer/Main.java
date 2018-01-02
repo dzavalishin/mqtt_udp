@@ -42,10 +42,13 @@ public class Main extends Application {
 			//AnchorPane pane = FXMLLoader.load( url );
 
 			MenuBar menu = makeMenu();
+
 			HBox content = makeContent();
 			content.setFillHeight(true);
 			HBox log = makeLog();
 			log.setFillHeight(true);
+			HBox hosts = makeHosts();
+			hosts.setFillHeight(true);
 
 			/*
 			VBox vbox = new VBox(menu,content,log);
@@ -54,11 +57,12 @@ public class Main extends Application {
 			Scene scene = new Scene( pane );
 			*/
 			
-			SplitPane sp = new SplitPane(content,log);
+			SplitPane sp = new SplitPane(content,log,hosts);
 			sp.setOrientation(Orientation.VERTICAL);
-			sp.setDividerPositions(0.7f);
+			sp.setDividerPositions(0.6f,0.8f);
 			SplitPane.setResizableWithParent(content, true);
 			SplitPane.setResizableWithParent(log, true);
+			SplitPane.setResizableWithParent(hosts, true);
 			
 			VBox vbox = new VBox(menu,sp);
 			vbox.setFillWidth(true);
@@ -76,6 +80,25 @@ public class Main extends Application {
 		}
 	}
 
+	private ObservableList<HostItem> hostItems = FXCollections.observableArrayList ();
+	private void addHostItem(HostItem i)
+	{
+		hostItems.add(i);
+		if( hostItems.size() > 400 )
+			hostItems.remove(0);
+	}
+
+	private HBox makeHosts() {
+		ListView<HostItem> listv = new ListView<HostItem>();
+		listv.setItems(hostItems);
+		listv.setPrefWidth(DEFAULT_WIDTH);
+
+		HBox hbox = new HBox(listv);
+
+		return hbox;
+	}
+
+	
 	private ObservableList<TopicItem> logItems = FXCollections.observableArrayList ();
 	private void addLogItem(TopicItem i)
 	{
@@ -83,7 +106,7 @@ public class Main extends Application {
 		if( logItems.size() > 400 )
 			logItems.remove(0);
 	}
-
+	
 	private HBox makeLog() {
 		ListView<TopicItem> listv = new ListView<TopicItem>();
 		listv.setItems(logItems);
@@ -170,7 +193,8 @@ public class Main extends Application {
 				@Override
 				public void run() {
 					setListItem(ti); 
-					addLogItem(ti); 
+					addLogItem(ti);
+					addHostItem( new HostItem(ti.getFrom()));
 				}
 			});
 

@@ -11,7 +11,7 @@ public class PublishPacket extends GenericPacket {
 	private String topic;
 	private byte[] value;
 
-	public PublishPacket(byte[] raw) {
+	public PublishPacket(byte[] raw, String from) {
 		int tlen = IPacket.decodeTopicLen( raw );
 
 		topic = new String(raw, 2, tlen, Charset.forName(MQTT_CHARSET));
@@ -19,13 +19,14 @@ public class PublishPacket extends GenericPacket {
 		int vlen = raw.length - tlen - 2;		
 		value = new byte[vlen];	
 		System.arraycopy( raw, tlen+2, value, 0, vlen );
+		
+		this.from = from;
 	}
 
 	
 	public String getTopic() {			return topic;	}
 	public byte[] getValueRaw() {		return value;	}	
 	public String getValueString() {	return new String(value, Charset.forName(MQTT_CHARSET));	}
-	
 	
 	public PublishPacket(String topic, byte[] value) {
 		makeMe( topic, value );

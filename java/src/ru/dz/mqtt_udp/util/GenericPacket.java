@@ -16,6 +16,8 @@ public abstract class GenericPacket implements IPacket {
 	//private static final int  MQTT_PORT = 1883;
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
+	protected String from;
+	
 	public static DatagramSocket sendSocket() throws SocketException
 	{
 		DatagramSocket s = new DatagramSocket();
@@ -73,13 +75,15 @@ public abstract class GenericPacket implements IPacket {
 		
 		System.arraycopy(p.getData(), p.getOffset(), got, 0, l);
 		
-		return IPacket.fromBytes(got);		
+		return IPacket.fromBytes(got, p.getSocketAddress().toString());		
 	}
 
+
+	public String getFrom() { return from; }
 	
 	@Override
 	public String toString() {		
-		return String.format("MQTT/UDP packet of unknown type, please redefine toString in %s", getClass().getName());
+		return String.format("MQTT/UDP packet of unknown type from '%s', please redefine toString in %s", from, getClass().getName());
 	}
 	
 }

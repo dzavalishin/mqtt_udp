@@ -24,7 +24,7 @@ public interface IPacket {
 
 	public byte[] toBytes();
 
-	public static IPacket fromBytes( byte[] raw ) throws MqttProtocolException
+	public static IPacket fromBytes( byte[] raw, String from ) throws MqttProtocolException
 	{
 		
 	    int dlen = 0;
@@ -56,7 +56,7 @@ public interface IPacket {
 		{
 		//case PT_PUBLISH:
 		case mqtt_udp_defs.PTYPE_PUBLISH:
-			return new PublishPacket(sub);
+			return new PublishPacket(sub, from);
 			
 		default:
 				throw new MqttProtocolException("Unknown pkt type "+raw[0]);

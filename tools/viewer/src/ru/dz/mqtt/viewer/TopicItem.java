@@ -4,6 +4,7 @@ public class TopicItem {
 
 	private String topic;
 	private String value;
+	private String from = "?";
 
 	public TopicItem(String topic) {
 		this.topic = topic;
@@ -22,4 +23,7 @@ public class TopicItem {
 
 	public String getTopic() {		return topic;	}
 	public String getValue() {		return value;	}
+
+	public void setFrom(String from) { this.from = from; }
+	public String getFrom() {		return from;	}
 }
