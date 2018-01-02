@@ -10,13 +10,15 @@ import java.net.UnknownHostException;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
+import ru.dz.mqtt_udp.io.IPacketAddress;
+import ru.dz.mqtt_udp.io.IpAddress;
 
 public abstract class GenericPacket implements IPacket {
 
 	//private static final int  MQTT_PORT = 1883;
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
-	protected String from;
+	protected IPacketAddress from;
 	
 	public static DatagramSocket sendSocket() throws SocketException
 	{
@@ -75,11 +77,11 @@ public abstract class GenericPacket implements IPacket {
 		
 		System.arraycopy(p.getData(), p.getOffset(), got, 0, l);
 		
-		return IPacket.fromBytes(got, p.getSocketAddress().toString());		
+		return IPacket.fromBytes(got, new IpAddress(p.getSocketAddress()) );		
 	}
 
 
-	public String getFrom() { return from; }
+	public IPacketAddress getFrom() { return from; }
 	
 	@Override
 	public String toString() {		

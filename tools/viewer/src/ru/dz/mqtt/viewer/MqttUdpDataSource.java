@@ -46,7 +46,7 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			
 			PublishPacket pp = (PublishPacket) p;			
 			TopicItem ti = new TopicItem(pp.getTopic(), pp.getValueString());
-			ti.setFrom(pp.getFrom());
+			ti.setFrom(pp.getFrom().toString());
 			sink.accept(ti);
 		}
 		else

@@ -18,6 +18,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -80,20 +81,43 @@ public class Main extends Application {
 		}
 	}
 
+	private ListView<HostItem> hostListView = new ListView<HostItem>();
 	private ObservableList<HostItem> hostItems = FXCollections.observableArrayList ();
-	private void addHostItem(HostItem i)
+	private void addHostItem(HostItem item)
 	{
+		// Dumb code, sorry
+		/*
 		hostItems.add(i);
 		if( hostItems.size() > 400 )
 			hostItems.remove(0);
+		*/
+		
+		int nItems = hostItems.size();
+		for( int j = 0; j < nItems; j++ )
+		{
+			HostItem ci = hostItems.get(j);
+			if(ci.getHostName().equals(item.getHostName()) )
+			{
+				hostItems.remove(j);
+				hostItems.add(j, item);
+
+				MultipleSelectionModel<HostItem> sm = hostListView.getSelectionModel();
+				if(sm.isEmpty())
+					sm.select(j);
+				
+				return;
+			}
+		}
+		
+		hostItems.add(0, item);
+		
 	}
 
 	private HBox makeHosts() {
-		ListView<HostItem> listv = new ListView<HostItem>();
-		listv.setItems(hostItems);
-		listv.setPrefWidth(DEFAULT_WIDTH);
+		hostListView.setItems(hostItems);
+		hostListView.setPrefWidth(DEFAULT_WIDTH);
 
-		HBox hbox = new HBox(listv);
+		HBox hbox = new HBox(hostListView);
 
 		return hbox;
 	}
@@ -148,6 +172,7 @@ public class Main extends Application {
 
 
 
+	private ListView<TopicItem> topicListView = new ListView<TopicItem>();
 	private ObservableList<TopicItem> listItems =FXCollections.observableArrayList();
 	private void setListItem(TopicItem item)
 	{
@@ -161,6 +186,7 @@ public class Main extends Application {
 
 				);
 		*/
+		// Dumb code, sorry
 		int nItems = listItems.size();
 		for( int j = 0; j < nItems; j++ )
 		{
@@ -169,23 +195,31 @@ public class Main extends Application {
 			{
 				listItems.remove(j);
 				listItems.add(j, item);
+				
+				MultipleSelectionModel<TopicItem> sm = topicListView.getSelectionModel();
+				if(sm.isEmpty())
+					sm.select(j);
+
 				return;
 			}
 		}
 		
 		listItems.add(0, item);
+		
+		MultipleSelectionModel<TopicItem> sm = topicListView.getSelectionModel();
+		if(sm.isEmpty())
+			sm.select(0);
 	}
 
 
 	private ListView<TopicItem> makeListView() {
-		ListView<TopicItem> lv = new ListView<TopicItem>();
-		lv.setPrefWidth(DEFAULT_WIDTH);
+		topicListView.setPrefWidth(DEFAULT_WIDTH);
 		
 		//ObservableSet<TopicItem> items = FXCollections.emptyObservableSet();
 
 
 
-		lv.setItems(listItems);
+		topicListView.setItems(listItems);
 
 		MqttUdpDataSource ds = new MqttUdpDataSource();
 		ds.setSink(ti -> { 
@@ -201,7 +235,7 @@ public class Main extends Application {
 
 		});
 
-		return lv;
+		return topicListView;
 	}
 
 

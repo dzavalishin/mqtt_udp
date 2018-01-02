@@ -4,6 +4,7 @@ public class HostItem implements Comparable<HostItem>{
 
 	private String hostName;
 
+	// TODO IPacketAddress?
 	public HostItem(String hostName ) {
 		this.hostName = hostName;
 	}
@@ -32,6 +33,10 @@ public class HostItem implements Comparable<HostItem>{
 	@Override
 	public int hashCode() {
 		return hostName.hashCode();
+	}
+
+	public String getHostName() {
+		return hostName;
 	}
 	
 }

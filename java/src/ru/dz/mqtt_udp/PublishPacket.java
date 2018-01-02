@@ -3,6 +3,7 @@ package ru.dz.mqtt_udp;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
@@ -11,7 +12,7 @@ public class PublishPacket extends GenericPacket {
 	private String topic;
 	private byte[] value;
 
-	public PublishPacket(byte[] raw, String from) {
+	public PublishPacket(byte[] raw, IPacketAddress from) {
 		int tlen = IPacket.decodeTopicLen( raw );
 
 		topic = new String(raw, 2, tlen, Charset.forName(MQTT_CHARSET));

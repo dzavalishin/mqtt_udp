@@ -1,5 +1,6 @@
 package ru.dz.mqtt_udp;
 
+import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public interface IPacket {
@@ -24,7 +25,7 @@ public interface IPacket {
 
 	public byte[] toBytes();
 
-	public static IPacket fromBytes( byte[] raw, String from ) throws MqttProtocolException
+	public static IPacket fromBytes( byte[] raw, IPacketAddress from ) throws MqttProtocolException
 	{
 		
 	    int dlen = 0;
