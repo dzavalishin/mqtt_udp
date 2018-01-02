@@ -1,7 +1,10 @@
+#!/bin/python
+
 import struct
 import socket
 
-import defs
+#import defs
+import mqtt_udp_defs as defs
 
 # simplest entry point, but recreates socket every time
 
@@ -67,7 +70,7 @@ def make_packet(topic, payload=b''):
     # we assume that topic and payload are already properly encoded
     assert not isinstance(topic, unicode) and not isinstance(payload, unicode) and payload is not None
 
-    command = defs.PUBLISH
+    command = defs.PTYPE_PUBLISH
     packet = bytearray()
     packet.append(command)
 
@@ -80,3 +83,7 @@ def make_packet(topic, payload=b''):
     packet.extend(payload)
 
     return packet
+
+if __name__ == "__main__":
+	import sys
+	send_once(sys.argv[1], sys.argv[2])

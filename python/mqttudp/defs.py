@@ -1,3 +1,4 @@
+#TODO unuse me, use mqtt_udp_defs.py
 
 # Message types
 CONNECT = 0x10

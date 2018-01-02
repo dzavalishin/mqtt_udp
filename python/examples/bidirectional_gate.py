@@ -1,3 +1,5 @@
+#!/bin/python
+
 '''
 Created on 24.12.2017
 
@@ -6,7 +8,7 @@ Created on 24.12.2017
 Listen to all traffic on MQTT/UDP, pump updates to MQTT broker
 '''
 
-# will work even if package is not installed 
+# will work even if package is not installed
 import sys
 sys.path.append('..')
 
@@ -78,4 +80,3 @@ if __name__ == "__main__":
 
     blt.join()
     ult.join()
-    

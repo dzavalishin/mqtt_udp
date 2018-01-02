@@ -5,7 +5,7 @@
 	topic once a 5 sec
 '''
 
-# will work even if package is not installed 
+# will work even if package is not installed
 import sys
 sys.path.append('..')
 

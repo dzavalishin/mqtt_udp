@@ -3,7 +3,8 @@
 #import struct
 import socket
 
-import defs
+#import defs
+import mqtt_udp_defs as defs
 from array import array
 
 BIND_IP = "0.0.0.0"
@@ -32,7 +33,7 @@ def unpack_remaining_length(pkt):
     return remaining_length, pkt
 
 def parse_packet(pkt):
-    if ord(pkt[0]) != defs.PUBLISH:
+    if ord(pkt[0]) != defs.PTYPE_PUBLISH:
         print( "Unknown packet type" )
         #print( pkt.type() )
         for b in pkt:
@@ -55,8 +56,8 @@ if __name__ == "__main__":
     while True:
         pkt = recv_udp_packet(s)    
         topic,value = parse_packet(pkt)
-        if last.has_key(topic) and last[topic] == value:
-            continue
+        #if last.has_key(topic) and last[topic] == value:
+        #    continue
         last[topic] = value
         print topic+"="+value
 
