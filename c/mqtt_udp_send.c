@@ -64,10 +64,8 @@ int mqtt_udp_send( int fd, char *topic, char *data )
     bp += used;
 
 
-    //int net_tlen = htons( tlen );
-    int net_tlen = tlen;
-    *bp++ = (net_tlen >>8) & 0xFF;
-    *bp++ = net_tlen & 0xFF;
+    *bp++ = (tlen >>8) & 0xFF;
+    *bp++ = tlen & 0xFF;
     blen -= 2;
 
     //NB! Must be UTF-8
@@ -87,6 +85,81 @@ int mqtt_udp_send( int fd, char *topic, char *data )
 
     return mqtt_udp_send_pkt( fd, buf, bp-buf );
 }
+
+
+// ----------------------------------------------------
+// Packet with no payload, just type and zero length
+// ----------------------------------------------------
+
+static int mqtt_udp_send_empty_pkt( int fd, char ptype )
+{
+#if 1
+    unsigned char buf[2];
+    buf[0] = ptype;
+    buf[1] = 0;
+    return mqtt_udp_send_pkt( fd, buf, sizeof(buf) );
+#else
+    unsigned char buf[BUFLEN];
+
+
+    int blen = sizeof(buf);
+    unsigned char *bp = buf;
+
+    *bp++ = ptype;
+    blen--;
+
+    int used = 0;
+    int rc = pack_len( bp, &blen, &used, 0 );
+    if( rc ) return rc;
+
+    bp += used;
+
+    return mqtt_udp_send_pkt( fd, buf, bp-buf );
+#endif
+}
+
+
+// ----------------------------------------------------
+// Ping
+// ----------------------------------------------------
+
+
+int mqtt_udp_send_ping_request( int fd )
+{
+#if 1
+    return mqtt_udp_send_empty_pkt( fd, PTYPE_PINGREQ );
+#else
+
+    unsigned char buf[BUFLEN];
+
+
+    int blen = sizeof(buf);
+    unsigned char *bp = buf;
+
+    *bp++ = PTYPE_PINGREQ;
+    blen--;
+
+    int used = 0;
+    int rc = pack_len( bp, &blen, &used, 0 );
+    if( rc ) return rc;
+
+    bp += used;
+
+    return mqtt_udp_send_pkt( fd, buf, bp-buf );
+#endif
+}
+
+
+int mqtt_udp_send_ping_responce( int fd, int ip_addr )
+{
+    return mqtt_udp_send_empty_pkt( fd, PTYPE_PINGRESP );
+}
+
+
+
+
+
+
 
 
 

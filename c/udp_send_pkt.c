@@ -12,7 +12,7 @@
 
 #include "mqtt_udp.h"
 
-#define BUFLEN 512
+//#define BUFLEN 512
 
 int mqtt_udp_send_pkt( int fd, char *data, size_t len )
 {
@@ -33,3 +33,26 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
 
     return (rc != len) ? EIO : 0;
 }
+
+
+int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr )
+{
+    struct sockaddr_in addr;
+
+    struct sockaddr_in serverAddr;
+    socklen_t addr_size;
+
+    /*Configure settings in address struct*/
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons( MQTT_PORT );
+    serverAddr.sin_addr.s_addr = ip_addr;
+    memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
+
+    addr_size = sizeof serverAddr;
+
+    ssize_t rc = sendto( fd, data, len, 0, (struct sockaddr *)&serverAddr, addr_size);
+
+    return (rc != len) ? EIO : 0;
+}
+
+
