@@ -18,6 +18,6 @@ public abstract class SubServer
 		}
 	}
 
-	protected abstract void processPacket(IPacket p);
+	protected abstract void processPacket(IPacket p) throws IOException;
 
 }

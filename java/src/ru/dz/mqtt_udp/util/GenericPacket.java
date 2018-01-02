@@ -18,8 +18,13 @@ public abstract class GenericPacket implements IPacket {
 	//private static final int  MQTT_PORT = 1883;
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
-	protected IPacketAddress from;
+	protected IPacketAddress from = null;
 	
+	/**
+	 * Create new socket to send MQTT/UDP packets.
+	 * @return socket
+	 * @throws SocketException
+	 */
 	public static DatagramSocket sendSocket() throws SocketException
 	{
 		DatagramSocket s = new DatagramSocket();
@@ -27,6 +32,11 @@ public abstract class GenericPacket implements IPacket {
 		return s;
 	}
 
+	/**
+	 * Create new socket to listn to MQTT/UDP packets.
+	 * @return socket
+	 * @throws SocketException
+	 */
 	public static DatagramSocket recvSocket() throws SocketException
 	{
 		DatagramSocket s = new DatagramSocket(mqtt_udp_defs.MQTT_PORT);
@@ -34,6 +44,10 @@ public abstract class GenericPacket implements IPacket {
 		return s;
 	}
 
+	/**
+	 * Create socket, broadcast me, delete socket.
+	 * @throws IOException
+	 */
 	public void send() throws IOException
 	{
 		DatagramSocket s = sendSocket();
@@ -41,14 +55,35 @@ public abstract class GenericPacket implements IPacket {
 		s.close();
 	}
 	
-	public void send(DatagramSocket s) throws IOException
+	/**
+	 * Broadcast me using given socket. 
+	 * @param sock Socket must be made with sendSocket() method.
+	 * @throws IOException
+	 */
+	public void send(DatagramSocket sock) throws IOException
 	{
 		byte[] pkt = toBytes();
 		
 		InetAddress address = InetAddress.getByAddress(broadcast);
 		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
-		s.send(p);
+		sock.send(p);
 	}
+
+	/**
+	 * Send me to given address. 
+	 * @param sock Socket must be made with sendSocket() method.
+	 * @param address Host to send to
+	 * @throws IOException
+	 */
+	public void send(DatagramSocket sock, InetAddress address) throws IOException
+	{
+		byte[] pkt = toBytes();
+		
+		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
+		sock.send(p);
+	}
+
+	
 
 	
 	public static IPacket recv() throws SocketException, IOException, MqttProtocolException

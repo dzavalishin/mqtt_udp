@@ -1,5 +1,6 @@
 package ru.dz.mqtt_udp.io;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
@@ -11,6 +12,16 @@ public class IpAddress extends GeneralAddress implements Comparable<IPacketAddre
 	{
 		this.socketAddress = socketAddress;
 		
+	}
+
+	@Override
+	public InetAddress getInetAddress() {
+		if (socketAddress instanceof InetSocketAddress) {
+			InetSocketAddress sa = (InetSocketAddress) socketAddress;
+	
+			return sa.getAddress();
+		}
+		return null;
 	}
 	
 	@Override

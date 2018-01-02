@@ -1,5 +1,5 @@
 package ru.dz.mqtt_udp.io;
 
-public class GeneralAddress implements IPacketAddress {
+public abstract class GeneralAddress implements IPacketAddress {
 
 }

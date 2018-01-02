@@ -1,5 +1,6 @@
 package ru.dz.mqtt.viewer;
 
+import java.net.SocketException;
 import java.net.URL;
 
 import javafx.application.Application;
@@ -221,7 +222,12 @@ public class Main extends Application {
 
 		topicListView.setItems(listItems);
 
-		MqttUdpDataSource ds = new MqttUdpDataSource();
+		MqttUdpDataSource ds;
+		try {
+			ds = new MqttUdpDataSource();
+		} catch (SocketException e) {
+			throw new RuntimeException(e);
+		}
 		ds.setSink(ti -> { 
 			Platform.runLater(new Runnable(){
 				@Override

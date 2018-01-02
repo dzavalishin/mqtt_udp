@@ -1,5 +1,7 @@
 package ru.dz.mqtt_udp.io;
 
+import java.net.InetAddress;
+
 /**
  * 
  * Address packet received from or will be sent to.
@@ -13,5 +15,7 @@ package ru.dz.mqtt_udp.io;
 public interface IPacketAddress {
 
 	public String toString();
+
+	public InetAddress getInetAddress();
 	
 }

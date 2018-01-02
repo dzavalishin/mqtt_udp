@@ -52,12 +52,18 @@ public interface IPacket {
 	    byte[] sub = new byte[slen];	    
 	    System.arraycopy(raw, pos, sub, 0, slen);
 	    
+	    int ptype = 0xF0 & (int)(raw[0]);
 	    
-		switch(raw[0])
+		switch(ptype)
 		{
-		//case PT_PUBLISH:
 		case mqtt_udp_defs.PTYPE_PUBLISH:
 			return new PublishPacket(sub, from);
+
+		case mqtt_udp_defs.PTYPE_PINGREQ:
+			return new PingReqPacket(sub, from);
+			
+		case mqtt_udp_defs.PTYPE_PINGRESP:
+			return new PingRespPacket(sub, from);
 			
 		default:
 				throw new MqttProtocolException("Unknown pkt type "+raw[0]);
