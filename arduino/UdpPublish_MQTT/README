@@ -1,5 +1,6 @@
 
-This example uses https://github.com/UIPEthernet/UIPEthernet library 
-for UDP/IP stack.
+This example uses
 
-Please add include files from ../../c
+ -  https://github.com/UIPEthernet/UIPEthernet library for UDP/IP stack.
+ - ../MQTT_UDP library for Arduino MQTT/UDP implementation
+

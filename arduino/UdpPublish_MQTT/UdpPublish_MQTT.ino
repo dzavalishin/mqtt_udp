@@ -1,5 +1,4 @@
 #include <mqtt_udp.h>
-#include <mqtt_udp_local.h>
 #include <UIPEthernet.h>
 
 EthernetUDP udp;
@@ -28,7 +27,7 @@ void setup() {
 void loop() {
 
   //int rc = 
-  mqtt_udp_send( 0, "From", "Arduino" );
+  mqtt_udp_send( 0, "From", "Arduino1" );
   delay(1000);
   return;
 }
@@ -44,6 +43,7 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
   return 0;
 }
 
+#if 0
 
 
 #define BUFLEN 512
@@ -120,6 +120,7 @@ int mqtt_udp_send( int fd, char *topic, char *data )
     return mqtt_udp_send_pkt( fd, (char *)buf, bp-buf );
 }
 
+#endif
 
 
 

@@ -1,0 +1,26 @@
+{
+  "name": "MQTT/UDP",
+  "keywords": "server, client, ethernet, mqtt, udp",
+  "description": "MQTT/UDP implementation for Arduino",
+  "authors":
+  [
+    {
+      "name": "Dmitry Zavalishin",
+      "email": "dz@dz.ru",
+      "url": "https://github.com/dzavalishin/mqtt_udp",
+      "maintainer": true
+    }    
+  ],
+  "include": [
+    "*.c",
+    "*.cpp",
+    "*.h"
+  ],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/dzavalishin/mqtt_udp"
+  },
+  "frameworks": "arduino",
+  "platforms": "atmelavr"
+}
