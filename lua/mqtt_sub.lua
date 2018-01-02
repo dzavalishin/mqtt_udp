@@ -1,11 +1,12 @@
 #!/usr/bin/lua
 
 local mqlib = require("mqtt_udp_lib")
+local defs  = require("mqtt_udp_defs.lua")
 
 local socket = require("socket")
 
 udp = socket.udp()
-udp:setsockname("*", 1883)
+udp:setsockname("*", defs.MQTT_PORT )
 udp:settimeout(1)
 
 while true do
@@ -21,7 +22,8 @@ end
 
 function parse_packet(pkt)
 
-	if( pkt[0] ~= 0x30 ) then
+	--if( pkt[0] ~= 0x30 ) then
+	if( pkt[0] ~= defs.PTYPE_PUBLISH ) then
 		return "","";
 	end
 

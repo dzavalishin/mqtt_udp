@@ -32,6 +32,8 @@ $(FN).py: $(FN).definitions  inc_txt2python/*
 	-rm $@.1
 	$(SENDTO) ../../python/mqttudp/
 
+
 $(FN).lua: $(FN).definitions  inc_txt2lua/*
 	$(CPP) -Iinc_txt2lua $(FN).definitions $@
+	$(SENDTO) ../../lua/
 
