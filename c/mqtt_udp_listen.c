@@ -34,7 +34,7 @@ static int handle_empty( int src_ip, int ptype )
         break;
 
     default:
-        printf("%d?\n", ptype );
+        printf("pkt type %d?\n", ptype );
         break;
 
     }

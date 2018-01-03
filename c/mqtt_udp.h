@@ -30,6 +30,36 @@ int mqtt_udp_send_ping_responce( int fd, int ip_addr );
 
 
 // --------------------------------------------------------------------------
+// Parse packet
+// --------------------------------------------------------------------------
+
+struct mqtt_udp_pkt
+{
+    int         from_ip;
+
+    int         ptype;          // upper 4 bits
+    int         pflags;         // lower 4 bits
+
+    size_t      total;   	// length of the rest of pkt down from here
+
+    int 	pkt_id;
+
+    size_t      topic_len;
+    char *      topic;
+
+    size_t      value_len;
+    char *      value;
+};
+
+
+typedef int (*process_pkt)( struct mqtt_udp_pkt *pkt );
+
+
+int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_pkt callback );
+int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
+
+
+// --------------------------------------------------------------------------
 // Recieve (unfinshed)
 // --------------------------------------------------------------------------
 

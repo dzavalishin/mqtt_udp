@@ -136,6 +136,64 @@ int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen
 }
 
 
+int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen, int *pkt_id_p )
+{
+    const char *pstart = pkt;
+
+    if( plen <= 4 )
+        return EINVAL;
+
+    unsigned char type = *pkt++;
+
+    // lower 4 bits must be 0 - covered below
+    //if( (type & 0xF) != 0 )
+    //    return EINVAL;
+
+    if( type != PTYPE_SUBSCRIBE )
+        return EINVAL;
+
+    size_t total = mqtt_udp_decode_size( (char **)&pkt );
+
+    total += CHEWED;
+
+    if( total > MAX_SZ )
+        return EINVAL;
+
+    int pkt_id = (pkt[0] << 8) | pkt[1];
+    pkt += 2;
+    total -= 2;
+    if( pkt_id_p ) *pkt_id_p = pkt_id;
+
+
+    if( total+1 > plen )
+        return EINVAL;
+
+    size_t tlen = mqtt_udp_decode_topic_len( pkt );
+    pkt += 2;
+
+    if( tlen > MAX_SZ )
+        return EINVAL;
+
+    if( CHEWED + tlen > total )
+        return EINVAL;
+
+    //tlen++; // strlcpy needs place for zero
+    int tcopy = (tlen+1 > o_tlen) ? o_tlen : tlen+1;
+    strlcpy( topic, pkt, tcopy );
+
+    /*
+    pkt += tlen;
+
+    size_t vlen = total - CHEWED;
+    if( vlen > MAX_SZ )
+        return EINVAL;
+    */
+
+    return 0;
+}
+
+
+
 // --------------------------------------------------------------
 // General reception code
 // --------------------------------------------------------------
@@ -158,6 +216,11 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
         return rc;
     }
 
+    {
+        // test new parser
+        mqtt_udp_parse_any_pkt( buf, BUFLEN, 0xAA55EEDD, mqtt_udp_dump_any_pkt );
+    }
+
     unsigned char ptype = buf[0];
 
     switch( ptype )
@@ -175,6 +238,18 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
         }
         break;
 
+    case PTYPE_SUBSCRIBE:
+        {
+            char topic[BUFLEN];
+            int pkt_id;
+            rc = mqtt_udp_parse_subscribe_pkt( buf, BUFLEN, topic, BUFLEN, &pkt_id );
+            if(rc) return rc;
+
+            if( h->handle_p )
+                return h->handle_p( src_ip, ptype, topic, "" );
+        }
+        break;
+
     case PTYPE_PINGREQ:
     case PTYPE_PINGRESP:
         {
@@ -188,21 +263,6 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
 
     }
 
-/*
-
-        char topic[BUFLEN];
-        char value[BUFLEN];
-
-        rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
-        if( rc )
-        {
-            printf("not parsed\n");
-            dump(buf);
-        }
-        else
-            printf("'%s' = '%s'\n", topic, value );
-*/
-
     return 0;
 }
 
@@ -210,7 +270,6 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
 // Process all incoming packets. Return only if error.
 int mqtt_udp_recv_loop( struct mqtt_udp_handlers *h )
 {
-
     int fd, rc;
 
     fd = mqtt_udp_socket();
@@ -231,28 +290,10 @@ int mqtt_udp_recv_loop( struct mqtt_udp_handlers *h )
             close(fd);
             return rc;
         }
-/*
-        memset(buf, 0, sizeof(buf));
-        rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN, 0 );
-
-
-        char topic[BUFLEN];
-        char value[BUFLEN];
-
-        rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
-        if( rc )
-        {
-            printf("not parsed\n");
-            dump(buf);
-        }
-        else
-            printf("'%s' = '%s'\n", topic, value );
-*/
     }
 
     close(fd);
     return 0;
-
 }
 
 

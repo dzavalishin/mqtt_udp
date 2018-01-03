@@ -10,7 +10,7 @@ run::
 clean::
 	-rm *.o *.exe
 
-OBJS=udp_send_pkt.o mqtt_udp.o 
+OBJS=udp_send_pkt.o mqtt_udp.o mqtt_udp_parse.o
 
 mqtt_udp_pub: $(OBJS) mqtt_udp_send.o mqtt_udp_pub.o
 	$(CC) $(CFLAGS) -o $@ $^
