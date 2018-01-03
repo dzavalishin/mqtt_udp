@@ -218,7 +218,9 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
 
     {
         // test new parser
-        mqtt_udp_parse_any_pkt( buf, BUFLEN, 0xAA55EEDD, mqtt_udp_dump_any_pkt );
+        int rc = mqtt_udp_parse_any_pkt( buf, BUFLEN, src_ip, mqtt_udp_dump_any_pkt );
+        if(rc) printf("err %d mqtt_udp_parse_any_pkt\n", rc );
+        return 0;
     }
 
     unsigned char ptype = buf[0];

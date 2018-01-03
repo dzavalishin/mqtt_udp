@@ -32,7 +32,8 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     struct mqtt_udp_pkt o;
     const char *pstart = pkt;
 
-    if( plen <= 2 )        return EINVAL;
+
+    if( plen <= 2 )        return -1;
 
     o.from_ip = from_ip;
 
@@ -43,7 +44,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
     o.total = mqtt_udp_decode_size( (char **)&pkt );
 
-    if( o.total+2 > plen )        return EINVAL;
+    if( o.total+2 > plen )        return -2;
 
     if( MQTT_UDP_PKT_HAS_ID(o) )
     {
@@ -73,10 +74,10 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     pkt += 2;
 
     if( tlen > MAX_SZ )
-        return EINVAL;
+        return -3;
 
-    if( CHEWED + tlen > o.total )
-        return EINVAL;
+    if( CHEWED + tlen > o.total + 2 )
+        return -4;
 
     o.topic = malloc( tlen+2 );
     if( o.topic == 0 ) return ENOMEM;
@@ -86,9 +87,9 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
     pkt += tlen;
 
-    size_t vlen = o.total - CHEWED;
+    size_t vlen = o.total - CHEWED + 2;
     if( vlen > MAX_SZ )
-        return EINVAL;
+        return -5;
 
     if( o.ptype != PTYPE_PUBLISH )
         goto done;
@@ -142,9 +143,28 @@ static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt )
 
 
 
+static char *ptname[] =
+{
+    "?0x00",
+    "CONNECT",	"CONNACK", 	"PUBLISH", 	"PUBACK",
+    "PUBREC",   "PUBREL",       "PUBCOMP",      "SUBSCRIBE",
+    "SUBACK",   "UNSUBSCRIBE",  "UNSUBACK",     "PINGREQ",
+    "PINGRESP", "DISCONNECT",
+    "?0xF0"
+};
+
+
 int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 {
-    printf( "pkt type %x flags %x, id %d from %08X", o->ptype, o->pflags, o->pkt_id, o->from_ip );
+    const char *tn = ptname[ o->ptype >> 4 ];
+
+    printf( "pkt %s flags %x, id %d from %d.%d.%d.%d",
+            tn, o->pflags, o->pkt_id,
+            0xFF & (o->from_ip >> 24),
+            0xFF & (o->from_ip >> 16),
+            0xFF & (o->from_ip >> 8),
+            0xFF & (o->from_ip)
+          );
 
     if( o->topic_len > 0 )
         printf(" topic '%s'", o->topic );
