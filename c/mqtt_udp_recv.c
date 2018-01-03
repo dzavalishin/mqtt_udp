@@ -15,7 +15,7 @@
 
 
 
-int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen )
+int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr )
 {
     struct sockaddr_in addr;
 /*
@@ -45,6 +45,9 @@ int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen )
 
     recvfrom(fd, buf, buflen, 0, (struct sockaddr *) &addr, &slen);
 
+    if( src_ip_addr ) *src_ip_addr = ntohl( addr.sin_addr.s_addr );
+
+    return 0;
 }
 
 
@@ -131,4 +134,125 @@ int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen
 
     return 0;
 }
+
+
+// --------------------------------------------------------------
+// General reception code
+// --------------------------------------------------------------
+
+// TODO need global constant def!
+#define BUFLEN 1400
+
+
+// Wait for one incoming packet, parse and call corresponding callback
+int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
+{
+    unsigned char buf[BUFLEN];
+    int rc, src_ip;
+
+    memset(buf, 0, sizeof(buf));
+    rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN, &src_ip );
+    if(rc)
+    {
+        perror("pkt recv");
+        return rc;
+    }
+
+    unsigned char ptype = buf[0];
+
+    switch( ptype )
+    {
+    case PTYPE_PUBLISH:
+        {
+            char topic[BUFLEN];
+            char value[BUFLEN];
+
+            rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
+            if(rc) return rc;
+
+            if( h->handle_p )
+                return h->handle_p( src_ip, ptype, topic, value );
+        }
+        break;
+
+    case PTYPE_PINGREQ:
+    case PTYPE_PINGRESP:
+        {
+            if( h->handle_e )
+                return h->handle_e( src_ip, ptype );
+        }
+        break;
+
+    default:
+        return h->handle_u( src_ip, buf, BUFLEN ); // TODO need correct len
+
+    }
+
+/*
+
+        char topic[BUFLEN];
+        char value[BUFLEN];
+
+        rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
+        if( rc )
+        {
+            printf("not parsed\n");
+            dump(buf);
+        }
+        else
+            printf("'%s' = '%s'\n", topic, value );
+*/
+
+    return 0;
+}
+
+
+// Process all incoming packets. Return only if error.
+int mqtt_udp_recv_loop( struct mqtt_udp_handlers *h )
+{
+
+    int fd, rc;
+
+    fd = mqtt_udp_socket();
+    if(fd < 0) return -1;
+
+    rc = mqtt_udp_bind( fd );
+    if(rc)
+    {
+        close(fd);
+        return -2;
+    }
+
+    while(1)
+    {
+        rc = mqtt_udp_recv( fd, h );
+        if(rc)
+        {
+            close(fd);
+            return rc;
+        }
+/*
+        memset(buf, 0, sizeof(buf));
+        rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN, 0 );
+
+
+        char topic[BUFLEN];
+        char value[BUFLEN];
+
+        rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
+        if( rc )
+        {
+            printf("not parsed\n");
+            dump(buf);
+        }
+        else
+            printf("'%s' = '%s'\n", topic, value );
+*/
+    }
+
+    close(fd);
+    return 0;
+
+}
+
 

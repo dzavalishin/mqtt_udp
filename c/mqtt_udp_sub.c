@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     do {
 
         memset(buf, 0, sizeof(buf));
-        rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN );
+        rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN, 0 );
 
 #if 0
         printf("Recieved!\n");

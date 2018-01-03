@@ -35,9 +35,29 @@ int mqtt_udp_send_ping_responce( int fd, int ip_addr );
 
 
 //void (*mqtt_udp_handle_recv)( char *topic, char *data );
-typedef void (*mqtt_udp_handle_recv)( char *, char * );
 
-int mqtt_udp_recv( int fd, mqtt_udp_handle_recv handle );
+// Handle incoming PUBLISH type packet
+typedef int (*mqtt_udp_handle_publish)( int src_ip, int ptype, char *topic, char *value );
+
+// Handle incoming packet with no payload - PINGREQ, PINGRESP
+typedef int (*mqtt_udp_handle_empty)( int src_ip, int ptype );
+
+// Handle unknown incoming packets - raw content
+typedef int (*mqtt_udp_handle_unknown)( int src_ip, char *data, int len );
+
+struct mqtt_udp_handlers
+{
+    mqtt_udp_handle_publish	handle_p;
+    mqtt_udp_handle_empty	handle_e;
+
+    mqtt_udp_handle_unknown     handle_u;
+};
+
+// Wait for one incoming packet, parse and call corresponding callback
+int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h );
+
+// Process all incoming packets. Return only if error.
+int mqtt_udp_recv_loop( struct mqtt_udp_handlers *h );
 
 
 // --------------------------------------------------------------------------
@@ -51,7 +71,7 @@ int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
 
 
 // Low level packet recv
-int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen );
+int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr );
 // Parse PUBLISH
 int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen, char *value, size_t o_vlen );
 

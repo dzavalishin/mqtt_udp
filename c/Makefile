@@ -2,7 +2,7 @@ CFLAGS += -g
 
 goal:: all run
 
-all:: mqtt_udp_pub mqtt_udp_sub
+all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen
 
 run::
 	./mqtt_udp_sub
@@ -18,4 +18,5 @@ mqtt_udp_pub: $(OBJS) mqtt_udp_send.o mqtt_udp_pub.o
 mqtt_udp_sub: $(OBJS) mqtt_udp_recv.o mqtt_udp_sub.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-
+mqtt_udp_listen: $(OBJS) mqtt_udp_recv.o mqtt_udp_listen.o
+	$(CC) $(CFLAGS) -o $@ $^
