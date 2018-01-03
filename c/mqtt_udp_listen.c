@@ -10,6 +10,25 @@
 #include "mqtt_udp.h"
 
 
+
+#if MQTT_UDP_NEW_PARSER
+
+int main(int argc, char *argv[])
+{
+    int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
+    if( rc ) {
+        printf("mqtt_udp_recv_loop() = %d", rc);
+        perror("error");
+        exit(1);
+    }
+
+    return 0;
+}
+
+
+#else // MQTT_UDP_NEW_PARSER
+
+
 static int handle_publish( int src_ip, int ptype, char *topic, char *value )
 {
     if( ptype == PTYPE_PUBLISH )
@@ -81,5 +100,5 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-
+#endif // MQTT_UDP_NEW_PARSER
 

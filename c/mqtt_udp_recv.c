@@ -203,7 +203,11 @@ int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, siz
 
 
 // Wait for one incoming packet, parse and call corresponding callback
+#if MQTT_UDP_NEW_PARSER
+int mqtt_udp_recv( int fd, process_pkt callback )
+#else
 int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
+#endif
 {
     unsigned char buf[BUFLEN];
     int rc, src_ip;
@@ -216,13 +220,11 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
         return rc;
     }
 
-    {
-        // test new parser
-        int rc = mqtt_udp_parse_any_pkt( buf, BUFLEN, src_ip, mqtt_udp_dump_any_pkt );
-        if(rc) printf("err %d mqtt_udp_parse_any_pkt\n", rc );
-        return 0;
-    }
-
+#if MQTT_UDP_NEW_PARSER
+    rc = mqtt_udp_parse_any_pkt( buf, BUFLEN, src_ip, callback );
+    //if(rc) printf("err %d mqtt_udp_parse_any_pkt\n", rc );
+    return rc;
+#else // MQTT_UDP_NEW_PARSER
     unsigned char ptype = buf[0];
 
     switch( ptype )
@@ -266,11 +268,16 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
     }
 
     return 0;
+#endif // MQTT_UDP_NEW_PARSER
 }
 
 
 // Process all incoming packets. Return only if error.
+#if MQTT_UDP_NEW_PARSER
+int mqtt_udp_recv_loop( process_pkt h )
+#else
 int mqtt_udp_recv_loop( struct mqtt_udp_handlers *h )
+#endif
 {
     int fd, rc;
 
