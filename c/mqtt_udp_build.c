@@ -26,22 +26,31 @@ static int pack_len( char *buf, int *blen, int *used, int data_len );
 
 
 // -----------------------------------------------------------------------
-//
+// Clear
+// -----------------------------------------------------------------------
+
+void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p )
+{
+    memset( p, 0, sizeof(struct mqtt_udp_pkt) );
+}
+
+// -----------------------------------------------------------------------
+// Build
 // -----------------------------------------------------------------------
 
 
 
-#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt.pflags) & 0x6)
+//#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt.pflags) & 0x6)
 
 
 // sanity check
 //#define MAX_SZ (4*1024)
 //#define CHEWED (pkt - pstart)
 
-#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt->pflags) & 0x6)
+//#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt->pflags) & 0x6)
 
-
-int mqtt_udp_build_any_pkt( const char *buf, size_t blen, struct mqtt_udp_pkt *p )
+// out_len - length of build packet
+int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size_t *out_len )
 {
     // TODO check for consistency - if pkt has to have topic & value and has it
 
@@ -50,12 +59,15 @@ int mqtt_udp_build_any_pkt( const char *buf, size_t blen, struct mqtt_udp_pkt *p
 
     unsigned char *bp = buf;
 
+    if( out_len ) *out_len = 0;
+
     *bp++ = (p->ptype & 0xF0) | (p->pflags & 0x0F);
     blen--;
 
     // TODO incorrect
     int total = tlen + dlen + 2 + 2; // packet size
-    if( MQTT_UDP_PKT_HAS_ID(p) ) total += 2;
+    //if( MQTT_UDP_PKT_HAS_ID(p) ) total += 2;
+    if(MQTT_UDP_FLAGS_HAS_ID(p->pflags)) total += 2;
 
     if( total > blen )
         return ENOMEM;
@@ -68,7 +80,8 @@ int mqtt_udp_build_any_pkt( const char *buf, size_t blen, struct mqtt_udp_pkt *p
 
     bp += used;
 
-    if( MQTT_UDP_PKT_HAS_ID(p) )
+    //if( MQTT_UDP_PKT_HAS_ID(p) )
+    if(MQTT_UDP_FLAGS_HAS_ID(p->pflags))
     {
         *bp++ = (p->pkt_id >> 8) & 0xFF;
         *bp++ = p->pkt_id & 0xFF;
@@ -81,6 +94,7 @@ int mqtt_udp_build_any_pkt( const char *buf, size_t blen, struct mqtt_udp_pkt *p
         *bp++ = tlen & 0xFF;
         blen -= 2;
 
+        const char *topic = p->topic;
         //NB! Must be UTF-8
         while( tlen-- > 0 )
         {
@@ -89,6 +103,7 @@ int mqtt_udp_build_any_pkt( const char *buf, size_t blen, struct mqtt_udp_pkt *p
             blen--;
         }
 
+        const char *data = p->value;
         while( dlen-- > 0 )
         {
             if( blen <= 0 ) return ENOMEM;
@@ -98,6 +113,9 @@ int mqtt_udp_build_any_pkt( const char *buf, size_t blen, struct mqtt_udp_pkt *p
 
     }
 
+    if( out_len ) *out_len = bp - (unsigned char *)buf;
+
+    return 0;
 }
 
 

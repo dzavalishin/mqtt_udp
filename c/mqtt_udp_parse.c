@@ -47,6 +47,8 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
     if( plen <= 2 )        return -1;
 
+    mqtt_udp_clear_pkt( &o );
+
     o.from_ip = from_ip;
 
     o.ptype = *pkt++;
@@ -58,7 +60,8 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
     if( o.total+2 > plen )        return -2;
 
-    if( MQTT_UDP_PKT_HAS_ID(o) )
+    //if( MQTT_UDP_PKT_HAS_ID(o) )
+    if(MQTT_UDP_FLAGS_HAS_ID(o.pflags))
     {
         o.pkt_id = (pkt[0] << 8) | pkt[1];
         pkt += 2;

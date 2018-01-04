@@ -24,7 +24,7 @@
 
 #include "mqtt_udp.h"
 
-static void dump( const char *buf );
+//static void dump( const char *buf );
 
 
 #define BUFLEN 64
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         if( rc )
         {
             printf("not parsed\n");
-            dump(buf);
+            mqtt_udp_dump( buf, BUFLEN );
         }
         else
             printf("'%s' = '%s'\n", topic, value );
@@ -79,6 +79,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+/*
 
 static void dump( const char *buf )
 {
@@ -94,4 +95,6 @@ static void dump( const char *buf )
     }
     printf("\n");
 }
+
+*/
 

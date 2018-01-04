@@ -44,7 +44,7 @@ int mqtt_udp_send_ping_responce( int fd, int ip_addr );
 
 
 // --------------------------------------------------------------------------
-// Parse packet
+// General packet representation
 // --------------------------------------------------------------------------
 
 struct mqtt_udp_pkt
@@ -69,6 +69,27 @@ struct mqtt_udp_pkt
 typedef int (*process_pkt)( struct mqtt_udp_pkt *pkt );
 
 
+
+#define MQTT_UDP_FLAGS_HAS_RETAIN(pflags)  ((pflags) & 0x1)
+#define MQTT_UDP_FLAGS_HAS_QOS1(pflags)  ((pflags) & 0x2)
+#define MQTT_UDP_FLAGS_HAS_QOS2(pflags)  ((pflags) & 0x4)
+#define MQTT_UDP_FLAGS_HAS_DUP(pflags)  ((pflags) & 0x8)
+
+// Flags field has bits which tell us to use packet id field
+#define MQTT_UDP_FLAGS_HAS_ID(pflags)  ((pflags) & 0x6)
+
+
+#define MQTT_UDP_FLAGS_SET_RETAIN(pflags)  ((pflags) |= 0x1)
+#define MQTT_UDP_FLAGS_SET_QOS1(pflags)  ((pflags) |= 0x2)
+#define MQTT_UDP_FLAGS_SET_QOS2(pflags)  ((pflags) |= 0x4)
+#define MQTT_UDP_FLAGS_SET_DUP(pflags)  ((pflags) |= 0x8)
+
+// --------------------------------------------------------------------------
+// General packet representation - build to binary / parse from binary / etc
+// --------------------------------------------------------------------------
+
+void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p );
+int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size_t *out_len );
 int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_pkt callback );
 int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
@@ -130,6 +151,14 @@ int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
 int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr );
 // Parse PUBLISH
 int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen, char *value, size_t o_vlen );
+
+// --------------------------------------------------------------------------
+// util
+// --------------------------------------------------------------------------
+
+
+void mqtt_udp_dump( const char *buf, size_t len );
+
 
 
 #ifdef __cplusplus

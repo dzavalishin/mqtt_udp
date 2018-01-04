@@ -51,6 +51,33 @@ int mqtt_udp_send( int fd, char *topic, char *data )
     return mqtt_udp_send_publish( fd, topic, data );
 }
 
+#if 1
+int mqtt_udp_send_publish( int fd, char *topic, char *data )
+{
+    struct mqtt_udp_pkt p;
+    unsigned char buf[BUFLEN];
+    int rc;
+    size_t out_size;
+
+    mqtt_udp_clear_pkt( &p );
+
+    p.ptype = PTYPE_PUBLISH;
+    p.topic = topic;
+    p.value = data;
+    p.topic_len = strlen( topic );
+    p.value_len = strlen( data );
+
+    mqtt_udp_dump_any_pkt( &p );
+
+    rc = mqtt_udp_build_any_pkt( buf, BUFLEN, &p, &out_size );
+    if( rc ) return rc;
+
+    mqtt_udp_dump( buf, out_size );
+
+    return mqtt_udp_send_pkt( fd, buf, out_size );
+}
+
+#else
 int mqtt_udp_send_publish( int fd, char *topic, char *data )
 {
     unsigned char buf[BUFLEN];
@@ -98,7 +125,7 @@ int mqtt_udp_send_publish( int fd, char *topic, char *data )
 
     return mqtt_udp_send_pkt( fd, buf, bp-buf );
 }
-
+#endif
 
 // ----------------------------------------------------
 // Packet with no payload, just type and zero length

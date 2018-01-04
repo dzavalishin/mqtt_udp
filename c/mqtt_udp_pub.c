@@ -18,19 +18,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <locale.h>
-#include <fcntl.h>
+//#include <locale.h>
+//#include <fcntl.h>
 #include <errno.h>
 
 #include "mqtt_udp.h"
 
 
-#define BUFLEN 512
+//#define BUFLEN 512
 
 int main(int argc, char *argv[])
 {
     int fd;
-    unsigned char buf[BUFLEN];
+    //unsigned char buf[BUFLEN];
 
     if( argc != 3 )
     {
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     char *value = argv[2];
     char *topic = argv[1];
 
-    printf("will publish '%s' to topic '%s'", value, topic );
+    printf("will publish '%s' to topic '%s'\n", value, topic );
 
     fd = mqtt_udp_socket();
     int rc = mqtt_udp_send_publish( fd, topic, value );
