@@ -1,3 +1,15 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * Dump all incoming packets
+ *
+**/
+
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>

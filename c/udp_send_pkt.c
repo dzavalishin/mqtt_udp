@@ -1,3 +1,15 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * Network connection - send UDP packet. To be rewritten per target OS.
+ *
+**/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -12,7 +24,7 @@
 
 #include "mqtt_udp.h"
 
-//#define BUFLEN 512
+
 
 int mqtt_udp_send_pkt( int fd, char *data, size_t len )
 {

@@ -1,3 +1,15 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * Reception
+ *
+**/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -13,7 +25,7 @@
 #include "mqtt_udp.h"
 
 
-
+// TODO move to separate src file - OS binding
 
 int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr )
 {
@@ -50,6 +62,9 @@ int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_ad
     return 0;
 }
 
+
+// TODO kill me
+#if 1
 
 static size_t mqtt_udp_decode_size( char **pkt )
 {
@@ -192,7 +207,7 @@ int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, siz
     return 0;
 }
 
-
+#endif
 
 // --------------------------------------------------------------
 // General reception code

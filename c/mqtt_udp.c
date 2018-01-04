@@ -1,3 +1,15 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * General network code - must be different per OS
+ *
+**/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

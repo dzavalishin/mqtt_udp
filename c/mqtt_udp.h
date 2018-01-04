@@ -1,3 +1,15 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * Main header file
+ *
+**/
+
 #ifndef MQTT_UDP_H
 #define MQTT_UDP_H
 

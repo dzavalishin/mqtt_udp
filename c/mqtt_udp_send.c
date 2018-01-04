@@ -1,13 +1,19 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * Packet send
+ *
+**/
+
 #include <sys/types.h>
-//#include <sys/socket.h>
-//#include <netinet/in.h>
-//#include <arpa/inet.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <unistd.h>
-//#include <locale.h>
-//#include <fcntl.h>
 #include <errno.h>
 
 #include "mqtt_udp.h"

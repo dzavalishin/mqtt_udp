@@ -1,3 +1,15 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * Data reception example code
+ *
+**/
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

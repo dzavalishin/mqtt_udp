@@ -1,3 +1,15 @@
+/**
+ *
+ * MQTT/UDP project
+ *
+ * https://github.com/dzavalishin/mqtt_udp
+ * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ *
+ * Generalized MQTT/UDP packet parser
+ *
+**/
+
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
@@ -13,7 +25,7 @@ static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt );
 
 
 // -----------------------------------------------------------------------
-// Unfinished - generalized MQTT packet parser
+// parse
 // -----------------------------------------------------------------------
 
 
@@ -141,6 +153,9 @@ static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt )
 }
 
 
+// -----------------------------------------------------------------------
+// dump
+// -----------------------------------------------------------------------
 
 
 static char *ptname[] =
