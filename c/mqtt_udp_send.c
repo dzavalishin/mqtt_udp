@@ -18,7 +18,7 @@
 
 #include "mqtt_udp.h"
 
-#define BUFLEN 512
+#define BUFLEN PKT_BUF_SIZE // 512
 
 
 

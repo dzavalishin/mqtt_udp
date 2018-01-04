@@ -27,7 +27,7 @@
 //static void dump( const char *buf );
 
 
-#define BUFLEN 64
+#define BUFLEN PKT_BUF_SIZE // 64
 
 int main(int argc, char *argv[])
 {

@@ -25,12 +25,10 @@
 #include "mqtt_udp.h"
 
 
-//#define BUFLEN 512
 
 int main(int argc, char *argv[])
 {
     int fd;
-    //unsigned char buf[BUFLEN];
 
     if( argc != 3 )
     {

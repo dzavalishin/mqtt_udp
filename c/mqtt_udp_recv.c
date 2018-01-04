@@ -216,7 +216,8 @@ int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, siz
 // --------------------------------------------------------------
 
 // TODO need global constant def!
-#define BUFLEN 1400
+//#define BUFLEN 1400
+#define BUFLEN PKT_BUF_SIZE
 
 
 // Wait for one incoming packet, parse and call corresponding callback

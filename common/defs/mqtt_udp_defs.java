@@ -16,4 +16,5 @@ public static final int PTYPE_PINGREQ = 0xC0;
 public static final int PTYPE_PINGRESP = 0xD0;
 public static final int PTYPE_DISCONNECT = 0xE0;
 public static final int MQTT_PORT = 1883;
+public static final int PKT_BUF_SIZE = 2048;
 }

@@ -14,3 +14,4 @@
 #define PTYPE_PINGRESP   0xD0 
 #define PTYPE_DISCONNECT   0xE0 
 #define MQTT_PORT   1883 
+#define PKT_BUF_SIZE   2048 

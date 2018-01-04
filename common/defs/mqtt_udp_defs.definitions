@@ -18,6 +18,7 @@ id(PTYPE_DISCONNECT,0xE0)
 
 id(MQTT_PORT,1883)
 
+id(PKT_BUF_SIZE,2048)
 
 
 #include "conv_footer"
