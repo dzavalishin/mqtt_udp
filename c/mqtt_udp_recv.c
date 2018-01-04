@@ -24,6 +24,7 @@
 
 #include "mqtt_udp.h"
 
+#if 0
 
 // TODO move to separate src file - OS binding
 
@@ -62,6 +63,7 @@ int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_ad
     return 0;
 }
 
+#endif
 
 // TODO kill me
 #if 1
