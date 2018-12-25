@@ -1,0 +1,21 @@
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/HTTP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM MQTT_UDP_PRG
+VAR
+	MQ		:	MQTT_UDP;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+	(* 	MQ_SEND_REAL( MQ, 'Name', Value );  *)
+
+	MQ_SEND_REAL( MQ, 'PLK0_WarmWaterConsumption', GLOBAL_WarmWaterConsumption );
+	MQ_SEND_REAL( MQ, 'PLK0_ColdWaterConsumption', GLOBAL_ColdWaterConsumption );
+
+	MQ_SEND_REAL( MQ, 'PLK0_activePa', GLOBAL_activePa_avg * 10 ); 
+	MQ_SEND_REAL(  MQ, 'PLK0_Va', Va );
+
+END_PROGRAM
