@@ -5,7 +5,10 @@ Created on 24.12.2017
 
 @author: dz
 
-Listen to all traffic on MQTT/UDP, pump updates to MQTT broker
+	This program will:
+		- subscribe to all the topics on a given MQTT broker 
+		  and pump all the updates to MQTT/UDP environment,
+		- listen to all traffic on MQTT/UDP, pump updates to MQTT broker.
 '''
 
 # will work even if package is not installed

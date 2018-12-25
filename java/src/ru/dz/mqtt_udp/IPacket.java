@@ -47,7 +47,7 @@ public interface IPacket {
 	    if(slen > dlen) slen = dlen; // TODO log warning
 	    
 	    if( slen < dlen)
-	    	throw new MqttProtocolException("packet decoded size > packet length");
+	    	throw new MqttProtocolException("packet decoded size ("+dlen+") > packet length ("+slen+")");
 	    
 	    byte[] sub = new byte[slen];	    
 	    System.arraycopy(raw, pos, sub, 0, slen);
