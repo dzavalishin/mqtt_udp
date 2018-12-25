@@ -1,0 +1,107 @@
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION MAKE_MQTT_PKT : STRING
+VAR_INPUT
+	topic : STRING;
+	data : STRING;
+END_VAR
+VAR
+	buf :	STRING;
+(*	blen :	DINT; *)
+	tlen :	DINT;
+	dlen :	DINT;
+	total : 	DINT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+	tlen := LEN(topic);
+	dlen :=LEN(data);
+
+	INSERT( buf, '$30', 0 ); (* 'publish' pkt type *)
+
+	total := tlen + dlen + 2; (* packet size *)
+
+	tlen := SHR( tlen, 8 ) ;
+
+	buf := CONCAT( buf, CHR_TO_STRING( DINT_TO_BYTE( SHR( tlen, 8 ) ) )  );
+	buf := CONCAT( buf, CHR_TO_STRING( DINT_TO_BYTE( tlen ) ) );
+
+	buf := CONCAT( buf, topic );
+	buf := CONCAT( buf, data );
+
+	MAKE_MQTT_PKT := buf;
+
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM MQTT_MAIN
+
+VAR
+
+	SocketHandle: 	DINT	:= SOCKET_INVALID; (* descriptor of open Socket *)
+	addr:				SOCKADDRESS;
+	flags:				DINT := 0;
+	buf:				STRING;
+	pkt_size:			DINT := 0;
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+IF SocketHandle <> SOCKET_INVALID THEN
+	SocketHandle := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
+END_IF
+
+IF SocketHandle <> SOCKET_INVALID THEN
+	RETURN;
+END_IF
+
+addr.sin_family := SOCKET_AF_INET;
+addr.sin_port :=1883; (* MQTT UDP *)
+addr.sin_addr := SOCKET_INADDR_BROADCAST;
+
+SysSockSendTo( SocketHandle, ADR(buf), pkt_size, flags, ADR(addr),   SIZEOF(addr)  );
+END_PROGRAM
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION PACK_LEN : STRING
+VAR_INPUT
+	data_len : DINT;
+END_VAR
+VAR
+	out : STRING := '';
+	b : BYTE;
+END_VAR
+(* @END_DECLARATION := '0' *)
+WHILE TRUE DO
+
+
+        B := DINT_TO_BYTE( data_len MOD 128 );
+        data_len := data_len / 128;
+
+        IF data_len > 0 THEN
+            B := B OR DINT_TO_BYTE( 16#80 );
+	END_IF
+
+        out := CONCAT( out, CHR_TO_STRING(b) );
+
+        IF( data_len = 0 ) THEN
+		EXIT;
+	END_IF
+END_WHILE
+
+PACK_LEN := out;
+
+
+END_FUNCTION

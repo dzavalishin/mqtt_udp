@@ -4,36 +4,90 @@
 (* @PATH := '\/MQTT_UDP' *)
 (* @OBJECTFLAGS := '0, 8' *)
 (* @SYMFILEFLAGS := '2048' *)
-FUNCTION MAKE_MQTT_PKT : STRING
+FUNCTION MQ_SEND_REAL : BOOL
 VAR_INPUT
-	topic : STRING;
-	data : STRING;
+	MQ		:	MQTT_UDP;
+	topic	:	STRING;
+	data	:	REAL;
 END_VAR
 VAR
-	buf :	STRING;
-(*	blen :	DINT; *)
-	tlen :	DINT;
-	dlen :	DINT;
-	total : 	DINT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+	MQ( topic:= topic,  data := REAL_TO_STRING( data ) );
+	MQ_SEND_REAL := TRUE; (* TODO success *)
+	RETURN;
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION MQTT_SEND : BOOL
+
+VAR_INPUT
+	socket				:	DINT;
+
+	topic 				:	STRING;
+	data 				:	STRING;
+
+	sock_adr_out		:	SOCKADDRESS;
+END_VAR
+
+VAR
+	tlen				:	DINT;
+	dlen 				:	DINT;
+	total 				: 	DINT;
+	PT 					:	POINTER TO BYTE;
+	buf					:	ARRAY[0..128] OF BYTE;
+
+	bindex 				: 	DINT;
+
 END_VAR
 (* @END_DECLARATION := '0' *)
 
 	tlen := LEN(topic);
 	dlen :=LEN(data);
 
-	INSERT( buf, '$30', 0 ); (* 'publish' pkt type *)
+	total := tlen + dlen + 2 + 2; (* max packet size *)
 
-	total := tlen + dlen + 2; (* packet size *)
+	IF total >= 127 THEN
+		MQTT_SEND := FALSE;
+		RETURN;
+	END_IF
 
-	tlen := SHR( tlen, 8 ) ;
+	buf[0] := 16#30;
+	buf[1] := DINT_TO_BYTE( total - 2 ) AND 16#7F;
 
-	buf := CONCAT( buf, CHR_TO_STRING( DINT_TO_BYTE( SHR( tlen, 8 ) ) )  );
-	buf := CONCAT( buf, CHR_TO_STRING( DINT_TO_BYTE( tlen ) ) );
+	buf[2] := SHR( DINT_TO_BYTE( tlen ), 8 ) AND 16#FF;
+	buf[3] := DINT_TO_BYTE( tlen ) AND 16#FF;
 
-	buf := CONCAT( buf, topic );
-	buf := CONCAT( buf, data );
+	bindex := 4;
 
-	MAKE_MQTT_PKT := buf;
+	PT := ADR( topic );
+	WHILE tlen > 0 DO
+		tlen := tlen - 1;
+
+		buf[bindex] := PT^;
+
+		PT := PT + 1;
+		bindex := bindex + 1;
+	END_WHILE
+
+	PT := ADR( data );
+	WHILE dlen > 0 DO
+		dlen := dlen - 1;
+
+		buf[bindex] := PT^;
+
+		PT := PT + 1;
+		bindex := bindex + 1;
+	END_WHILE
+
+	SysSockSendTo( socket, ADR( buf[0] ), total, 0, ADR( sock_adr_out ), SIZEOF( sock_adr_out ) );
+
+	MQTT_SEND := TRUE;
 
 END_FUNCTION
 
@@ -42,66 +96,33 @@ END_FUNCTION
 (* @PATH := '\/MQTT_UDP' *)
 (* @OBJECTFLAGS := '0, 8' *)
 (* @SYMFILEFLAGS := '2048' *)
-PROGRAM MQTT_MAIN
+FUNCTION_BLOCK MQTT_UDP
 
-VAR
-
-	SocketHandle: 	DINT	:= SOCKET_INVALID; (* descriptor of open Socket *)
-	addr:				SOCKADDRESS;
-	flags:				DINT := 0;
-	buf:				STRING;
-	pkt_size:			DINT := 0;
-
-END_VAR
-(* @END_DECLARATION := '0' *)
-
-IF SocketHandle <> SOCKET_INVALID THEN
-	SocketHandle := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
-END_IF
-
-IF SocketHandle <> SOCKET_INVALID THEN
-	RETURN;
-END_IF
-
-addr.sin_family := SOCKET_AF_INET;
-addr.sin_port :=1883; (* MQTT UDP *)
-addr.sin_addr := SOCKET_INADDR_BROADCAST;
-
-SysSockSendTo( SocketHandle, ADR(buf), pkt_size, flags, ADR(addr),   SIZEOF(addr)  );
-END_PROGRAM
-
-
-(* @NESTEDCOMMENTS := 'Yes' *)
-(* @PATH := '\/MQTT_UDP' *)
-(* @OBJECTFLAGS := '0, 8' *)
-(* @SYMFILEFLAGS := '2048' *)
-FUNCTION PACK_LEN : STRING
 VAR_INPUT
-	data_len : DINT;
+	topic 				:	STRING;
+	data 				:	STRING;
 END_VAR
+
+VAR_OUTPUT
+END_VAR
+
 VAR
-	out : STRING := '';
-	b : BYTE;
+	socket			:	DINT := SOCKET_INVALID;
+	wOutPort		:	INT := 1883;
+	m_SAddress		:	SOCKADDRESS;
+
 END_VAR
 (* @END_DECLARATION := '0' *)
-WHILE TRUE DO
 
+	IF socket = SOCKET_INVALID THEN
+		SysSockClose( socket );
+		socket := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
 
-        B := DINT_TO_BYTE( data_len MOD 128 );
-        data_len := data_len / 128;
-
-        IF data_len > 0 THEN
-            B := B OR DINT_TO_BYTE( 16#80 );
+		m_SAddress.sin_family	:= SOCKET_AF_INET;
+		m_SAddress.sin_port	:= SysSockHtons( wOutPort );
+		m_SAddress.sin_addr	:= 16#FFFFFFFF; (* broadcast *)
 	END_IF
 
-        out := CONCAT( out, CHR_TO_STRING(b) );
+	MQTT_SEND( socket, topic, data, m_SAddress );
 
-        IF( data_len = 0 ) THEN
-		EXIT;
-	END_IF
-END_WHILE
-
-PACK_LEN := out;
-
-
-END_FUNCTION
+END_FUNCTION_BLOCK
