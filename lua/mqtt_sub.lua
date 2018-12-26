@@ -8,10 +8,12 @@ udp = mq.make_listen_socket()
 while true do
     data, ip, port = udp:receivefrom()
     if data then
-        print("Received: ", data, ip, port)
+        --print("Received: ", data, ip, port, type(data))
+        print("Received from: ", ip, port )
        --[[udp:sendto(data, ip, port)--]]
-	topic,len = mq.parse_packet(data)
-	print("Data: ",topic,len)
+	topic,val = mq.parse_packet(data)
+	print("Topic: '"..topic.."'")
+	print("Value: '"..val.."'")
     end
     socket.sleep(0.01)
 end
