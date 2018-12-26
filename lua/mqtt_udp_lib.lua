@@ -58,4 +58,32 @@ end
 
 
 
+function mqtt_udp_lib.make_publish_socket()
+
+    udp = socket.udp()
+
+    assert(udp)
+    --assert(udp:settimeout(1))
+    assert(udp:settimeout())
+    assert(udp:setoption('broadcast', true))
+    assert(udp:setoption('dontroute',true))
+    --assert(udp:setsockname(s_address, defs.MQTT_PORT))
+    --assert(udp:setsockname("*", defs.MQTT_PORT ))
+
+    return udp
+
+end
+
+
+function mqtt_udp_lib.make_packet( topic, value )
+    pkt = "";
+    pkt = pkt..string.char(defs.PTYPE_PUBLISH);
+end
+
+
+function mqtt_udp_lib.send_packet( data )
+    udp:sendto( data, "255.255.255.255", defs.MQTT_PORT )
+end
+
+
 return mqtt_udp_lib

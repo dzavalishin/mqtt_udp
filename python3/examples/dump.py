@@ -1,11 +1,11 @@
 #!/bin/python
 
 '''
-Created on 24.12.2017
+Created on 26.12.2018
 
 @author: dz
 
-Listen to all the traffic on MQTT/UDP, print changed data only
+Listen to all the traffic on MQTT/UDP, print
 '''
 # will work even if package is not installed
 import sys
@@ -16,13 +16,9 @@ import mqttudp.sub
 
 if __name__ == "__main__":
     s = mqttudp.sub.make_recv_socket()
-    last = {}
     while True:
         pkt = mqttudp.sub.recv_udp_packet(s)    
         ptype,topic,value = mqttudp.sub.parse_packet(pkt)
         if ptype != "publish":
             continue
-        if last.__contains__(topic) and last[topic] == value:
-            continue
-        last[topic] = value
         print( topic+"="+value )

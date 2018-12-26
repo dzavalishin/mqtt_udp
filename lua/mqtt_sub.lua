@@ -1,6 +1,6 @@
 #!/usr/bin/lua
 
-local defs  = require "mqtt_udp_defs"
+--local defs  = require "mqtt_udp_defs"
 local mq = require "mqtt_udp_lib"
 
 udp = mq.make_listen_socket()
