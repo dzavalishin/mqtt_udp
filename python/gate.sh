@@ -1,3 +1,3 @@
 #!/bin/sh
 cd examples
-python bidirectional_gate.py
+python bidirectional_gate.py &
