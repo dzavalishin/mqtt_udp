@@ -1,8 +1,9 @@
+local mqtt_udp_lib = {}
 
-function unpack_remaining_length(pkt)
+function mqtt_udp_lib.unpack_remaining_length(pkt)
     remaining_length = 0
     while( 1 )
-	do
+    do
         pkt = strsub( pkt, 1 );
         b = pkt[0];
         remaining_length = bit.lshft( remaining_length, 7);
@@ -11,6 +12,8 @@ function unpack_remaining_length(pkt)
 		then
             break
 		end
-    return remaining_length, pkt
-	end
+        return remaining_length, pkt
+    end
 end
+
+return mqtt_udp_lib

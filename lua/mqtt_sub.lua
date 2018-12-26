@@ -1,9 +1,9 @@
 #!/usr/bin/lua
 
-local mqlib = require("mqtt_udp_lib")
-local defs  = require("mqtt_udp_defs.lua")
+local defs  = require "mqtt_udp_defs"
+local mqlib = require "mqtt_udp_lib"
 
-local socket = require("socket")
+local socket = require "socket"
 
 udp = socket.udp()
 udp:setsockname("*", defs.MQTT_PORT )
