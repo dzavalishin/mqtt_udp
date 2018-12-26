@@ -27,6 +27,8 @@
 
 int main(int argc, char *argv[])
 {
+    printf("Will listen to MQTT/UDP traffic and dump all the messages pass through\n\n");
+
     int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
     if( rc ) {
         printf("mqtt_udp_recv_loop() = %d", rc);
@@ -102,6 +104,8 @@ struct mqtt_udp_handlers h = {
 
 int main(int argc, char *argv[])
 {
+    printf("Will listen to MQTT/UDP traffic and dump all the messages pass through\n\n");
+
     int rc = mqtt_udp_recv_loop( &h );
     if( rc ) {
         printf("mqtt_udp_recv_loop() = %d", rc);

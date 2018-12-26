@@ -31,6 +31,8 @@
 
 int main(int argc, char *argv[])
 {
+    printf("Will listen to MQTT/UDP traffic and dump one next message\n\n");
+
     int loop = 0;
 
     if( argc == 2 && (0==strcmp(argv[1], "-f")) )
