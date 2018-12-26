@@ -9,11 +9,13 @@ import mqtt_udp_defs as defs
 # simplest entry point, but recreates socket every time
 
 def send_once(topic, payload=b''):
-    if isinstance(topic, unicode):
-        topic = topic.encode('utf-8')
+#    if isinstance(topic, unicode):
+#        topic = topic.encode('utf-8')
+    topic = topic.encode()
 
-    if isinstance(payload, unicode):
-        payload = payload.encode('utf-8')
+#    if isinstance(payload, unicode):
+#        payload = payload.encode('utf-8')
+    payload = payload.encode()
 
     pkt = make_packet(topic, payload)
     send_udp_packet(pkt)
@@ -21,11 +23,13 @@ def send_once(topic, payload=b''):
 # simplest entry point, but recreates socket every time
 
 def send( udp_socket, topic, payload=b''):
-    if isinstance(topic, unicode):
-        topic = topic.encode('utf-8')
+#    if isinstance(topic, unicode):
+#        topic = topic.encode('utf-8')
+    topic = topic.encode()
 
-    if isinstance(payload, unicode):
-        payload = payload.encode('utf-8')
+#    if isinstance(payload, unicode):
+#        payload = payload.encode('utf-8')
+    payload = payload.encode()
 
     pkt = make_packet(topic, payload)
     #udp_socket.sendto( pkt, ("255.255.255.255", 1883) )
@@ -60,15 +64,16 @@ def pack_remaining_length(packet, remaining_length):
                 return packet
 
 def pack_str16(packet, data):
-        if isinstance(data, unicode):
-            data = data.encode('utf-8')
+#        if isinstance(data, unicode):
+#            data = data.encode('utf-8')
+#        data = data.encode()
         packet.extend(struct.pack("!H", len(data)))
         packet.extend(data)
 
 
 def make_packet(topic, payload=b''):
     # we assume that topic and payload are already properly encoded
-    assert not isinstance(topic, unicode) and not isinstance(payload, unicode) and payload is not None
+#    assert not isinstance(topic, unicode) and not isinstance(payload, unicode) and payload is not None
 
     command = defs.PTYPE_PUBLISH
     packet = bytearray()

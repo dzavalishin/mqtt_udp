@@ -7,6 +7,7 @@
 # will work even if package is not installed
 import sys
 sys.path.append('..')
+sys.path.append('../mqttudp')
 
 import threading
 import mqttudp.pub
@@ -26,8 +27,8 @@ if __name__ == "__main__":
         ptype,topic,value = mqttudp.sub.parse_packet(pkt)
 
         if ptype == "publish":
-            print topic+"="+value
+            print( topic+"="+value )
         if ptype == "pingreq":
-            print ptype
+            print( ptype )
         if ptype == "pingresp":
-            print ptype
+            print( ptype )
