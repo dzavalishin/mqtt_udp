@@ -10,28 +10,28 @@
  *
 **/
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+//#include <sys/types.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
+//#include <arpa/inet.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <locale.h>
-#include <fcntl.h>
+//#include <locale.h>
+//#include <fcntl.h>
 #include <errno.h>
 
 #include "mqtt_udp.h"
 
-//static void dump( const char *buf );
 
 
 #define BUFLEN PKT_BUF_SIZE // 64
 
 int main(int argc, char *argv[])
 {
-    printf("Will listen to MQTT/UDP traffic and dump one next message\n\n");
+    printf("Will listen to MQTT/UDP traffic and dump one next message\n");
+    printf("Usage: -f to print all traffic (^C to stop)\n\n");
 
     int loop = 0;
 
@@ -59,11 +59,6 @@ int main(int argc, char *argv[])
         memset(buf, 0, sizeof(buf));
         rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN, 0 );
 
-#if 0
-        printf("Recieved!\n");
-
-#endif
-
         char topic[BUFLEN];
         char value[BUFLEN];
 
@@ -81,22 +76,4 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-/*
-
-static void dump( const char *buf )
-{
-    for (int i=0; i<BUFLEN;i++)
-    {
-        printf("0x%x ", buf[i]);
-    }
-    printf("\n");
-
-    for (int i=0; i<BUFLEN;i++)
-    {
-        printf("%c", ((buf[i] > ' ') && (buf[i] < 0x7F)) ? buf[i] : '.'   );
-    }
-    printf("\n");
-}
-
-*/
 

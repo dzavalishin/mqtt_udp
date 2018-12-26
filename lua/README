@@ -1,4 +1,13 @@
-Not finished
 
-Supposed to be standalone Lua implementation and WireShark Lua protocol
-dissolver to be able to dump MQTT/UDP packets.
+mqtt_udp_lib.lua		- MQTT/UDP protocol Lua library
+
+mqtt_udp_defs.lua		- part of library, generated outside
+
+
+mqtt_pub.lua			- command line tool that uses Lua library to publish data with MQTT/UDP protocol
+
+mqtt_sub.lua			- command line tool that uses Lua library to listen to MQTT/UDP messages
+
+
+wireshark_dissector.lua - incomplete WireShark protocol dissolver to be able to dump MQTT/UDP packets
+

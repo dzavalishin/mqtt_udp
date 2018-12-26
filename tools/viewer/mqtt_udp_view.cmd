@@ -1,1 +1,1 @@
-java -cp bin ru.dz.mqtt.viewer.Main
+java -cp bin;../../java/bin ru.dz.mqtt.viewer.Main
