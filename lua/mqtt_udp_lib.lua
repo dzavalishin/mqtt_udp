@@ -1,3 +1,9 @@
+--[[
+
+ MQTT/UDP Lua library. See mqtt_pub.lua and mqtt_sub.lua for usage.
+
+]]
+
 local mqtt_udp_lib = {}
 
 local defs  = require "mqtt_udp_defs"
@@ -57,6 +63,22 @@ function mqtt_udp_lib.parse_packet(pkt)
 end
 
 
+function mqtt_udp_lib.listen( sock, listener )
+
+while true do
+    data, ip, port = sock:receivefrom()
+    if data then
+        --print("Received: ", data, ip, port, type(data))
+        --print("Received from: ", ip, port )
+        --[[udp:sendto(data, ip, port)--]]
+	topic,val = mqtt_udp_lib.parse_packet(data)
+        listener( "publish", topic, val, ip, port );
+    end
+    socket.sleep(0.01)
+end
+
+end
+
 
 function mqtt_udp_lib.make_publish_socket()
 
@@ -77,7 +99,7 @@ end
 
 function mqtt_udp_lib.make_packet( topic, value )
 
-    print("Topic: '"..topic.."' val '"..value.."'")
+    -- print("Topic: '"..topic.."' val '"..value.."'")
 
     pkt = "";
     pkt = pkt..string.char(defs.PTYPE_PUBLISH);
@@ -99,9 +121,18 @@ function mqtt_udp_lib.make_packet( topic, value )
 end
 
 
-function mqtt_udp_lib.send_packet( data )
-    udp:sendto( data, "255.255.255.255", defs.MQTT_PORT )
+--function mqtt_udp_lib.send_packet( data )
+--    udp:sendto( data, "255.255.255.255", defs.MQTT_PORT )
+--end
+
+function mqtt_udp_lib.send_packet( socket, data )
+    socket:sendto( data, "255.255.255.255", defs.MQTT_PORT )
 end
 
+
+function mqtt_udp_lib.publish( socket, topic, value )
+    data = mqtt_udp_lib.make_packet( topic, value )
+    mqtt_udp_lib.send_packet( socket, data )
+end
 
 return mqtt_udp_lib
