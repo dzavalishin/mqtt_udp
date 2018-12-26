@@ -21,4 +21,4 @@ if __name__ == "__main__":
         ptype,topic,value = mqttudp.sub.parse_packet(pkt)
         if ptype != "publish":
             continue
-        print( topic+"="+value )
+        print( "'"+topic+"' = '"+value+"'" )

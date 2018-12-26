@@ -76,8 +76,26 @@ end
 
 
 function mqtt_udp_lib.make_packet( topic, value )
+
+    print("Topic: '"..topic.."' val '"..value.."'")
+
     pkt = "";
     pkt = pkt..string.char(defs.PTYPE_PUBLISH);
+
+    tlen = topic:len()
+    remaining_length = 2 + value:len() + tlen
+
+    assert( remaining_length < 127 );
+
+    pkt = pkt..string.char( bit.band( remaining_length, 0x7F ) );
+
+    pkt = pkt..string.char( 0 ); -- upper byte of topic len = 0, can't be longer than 127
+    pkt = pkt..string.char( tlen );
+
+    pkt = pkt..topic;
+    pkt = pkt..value;
+
+    return pkt;
 end
 
 
