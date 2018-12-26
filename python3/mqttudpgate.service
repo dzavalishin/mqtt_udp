@@ -1,0 +1,25 @@
+[Unit]
+Description=MQTT/UDP to MQTT broker gateway
+Documentation=https://github.com/dzavalishin/mqtt_udp/wiki
+After=syslog.target network.target
+Requires=network.target
+
+# Add your MQTT broker target as requirement here
+# We suppose mosquitto by default
+After=mosquitto.service
+
+#ConditionPathExists=/opt/mqttudp/python/gate.sh
+
+[Service]
+Type=forking
+WorkingDirectory=/opt/mqttudp
+ExecStart=/opt/mqttudp/python/gate.sh
+Restart=allways
+RestartSec=5
+GuessMainPID=yes
+#Can use existing one
+#User=mosquitto
+#Group=
+
+[Install]
+WantedBy=multi-user.target

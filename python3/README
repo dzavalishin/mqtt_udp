@@ -1,0 +1,3 @@
+Only publishing is implemented in Python at this moment.
+Will write subscription a little later.
+For now you can check other languages implementations - https://github.com/dzavalishin/mqtt_udp

@@ -1,0 +1,17 @@
+Metadata-Version: 1.1
+Name: mqttudp
+Version: 0.1
+Summary: An MQTT/UDP implementation in Python
+Home-page: https://github.com/dzavalishin/mqtt_udp
+Author: Dmitry Zavalishin
+Author-email: dz@dz.ru
+License: UNKNOWN
+Description: MQTT/UDP is a simplest brokerless variation of MQTT protocol based on UDP broadcast. See https://github.com/dzavalishin/mqtt_udp for more prog. languages and info.
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: MQTT
+Classifier: Topic :: Internet :: IoT

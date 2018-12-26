@@ -1,6 +1,5 @@
-local mqtt_udp_defs = {}
-
 -- This code is generated, do not change
+local mqtt_udp_defs = {}
 mqtt_udp_defs.PTYPE_CONNECT = 0x10
 mqtt_udp_defs.PTYPE_CONNACK = 0x20
 mqtt_udp_defs.PTYPE_PUBLISH = 0x30
@@ -17,5 +16,4 @@ mqtt_udp_defs.PTYPE_PINGRESP = 0xD0
 mqtt_udp_defs.PTYPE_DISCONNECT = 0xE0
 mqtt_udp_defs.MQTT_PORT = 1883
 mqtt_udp_defs.PKT_BUF_SIZE = 2048
-
 return mqtt_udp_defs

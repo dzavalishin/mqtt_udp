@@ -1,4 +1,5 @@
 CFLAGS += -g
+#CC=gcc
 
 goal:: all run
 
