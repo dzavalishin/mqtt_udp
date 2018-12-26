@@ -18,13 +18,17 @@ import time
 
 
 if __name__ == "__main__":
-    udp_socket = mqttudp.pub.make_send_socket()
-    mqttudp.pub.send_ping(udp_socket)
+    print( "Will send MQTT/UDP [ing packet and dump all the replies forever" )
+    print( "Press ^C to stop" )
 
-    s = mqttudp.sub.make_recv_socket()
+    recv_socket = mqttudp.sub.make_recv_socket()
+
+    send_socket = mqttudp.pub.make_send_socket()
+    mqttudp.pub.send_ping( send_socket )
+
     while True:
-        pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value = mqttudp.sub.parse_packet(pkt)
+        pkt = mqttudp.sub.recv_udp_packet( recv_socket )    
+        ptype,topic,value = mqttudp.sub.parse_packet( pkt ) 
 
         if ptype == "publish":
             print( topic+"="+value )

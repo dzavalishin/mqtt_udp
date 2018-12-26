@@ -11,6 +11,7 @@ Listen to all traffic on MQTT/UDP, pump updates to MQTT broker
 # will work even if package is not installed
 import sys
 sys.path.append('..')
+sys.path.append('../mqttudp')
 
 import threading
 import mqttudp.sub
@@ -27,6 +28,8 @@ def broker_listen_thread(bclient):
 
 
 if __name__ == "__main__":
+    print( "Will resend all the MQTT/UDP traffic to MQTT broker at "+MQTT_BROKER_HOST )
+
     bclient = broker.Client()
     #client.on_connect = on_connect
     #client.on_message = on_message
@@ -47,7 +50,7 @@ if __name__ == "__main__":
         if last.has_key(topic) and last[topic] == value:
             continue
         last[topic] = value
-        print topic+"="+value
+        print( topic+"="+value )
         bclient.publish(topic, value, qos=0)
 
     blt.join()

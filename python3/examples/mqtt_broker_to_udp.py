@@ -8,6 +8,7 @@
 # will work even if package is not installed 
 import sys
 sys.path.append('..')
+sys.path.append('../mqttudp')
 
 import threading
 import paho.mqtt.client as broker
@@ -54,6 +55,7 @@ def broker_listen_thread():
 
 
 if __name__ == "__main__":
+    print( "Will resend all the traffic from MQTT broker at "+MQTT_BROKER_HOST+" to MQTT/UDP" )
     blt = threading.Thread(target=broker_listen_thread, args=())
     blt.start()
     blt.join()

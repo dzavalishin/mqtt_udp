@@ -11,6 +11,7 @@ Listen to all traffic on MQTT/UDP, pump updates to MQTT broker
 # will work even if package is not installed
 import sys
 sys.path.append('..')
+sys.path.append('../mqttudp')
 
 import threading
 import mqttudp.pub
@@ -60,13 +61,15 @@ def udp_listen_thread(bclient):
         last[topic] = value
         if ilock.udp_to_broker(topic, value):
             bclient.publish(topic, value, qos=0)
-            print "From UDP: "+topic+"="+value
+            print( "From UDP: "+topic+"="+value )
         else:
-            print "BLOCKED from UDP: "+topic+"="+value
+            print( "BLOCKED from UDP: "+topic+"="+value )
 
 
 
 if __name__ == "__main__":
+    print( "Will exchange all the traffic between MQTT/UDP and MQTT broker at "+MQTT_BROKER_HOST )
+
     bclient = broker.Client()
     bclient.on_connect = broker_on_connect
     bclient.on_message = broker_on_message
