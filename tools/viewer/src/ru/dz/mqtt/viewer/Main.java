@@ -23,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -31,6 +32,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -41,6 +47,7 @@ import javafx.scene.layout.VBox;
 
 
 public class Main extends Application {
+	private static final int TOOLBAR_HEIGHT = 34;
 	private FileLogger flog = new FileLogger();
 	FileChooser fch = new FileChooser();
 
@@ -49,6 +56,9 @@ public class Main extends Application {
 	private SplitPane splitPane;
 	private HBox hosts;
 
+	private static final Image applicationIcon = ImageUtils.getImage("maintenance256.png");
+
+	static private final Alert aboutAlert = new Alert(AlertType.INFORMATION);
 
 	private static final int DEFAULT_WIDTH = 1000;
 	@Override
@@ -67,16 +77,36 @@ public class Main extends Application {
 			//URL url = getClass().getResource("TopicTree.fxml");
 			//AnchorPane pane = FXMLLoader.load( url );
 
+			primaryStage.getIcons().add(applicationIcon);
+			
 			fch.setTitle("Event log file");
-			fch.setInitialFileName("MQTT_UDP.log");
-			
-			MenuBar leftMenu = makeLeftMenu();
+			fch.setInitialFileName("MQTT_UDP.log");		
 
-			Region spacer = new Region();
-	        spacer.getStyleClass().add("menu-bar");
-	        HBox.setHgrow(spacer, Priority.SOMETIMES);
-	        HBox menubars = new HBox(leftMenu, spacer, makeRightMenu());			
-			
+			HBox menubars;
+			{
+				Region spacer = new Region();
+				spacer.getStyleClass().add("menu-bar");
+				HBox.setHgrow(spacer, Priority.SOMETIMES);
+				
+				MenuBar leftMenu = makeLeftMenu();
+				ToolBar toolBar = makeToolBar();				
+				MenuBar rightMenu = makeRightMenu();
+
+				//leftMenu.setPrefHeight(toolBar.getHeight());
+				//rightMenu.setPrefHeight(toolBar.getHeight());
+				
+				leftMenu.setPrefHeight(TOOLBAR_HEIGHT);
+				rightMenu.setPrefHeight(TOOLBAR_HEIGHT);
+				toolBar.setPrefHeight(TOOLBAR_HEIGHT);
+				
+				toolBarUpdateButton.setPrefHeight(12);
+				
+				menubars = new HBox(leftMenu, spacer, toolBar, rightMenu);			
+				//menubars = new HBox(makeLeftMenu(), spacer, makeToolBar(), makeRightMenu());
+				
+				
+				//menubars.setMinHeight(32);
+			}
 			HBox content = makeContent();
 			content.setFillHeight(true);
 			HBox log = makeLog();
@@ -107,7 +137,7 @@ public class Main extends Application {
 
 			Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 			//vbox.setMaxHeight(screenSize.getHeight()-20);
-			
+
 			// setting the stage
 			primaryStage.setScene( scene );
 			primaryStage.setTitle( "MQTT/UDP Traffic Viewer" );			
@@ -116,6 +146,13 @@ public class Main extends Application {
 			primaryStage.setHeight( screenSize.getHeight() - 100 ); // TODO hack, redo
 			primaryStage.show();
 
+			aboutAlert.setTitle("About MQTT/UDP viewer");
+			aboutAlert.setHeaderText("MQTT/UDP viewer version 1.0");
+			aboutAlert.setContentText("Network is broker!");
+
+			aboutAlert.initOwner(primaryStage);
+			
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -190,6 +227,12 @@ public class Main extends Application {
 		return hbox;
 	}
 
+
+	private CheckMenuItem updateMenuItem = new CheckMenuItem("Update");	
+	//private CheckMenuItem updateTopMenuItem = new CheckMenuItem();
+	private ToggleButton toolBarUpdateButton = new ToggleButton();
+
+
 	private MenuBar makeLeftMenu() {
 
 		Menu fileMenu = new Menu("File");
@@ -207,7 +250,6 @@ public class Main extends Application {
 		Menu displayMenu = new Menu("Display");
 		//displayMenu.addEventHandler(eventType, eventHandler);
 
-		CheckMenuItem updateMenuItem = new CheckMenuItem("Update");	
 		CheckMenuItem viewHostsMenuItem = new CheckMenuItem("Hosts view");
 
 		displayMenu.getItems().addAll(updateMenuItem, new SeparatorMenuItem(), viewHostsMenuItem);
@@ -228,13 +270,13 @@ public class Main extends Application {
 			}
 		});
 
-
 		updateMenuItem.setAccelerator(KeyCombination.keyCombination("F5"));
 		updateMenuItem.setSelected(true);
 		updateMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
-				updateEnabled = updateMenuItem.isSelected();				
+				//updateEnabled = updateMenuItem.isSelected();
+				switchRunStop();
 			}
 		});
 
@@ -246,8 +288,8 @@ public class Main extends Application {
 			}
 		});
 
-
-		logStart.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
+		logStart.setGraphic(ImageUtils.getIcon("Folder-Add"));
+		logStart.setAccelerator(KeyCombination.keyCombination("Ctrl+L"));
 		logStart.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
@@ -266,6 +308,7 @@ public class Main extends Application {
 			}
 		});
 
+		logStop.setGraphic(ImageUtils.getIcon("Folder-Delete"));
 		logStop.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
@@ -276,7 +319,7 @@ public class Main extends Application {
 		return mb;
 	}
 
-	
+
 	private MenuBar makeRightMenu() {
 		Menu helpMenu = new Menu("Help");
 
@@ -287,41 +330,68 @@ public class Main extends Application {
 
 		helpMenu.getItems().addAll( help, goSite, new SeparatorMenuItem(), aboutMenuItem );
 
-		
+
 		help.setAccelerator(KeyCombination.keyCombination("F1"));
 		help.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
 				getHostServices().showDocument("https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help");			
-				}
+			}
 		});
-		
+
 		goSite.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
 				getHostServices().showDocument("https://github.com/dzavalishin/mqtt_udp");			
-				}
+			}
 		});
 
 		aboutMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) { showAboutAlert(); }
 		});
-		
+
 		MenuBar mb = new MenuBar(helpMenu);
 		return mb;
 	}
-	
-	 private void showAboutAlert() {
-	        Alert alert = new Alert(AlertType.INFORMATION);
-	        alert.setTitle("About MQTT/UDP viewer");
-	        alert.setHeaderText("MQTT/UDP viewer version 1.0");
-	        alert.setContentText("Network is broker!");
-	 
-	        alert.showAndWait();
-	    }
-	
-	
+
+	private static final ImageView runIcon = ImageUtils.getIcon("start");
+	private static final ImageView stopIcon = ImageUtils.getIcon("pause");
+	private ToolBar makeToolBar()
+	{
+		toolBarUpdateButton.setTooltip(new Tooltip("Press F5 to stop/run"));
+		toolBarUpdateButton.setGraphic(runIcon);
+		toolBarUpdateButton.setSelected(true);
+		toolBarUpdateButton.setOnAction(new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) { switchRunStop(); }
+		});
+
+		//toolBarUpdateButton.setMaxHeight(12);
+		//toolBarUpdateButton.setMaxWidth(12);
+
+		ToolBar tb = new ToolBar();
+		//tb.setMaxHeight(16);
+		tb.getItems().add(toolBarUpdateButton);
+
+		return tb;
+	}
+
+	private void switchRunStop()
+	{
+		//updateEnabled = updateMenuItem.isSelected();
+		updateEnabled = !updateEnabled;
+		updateMenuItem.setSelected(updateEnabled);
+		toolBarUpdateButton.setSelected(updateEnabled);
+
+		toolBarUpdateButton.setGraphic( updateEnabled ? runIcon : stopIcon );
+	}
+
+	private void showAboutAlert() {
+		aboutAlert.showAndWait();
+	}
+
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -393,7 +463,7 @@ public class Main extends Application {
 						setListItem(ti); 
 						addLogItem(ti);
 						addHostItem( new HostItem(ti.getFrom()) );
-						
+
 						flog.logItem(ti);
 					}
 				}
