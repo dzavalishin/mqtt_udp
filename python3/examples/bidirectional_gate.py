@@ -56,7 +56,7 @@ def udp_listen_thread(bclient):
         ptype,topic,value = mqttudp.sub.parse_packet(pkt)
         if ptype != "publish":
             continue
-        if last.has_key(topic) and last[topic] == value:
+        if last.__contains__(topic) and last[topic] == value:
             continue
         last[topic] = value
         if ilock.udp_to_broker(topic, value):

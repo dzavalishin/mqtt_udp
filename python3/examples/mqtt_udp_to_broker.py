@@ -47,7 +47,7 @@ if __name__ == "__main__":
         ptype,topic,value = mqttudp.sub.parse_packet(pkt)
         if ptype != "publish":
             continue
-        if last.has_key(topic) and last[topic] == value:
+        if last.__contains__(topic) and last[topic] == value:
             continue
         last[topic] = value
         print( topic+"="+value )
