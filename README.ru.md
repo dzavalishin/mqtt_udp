@@ -1,5 +1,5 @@
 ﻿# mqtt_udp
-Упрощённая версия MQTT поверх UDP
+Упрощённая версия MQTT поверх UDP: Брокер - это сеть!
 
 [See English version / Английская версия здесь](./README.md)
 
