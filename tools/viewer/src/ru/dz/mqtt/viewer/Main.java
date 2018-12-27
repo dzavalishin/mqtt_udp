@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 import ru.dz.mqtt_udp.IPacket;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -33,6 +35,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 
@@ -66,8 +70,13 @@ public class Main extends Application {
 			fch.setTitle("Event log file");
 			fch.setInitialFileName("MQTT_UDP.log");
 			
-			MenuBar menu = makeMenu(primaryStage);
+			MenuBar leftMenu = makeLeftMenu();
 
+			Region spacer = new Region();
+	        spacer.getStyleClass().add("menu-bar");
+	        HBox.setHgrow(spacer, Priority.SOMETIMES);
+	        HBox menubars = new HBox(leftMenu, spacer, makeRightMenu());			
+			
 			HBox content = makeContent();
 			content.setFillHeight(true);
 			HBox log = makeLog();
@@ -91,7 +100,7 @@ public class Main extends Application {
 			SplitPane.setResizableWithParent(log, true);
 			SplitPane.setResizableWithParent(hosts, true);
 
-			VBox vbox = new VBox(menu,splitPane);
+			VBox vbox = new VBox(menubars,splitPane);
 			vbox.setFillWidth(true);
 
 			Scene scene = new Scene( vbox );
@@ -181,7 +190,7 @@ public class Main extends Application {
 		return hbox;
 	}
 
-	private MenuBar makeMenu(Stage stage) {
+	private MenuBar makeLeftMenu() {
 
 		Menu fileMenu = new Menu("File");
 
@@ -267,6 +276,52 @@ public class Main extends Application {
 		return mb;
 	}
 
+	
+	private MenuBar makeRightMenu() {
+		Menu helpMenu = new Menu("Help");
+
+		MenuItem help = new MenuItem("Help");
+		MenuItem goSite = new MenuItem("Visit project on GitHub");
+
+		MenuItem aboutMenuItem = new MenuItem("About");
+
+		helpMenu.getItems().addAll( help, goSite, new SeparatorMenuItem(), aboutMenuItem );
+
+		
+		help.setAccelerator(KeyCombination.keyCombination("F1"));
+		help.setOnAction(new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) {
+				getHostServices().showDocument("https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help");			
+				}
+		});
+		
+		goSite.setOnAction(new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) {
+				getHostServices().showDocument("https://github.com/dzavalishin/mqtt_udp");			
+				}
+		});
+
+		aboutMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) { showAboutAlert(); }
+		});
+		
+		MenuBar mb = new MenuBar(helpMenu);
+		return mb;
+	}
+	
+	 private void showAboutAlert() {
+	        Alert alert = new Alert(AlertType.INFORMATION);
+	        alert.setTitle("About MQTT/UDP viewer");
+	        alert.setHeaderText("MQTT/UDP viewer version 1.0");
+	        alert.setContentText("Network is broker!");
+	 
+	        alert.showAndWait();
+	    }
+	
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
