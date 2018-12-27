@@ -1,5 +1,5 @@
 # mqtt_udp
-Simpified version of MQTT over UDP
+Simpified version of MQTT over UDP: Network is broker!
 
 [See Russian version / Русская версия здесь](./README.ru.md)
 
