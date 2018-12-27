@@ -54,4 +54,4 @@ It is really easy.
 ## Fast start instructions
 
 * Clone repository to local disk
-* Read HOWTO file: [[https://raw.githubusercontent.com/dzavalishin/mqtt_udp/master/HOWTO]]
+* Read [HOWTO](https://raw.githubusercontent.com/dzavalishin/mqtt_udp/master/HOWTO) file
