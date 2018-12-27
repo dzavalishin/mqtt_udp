@@ -28,8 +28,14 @@ public class FileLogger {
 	
 	public void logItem(TopicItem ti)
 	{
-		try {
-			if(writer != null) writer.write(ti.toString()+"\n");
+		String s = ti.toString();
+		try {			
+			if(writer != null) 
+				{
+				//System.out.println(s);
+				writer.write(s+"\n");
+				writer.flush();
+				}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

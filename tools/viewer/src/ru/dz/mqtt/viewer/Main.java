@@ -14,7 +14,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
+import javafx.geometry.Rectangle2D;
 import javafx.stage.FileChooser;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.dz.mqtt_udp.IPacket;
 import javafx.scene.Node;
@@ -62,7 +64,7 @@ public class Main extends Application {
 			//AnchorPane pane = FXMLLoader.load( url );
 
 			fch.setTitle("Event log file");
-
+			fch.setInitialFileName("MQTT_UDP.log");
 			
 			MenuBar menu = makeMenu(primaryStage);
 
@@ -84,7 +86,7 @@ public class Main extends Application {
 			//SplitPane 
 			splitPane = new SplitPane(content,log,hosts);
 			splitPane.setOrientation(Orientation.VERTICAL);
-			splitPane.setDividerPositions(0.6f,0.8f);
+			splitPane.setDividerPositions(0.5f,0.8f);
 			SplitPane.setResizableWithParent(content, true);
 			SplitPane.setResizableWithParent(log, true);
 			SplitPane.setResizableWithParent(hosts, true);
@@ -94,10 +96,15 @@ public class Main extends Application {
 
 			Scene scene = new Scene( vbox );
 
+			Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+			//vbox.setMaxHeight(screenSize.getHeight()-20);
+			
 			// setting the stage
 			primaryStage.setScene( scene );
 			primaryStage.setTitle( "MQTT/UDP Traffic Viewer" );			
 			primaryStage.setOnCloseRequest(e -> { Platform.exit(); System.exit(0);} );
+			//primaryStage.sizeToScene();
+			primaryStage.setHeight( screenSize.getHeight() - 100 ); // TODO hack, redo
 			primaryStage.show();
 
 		} catch(Exception e) {
@@ -147,20 +154,20 @@ public class Main extends Application {
 	}
 
 
+	private ListView<TopicItem> logListView = new ListView<TopicItem>();
 	private ObservableList<TopicItem> logItems = FXCollections.observableArrayList ();
 	private void addLogItem(TopicItem i)
 	{
-		logItems.add(i);
+		logItems.add(0,i);
 		if( logItems.size() > 400 )
-			logItems.remove(0);
+			logItems.remove(logItems.size()-1);
 	}
 
 	private HBox makeLog() {
-		ListView<TopicItem> listv = new ListView<TopicItem>();
-		listv.setItems(logItems);
-		listv.setPrefWidth(DEFAULT_WIDTH);
+		logListView.setItems(logItems);
+		logListView.setPrefWidth(DEFAULT_WIDTH);
 
-		HBox hbox = new HBox(listv);
+		HBox hbox = new HBox(logListView);
 
 		return hbox;
 	}
@@ -181,11 +188,11 @@ public class Main extends Application {
 		MenuItem logStart = new MenuItem("Start log");
 		MenuItem logStop = new MenuItem("Stop log");
 
-		MenuItem exit = new MenuItem("Exit");
+		MenuItem exitMenuItem = new MenuItem("Exit");
 
-		//fileMenu.getItems().addAll( logStart, logStop, new SeparatorMenuItem(), exit );
+		fileMenu.getItems().addAll( logStart, logStop, new SeparatorMenuItem(), exitMenuItem );
 		// log open dialog crashes :(
-		fileMenu.getItems().addAll( exit );
+		//fileMenu.getItems().addAll( exit );
 
 
 		Menu displayMenu = new Menu("Display");
@@ -223,10 +230,10 @@ public class Main extends Application {
 		});
 
 
-		fileMenu.setOnAction(new EventHandler<ActionEvent>() {			
+		exitMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
-				Platform.exit(); System.exit(0);				
+				//Platform.exit(); System.exit(0);				
 			}
 		});
 
@@ -236,8 +243,8 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				//File fname = fch.showOpenDialog(stage);
-				//File fname = fch.showOpenDialog(new Stage());
-				File fname = fch.showOpenDialog(logStart.getParentPopup().getScene().getWindow());
+				//File fname = fch.showOpenDialog(logStart.getParentPopup().getScene().getWindow());
+				File fname = fch.showSaveDialog(logStart.getParentPopup().getScene().getWindow());
 				if( fname != null )
 				{
 					try {
@@ -330,7 +337,7 @@ public class Main extends Application {
 					{
 						setListItem(ti); 
 						addLogItem(ti);
-						addHostItem( new HostItem(ti.getFrom()));
+						addHostItem( new HostItem(ti.getFrom()) );
 						
 						flog.logItem(ti);
 					}
