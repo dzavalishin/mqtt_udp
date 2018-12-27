@@ -50,4 +50,4 @@ MQTT - симпатичный и простой протокол, который
 ## Как начать работу
 
 * Клонируйте или скачайте репозиторий к себе на диск (зелёная кнопка Clone of Download)
-* Прочитайте файл HOWTO: https://raw.githubusercontent.com/dzavalishin/mqtt_udp/master/HOWTO
+* Прочитайте файл [HOWTO](https://raw.githubusercontent.com/dzavalishin/mqtt_udp/master/HOWTO)
