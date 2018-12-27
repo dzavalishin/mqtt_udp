@@ -4,6 +4,9 @@
 @author: dz
 
 Listen to all traffic on MQTT/UDP, pump updates to OpenHAB
+
+Based on examples from https://github.com/openhab/openhab1-addons/wiki/Samples-REST
+
 '''
 
 # will work even if package is not installed
@@ -25,6 +28,17 @@ OPENHAB_PORT="8080"
 #    bclient.loop_forever()
 
 
+def polling_header(atmos_id):
+    """ Header for OpenHAB REST request - polling """
+#    self.auth = base64.encodestring('%s:%s'%(self.username, self.password)).replace('\n', '')
+    return {
+#        "Authorization" : "Basic %s" % self.cmd.auth,
+        "X-Atmosphere-Transport" : "long-polling",
+        "X-Atmosphere-tracking-id" : atmos_id,
+        "X-Atmosphere-Framework" : "1.0",
+        "Accept" : "application/json"
+        }
+
 def basic_header():
     """ Header for OpenHAB REST request - standard """
 #    self.auth = base64.encodestring('%s:%s'%(self.username, self.password)).replace('\n', '')
@@ -32,6 +46,8 @@ def basic_header():
 #            "Authorization" : "Basic %s" %self.auth,
             "Content-type": "text/plain"
            }
+
+
 
 def post_command( key, value ):
     """ Post a command to OpenHAB - key is item, value is command """
