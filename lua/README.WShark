@@ -1,0 +1,10 @@
+Wireshark HOWTO
+
+ - filter "udp.port==1883"
+
+ - add to wireshark/init.lua (C:\Program Files\Wireshark\init.lua)
+
+    MQTTUDPPROTO_SCRIPT_PATH = "E:\\mqtt_udp\\lua\\" -- path to wireshark_dissector.lua
+    dofile(MQTTUDPPROTO_SCRIPT_PATH .. "wireshark_dissector.lua")
+
+

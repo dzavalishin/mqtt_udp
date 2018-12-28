@@ -4,7 +4,8 @@
 
 ]]
 
-local mqtt_udp_lib = {}
+--local mqtt_udp_lib = {}
+local mqtt_udp_lib = require "mqtt_proto_lib"
 
 local defs  = require "mqtt_udp_defs"
 local socket = require "socket"
@@ -21,6 +22,7 @@ function mqtt_udp_lib.make_listen_socket()
 
 end
 
+--[[
 function mqtt_udp_lib.unpack_remaining_length(pkt)
     remaining_length = 0
     while( 1 )
@@ -57,11 +59,11 @@ function mqtt_udp_lib.parse_packet(pkt)
     topic = pkt:sub( 3, topic_len+2 );
     value = pkt:sub( topic_len+2+1 );
     
-    --[[TODO use total_len--]]
+    -- TODO use total_len
     
     return topic,value
 end
-
+]]
 
 function mqtt_udp_lib.listen( sock, listener )
 
@@ -96,7 +98,7 @@ function mqtt_udp_lib.make_publish_socket()
 
 end
 
-
+--[[
 function mqtt_udp_lib.make_packet( topic, value )
 
     -- print("Topic: '"..topic.."' val '"..value.."'")
@@ -119,7 +121,7 @@ function mqtt_udp_lib.make_packet( topic, value )
 
     return pkt;
 end
-
+]]
 
 --function mqtt_udp_lib.send_packet( data )
 --    udp:sendto( data, "255.255.255.255", defs.MQTT_PORT )
