@@ -2,11 +2,25 @@ MQTT/UDP Python (3.x) implementation.
 
 You can check other languages implementations also - https://github.com/dzavalishin/mqtt_udp
 
-  mqttudp				- MQTT/UDP library in Python language
+  mqttudp					- MQTT/UDP library in Python language
 
-  examples				- Library usage examples
+  examples					- Library usage examples
 
-  gate.sh				- Shell script to start bidirectional MQTT/UDP to MQTT broker gateway
-  mqttudpgate.service	- Unix systemctl service definition for gateway
+  gate.sh					- Shell script to start bidirectional MQTT/UDP to MQTT broker gateway
+  mqttudpgate.service		- Unix systemctl service definition for gateway
 
+examples:
 
+  mqtt_udp_to_openhab.py 	- Translate all the data to OpenHAB REST API
+
+  seq_storm_send.py 		- Send seqentially numbered packets as fast as possible
+  seq_storm_check.py 		- Check packets for sequentialness and calc speed
+
+  bidirectional_gate.py		- Translate data between MQTT/UDP and traditional MQTT
+
+  random_to_udp.py			- Generate traffic with random numbers
+
+  dump.py					- Print all MQTT/UDP traffic
+  listen.py					- Print packets only if content is changeg
+
+  ping.py					- Send ping and print replies. Not all the implementations respond to ping yet.

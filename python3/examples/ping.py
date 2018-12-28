@@ -18,7 +18,7 @@ import time
 
 
 if __name__ == "__main__":
-    print( "Will send MQTT/UDP [ing packet and dump all the replies forever" )
+    print( "Will send MQTT/UDP ping packet and dump all the replies forever" )
     print( "Press ^C to stop" )
 
     recv_socket = mqttudp.sub.make_recv_socket()
