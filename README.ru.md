@@ -60,3 +60,5 @@ MQTT - симпатичный и простой протокол, который
 * Диссектор протокола для WireShark чтобы смотреть пакеты MQTT/UDP; в каталоге [lua](https://github.com/dzavalishin/mqtt_udp/tree/master/lua)
 * GUI программа для отображения трафика пакетов и последнего состояния по каждому топику; в каталоге [tools/viewer](https://github.com/dzavalishin/mqtt_udp/tree/master/tools/viewer)
 * Генератор пакетов со случайным содержанием (random_to_udp.py) в каталоге [python3/examples](https://github.com/dzavalishin/mqtt_udp/tree/master/python3/examples) 
+* Генератор/проверяльщик пакетов с последовательными номерами. Примеры seq_storm_send.py and seq_storm_check.py в каталоге [python3/examples](https://github.com/dzavalishin/mqtt_udp/tree/master/python3/examples) 
+
