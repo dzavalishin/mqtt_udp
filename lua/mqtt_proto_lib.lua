@@ -10,6 +10,40 @@ local defs  = require "mqtt_udp_defs"
 local bit = require "bit"
 
 
+
+
+function mqtt_proto_lib.listen( sock, listener )
+
+    while true do
+        --data, ip, port = sock:receivefrom()
+        data, ip, port = mqtt_udp_lib.recv_packet( sock )
+        if data then
+            --print("Received: ", data, ip, port, type(data))
+            --print("Received from: ", ip, port )
+            --[[udp:sendto(data, ip, port)--]]
+            topic,val = mqtt_udp_lib.parse_packet(data)
+            listener( "publish", topic, val, ip, port );
+        end
+        socket.sleep(0.01)
+    end
+
+end
+
+
+
+function mqtt_proto_lib.publish( socket, topic, value )
+    data = mqtt_proto_lib.make_packet( topic, value )
+    mqtt_proto_lib.send_packet( socket, data )
+end
+
+
+
+
+
+
+
+
+
 function mqtt_proto_lib.unpack_remaining_length(pkt)
     remaining_length = 0
     while( 1 )
