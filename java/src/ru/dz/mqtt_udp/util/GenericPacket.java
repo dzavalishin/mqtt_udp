@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -39,8 +40,16 @@ public abstract class GenericPacket implements IPacket {
 	 */
 	public static DatagramSocket recvSocket() throws SocketException
 	{
-		DatagramSocket s = new DatagramSocket(mqtt_udp_defs.MQTT_PORT);
+		//DatagramSocket s = new DatagramSocket(mqtt_udp_defs.MQTT_PORT);
+		DatagramSocket s = new DatagramSocket(null);
 		//s.setBroadcast(true);
+		
+		s.setReuseAddress(true);
+		// TODO reuseport
+		
+		InetSocketAddress address = new InetSocketAddress(mqtt_udp_defs.MQTT_PORT);
+		
+		s.bind(address);
 		return s;
 	}
 

@@ -15,6 +15,15 @@ def make_recv_socket():
     udp_socket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     #udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+    if hasattr(socket, 'SO_REUSEPORT'):  # pragma: no cover
+        try:
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        except socket.error as err:
+            print( "No SO_REUSEPORT" )
+            if err[0] not in (errno.ENOPROTOOPT, errno.EINVAL):
+                raise
+
     udp_socket.bind( (BIND_IP,defs.MQTT_PORT) )
     return udp_socket
 
