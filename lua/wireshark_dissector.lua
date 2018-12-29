@@ -1,3 +1,15 @@
+--[[
+
+  WireShark dissector for MQTT/UDP protocol.
+
+  TODO decode packet length for real (multibyte mode) - currently we just check one byte
+  TODO decode topic len completely (2 bytes)
+
+  See also https://habr.com/sandbox/30799/
+
+]]
+
+
 -- local mq = require("mqtt_udp_lib")
 
 packettypes  = { 
