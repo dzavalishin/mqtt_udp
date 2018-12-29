@@ -16,10 +16,10 @@ def make_recv_socket():
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     #udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-    if hasattr(socket, 'SO_REUSEPORT'):  # pragma: no cover
+    if hasattr(udp_socket, 'SO_REUSEPORT'):  # pragma: no cover
         try:
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        except socket.error as err:
+            udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        except udp_socket.error as err:
             print( "No SO_REUSEPORT" )
             if err[0] not in (errno.ENOPROTOOPT, errno.EINVAL):
                 raise
