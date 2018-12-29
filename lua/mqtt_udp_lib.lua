@@ -14,6 +14,9 @@ local bit = require "bit"
 function mqtt_udp_lib.make_listen_socket()
 
     local udp = socket.udp()
+    --print(assert(c:setoption("reuseport", true)))
+    --print("reuseport: ", udp:setoption("reuseport", true))
+    udp:setoption("reuseaddr", true)
     udp:setsockname("*", defs.MQTT_PORT )
     -- udp:settimeout(1)
     udp:settimeout()
