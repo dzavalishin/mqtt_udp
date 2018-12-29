@@ -3,7 +3,7 @@
 --local defs  = require "mqtt_udp_defs"
 local mq = require "mqtt_udp_lib"
 
-listener = function(ptype, topic, value, ip, port )
+local listener = function(ptype, topic, value, ip, port )
     --print("Topic: '"..topic.."'")
     --print("Value: '"..val.."'")
     --print("From: ", ip, port )
@@ -13,7 +13,7 @@ end
 
 print("Will listen for MQTT/UDP packets");
 
-udp = mq.make_listen_socket()
+local udp = mq.make_listen_socket()
 mq.listen( udp, listener )
 
 --[[

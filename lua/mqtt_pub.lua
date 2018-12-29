@@ -4,10 +4,10 @@
 
 local mq = require "mqtt_udp_lib"
 
-udp = mq.make_publish_socket()
+local udp = mq.make_publish_socket()
 
-topic = "Lua Sender Test";
-val = "Hello";
+local topic = "Lua Sender Test";
+local val = "Hello";
 
 print("Will send '"..topic.."'='"..val.."'");
 

@@ -13,7 +13,7 @@ local bit = require "bit"
 
 function mqtt_udp_lib.make_listen_socket()
 
-    udp = socket.udp()
+    local udp = socket.udp()
     udp:setsockname("*", defs.MQTT_PORT )
     -- udp:settimeout(1)
     udp:settimeout()
@@ -25,7 +25,7 @@ end
 
 function mqtt_udp_lib.make_publish_socket()
 
-    udp = socket.udp()
+    local udp = socket.udp()
 
     assert(udp)
     --assert(udp:settimeout(1))

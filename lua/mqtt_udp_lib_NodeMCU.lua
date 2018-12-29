@@ -19,37 +19,34 @@ local mcunet = require "net"
 
 function mqtt_udp_lib.make_listen_socket()
 
-    udp = socket.udp()
-    udp:setsockname("*", defs.MQTT_PORT )
+    local udpSocket, our_ip
+
+    tmr.alarm(1, 1000, 1, function()
+        if wifi.sta.getip() == nil then
+            print("Waiting for IP...")
+        else
+		tmr.stop(1)
+		our_ip = wifi.sta.getip() -- we store our_ip, as we need it to setup udp socket properly
+		print(" Your IP is ".. our_ip)
+	end
+    end)
+
+    --udp = socket.udp()
+    udpSocket = net.createUDPSocket() -- NodeMCU way
+    --udp:setsockname("*", defs.MQTT_PORT )
+    udpSocket:listen( defs.MQTT_PORT, our_ip ) -- NodeMCU way
     -- udp:settimeout(1)
     udp:settimeout()
 
-    return udp
+    return udpSocket
 
 end
 
---[[
-function mqtt_udp_lib.listen( sock, listener )
-
-while true do
-    --data, ip, port = sock:receivefrom()
-    data, ip, port = mqtt_udp_lib.recv_packet( sock )
-    if data then
-        --print("Received: ", data, ip, port, type(data))
-        --print("Received from: ", ip, port )
-        --[[udp:sendto(data, ip, port)--]]
-        topic,val = mqtt_udp_lib.parse_packet(data)
-        listener( "publish", topic, val, ip, port );
-    end
-    socket.sleep(0.01)
-end
-
-end
-]]
 
 function mqtt_udp_lib.make_publish_socket()
 
-    udp = socket.udp()
+    --udp = socket.udp()
+    local udp = net.createUDPSocket() -- NodeMCU way
 
     assert(udp)
     --assert(udp:settimeout(1))
@@ -64,12 +61,10 @@ function mqtt_udp_lib.make_publish_socket()
 end
 
 
---function mqtt_udp_lib.send_packet( data )
---    udp:sendto( data, "255.255.255.255", defs.MQTT_PORT )
---end
 
 function mqtt_udp_lib.send_packet( socket, data )
-    socket:sendto( data, "255.255.255.255", defs.MQTT_PORT )
+    --socket:sendto( data, "255.255.255.255", defs.MQTT_PORT )
+    socket:send(defs.MQTT_PORT, 0xFFFFFFFF, data ) -- NodeMCU way
 end
 
 function mqtt_udp_lib.recv_packet( socket )
@@ -77,12 +72,6 @@ function mqtt_udp_lib.recv_packet( socket )
     return socket:receivefrom()
 end
 
---[[
-function mqtt_udp_lib.publish( socket, topic, value )
-    data = mqtt_udp_lib.make_packet( topic, value )
-    mqtt_udp_lib.send_packet( socket, data )
-end
-]]
 
 return mqtt_udp_lib
 
