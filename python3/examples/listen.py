@@ -20,6 +20,9 @@ if __name__ == "__main__":
     while True:
         pkt = mqttudp.sub.recv_udp_packet(s)    
         ptype,topic,value = mqttudp.sub.parse_packet(pkt)
+        if ptype == "ping":
+            print( "Got ping" )
+            continue
         if ptype != "publish":
             continue
         if last.__contains__(topic) and last[topic] == value:

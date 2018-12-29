@@ -33,7 +33,7 @@ public abstract class GenericPacket implements IPacket {
 	}
 
 	/**
-	 * Create new socket to listn to MQTT/UDP packets.
+	 * Create new socket to listen to MQTT/UDP packets.
 	 * @return socket
 	 * @throws SocketException
 	 */

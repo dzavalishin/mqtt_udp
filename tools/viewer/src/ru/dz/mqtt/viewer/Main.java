@@ -62,6 +62,7 @@ public class Main extends Application {
 
 	private static final int DEFAULT_WIDTH = 1000;
 
+	private PingSender pingSender = new PingSender(); 
 
 
 	@Override
@@ -228,6 +229,8 @@ public class Main extends Application {
 
 	private MenuBar makeLeftMenu() {
 
+		// ---------- File ----------------------------------------
+
 		Menu fileMenu = new Menu("File");
 
 		MenuItem logStart = new MenuItem("Start log");
@@ -236,10 +239,9 @@ public class Main extends Application {
 		MenuItem exitMenuItem = new MenuItem("Exit");
 
 		fileMenu.getItems().addAll( logStart, logStop, new SeparatorMenuItem(), exitMenuItem );
-		// log open dialog crashes :(
-		//fileMenu.getItems().addAll( exit );
 
 
+		// ---------- Display -------------------------------------
 		Menu displayMenu = new Menu("Display");
 		//displayMenu.addEventHandler(eventType, eventHandler);
 
@@ -247,7 +249,23 @@ public class Main extends Application {
 
 		displayMenu.getItems().addAll(updateMenuItem, new SeparatorMenuItem(), viewHostsMenuItem);
 
-		MenuBar mb = new MenuBar(fileMenu,displayMenu);
+		// ---------- Send ----------------------------------------
+		
+		Menu sendMenu = new Menu("Send");
+
+		CheckMenuItem pingMenuItem = new CheckMenuItem("Ping");
+		pingMenuItem.setSelected(pingSender.isEnabled());
+		pingMenuItem.setOnAction( new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) { pingSender.setEnabled(pingMenuItem.isSelected()); } 
+		});
+		
+		
+		sendMenu.getItems().addAll(pingMenuItem);
+		
+		// ---------- Bar -----------------------------------------
+		
+		MenuBar mb = new MenuBar(fileMenu,displayMenu,sendMenu);
 
 
 		viewHostsMenuItem.setSelected(true);
