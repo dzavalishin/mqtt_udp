@@ -49,7 +49,7 @@ import javafx.scene.layout.VBox;
 public class Main extends Application {
 	private static final int TOOLBAR_HEIGHT = 34;
 	private FileLogger flog = new FileLogger();
-	FileChooser fch = new FileChooser();
+	private FileChooser fch = new FileChooser();
 
 	//private Stage stage;
 
@@ -61,24 +61,18 @@ public class Main extends Application {
 	static private final Alert aboutAlert = new Alert(AlertType.INFORMATION);
 
 	private static final int DEFAULT_WIDTH = 1000;
+
+
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 
 			//stage = primaryStage;
 
-			//BorderPane root = new BorderPane();
-			//Scene scene = new Scene(root,400,400);
-			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			//primaryStage.setScene(scene);
-			//primaryStage.show();
-
-			// constructing our scene
-			//URL url = getClass().getResource("TopicTree.fxml");
-			//AnchorPane pane = FXMLLoader.load( url );
 
 			primaryStage.getIcons().add(applicationIcon);
-			
+
 			fch.setTitle("Event log file");
 			fch.setInitialFileName("MQTT_UDP.log");		
 
@@ -87,26 +81,25 @@ public class Main extends Application {
 				Region spacer = new Region();
 				spacer.getStyleClass().add("menu-bar");
 				HBox.setHgrow(spacer, Priority.SOMETIMES);
-				
+
 				MenuBar leftMenu = makeLeftMenu();
 				ToolBar toolBar = makeToolBar();				
 				MenuBar rightMenu = makeRightMenu();
 
 				//leftMenu.setPrefHeight(toolBar.getHeight());
 				//rightMenu.setPrefHeight(toolBar.getHeight());
-				
+
 				leftMenu.setPrefHeight(TOOLBAR_HEIGHT);
 				rightMenu.setPrefHeight(TOOLBAR_HEIGHT);
 				toolBar.setPrefHeight(TOOLBAR_HEIGHT);
-				
+
 				toolBarUpdateButton.setPrefHeight(12);
-				
+
 				menubars = new HBox(leftMenu, spacer, toolBar, rightMenu);			
-				//menubars = new HBox(makeLeftMenu(), spacer, makeToolBar(), makeRightMenu());
-				
-				
+				//menubars = new HBox(makeLeftMenu(), spacer, makeToolBar(), makeRightMenu());							
 				//menubars.setMinHeight(32);
 			}
+
 			HBox content = makeContent();
 			content.setFillHeight(true);
 			HBox log = makeLog();
@@ -149,10 +142,10 @@ public class Main extends Application {
 			aboutAlert.setTitle("About MQTT/UDP viewer");
 			aboutAlert.setHeaderText("MQTT/UDP viewer version 1.0");
 			aboutAlert.setContentText("Network is broker!");
-
 			aboutAlert.initOwner(primaryStage);
-			
-			
+
+			initNetwork();
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -385,6 +378,9 @@ public class Main extends Application {
 		toolBarUpdateButton.setSelected(updateEnabled);
 
 		toolBarUpdateButton.setGraphic( updateEnabled ? runIcon : stopIcon );
+		
+		if( updateEnabled ) ds.requestStart();
+		else				ds.requestStop();
 	}
 
 	private void showAboutAlert() {
@@ -448,7 +444,14 @@ public class Main extends Application {
 
 		topicListView.setItems(listItems);
 
-		MqttUdpDataSource ds;
+		return topicListView;
+	}
+
+
+
+	private MqttUdpDataSource ds;
+	private void initNetwork()
+	{
 		try {
 			ds = new MqttUdpDataSource();
 		} catch (SocketException e) {
@@ -472,10 +475,7 @@ public class Main extends Application {
 
 		});
 
-		return topicListView;
 	}
-
-
 
 
 }

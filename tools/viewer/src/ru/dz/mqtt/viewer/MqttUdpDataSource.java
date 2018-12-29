@@ -22,7 +22,24 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 	{
 		ss = GenericPacket.sendSocket();
 		
-		Runnable target = new Runnable() {
+		start();
+	}
+
+	private void start() {
+		Runnable target = makeLoopRunnable();
+		Thread t = new Thread(target, "MQTT UDP Recv");
+		t.start();
+	}
+
+	public void requestStart()
+	{
+		if(isRunning()) return;
+		start();
+	}
+	
+	
+	private Runnable makeLoopRunnable() {
+		return new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -36,9 +53,6 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 				}				
 			}
 		};
-
-		Thread t = new Thread(target, "MQTT UDP Recv");
-		t.start();
 	}
 
 	@Override
