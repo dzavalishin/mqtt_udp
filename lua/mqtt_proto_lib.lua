@@ -16,12 +16,12 @@ function mqtt_proto_lib.listen( sock, listener )
 
     while true do
         --data, ip, port = sock:receivefrom()
-        data, ip, port = mqtt_udp_lib.recv_packet( sock )
+        data, ip, port = mqtt_proto_lib.recv_packet( sock )
         if data then
             --print("Received: ", data, ip, port, type(data))
             --print("Received from: ", ip, port )
             --[[udp:sendto(data, ip, port)--]]
-            topic,val = mqtt_udp_lib.parse_packet(data)
+            topic,val = mqtt_proto_lib.parse_packet(data)
             listener( "publish", topic, val, ip, port );
         end
         socket.sleep(0.01)
@@ -71,7 +71,7 @@ function mqtt_proto_lib.parse_packet(pkt)
         return "","";
     end
 
-    total_len, pkt = mqtt_udp_lib.unpack_remaining_length(pkt:sub(2));
+    total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
 
     --print("Total_len: ", total_len);
     --print("pkt[0]: ", pkt:byte( 1 ) )

@@ -11,6 +11,8 @@ listener = function(ptype, topic, value, ip, port )
     print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
 end
 
+print("Will listen for MQTT/UDP packets");
+
 udp = mq.make_listen_socket()
 mq.listen( udp, listener )
 
