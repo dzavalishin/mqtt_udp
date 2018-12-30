@@ -83,3 +83,10 @@ $RECYCLE.BIN/
 
 *.pyc
 *.stackdump
+c/autom4te.cache/traces.0
+c/config.h
+c/Makefile
+c/config.status
+c/config.log
+c/autom4te.cache/requests
+c/autom4te.cache/output.0

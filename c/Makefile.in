@@ -1,5 +1,19 @@
-CFLAGS += -g
-#CC=gcc
+# @configure_input@
+
+CFLAGS += @CFLAGS@
+CC=@CC@
+
+# autoconf: 
+# @EXEEXT@ - executable file extension
+
+
+# Package-related substitution variables
+
+package        = @PACKAGE_NAME@
+version        = @PACKAGE_VERSION@
+tarname        = @PACKAGE_TARNAME@
+distdir        = $(tarname)-$(version)
+
 
 goal:: all run
 
