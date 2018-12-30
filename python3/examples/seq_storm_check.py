@@ -51,7 +51,9 @@ if __name__ == "__main__":
             speed_s = "?"
             if now != start_time:
                 speed_s = '{:.0f}'.format( STEP/(now-start_time) )
-            print("@ "+str(last)+"\terrors = "+str(errors)+"\tspeed is "+speed_s+" pkt/sec" )
+                err_percent_s = '{:.1f}'.format( errors*100.0/STEP )
+                print("@ "+str(last)+"\terrors = "+str(errors)+"\tspeed is "+speed_s+" pkt/sec,\terr "+err_percent_s+"%" )
+                errors = 0
             start_time = now
 
         curr = int( value )

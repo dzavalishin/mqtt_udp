@@ -15,6 +15,7 @@ sys.path.append('../mqttudp')
 import mqttudp.sub
 
 if __name__ == "__main__":
+    print( "Will dump MQTT/UDP packets with changed value" )
     s = mqttudp.sub.make_recv_socket()
     last = {}
     while True:

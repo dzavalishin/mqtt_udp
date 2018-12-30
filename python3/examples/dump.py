@@ -15,6 +15,7 @@ sys.path.append('../mqttudp')
 import mqttudp.sub
 
 if __name__ == "__main__":
+    print( "Will dump all MQTT/UDP packets recv'd" )
     s = mqttudp.sub.make_recv_socket()
     while True:
         pkt = mqttudp.sub.recv_udp_packet(s)    
