@@ -18,6 +18,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import ru.dz.mqtt_udp.IPacket;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -25,6 +26,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -417,16 +420,6 @@ public class Main extends Application {
 	protected boolean updateEnabled = true;
 	private void setListItem(TopicItem item)
 	{
-		/*
-		//listItems.add(i);
-		listItems.forEach(
-				ti -> {
-					if(ti.getTopic() == item.getTopic())
-						listItems.remove(ti);
-				}
-
-				);
-		 */
 		// Dumb code, sorry
 		int nItems = listItems.size();
 		for( int j = 0; j < nItems; j++ )
@@ -457,11 +450,35 @@ public class Main extends Application {
 		topicListView.setPrefWidth(DEFAULT_WIDTH);
 
 		//ObservableSet<TopicItem> items = FXCollections.emptyObservableSet();
-
-
-
 		topicListView.setItems(listItems);
 
+		topicListView.setCellFactory(new Callback<ListView<TopicItem>, ListCell<TopicItem>>() {
+			@Override
+			public ListCell<TopicItem> call(ListView<TopicItem> arg0) {
+
+				//final Label leadLbl = new Label();
+	            final Tooltip tooltip = new Tooltip();
+	            final ListCell<TopicItem> cell = new ListCell<TopicItem>() {
+	              @Override
+	              public void updateItem(TopicItem item, boolean empty) {
+	                super.updateItem(item, empty);
+	                if (item != null) {
+	                  //leadLbl.setText(item.toString());
+	                  setText(item.toString());
+	                  tooltip.setText("From "+item.getFrom());
+	                  setTooltip(tooltip);
+	                }
+	              }
+	            }; // ListCell				
+
+				return cell;
+			}
+			
+		});
+	/* */
+		
+		
+		
 		return topicListView;
 	}
 
