@@ -100,29 +100,10 @@ int mqtt_udp_send_publish( int fd, char *topic, char *data )
 
 static int mqtt_udp_send_empty_pkt( int fd, char ptype )
 {
-#if 1
     unsigned char buf[2];
     buf[0] = ptype;
     buf[1] = 0;
     return mqtt_udp_send_pkt( fd, buf, sizeof(buf) );
-#else
-    unsigned char buf[BUFLEN];
-
-
-    int blen = sizeof(buf);
-    unsigned char *bp = buf;
-
-    *bp++ = ptype;
-    blen--;
-
-    int used = 0;
-    int rc = pack_len( bp, &blen, &used, 0 );
-    if( rc ) return rc;
-
-    bp += used;
-
-    return mqtt_udp_send_pkt( fd, buf, bp-buf );
-#endif
 }
 
 
@@ -133,27 +114,7 @@ static int mqtt_udp_send_empty_pkt( int fd, char ptype )
 
 int mqtt_udp_send_ping_request( int fd )
 {
-#if 1
     return mqtt_udp_send_empty_pkt( fd, PTYPE_PINGREQ );
-#else
-
-    unsigned char buf[BUFLEN];
-
-
-    int blen = sizeof(buf);
-    unsigned char *bp = buf;
-
-    *bp++ = PTYPE_PINGREQ;
-    blen--;
-
-    int used = 0;
-    int rc = pack_len( bp, &blen, &used, 0 );
-    if( rc ) return rc;
-
-    bp += used;
-
-    return mqtt_udp_send_pkt( fd, buf, bp-buf );
-#endif
 }
 
 

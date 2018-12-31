@@ -27,7 +27,7 @@ $(FN).h: $(IN)  inc_txt2c/*
 	sed 's/=/ /' $@.2 | sed 's/;/ /' > $@
 	-rm $@.1 $@.2
 	$(SENDTO) $(ROOT)/c/
-
+	$(SENDTO) $(ROOT)/arduino/MQTT_UDP 
 
 $(FN).py: $(IN)  inc_txt2python/*
 	$(CPP) -Iinc_txt2python $(IN) $@.1

@@ -1,4 +1,6 @@
 /* This code is generated, do not change */
+#define PACKAGE_VERSION_MAJOR   0 
+#define PACKAGE_VERSION_MINOR   2 
 #define PTYPE_CONNECT   0x10 
 #define PTYPE_CONNACK   0x20 
 #define PTYPE_PUBLISH   0x30 
@@ -14,3 +16,4 @@
 #define PTYPE_PINGRESP   0xD0 
 #define PTYPE_DISCONNECT   0xE0 
 #define MQTT_PORT   1883 
+#define PKT_BUF_SIZE   2048 
