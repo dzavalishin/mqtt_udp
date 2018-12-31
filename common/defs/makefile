@@ -2,6 +2,7 @@
 
 FN=mqtt_udp_defs
 
+IN=$(FN).definitions
 OUT=$(FN).java $(FN).h $(FN).py $(FN).lua
 
 goal:: $(OUT)
@@ -9,31 +10,34 @@ goal:: $(OUT)
 CPP=cpp -P -C
 SENDTO=cp $@ 
 
+ROOT=../..
+
 clean:
 	rm $(OUT)
 
 
-$(FN).java: $(FN).definitions  inc_txt2java/*
-	$(CPP) -Iinc_txt2java $(FN).definitions $@
-	$(SENDTO) ../../java/src/ru/dz/mqtt_udp/util/
+$(FN).java: $(IN)  inc_txt2java/*
+	$(CPP) -Iinc_txt2java $(IN) $@
+	$(SENDTO) $(ROOT)/java/src/ru/dz/mqtt_udp/util/
 
 
-$(FN).h: $(FN).definitions  inc_txt2c/*
-	$(CPP) -Iinc_txt2c $(FN).definitions $@.1 
+$(FN).h: $(IN)  inc_txt2c/*
+	$(CPP) -Iinc_txt2c $(IN) $@.1 
 	sed 's/const unsigned char/#define/' $@.1 > $@.2
 	sed 's/=/ /' $@.2 | sed 's/;/ /' > $@
 	-rm $@.1 $@.2
-	$(SENDTO) ../../c/
+	$(SENDTO) $(ROOT)/c/
 
 
-$(FN).py: $(FN).definitions  inc_txt2python/*
-	$(CPP) -Iinc_txt2python $(FN).definitions $@.1
+$(FN).py: $(IN)  inc_txt2python/*
+	$(CPP) -Iinc_txt2python $(IN) $@.1
 	sed 's/----/\#/' $@.1 > $@
 	-rm $@.1
-	$(SENDTO) ../../python/mqttudp/
+	$(SENDTO) $(ROOT)/python/mqttudp/
+	$(SENDTO) $(ROOT)/python3/mqttudp/
 
 
-$(FN).lua: $(FN).definitions  inc_txt2lua/*
-	$(CPP) -Iinc_txt2lua $(FN).definitions $@
-	$(SENDTO) ../../lua/
+$(FN).lua: $(IN)  inc_txt2lua/*
+	$(CPP) -Iinc_txt2lua $(IN) $@
+	$(SENDTO) $(ROOT)/lua/
 

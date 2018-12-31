@@ -1,5 +1,7 @@
 -- This code is generated, do not change
 local mqtt_udp_defs = {}
+mqtt_udp_defs.PACKAGE_VERSION_MAJOR = 0
+mqtt_udp_defs.PACKAGE_VERSION_MINOR = 2
 mqtt_udp_defs.PTYPE_CONNECT = 0x10
 mqtt_udp_defs.PTYPE_CONNACK = 0x20
 mqtt_udp_defs.PTYPE_PUBLISH = 0x30

@@ -1,4 +1,6 @@
 /* This code is generated, do not change */
+#define PACKAGE_VERSION_MAJOR   0 
+#define PACKAGE_VERSION_MINOR   2 
 #define PTYPE_CONNECT   0x10 
 #define PTYPE_CONNACK   0x20 
 #define PTYPE_PUBLISH   0x30 

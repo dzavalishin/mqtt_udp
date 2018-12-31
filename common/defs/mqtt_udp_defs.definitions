@@ -1,5 +1,7 @@
 #include "conv_header"
 
+id(PACKAGE_VERSION_MAJOR,0)
+id(PACKAGE_VERSION_MINOR,2)
 
 id(PTYPE_CONNECT,0x10)
 id(PTYPE_CONNACK,0x20)
