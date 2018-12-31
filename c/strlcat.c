@@ -1,4 +1,7 @@
 #ifndef HAVE_STRLCAT
+#include <sys/types.h>
+#include <string.h>
+
 /*
  * '_cups_strlcat()' - Safely concatenate two strings.
  */

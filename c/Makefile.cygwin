@@ -1,22 +1,22 @@
-# @configure_input@
+# Makefile.  Generated from Makefile.in by configure.
 
-CFLAGS += @CFLAGS@
-CC=@CC@
+CFLAGS += -g -O2
+CC=gcc
 #AR=@AR@
 AR=ar
-RANLIB=@RANLIB@
+RANLIB=ranlib
 
 # autoconf: 
-# @EXEEXT@ - executable file extension
+# .exe - executable file extension
 
 
 # Package-related substitution variables
 
-package        = @PACKAGE_NAME@
-version        = @PACKAGE_VERSION@
-tarname        = @PACKAGE_TARNAME@
+package        = MQTT-UDP-Library
+version        = 0.1
+tarname        = mqtt-udp-library
 distdir        = $(tarname)-$(version)
-prefix         = @prefix@
+prefix         = /usr/local
 
 LIB=libmqttudp.a
 
@@ -42,7 +42,7 @@ library:: libmqttudp.a
 $(LIB): $(OBJS)
 	$(AR) rc $@ $(OBJS)
 	$(RANLIB) $@
-	cp $@ libmqttudp.@PACKAGE_VERSION@.a
+	cp $@ libmqttudp.0.1.a
 
 mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
