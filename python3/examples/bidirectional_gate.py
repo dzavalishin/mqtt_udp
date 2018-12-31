@@ -53,7 +53,7 @@ def udp_listen_thread(bclient):
     last = {}
     while True:
         pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value = mqttudp.sub.parse_packet(pkt)
+        ptype,topic,value,pflags = mqttudp.sub.parse_packet(pkt)
         if ptype != "publish":
             continue
         if last.__contains__(topic) and last[topic] == value:

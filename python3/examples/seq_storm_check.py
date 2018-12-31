@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     while True:
         pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value = mqttudp.sub.parse_packet(pkt)
+        ptype,topic,value,pflags = mqttudp.sub.parse_packet(pkt)
 
         if ptype != "publish":
             continue
