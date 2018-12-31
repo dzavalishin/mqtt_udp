@@ -10,7 +10,7 @@ goal:: $(OUT)
 CPP=cpp -P -C
 SENDTO=cp $@ 
 
-ROOT=../..
+ROOT=../../lang
 
 clean:
 	rm $(OUT)
