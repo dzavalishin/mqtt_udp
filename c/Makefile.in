@@ -1,0 +1,55 @@
+# @configure_input@
+
+CFLAGS += @CFLAGS@
+CC=@CC@
+#AR=@AR@
+AR=ar
+RANLIB=@RANLIB@
+
+# autoconf: 
+# @EXEEXT@ - executable file extension
+
+
+# Package-related substitution variables
+
+package        = @PACKAGE_NAME@
+version        = @PACKAGE_VERSION@
+tarname        = @PACKAGE_TARNAME@
+distdir        = $(tarname)-$(version)
+prefix         = @prefix@
+
+LIB=libmqttudp.a
+
+goal:: all run
+
+all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen
+
+run::
+	./mqtt_udp_sub
+
+clean::
+	-rm *.o *.exe autom4te.cache/* config.h config.status config.log $(LIB)
+	-rmdir autom4te.cache
+
+OBJS  = udp_send_pkt.o udp_recv_pkt.o 
+OBJS += mqtt_udp.o mqtt_udp_util.o
+OBJS += mqtt_udp_parse.o mqtt_udp_build.o
+OBJS += mqtt_udp_send.o mqtt_udp_recv.o
+OBJS += strlcat.o strlcpy.o
+
+
+library:: libmqttudp.a
+
+$(LIB): $(OBJS)
+	$(AR) rc $@ $(OBJS)
+	$(RANLIB) $@
+	cp $@ libmqttudp.@PACKAGE_VERSION@.a
+
+mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^
+
+mqtt_udp_sub: mqtt_udp_sub.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^
+
+mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^

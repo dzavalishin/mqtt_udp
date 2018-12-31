@@ -27,3 +27,10 @@ Examples based on MQTT/UDP library
   mqtt_udp_sub.c		- print next coming MQTT/UDP packet (or all packets with -f flag)
 
   mqtt_udp_pub.c		- publish MQTT/UDP message to all the listeners
+
+
+Build instructions
+------------------
+
+On most systems do './configure && make'
+If you have no autoconf tools try 'make -f Makefile.cygwin' or tailor it to your needs
