@@ -2,7 +2,7 @@ Fast track:
 
 1. Go to tools/viewer, run mqtt_udp_view (you will need Java 8) - it will start visual MQTT/UDP traffic viewer.
 
-2. Go to python3/examples and run random_to_udp.py  (you will need python 3.x) - it will start sending MQTT/UDP messages with random content. (If you love python 2.x, use python/... dir instead.
+2. Go to lang/python3/examples and run random_to_udp.py  (you will need python 3.x) - it will start sending MQTT/UDP messages with random content. (If you love python 2.x, use lang/python/... dir instead.
 
 3. See viewer shows same data random_to_udp.py sends.
 
@@ -15,21 +15,21 @@ You have test environment set up.
 
 You can also dump all traffic with:
 
-  python/examples/listen.py 
-  python3/examples/listen.py 
-  lua/mqtt_sub.lua
-  c/mqtt_udp_listen
+  lang/python/examples/listen.py 
+  lang/python3/examples/listen.py 
+  lang/lua/mqtt_sub.lua
+  lang/c/mqtt_udp_listen
 
 
 
 You can also generate MQTT/UDP traffic with:
 
-  python/mqttudp/pub.py
-  python3/mqttudp/pub.py
-  lua/mqtt_pub.lua
-  c/mqtt_udp_pub
+  lang/python/mqttudp/pub.py
+  lang/python3/mqttudp/pub.py
+  lang/lua/mqtt_pub.lua
+  lang/c/mqtt_udp_pub
 
 And (not from cmd line, though) even with:
 
-  codesys/MQTT_UDP.EXP
-  java ru.dz.mqtt_udp.util.Pub class
+  lang/codesys/MQTT_UDP.EXP
+  lang/java ru.dz.mqtt_udp.util.Pub class
