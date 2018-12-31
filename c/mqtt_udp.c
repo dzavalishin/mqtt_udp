@@ -41,6 +41,13 @@ int mqtt_udp_socket(void)
         setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
     }
 
+    {
+        int enable = 1;
+        setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
+		//if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+		//    error("setsockopt(SO_REUSEADDR) failed");
+    }
+
     return fd;
 }
 
