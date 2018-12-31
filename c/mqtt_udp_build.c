@@ -75,7 +75,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
     //int size = total+1;
 
     int used = 0;
-    int rc = pack_len( bp, &blen, &used, total );
+    int rc = pack_len( bp, &blen, &used, total-2 );
     if( rc ) return rc;
 
     bp += used;
