@@ -7,7 +7,8 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class PingRespPacket extends GenericPacket {
 
-	public PingRespPacket(byte[] raw, IPacketAddress from) {
+	public PingRespPacket(byte[] raw, byte flags, IPacketAddress from) {
+		this.flags = flags;
 		this.from = from;
 		if( raw.length > 0 )
 			System.err.println("nonempty PingRespPacket");
@@ -20,7 +21,7 @@ public class PingRespPacket extends GenericPacket {
 	@Override
 	public byte[] toBytes() {
 		byte[] pkt = new byte[0];
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PINGRESP );	
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PINGRESP, flags );	
 	}
 
 	@Override

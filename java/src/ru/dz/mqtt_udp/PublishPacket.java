@@ -9,10 +9,11 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class PublishPacket extends GenericPacket {
 
-	private String topic;
-	private byte[] value;
+	private String  topic;
+	private byte[]  value;
 
-	public PublishPacket(byte[] raw, IPacketAddress from) {
+	public PublishPacket(byte[] raw, byte flags, IPacketAddress from) {
+		this.flags = flags;
 		int tlen = IPacket.decodeTopicLen( raw );
 
 		topic = new String(raw, 2, tlen, Charset.forName(MQTT_CHARSET));
@@ -29,20 +30,29 @@ public class PublishPacket extends GenericPacket {
 	public byte[] getValueRaw() {		return value;	}	
 	public String getValueString() {	return new String(value, Charset.forName(MQTT_CHARSET));	}
 	
-	public PublishPacket(String topic, byte[] value) {
-		makeMe( topic, value );
+	public PublishPacket(String topic, byte flags, byte[] value) {
+		makeMe( topic, flags, value );
 	}
 
 	public PublishPacket(String topic, String value) {
 		try {
-			makeMe( topic, value.getBytes(MQTT_CHARSET) );
+			makeMe( topic, (byte) 0, value.getBytes(MQTT_CHARSET) );
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	private void makeMe(String topic, byte[] value) {
+	public PublishPacket(String topic, byte flags, String value) {
+		try {
+			makeMe( topic, flags, value.getBytes(MQTT_CHARSET) );
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private void makeMe(String topic, byte flags, byte[] value) {
 		this.topic = topic;
+		this.flags = flags;
 		this.value = value;
 	}
 	
@@ -61,20 +71,24 @@ public class PublishPacket extends GenericPacket {
 					
 		byte [] pkt = new byte[plen]; 
 
-		pkt[0] = (byte) ((tbytes.length >>8) & 0xFF);
+		pkt[0] = (byte) (((tbytes.length >>8) & 0xFF) | (flags & 0x0F)); // TODO encodeTotalLength does it?
 		pkt[1] = (byte) (tbytes.length & 0xFF);
 		
 		System.arraycopy(tbytes, 0, pkt, 2, tbytes.length);
 		System.arraycopy(value, 0, pkt, tbytes.length + 2, value.length );
 		
 		//return IPacket.encodeTotalLength(pkt, IPacket.PT_PUBLISH);
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBLISH );
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBLISH, flags );
 	}
 
 	@Override
 	public String toString() {		
 		return String.format("MQTT/UDP PUBLISH '%s'='%s'", getTopic(), getValueString() );
 	}
+
+
+	public byte getFlags() {		return flags;	}
+	//public void setFlags(byte flags) {		this.flags = flags;	}
 	
 	
 }

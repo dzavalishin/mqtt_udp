@@ -19,6 +19,7 @@ public abstract class GenericPacket implements IPacket {
 	//private static final int  MQTT_PORT = 1883;
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
+	protected byte    flags;
 	protected IPacketAddress from = null;
 	
 	/**

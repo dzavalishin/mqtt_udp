@@ -4,27 +4,19 @@ import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public interface IPacket {
-/*
-	public static final int PT_CONNECT = 0x10;
-	public static final int PT_CONNACK = 0x20;
-	public static final int PT_PUBLISH = 0x30;
-	public static final int PT_PUBACK = 0x40;
-	public static final int PT_PUBREC = 0x50;
-	public static final int PT_PUBREL = 0x60;
-	public static final int PT_PUBCOMP = 0x70;
-	public static final int PT_SUBSCRIBE = 0x80;
-	public static final int PT_SUBACK = 0x90;
-	public static final int PT_UNSUBSCRIBE = 0xA0;
-	public static final int PT_UNSUBACK = 0xB0;
-	public static final int PT_PINGREQ = 0xC0;
-	public static final int PT_PINGRESP = 0xD0;
-	public static final int PT_DISCONNECT = 0xE0;
-*/
+
 	public static final String MQTT_CHARSET = "UTF-8";
 
 
 	public byte[] toBytes();
 
+	/**
+	 * Construct packet object from binary data (recvd from net).
+	 * @param raw binary data from UDP packet
+	 * @param from source address
+	 * @return Packet object
+	 * @throws MqttProtocolException on incorrect binary packet data
+	 */
 	public static IPacket fromBytes( byte[] raw, IPacketAddress from ) throws MqttProtocolException
 	{
 		
@@ -53,17 +45,18 @@ public interface IPacket {
 	    System.arraycopy(raw, pos, sub, 0, slen);
 	    
 	    int ptype = 0xF0 & (int)(raw[0]);
+	    int flags = 0x0F & (int)(raw[0]);
 	    
 		switch(ptype)
 		{
 		case mqtt_udp_defs.PTYPE_PUBLISH:
-			return new PublishPacket(sub, from);
+			return new PublishPacket(sub, (byte)flags, from);
 
 		case mqtt_udp_defs.PTYPE_PINGREQ:
-			return new PingReqPacket(sub, from);
+			return new PingReqPacket(sub, (byte)flags, from);
 			
 		case mqtt_udp_defs.PTYPE_PINGRESP:
-			return new PingRespPacket(sub, from);
+			return new PingRespPacket(sub, (byte)flags, from);
 			
 		default:
 				throw new MqttProtocolException("Unknown pkt type "+raw[0]);
@@ -84,14 +77,20 @@ public interface IPacket {
 	    return ret;
 	}
 
-	
-	public static byte[] encodeTotalLength(byte[] pkt, int packetType) {
+	/**
+	 * Rename to encodePacketHeader?
+	 * @param pkt packet payload bytes
+	 * @param packetType type ( & 0xF0 )
+	 * @param flags flags
+	 * @return encoded packet to send to UDP
+	 */
+	public static byte[] encodeTotalLength(byte[] pkt, int packetType, byte flags) {
 		int data_len = pkt.length;
 		
 		byte[] buf = new byte[4]; // can't sent very long packets over UDP, 16 bytes are surely ok
 		int bp = 1;
 		
-		buf[0] = (byte) packetType;
+		buf[0] = (byte) ((packetType & 0xF0) | (flags & 0x0F));
 		
 	    do 
 	    {

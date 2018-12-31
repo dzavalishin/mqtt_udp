@@ -52,7 +52,7 @@ public class PingSender {
 
 	private static final byte[] empty = new byte[0];
 	private void sendPing() throws IOException {
-		PingReqPacket ping = new PingReqPacket(empty, null );
+		PingReqPacket ping = new PingReqPacket(empty, (byte) 0, null );
 		ping.send();
 	}
 
