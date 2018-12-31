@@ -66,12 +66,14 @@ function mqtt_proto_lib.parse_packet(pkt)
 
     --print("pkt[0]: ", pkt:byte( 1 ) )
 
-    --if( pkt[0] ~= 0x30 ) then
-    if( pkt:byte( 1 ) ~= defs.PTYPE_PUBLISH ) then
+    local ptype = bit.band( pkt:byte( 1 ), 0xF0 )
+    local pflags = bit.band( pkt:byte( 1 ), 0x0F )
+
+    if( ptype ~= defs.PTYPE_PUBLISH ) then
         return "","";
     end
 
-    total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
+    local total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
 
     --print("Total_len: ", total_len);
     --print("pkt[0]: ", pkt:byte( 1 ) )
