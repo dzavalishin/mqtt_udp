@@ -24,46 +24,6 @@
 
 #include "mqtt_udp.h"
 
-#if 0
-
-// TODO move to separate src file - OS binding
-
-int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr )
-{
-    struct sockaddr_in addr;
-/*
-    {
-        struct sockaddr_in srcaddr;
-
-        memset(&srcaddr, 0, sizeof(srcaddr));
-
-        srcaddr.sin_family = AF_INET;
-        srcaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-        srcaddr.sin_port = htons(MQTT_PORT);
-
-        if (bind(fd, (struct sockaddr *) &srcaddr, sizeof(srcaddr)) < 0) {
-            perror("bind");
-            exit(1);
-        }
-    }
-*/
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    //addr.sin_addr.s_addr = inet_addr(IP);
-    //addr.sin_port = htons(MQTT_PORT);
-
-    int slen = sizeof(addr);
-
-    memset(buf, 0, sizeof(buf));
-
-    recvfrom(fd, buf, buflen, 0, (struct sockaddr *) &addr, &slen);
-
-    if( src_ip_addr ) *src_ip_addr = ntohl( addr.sin_addr.s_addr );
-
-    return 0;
-}
-
-#endif
 
 // TODO kill me
 #if 1
@@ -221,11 +181,8 @@ int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, siz
 
 
 // Wait for one incoming packet, parse and call corresponding callback
-#if MQTT_UDP_NEW_PARSER
+
 int mqtt_udp_recv( int fd, process_pkt callback )
-#else
-int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
-#endif
 {
     unsigned char buf[BUFLEN];
     int rc, src_ip;
@@ -238,64 +195,15 @@ int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h )
         return rc;
     }
 
-#if MQTT_UDP_NEW_PARSER
     rc = mqtt_udp_parse_any_pkt( buf, BUFLEN, src_ip, callback );
     //if(rc) printf("err %d mqtt_udp_parse_any_pkt\n", rc );
     return rc;
-#else // MQTT_UDP_NEW_PARSER
-    unsigned char ptype = buf[0];
-
-    switch( ptype )
-    {
-    case PTYPE_PUBLISH:
-        {
-            char topic[BUFLEN];
-            char value[BUFLEN];
-
-            rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
-            if(rc) return rc;
-
-            if( h->handle_p )
-                return h->handle_p( src_ip, ptype, topic, value );
-        }
-        break;
-
-    case PTYPE_SUBSCRIBE:
-        {
-            char topic[BUFLEN];
-            int pkt_id;
-            rc = mqtt_udp_parse_subscribe_pkt( buf, BUFLEN, topic, BUFLEN, &pkt_id );
-            if(rc) return rc;
-
-            if( h->handle_p )
-                return h->handle_p( src_ip, ptype, topic, "" );
-        }
-        break;
-
-    case PTYPE_PINGREQ:
-    case PTYPE_PINGRESP:
-        {
-            if( h->handle_e )
-                return h->handle_e( src_ip, ptype );
-        }
-        break;
-
-    default:
-        return h->handle_u( src_ip, buf, BUFLEN ); // TODO need correct len
-
-    }
-
-    return 0;
-#endif // MQTT_UDP_NEW_PARSER
 }
 
 
 // Process all incoming packets. Return only if error.
-#if MQTT_UDP_NEW_PARSER
+
 int mqtt_udp_recv_loop( process_pkt h )
-#else
-int mqtt_udp_recv_loop( struct mqtt_udp_handlers *h )
-#endif
 {
     int fd, rc;
 

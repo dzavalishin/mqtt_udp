@@ -20,7 +20,6 @@
 extern "C" {
 #endif
 
-#define MQTT_UDP_NEW_PARSER 1
 
 // --------------------------------------------------------------------------
 // Prepare socket
@@ -34,9 +33,9 @@ int mqtt_udp_bind( int fd ); // prepare to receive data
 // --------------------------------------------------------------------------
 
 // Send PUBLISH packet - obsolete entry point, do not use
-int mqtt_udp_send( int fd, char *topic, char *data );
+//int mqtt_udp_send( int fd, char *topic, char *data );
 
-// Send PUBLISH packet - obsolete entry point, do not use
+// Send PUBLISH packet
 int mqtt_udp_send_publish( int fd, char *topic, char *data );
 
 int mqtt_udp_send_ping_request( int fd );
@@ -98,7 +97,6 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 // Recieve (unfinshed)
 // --------------------------------------------------------------------------
 
-#if MQTT_UDP_NEW_PARSER
 
 // Wait for one incoming packet, parse and call corresponding callback
 int mqtt_udp_recv( int fd, process_pkt callback );
@@ -107,34 +105,6 @@ int mqtt_udp_recv( int fd, process_pkt callback );
 int mqtt_udp_recv_loop( process_pkt callback );
 
 
-#else // MQTT_UDP_NEW_PARSER
-
-//void (*mqtt_udp_handle_recv)( char *topic, char *data );
-
-// Handle incoming PUBLISH type packet
-typedef int (*mqtt_udp_handle_publish)( int src_ip, int ptype, char *topic, char *value );
-
-// Handle incoming packet with no payload - PINGREQ, PINGRESP
-typedef int (*mqtt_udp_handle_empty)( int src_ip, int ptype );
-
-// Handle unknown incoming packets - raw content
-typedef int (*mqtt_udp_handle_unknown)( int src_ip, char *data, int len );
-
-struct mqtt_udp_handlers
-{
-    mqtt_udp_handle_publish	handle_p;
-    mqtt_udp_handle_empty	handle_e;
-
-    mqtt_udp_handle_unknown     handle_u;
-};
-
-// Wait for one incoming packet, parse and call corresponding callback
-int mqtt_udp_recv( int fd, struct mqtt_udp_handlers *h );
-
-// Process all incoming packets. Return only if error.
-int mqtt_udp_recv_loop( struct mqtt_udp_handlers *h );
-
-#endif // MQTT_UDP_NEW_PARSER
 
 
 // --------------------------------------------------------------------------
