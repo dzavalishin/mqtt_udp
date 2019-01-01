@@ -13,7 +13,7 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.jarfile}/bin"/>
-            <fileset dir="../../java/bin"/>
+            <fileset dir="../../lang/java/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/dz/.p2/pool/plugins/org.eclipse.fx.ide.css.jfx8_2.4.0.201605112122.jar"/>
         </jar>
     </target>

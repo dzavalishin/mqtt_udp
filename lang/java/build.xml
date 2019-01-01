@@ -5,7 +5,7 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. --><project basedir="." default="build" name="mqtt_udp">
     <property environment="env"/>
-    <property name="mqtt_view.location" value="../tools/viewer"/>
+    <property name="mqtt_view.location" value="../../tools/viewer"/>
     <property name="ECLIPSE_HOME" value="C:/bin/eclipse/"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>

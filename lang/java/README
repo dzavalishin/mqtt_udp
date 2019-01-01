@@ -6,7 +6,7 @@ MQTT/UDP protocol Java implementation
 
 All the rest is library.
 
-See also ../tools/viewer, simple visual MQTT/UDP traffic viewer written in Java.
+See also ../../tools/viewer, simple visual MQTT/UDP traffic viewer written in Java.
 
 BUILD
 
