@@ -4,7 +4,7 @@ Wireshark HOWTO
 
  - add to wireshark/init.lua (C:\Program Files\Wireshark\init.lua)
 
-    MQTTUDPPROTO_SCRIPT_PATH = "E:\\mqtt_udp\\lang\\lua\\" -- path to wireshark_dissector.lua
-    dofile(MQTTUDPPROTO_SCRIPT_PATH .. "wireshark_dissector.lua")
+    MQTTUDPPROTO_SCRIPT_PATH = "E:\\mqtt_udp\\lang\\lua\\" -- path to wireshark_mqtt_dissector.lua
+    dofile(MQTTUDPPROTO_SCRIPT_PATH .. "wireshark_mqtt_dissector.lua")
 
 

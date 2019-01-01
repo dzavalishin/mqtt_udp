@@ -41,15 +41,17 @@ function mq_proto.dissector(buffer,pinfo,tree)
 
     subtree:add(buffer(0,1),"Packet type: " .. buffer(0,1):uint() .. " "..type_str)
 
-    -- TODO upper byte
-    local topic_len = buffer(3,1):uint()
+	-- TODO & 0xF0!
+    if buffer(0,1):uint() == 0x30 then
+        -- TODO upper byte
+        local topic_len = buffer(3,1):uint()
 
-    --subtree:add(buffer(3,1),"Topic len: " .. buffer(3,1):uint() )
+        --subtree:add(buffer(3,1),"Topic len: " .. buffer(3,1):uint() )
 
-    subtree:add(buffer(4,topic_len),"Topic: " .. buffer(4,topic_len):string() )
+        subtree:add(buffer(4,topic_len),"Topic: " .. buffer(4,topic_len):string() )
 
-    subtree:add(buffer(4+topic_len),"Value: " .. buffer(4+topic_len):string() )
-
+        subtree:add(buffer(4+topic_len),"Value: " .. buffer(4+topic_len):string() )
+    end
 
     -- total_len, pkt_rest = mq.unpack_remaining_length(buffer);
 --    topic,val = mqtt_udp_lib.parse_packet(data)

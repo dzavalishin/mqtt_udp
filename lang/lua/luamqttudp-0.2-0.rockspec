@@ -31,6 +31,6 @@ build = {
         pub		= "mqtt_pub.lua",
         sub		= "mqtt_sub.lua",
         node	= "mqtt_udp_lib_NodeMCU.lua",
-        wshark	= "wireshark_dissector.lua"
+        wshark	= "wireshark_mqtt_dissector.lua"
     }
 }

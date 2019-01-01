@@ -9,5 +9,5 @@ mqtt_pub.lua			- command line tool that uses Lua library to publish data with MQ
 mqtt_sub.lua			- command line tool that uses Lua library to listen to MQTT/UDP messages
 
 
-wireshark_dissector.lua - incomplete WireShark protocol dissolver to be able to dump MQTT/UDP packets
+wireshark_mqtt_dissector.lua - incomplete WireShark protocol dissolver to be able to dump MQTT/UDP packets
 
