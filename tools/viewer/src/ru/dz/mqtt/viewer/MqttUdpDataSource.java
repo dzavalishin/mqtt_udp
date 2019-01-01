@@ -83,6 +83,14 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			//System.out.println(p);
 			
 			// TODO hack
+			TopicItem ti = new TopicItem("PingRequest", p.toString());
+			ti.setFrom(p.getFrom().toString());
+			sink.accept(ti);
+		}else 
+		if( p instanceof PingRespPacket)
+		{
+			//PingRespPacket pr = (PingRespPacket)p; 
+			// TODO hack
 			TopicItem ti = new TopicItem("PingResponce", p.toString());
 			ti.setFrom(p.getFrom().toString());
 			sink.accept(ti);

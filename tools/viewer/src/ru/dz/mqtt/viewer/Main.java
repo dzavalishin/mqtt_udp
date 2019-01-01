@@ -20,6 +20,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import ru.dz.mqtt_udp.IPacket;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -144,7 +145,8 @@ public class Main extends Application {
 			primaryStage.show();
 
 			aboutAlert.setTitle("About MQTT/UDP viewer");
-			aboutAlert.setHeaderText("MQTT/UDP viewer version 1.0");
+			aboutAlert.setHeaderText(String.format( "MQTT/UDP viewer version %d.%d",
+					mqtt_udp_defs.PACKAGE_VERSION_MAJOR, mqtt_udp_defs.PACKAGE_VERSION_MINOR ) );
 			aboutAlert.setContentText("Network is broker!");
 			aboutAlert.initOwner(primaryStage);
 

@@ -55,7 +55,7 @@ struct mqtt_udp_pkt
 
     size_t      total;   	// length of the rest of pkt down from here
 
-    int 	pkt_id;
+    int         pkt_id;
 
     size_t      topic_len;
     char *      topic;
