@@ -1,4 +1,5 @@
 ---
+title: MQTT/UDP
 ---
 
 # Hi and welcome to MQTT/UDP project
@@ -77,7 +78,14 @@ Fast start is described in [HOWTO](https://raw.githubusercontent.com/dzavalishin
 
 
 
+## Feedback and bug reports
+
+Here is an [Issue tracker](https://github.com/dzavalishin/mqtt_udp/issues).
 
 
+## Blog
 
+{% for post in site.posts %}
+* [{{ post.title }}]({{ post.url }})
+{% endfor %}
 
