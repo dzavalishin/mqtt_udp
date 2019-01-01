@@ -13,6 +13,7 @@ public class PublishPacket extends GenericPacket {
 	private byte[]  value;
 
 	public PublishPacket(byte[] raw, byte flags, IPacketAddress from) {
+		super(from);
 		this.flags = flags;
 		int tlen = IPacket.decodeTopicLen( raw );
 
@@ -22,7 +23,7 @@ public class PublishPacket extends GenericPacket {
 		value = new byte[vlen];	
 		System.arraycopy( raw, tlen+2, value, 0, vlen );
 		
-		this.from = from;
+		//this.from = from;
 	}
 
 	
@@ -31,10 +32,12 @@ public class PublishPacket extends GenericPacket {
 	public String getValueString() {	return new String(value, Charset.forName(MQTT_CHARSET));	}
 	
 	public PublishPacket(String topic, byte flags, byte[] value) {
+		super(null);
 		makeMe( topic, flags, value );
 	}
 
 	public PublishPacket(String topic, String value) {
+		super(null);
 		try {
 			makeMe( topic, (byte) 0, value.getBytes(MQTT_CHARSET) );
 		} catch (UnsupportedEncodingException e) {
@@ -43,6 +46,7 @@ public class PublishPacket extends GenericPacket {
 	}
 	
 	public PublishPacket(String topic, byte flags, String value) {
+		super(null);
 		try {
 			makeMe( topic, flags, value.getBytes(MQTT_CHARSET) );
 		} catch (UnsupportedEncodingException e) {

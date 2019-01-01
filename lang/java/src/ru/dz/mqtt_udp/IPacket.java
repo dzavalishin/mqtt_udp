@@ -113,6 +113,7 @@ public interface IPacket {
 		return out;
 	}
 
+	public IPacketAddress getFrom();
 	
 	
 }

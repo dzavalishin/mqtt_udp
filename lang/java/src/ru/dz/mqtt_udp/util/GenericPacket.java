@@ -20,7 +20,12 @@ public abstract class GenericPacket implements IPacket {
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
 	protected byte    flags;
-	protected IPacketAddress from = null;
+	protected IPacketAddress from;
+	
+	
+	public GenericPacket(IPacketAddress from) {
+		this.from = from;
+	}
 	
 	/**
 	 * Create new socket to send MQTT/UDP packets.

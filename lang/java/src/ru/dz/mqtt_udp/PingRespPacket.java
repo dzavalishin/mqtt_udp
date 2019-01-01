@@ -8,13 +8,15 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 public class PingRespPacket extends GenericPacket {
 
 	public PingRespPacket(byte[] raw, byte flags, IPacketAddress from) {
+		super(from);
 		this.flags = flags;
 		this.from = from;
 		if( raw.length > 0 )
 			System.err.println("nonempty PingRespPacket");
 	}
 
-	public PingRespPacket() {
+	public PingRespPacket(IPacketAddress from) {
+		super(from);
 		
 	}
 
