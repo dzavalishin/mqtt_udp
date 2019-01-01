@@ -54,9 +54,11 @@ static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt )
 }
 
 
-// sanity check
 #define MAX_SZ (16*1024)
 #define CHEWED (pkt - pstart)
+
+/* obsolete
+// sanity check
 
 int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen, char *value, size_t o_vlen )
 {
@@ -111,7 +113,7 @@ int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen
 
     return 0;
 }
-
+*/
 
 int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen, int *pkt_id_p )
 {

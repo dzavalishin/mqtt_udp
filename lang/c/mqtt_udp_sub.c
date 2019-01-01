@@ -55,7 +55,13 @@ int main(int argc, char *argv[])
     }
 
     do {
-
+#if 1
+        int rc = mqtt_udp_recv( fd, mqtt_udp_dump_any_pkt );
+        if( rc )
+        {
+            printf("mqtt_udp_recv err = %d\n", rc );
+        }
+#else
         memset(buf, 0, sizeof(buf));
         rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN, 0 );
 
@@ -70,6 +76,7 @@ int main(int argc, char *argv[])
         }
         else
             printf("'%s' = '%s'\n", topic, value );
+#endif
 
     } while(loop);
 
