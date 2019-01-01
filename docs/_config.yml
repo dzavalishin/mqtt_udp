@@ -1,3 +1,9 @@
 encoding: UTF-8
 theme: jekyll-theme-leap-day
+title: MQTT/UDP
+email: dz@dz.ru
+baseurl: /mqtt_udp
 
+header_pages:
+ - index.md
+ - blog.md
