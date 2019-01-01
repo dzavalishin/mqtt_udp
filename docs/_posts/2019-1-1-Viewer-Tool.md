@@ -13,4 +13,23 @@ There's how it looks like:
 ![MQTT Viwer screenshot](https://raw.githubusercontent.com/dzavalishin/mqtt_udp/master/dox/TrafficViewerScreen_Dec2018.png)
 
 
-Viewer tool [help page](https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help) in Wiki.
+For up to date info please visit viewer tool [help page](https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help) in Wiki.
+
+Here we will describe it as it was at version 1.0.
+
+As started Viewer displays all the PUBLISH packets traffic available at local host.
+
+* You can write all data to log file
+
+Use File/Log menu item or press Ctrl-L to open log file. Use File/Stop log menu to finish.
+
+* You can stop/start update 
+
+Press F5 or green arrow button at top left of the screen. Note that log is not updated too.
+
+
+* Turn off pings
+
+By default Viewer sends broadcast pings to discover MQTT/UDP nodes all over network.
+You can turn it off with Send/Ping menu item.
+
