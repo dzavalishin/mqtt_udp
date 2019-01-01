@@ -12,6 +12,12 @@ public class ImageUtils {
 		//return getImageView( iName+"24.png" );
 		return getImageView( iName+"16.png" );
 	}
+
+	public static ImageView getIcon32(String iName)
+	{
+		return getImageView( iName+"32.png" );
+	}
+	
 	
 	public static ImageView getImageView(String sourcePath)
 	{

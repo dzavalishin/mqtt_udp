@@ -55,6 +55,9 @@ public class Main extends Application {
 	private FileLogger flog = new FileLogger();
 	private FileChooser fch = new FileChooser();
 
+	private TopicTable generalTopicTable = new TopicTable();
+
+	
 	//private Stage stage;
 
 	private SplitPane splitPane;
@@ -152,6 +155,10 @@ public class Main extends Application {
 
 			initNetwork();
 
+			// TODO kill me, test only
+			toolBarSendButton.setSelected(true);
+			generalTopicTable.setVisible(true);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -230,6 +237,7 @@ public class Main extends Application {
 	private CheckMenuItem updateMenuItem = new CheckMenuItem("Update");	
 	//private CheckMenuItem updateTopMenuItem = new CheckMenuItem();
 	private ToggleButton toolBarUpdateButton = new ToggleButton();
+	private ToggleButton toolBarSendButton = new ToggleButton();
 
 
 	private MenuBar makeLeftMenu() {
@@ -385,10 +393,17 @@ public class Main extends Application {
 
 		//toolBarUpdateButton.setMaxHeight(12);
 		//toolBarUpdateButton.setMaxWidth(12);
-
+		
+		toolBarSendButton.setTooltip(new Tooltip("Open data send interface"));
+		toolBarSendButton.setGraphic(ImageUtils.getIcon("content"));
+		toolBarSendButton.setOnAction(new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) { generalTopicTable.setVisible(toolBarSendButton.isSelected()); }
+		});
+		
 		ToolBar tb = new ToolBar();
 		//tb.setMaxHeight(16);
-		tb.getItems().add(toolBarUpdateButton);
+		tb.getItems().addAll(toolBarSendButton,toolBarUpdateButton);
 
 		return tb;
 	}
