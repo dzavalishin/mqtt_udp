@@ -10,7 +10,7 @@ MQTT/UDP viewer is a tool which can help to see what's going on on the network w
 
 There's how it looks like:
 
-![MQTT Viwer screenshot](https://github.com/dzavalishin/mqtt_udp/blob/master/dox/TrafficViewerScreen_Dec2018.png)
+![MQTT Viwer screenshot](https://raw.githubusercontent.com/dzavalishin/mqtt_udp/master/dox/TrafficViewerScreen_Dec2018.png)
 
 
 Viewer tool [help page](https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help) in Wiki.
