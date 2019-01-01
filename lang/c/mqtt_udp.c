@@ -25,6 +25,8 @@
 #include "mqtt_udp.h"
 
 
+static int last_socket = -1;
+
 int mqtt_udp_socket(void)
 {
     int fd;
@@ -48,6 +50,7 @@ int mqtt_udp_socket(void)
 		//    error("setsockopt(SO_REUSEADDR) failed");
     }
 
+    last_socket = fd;
     return fd;
 }
 
@@ -69,4 +72,11 @@ int mqtt_udp_bind( int fd )
     }
 */
 }
+
+
+int mqtt_udp_get_send_fd( void ) // TODO hack, get fd to send datagrams
+{
+    return last_socket;
+}
+
 

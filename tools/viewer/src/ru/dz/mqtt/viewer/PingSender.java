@@ -23,6 +23,8 @@ public class PingSender {
 		return new Runnable() {
 			@Override
 			public void run() {
+				while(true)
+				{
 				try {
 					loop();
 				} catch (IOException e) {
@@ -32,6 +34,7 @@ public class PingSender {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}*/				
+				}			
 			}
 		};
 	}
@@ -54,6 +57,7 @@ public class PingSender {
 	private void sendPing() throws IOException {
 		PingReqPacket ping = new PingReqPacket(empty, (byte) 0, null );
 		ping.send();
+		//System.out.println("Send ping "+ping);
 	}
 
 	

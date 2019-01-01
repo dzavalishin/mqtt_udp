@@ -121,6 +121,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
 done:
 
+    mqtt_udp_recv_reply( &o );
     callback( &o );
 
     if( o.topic ) free( o.topic );

@@ -232,3 +232,37 @@ int mqtt_udp_recv_loop( process_pkt h )
 }
 
 
+
+// --------------------------------------------------------------
+//
+// Default packet processing
+//
+// - Reply to ping
+// - TODO Reply to SUBSCRIBE
+// - TODO Reply with PUBACK for PUBLISH with QoS
+//
+// TODO error handling
+//
+// --------------------------------------------------------------
+
+
+
+void mqtt_udp_recv_reply( struct mqtt_udp_pkt *pkt )
+{
+    int fd = mqtt_udp_get_send_fd();
+
+    switch( pkt->ptype )
+    {
+    case PTYPE_PINGREQ:
+        // TODO err check
+        if( fd > 0 ) mqtt_udp_send_ping_responce( fd, pkt->from_ip );
+        break;
+    //case PTYPE_SUBSCRIBE:
+    //case PTYPE_PUBLISH:
+    default:
+        break;
+    }
+}
+
+
+
