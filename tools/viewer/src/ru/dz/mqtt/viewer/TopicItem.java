@@ -33,10 +33,13 @@ public class TopicItem {
 	}
 
 	public String getTopic() {		return topic;	}
+
+	public void setValue(String value) { this.value = value; }
 	public String getValue() {		return value;	}
 
 	public void setFrom(String from) { this.from = from; }
 	public String getFrom() {		return from;	}
 
 	public String getTime() {		return time;	}
+
 }

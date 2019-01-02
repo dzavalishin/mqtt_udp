@@ -55,7 +55,10 @@ public class Main extends Application {
 	private FileLogger flog = new FileLogger();
 	private FileChooser fch = new FileChooser();
 
-	private TopicTable generalTopicTable = new TopicTable();
+	protected boolean updateEnabled = true;
+
+	private ObservableList<TopicItem> listItems = FXCollections.observableArrayList();
+	private TopicTable generalTopicTable = new TopicTable(listItems);
 
 	
 	//private Stage stage;
@@ -433,8 +436,6 @@ public class Main extends Application {
 
 
 	private ListView<TopicItem> topicListView = new ListView<TopicItem>();
-	private ObservableList<TopicItem> listItems =FXCollections.observableArrayList();
-	protected boolean updateEnabled = true;
 	private void setListItem(TopicItem item)
 	{
 		// Dumb code, sorry
