@@ -5,6 +5,11 @@ import java.net.DatagramSocket;
 
 import ru.dz.mqtt_udp.util.GenericPacket;
 
+/** 
+ * Server loop to listen to network traffic and process incoming packets.
+ * @author dz
+ *
+ */
 public abstract class SubServer 
 {
 

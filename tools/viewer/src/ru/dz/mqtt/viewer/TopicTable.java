@@ -384,11 +384,11 @@ public class TopicTable  {
 			if(limitSendToHost)
 			{
 				InetAddress addr = InetAddress.getByName(it.getFrom());
-				System.out.println("Send "+it+" to "+addr);
+				//System.out.println("Send "+it+" to "+addr);
 				it.sendTo( addr );
 			} else
 			{
-				System.out.println("Send "+it+" to all");
+				//System.out.println("Send "+it+" to all");
 				it.sendToAll();
 			}
 		} catch (IOException e) {
@@ -412,11 +412,11 @@ public class TopicTable  {
 			if(limitSendToHost)
 			{
 				InetAddress addr = InetAddress.getByName(it.getFrom());
-				System.out.println("Send "+it+" to "+addr);
+				//System.out.println("Send SUBSCRIBE "+it+" to "+addr);
 				sp.send( addr );
 			} else
 			{
-				System.out.println("Send "+it+" to all");
+				//System.out.println("Send SUBSCRIBE "+it+" to all");
 				sp.send();
 			}
 		} catch (IOException e) {

@@ -16,6 +16,7 @@ import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.io.IpAddress;
+import ru.dz.mqtt_udp.io.SingleSendSocket;
 
 public abstract class GenericPacket implements IPacket {
 
@@ -39,13 +40,13 @@ public abstract class GenericPacket implements IPacket {
 	 * Create new socket to send MQTT/UDP packets.
 	 * @return socket
 	 * @throws SocketException
-	 */
+	 * /
 	public static DatagramSocket sendSocket() throws SocketException
 	{
 		DatagramSocket s = new DatagramSocket();
 		s.setBroadcast(true);
 		return s;
-	}
+	} */
 
 	/**
 	 * Create new socket to listen to MQTT/UDP packets.
@@ -73,9 +74,10 @@ public abstract class GenericPacket implements IPacket {
 	 */
 	public void send() throws IOException
 	{
-		DatagramSocket s = sendSocket();
-		send(s);
-		s.close();
+		//DatagramSocket s = sendSocket();
+		//send(s);
+		//s.close();
+		send(SingleSendSocket.get());
 	}
 	
 	/**
@@ -83,9 +85,10 @@ public abstract class GenericPacket implements IPacket {
 	 * @throws IOException
 	 */
 	public void send(InetAddress addr) throws IOException {
-		DatagramSocket s = sendSocket();
-		send(s,addr);
-		s.close();
+		//DatagramSocket s = sendSocket();
+		//send(s,addr);
+		//s.close();
+		send(SingleSendSocket.get(),addr);
 	}
 	
 	/**
@@ -100,6 +103,7 @@ public abstract class GenericPacket implements IPacket {
 		InetAddress address = InetAddress.getByAddress(broadcast);
 		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
 		sock.send(p);
+		//System.out.println("UDP broadcast "+pkt.length);
 	}
 
 	/**
@@ -114,6 +118,7 @@ public abstract class GenericPacket implements IPacket {
 		
 		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
 		sock.send(p);
+		//System.out.println("UDP sent "+pkt.length);
 	}
 
 	

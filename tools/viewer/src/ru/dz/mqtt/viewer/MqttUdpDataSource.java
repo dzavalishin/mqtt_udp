@@ -11,6 +11,7 @@ import ru.dz.mqtt_udp.PingReqPacket;
 import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubServer;
+import ru.dz.mqtt_udp.io.SingleSendSocket;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
@@ -21,8 +22,8 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 
 	public MqttUdpDataSource() throws SocketException 
 	{
-		ss = GenericPacket.sendSocket();
-		
+		//ss = GenericPacket.sendSocket();
+		ss = SingleSendSocket.get();
 		start();
 	}
 
