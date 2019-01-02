@@ -3,18 +3,71 @@ package ru.dz.mqtt.viewer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-// TODO add packet type
+import ru.dz.mqtt_udp.IPacket;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
+// TODO rename to PacketItem, make subclasses per type
+
+/**
+ * Container to keep packet data for display and edit. 
+ * TODO Actually must be converted to class hierarchy according to packet type.
+ * @author dz
+ *
+ */
 public class TopicItem {
 
+	private int packetType = -1;
+	
 	private String topic;
 	private String value;
 	private String from = "?";
 	private String time = getCurrentTime();
 
-	public TopicItem(String topic) {
+	public TopicItem(int packetType) {
+		this.packetType = packetType;
+		assertHasNoTopic();
+	}
+	
+	public TopicItem(int packetType, String topic) {
+		this.packetType = packetType;
 		this.topic = topic;
 		this.value = "";
+		
+		assertHasTopic();
+	}
+
+
+	public TopicItem(int packetType, String topic, String value) {
+		this.packetType = packetType;
+		this.topic = topic;
+		this.value = value;
+
+		assertHasTopic();
+	}
+
+	public TopicItem(TopicItem src) {
+		this.packetType = src.packetType;
+		this.topic = src.topic;
+		this.value = src.value;
+		this.from  = src.from;
+		this.time = src.time;
+	}
+
+	
+	
+	// ---------------------------------------------------
+	// C'tors help
+	
+	public void assertHasTopic() {		assert typeWithTopic();	}
+	public void assertHasNoTopic() {		assert !typeWithTopic();	}
+
+	public boolean typeWithTopic() {
+		return (packetType == mqtt_udp_defs.PTYPE_PUBLISH) ||
+		(packetType == mqtt_udp_defs.PTYPE_PUBACK) ||
+		(packetType == mqtt_udp_defs.PTYPE_SUBSCRIBE) ||
+		(packetType == mqtt_udp_defs.PTYPE_SUBACK) ||
+		(packetType == mqtt_udp_defs.PTYPE_UNSUBSCRIBE) ||
+		(packetType == mqtt_udp_defs.PTYPE_UNSUBACK);
 	}
 
 	static private final SimpleDateFormat ft3 = new SimpleDateFormat("hh:mm:ss");
@@ -23,22 +76,20 @@ public class TopicItem {
 		Date dNow = new Date( );
 		return ft3.format(dNow);
 	}
-
-	public TopicItem(String topic, String value) {
-		this.topic = topic;
-		this.value = value;
-	}
-
-	public TopicItem(TopicItem src) {
-		this.topic = src.topic;
-		this.value = src.value;
-		this.from  = src.from;
-		this.time = src.time;
-	}
+	
+	
+	
+	
+	// ---------------------------------------------------
+	// Get/set
+	
 
 	@Override
 	public String toString() {
-		return time+":  "+topic+"="+value;
+		if(typeWithTopic())
+			return time+":  "+topic+"="+value;
+		else
+			return time+":  "+IPacket.getPacketTypeName(packetType);
 	}
 
 	public String getTopic() {		return topic;	}
@@ -70,5 +121,7 @@ public class TopicItem {
 	{
 		return getTopic().equals(t.getTopic()) && getFrom().equals(t.getFrom());
 	}
+
+	//public boolean hasTopic() {		return typeWithTopic();	}
 	
 }

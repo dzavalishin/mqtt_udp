@@ -11,6 +11,9 @@ import java.net.UnknownHostException;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
+import ru.dz.mqtt_udp.PingReqPacket;
+import ru.dz.mqtt_udp.PingRespPacket;
+import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.io.IpAddress;
 
@@ -19,7 +22,8 @@ public abstract class GenericPacket implements IPacket {
 	//private static final int  MQTT_PORT = 1883;
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
-	protected byte    flags;
+	//protected byte    type;
+	protected byte    flags = 0;
 	protected IPacketAddress from;
 	
 	
@@ -133,9 +137,16 @@ public abstract class GenericPacket implements IPacket {
 
 	public IPacketAddress getFrom() { return from; }
 	
+	
 	@Override
 	public String toString() {		
 		return String.format("MQTT/UDP packet of unknown type from '%s', please redefine toString in %s", from, getClass().getName());
 	}
+
+	
+	// -------------------------------------------------------
+	// binary rep
+	
+	
 	
 }

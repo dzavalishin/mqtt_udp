@@ -438,6 +438,8 @@ public class Main extends Application {
 	private ListView<TopicItem> topicListView = new ListView<TopicItem>();
 	private void setListItem(TopicItem item)
 	{
+		if(!item.typeWithTopic()) return;
+		
 		// Dumb code, sorry
 		int nItems = listItems.size();
 		for( int j = 0; j < nItems; j++ )

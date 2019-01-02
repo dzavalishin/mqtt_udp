@@ -21,9 +21,12 @@ public class PingReqPacket extends GenericPacket {
 	}
 
 	@Override
+	public int getType() {		return mqtt_udp_defs.PTYPE_PINGREQ;	}
+	
+	
+	@Override
 	public String toString() {		
 		return String.format("MQTT/UDP PING Request" );
-	}
-	
+	}	
 	
 }

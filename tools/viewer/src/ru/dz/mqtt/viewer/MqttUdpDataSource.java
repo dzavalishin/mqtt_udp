@@ -12,6 +12,7 @@ import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubServer;
 import ru.dz.mqtt_udp.util.GenericPacket;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class MqttUdpDataSource extends SubServer implements IDataSource {
 
@@ -72,7 +73,7 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			//System.out.println("Pub pkt "+p);
 
 			PublishPacket pp = (PublishPacket) p;			
-			TopicItem ti = new TopicItem(pp.getTopic(), pp.getValueString());
+			TopicItem ti = new TopicItem( p.getType(), pp.getTopic(), pp.getValueString() );
 			ti.setFrom(pp.getFrom().toString());
 			sink.accept(ti);
 		} else 
@@ -83,7 +84,8 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			//System.out.println(p);
 			
 			// TODO hack
-			TopicItem ti = new TopicItem("PingRequest", p.toString());
+			//TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGREQ, "PingRequest", p.toString());
+			TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGREQ);
 			ti.setFrom(p.getFrom().toString());
 			sink.accept(ti);
 		}else 
@@ -91,7 +93,8 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 		{
 			//PingRespPacket pr = (PingRespPacket)p; 
 			// TODO hack
-			TopicItem ti = new TopicItem("PingResponce", p.toString());
+			//TopicItem ti = new TopicItem("PingResponce", p.toString());
+			TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGRESP);
 			ti.setFrom(p.getFrom().toString());
 			sink.accept(ti);
 		}
@@ -99,7 +102,7 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 		{
 			System.out.println(p);
 			// TODO hack
-			TopicItem ti = new TopicItem("UnknownPacket", p.toString());
+			TopicItem ti = new TopicItem( 0, "UnknownPacket", p.toString());
 			ti.setFrom(p.getFrom().toString());
 			sink.accept(ti);
 		}

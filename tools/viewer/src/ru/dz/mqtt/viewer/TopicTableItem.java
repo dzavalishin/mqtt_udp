@@ -8,12 +8,12 @@ public class TopicTableItem extends TopicItem {
 		super(src);
 	}
 
-	public TopicTableItem(String topicName) {
-		super(topicName);
+	public TopicTableItem(int packetType, String topicName) {
+		super( packetType, topicName );
 	}
 
 	public TableButtonsState getTableButtonsState() { return tableButtonsState; }
 	public void setTableButtonsState(TableButtonsState tableButtonsState) { this.tableButtonsState = tableButtonsState; }
 
-
+	
 }

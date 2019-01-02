@@ -93,6 +93,10 @@ public class PublishPacket extends GenericPacket {
 
 	public byte getFlags() {		return flags;	}
 	//public void setFlags(byte flags) {		this.flags = flags;	}
-	
+
+	@Override
+	public int getType() {
+		return mqtt_udp_defs.PTYPE_PUBLISH;
+	}
 	
 }

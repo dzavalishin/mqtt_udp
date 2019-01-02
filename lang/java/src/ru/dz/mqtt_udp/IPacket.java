@@ -7,9 +7,19 @@ public interface IPacket {
 
 	public static final String MQTT_CHARSET = "UTF-8";
 
-
 	public byte[] toBytes();
 
+	public IPacketAddress getFrom();
+
+	public int getType();
+
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Construct packet object from binary data (recvd from net).
 	 * @param raw binary data from UDP packet
@@ -113,7 +123,34 @@ public interface IPacket {
 		return out;
 	}
 
-	public IPacketAddress getFrom();
+
+	static String[] pTYpeNames = {
+			"? NULL",
+			"Connect",
+			"ConnAck",
+			"Publish",
+			"PubAck",
+			"PubRec",
+			"PubRel",
+			"PubComp",
+			"Subscribe",
+			"SubAck",
+			"UnSubscribe",
+			"UnSubAck",
+			"PingReq",
+			"PingResp",
+			"Disconnect",
+			"? 0xFF",
+	};
+	
+	public static String getPacketTypeName(int packetType) 
+	{
+		packetType = packetType >> 4;
+	    
+		if( (packetType < 0) || (packetType > 15) )
+			return "?";
+		return pTYpeNames[packetType];
+	}
 	
 	
 }

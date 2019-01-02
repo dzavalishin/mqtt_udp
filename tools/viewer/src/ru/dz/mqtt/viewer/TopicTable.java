@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class TopicTable  {
 
@@ -165,29 +166,11 @@ public class TopicTable  {
 		openWindow();
 	}
 
-	public void updateLocalData(ObservableList<TopicItem> data) {
-
-		/*
-		localData = FXCollections.observableArrayList( data );
-		table.setItems(localData);
-		 */
+	public void updateLocalData(ObservableList<TopicItem> data) 
+	{
 		data.forEach( ti -> {
 
-			//if( localData.contains(ti) ) return;
-
 			final AtomicReference<Boolean> have = new AtomicReference<Boolean>(false);  
-			/*			
-			localData.forEach(lti -> {
-				if( lti.sameHostAndTopic(ti) )
-				{
-					lti.assignFrom(ti);
-					//return;
-					have.set(true);
-					//localData.set(lti., element)
-
-				}
-			}
-			 */
 			synchronized (localData) {
 				for( int i = 0; i < localData.size(); i++)
 				{
@@ -208,10 +191,6 @@ public class TopicTable  {
 				TopicTableItem nti = new TopicTableItem(ti);
 				localData.add(nti);
 			}
-
-
-			//localData.add(ti);
-
 		});
 
 		//table.refresh();
@@ -224,7 +203,7 @@ public class TopicTable  {
 		VBox vbox = new VBox(makeToolBar(),table);
 		vbox.setFillWidth(true);
 
-		vbox.setVgrow(table, Priority.ALWAYS);
+		VBox.setVgrow(table, Priority.ALWAYS);
 
 		Scene secondScene = new Scene(vbox, 800, 500);
 
@@ -266,7 +245,7 @@ public class TopicTable  {
 			public void handle(ActionEvent event) {
 				Optional<String> result = newTopicDialog();
 				result.ifPresent(newTopicName -> { 
-					TopicTableItem nti = new TopicTableItem(newTopicName);
+					TopicTableItem nti = new TopicTableItem( mqtt_udp_defs.PTYPE_PUBLISH, newTopicName );
 					localData.add(nti);
 				});
 			} // TODO
@@ -391,5 +370,8 @@ public class TopicTable  {
 
 	}
 
+	
+	
+ 
 
 }
