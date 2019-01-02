@@ -1,9 +1,16 @@
 package ru.dz.mqtt.viewer;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ru.dz.mqtt_udp.IPacket;
+import ru.dz.mqtt_udp.PingReqPacket;
+import ru.dz.mqtt_udp.PingRespPacket;
+import ru.dz.mqtt_udp.PublishPacket;
+import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 // TODO rename to PacketItem, make subclasses per type
@@ -103,6 +110,10 @@ public class TopicItem {
 	public String getTime() {		return time;	}
 
 	
+	// ---------------------------------------------------
+	
+	
+	
 	// TODO assign value and time only? check for host/topic be same?
 	/** Assign all data from src */
 	public void assignFrom(TopicItem src) {
@@ -123,5 +134,38 @@ public class TopicItem {
 	}
 
 	//public boolean hasTopic() {		return typeWithTopic();	}
+
+	// ---------------------------------------------------
+	
+	
+	public GenericPacket toPacket()
+	{
+		switch(packetType)
+		{
+		case mqtt_udp_defs.PTYPE_PUBLISH: return new PublishPacket(topic, value);
+		//case mqtt_udp_defs.PTYPE_SUBSCRIBE: return new SubscribePacket(topic, value);
+		case mqtt_udp_defs.PTYPE_PINGREQ: return new PingReqPacket();
+		case mqtt_udp_defs.PTYPE_PINGRESP: return new PingRespPacket();
+		}
+		
+		throw new RuntimeException("Unknown pkt type 0x"+Integer.toHexString(packetType));
+	}
+
+	// TODO use one global socket
+	public void sendToAll() throws IOException
+	{
+		GenericPacket pkt = toPacket();
+		pkt.send();
+	}
+
+	// TODO use one global socket
+	public void sendTo(InetAddress addr) throws IOException
+	{
+		GenericPacket pkt = toPacket();
+		//DatagramSocket fd = GenericPacket.sendSocket();
+		pkt.send( addr );
+		//fd.close();
+	}
+	
 	
 }

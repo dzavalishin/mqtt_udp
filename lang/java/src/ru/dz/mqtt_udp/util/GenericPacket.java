@@ -30,6 +30,10 @@ public abstract class GenericPacket implements IPacket {
 	public GenericPacket(IPacketAddress from) {
 		this.from = from;
 	}
+
+	protected GenericPacket() {
+		this.from = null;
+	}
 	
 	/**
 	 * Create new socket to send MQTT/UDP packets.
@@ -71,6 +75,16 @@ public abstract class GenericPacket implements IPacket {
 	{
 		DatagramSocket s = sendSocket();
 		send(s);
+		s.close();
+	}
+	
+	/**
+	 * Create socket, send me, delete socket.
+	 * @throws IOException
+	 */
+	public void send(InetAddress addr) throws IOException {
+		DatagramSocket s = sendSocket();
+		send(s,addr);
 		s.close();
 	}
 	
@@ -142,6 +156,7 @@ public abstract class GenericPacket implements IPacket {
 	public String toString() {		
 		return String.format("MQTT/UDP packet of unknown type from '%s', please redefine toString in %s", from, getClass().getName());
 	}
+
 
 	
 	// -------------------------------------------------------

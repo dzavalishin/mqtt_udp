@@ -16,9 +16,12 @@ public class PingRespPacket extends GenericPacket {
 	}
 
 	public PingRespPacket(IPacketAddress from) {
-		super(from);
-		
+		super(from);	
 	}
+
+	public PingRespPacket() {
+	}
+
 
 	@Override
 	public byte[] toBytes() {

@@ -1,5 +1,7 @@
 package ru.dz.mqtt.viewer;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -34,6 +36,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
+import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class TopicTable  {
@@ -370,8 +373,62 @@ public class TopicTable  {
 
 	}
 
+	/**
+	 * Find in items list item by index, send to net 
+	 */
+	public void sendRecord(int index, boolean limitSendToHost) 
+	{
+		TopicTableItem it = localData.get(index);
+
+		try {
+			if(limitSendToHost)
+			{
+				InetAddress addr = InetAddress.getByName(it.getFrom());
+				System.out.println("Send "+it+" to "+addr);
+				it.sendTo( addr );
+			} else
+			{
+				System.out.println("Send "+it+" to all");
+				it.sendToAll();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+
+	/**
+	 * Find in items list item by index, send SUBSCRIBE with topic of the record 
+	 */
+	public void sendRequest(int index, boolean limitSendToHost) 
+	{
+		TopicTableItem it = localData.get(index);
+		String topic = it.getTopic();
+		SubscribePacket sp = new SubscribePacket(topic);
+		
+		try {
+			if(limitSendToHost)
+			{
+				InetAddress addr = InetAddress.getByName(it.getFrom());
+				System.out.println("Send "+it+" to "+addr);
+				sp.send( addr );
+			} else
+			{
+				System.out.println("Send "+it+" to all");
+				sp.send();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+
 	
 	
- 
+
 
 }

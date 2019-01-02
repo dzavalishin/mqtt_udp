@@ -124,7 +124,7 @@ public interface IPacket {
 	}
 
 
-	static String[] pTYpeNames = {
+	static final String[] pTYpeNames = {
 			"? NULL",
 			"Connect",
 			"ConnAck",

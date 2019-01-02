@@ -14,6 +14,10 @@ public class PingReqPacket extends GenericPacket {
 			System.err.println("nonempty PingReqPacket");
 	}
 
+	public PingReqPacket() {
+	}
+	
+	
 	@Override
 	public byte[] toBytes() {
 		byte[] pkt = new byte[0];

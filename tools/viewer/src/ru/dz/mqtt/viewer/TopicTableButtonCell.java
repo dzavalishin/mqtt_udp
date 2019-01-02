@@ -34,20 +34,14 @@ public class TopicTableButtonCell extends TableCell<TopicTableItem, TableButtons
 
 			@Override
 			public void handle(ActionEvent t) {
-				//TopicTableButtonCell cell = TopicTableButtonCell.this;
-
-				// get Selected Item
-				//TopicTableItem currentTopic = (TopicTableItem) TopicTableButtonCell.this.getTableView().getItems().get(TopicTableButtonCell.this.getIndex());
-				//TopicTableItem currentTopic = (TopicTableItem) cell.getTableView().getItems().get(cell.getIndex());
-
-				//remove selected item from the table list
-				//data.remove(currentPerson);
+				topicTable.sendRecord( getIndex(), tableButtonsState.isLimitSendToHost() );
 			}
 		});
 		
 		makeButton(ImageUtils.getIcon("order"), "Request from network", new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent t) {
+				topicTable.sendRequest( getIndex(), tableButtonsState.isLimitSendToHost() );
 			}
 		});
 
