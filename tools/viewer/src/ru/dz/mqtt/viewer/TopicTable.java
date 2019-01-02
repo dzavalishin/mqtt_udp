@@ -3,6 +3,7 @@ package ru.dz.mqtt.viewer;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -14,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
@@ -46,7 +48,7 @@ public class TopicTable  {
 	public TopicTable(ObservableList<TopicItem> data) {
 		table.setEditable(true);
 
-		TableColumn<TopicTableItem, String> buttonsCol = new TableColumn("");
+		TableColumn<TopicTableItem, TableButtonsState> buttonsCol = new TableColumn("");
 		TableColumn<TopicTableItem, String> topicCol = new TableColumn("Topic");
 		TableColumn<TopicTableItem, String> valueCol = new TableColumn(); // new TableColumn("Value");
 		TableColumn<TopicTableItem, String> hostCol = new TableColumn("Host");
@@ -117,14 +119,16 @@ public class TopicTable  {
 
 
 		buttonsCol.setCellFactory(
-				new Callback<TableColumn<TopicTableItem, String>, TableCell<TopicTableItem, String>>() {
+				new Callback<TableColumn<TopicTableItem, TableButtonsState>, TableCell<TopicTableItem, TableButtonsState>>() {
 					@Override
-					public TableCell<TopicTableItem, String> call(TableColumn<TopicTableItem, String> p) {
-						return new TopicTableButtonCell();
+					public TableCell<TopicTableItem, TableButtonsState> call(TableColumn<TopicTableItem, TableButtonsState> p) {
+						return new TopicTableButtonCell(TopicTable.this);
 					}
-
+					
 				});
 
+		
+		buttonsCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, TableButtonsState>("tableButtonsState"));
 		topicCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("topic"));
 		valueCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("value"));
 		hostCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("from"));
@@ -245,7 +249,10 @@ public class TopicTable  {
 			@Override
 			public void handle(ActionEvent event) {
 				Optional<String> result = newTopicDialog();
-				result.ifPresent(newTopicName -> { System.out.println(newTopicName);	});
+				result.ifPresent(newTopicName -> { 
+					TopicTableItem nti = new TopicTableItem(newTopicName);
+					localData.add(nti);
+				});
 			} // TODO
 		});
 
