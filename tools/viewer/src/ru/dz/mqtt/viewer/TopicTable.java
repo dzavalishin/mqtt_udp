@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -26,6 +27,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class TopicTable  {
 
@@ -96,6 +98,15 @@ public class TopicTable  {
                 }
             );
 
+        
+        buttonsCol.setCellFactory(
+                new Callback<TableColumn<TopicItem, String>, TableCell<TopicItem, String>>() {
+            @Override
+            public TableCell<TopicItem, String> call(TableColumn<TopicItem, String> p) {
+                return new TopicTableButtonCell();
+            }
+        
+        });
         
         topicCol.setCellValueFactory(new PropertyValueFactory<TopicItem, String>("topic"));
         valueCol.setCellValueFactory(new PropertyValueFactory<TopicItem, String>("value"));
