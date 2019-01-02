@@ -281,12 +281,13 @@ public class TopicTable  {
 		});
 
 		ToggleButton refreshValueButton = new ToggleButton();
-		refreshValueButton.setTooltip(new Tooltip("Enable automatic value send"));
+		refreshValueButton.setTooltip(new Tooltip("Enable automatic value send - not implemented"));
 		refreshValueButton.setGraphic(ImageUtils.getIcon32("refresh"));
 		refreshValueButton.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) { autoNetworkSendEnabled = refreshValueButton.isSelected(); } // TODO
 		});
+		refreshValueButton.setDisable(true); // TODO implement
 
 
 		ToolBar leftTb = new ToolBar();
