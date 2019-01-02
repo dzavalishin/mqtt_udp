@@ -124,10 +124,10 @@ public class TopicTable  {
 					public TableCell<TopicTableItem, TableButtonsState> call(TableColumn<TopicTableItem, TableButtonsState> p) {
 						return new TopicTableButtonCell(TopicTable.this);
 					}
-					
+
 				});
 
-		
+
 		buttonsCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, TableButtonsState>("tableButtonsState"));
 		topicCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("topic"));
 		valueCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("value"));
@@ -143,7 +143,7 @@ public class TopicTable  {
 
 		//ObservableList<TopicTableItem> 
 		//updateLocalData(data);
-		
+
 		data.addListener(new ListChangeListener<TopicItem>(){
 
 			@Override
@@ -154,7 +154,7 @@ public class TopicTable  {
 					//table.setItems( localData );
 
 					//table.setItems( FXCollections.observableArrayList( data ) );
-					
+
 					updateLocalData(data);
 				}
 			}
@@ -170,35 +170,51 @@ public class TopicTable  {
 		/*
 		localData = FXCollections.observableArrayList( data );
 		table.setItems(localData);
-		*/
+		 */
 		data.forEach( ti -> {
-			
+
 			//if( localData.contains(ti) ) return;
 
 			final AtomicReference<Boolean> have = new AtomicReference<Boolean>(false);  
-			
+			/*			
 			localData.forEach(lti -> {
 				if( lti.sameHostAndTopic(ti) )
 				{
 					lti.assignFrom(ti);
 					//return;
 					have.set(true);
-				}
+					//localData.set(lti., element)
 
-			});
+				}
+			}
+			 */
+			synchronized (localData) {
+				for( int i = 0; i < localData.size(); i++)
+				{
+					TopicTableItem lti = localData.get(i);
+					if( lti.sameHostAndTopic(ti) )
+					{
+						lti.assignFrom(ti);
+						have.set(true);
+						localData.set(i, lti); // to fire table update
+
+					}
+				}
+			}
+
 
 			if( !have.get() )
 			{
 				TopicTableItem nti = new TopicTableItem(ti);
 				localData.add(nti);
 			}
-			
-			
+
+
 			//localData.add(ti);
-			
+
 		});
-		
-		table.refresh();
+
+		//table.refresh();
 	}
 
 	private static final Image windowIcon = ImageUtils.getImage("content256.png");
@@ -358,7 +374,7 @@ public class TopicTable  {
 		TableViewSelectionModel<TopicTableItem> sel = table.getSelectionModel();
 		sel.setSelectionMode(SelectionMode.MULTIPLE);
 		sel.clearSelection();
-		
+
 		for(int i=0; i< localData.size(); i++) 
 		{
 			String cellValue = col.getCellData(localData.get(i)).toString().toLowerCase();
@@ -372,7 +388,7 @@ public class TopicTable  {
 		}		
 
 		table.setSelectionModel(sel);
-	
+
 	}
 
 
