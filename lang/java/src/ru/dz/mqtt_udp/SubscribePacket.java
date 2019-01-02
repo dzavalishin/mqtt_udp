@@ -57,7 +57,7 @@ public class SubscribePacket extends GenericPacket {
 			throw new RuntimeException(e);
 		}
 
-		int plen = tbytes.length + 2;
+		int plen = tbytes.length + 2 + 1; // + QoS byte
 
 		byte [] pkt = new byte[plen]; 
 
@@ -67,6 +67,8 @@ public class SubscribePacket extends GenericPacket {
 		System.arraycopy(tbytes, 0, pkt, 2, tbytes.length);
 		//System.arraycopy(value, 0, pkt, tbytes.length + 2, value.length );
 
+		pkt[tbytes.length + 2] = 0; // Requested QoS is allways zero now - TODO add property
+		
 		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_SUBSCRIBE, flags );
 	}
 
