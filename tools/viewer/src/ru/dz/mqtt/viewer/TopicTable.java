@@ -1,6 +1,7 @@
 package ru.dz.mqtt.viewer;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,13 +31,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
 
 public class TopicTable  {
 
 	private Stage newWindow = new Stage();
 
-	private ObservableList<TopicItem> localData;
-	private TableView<TopicItem> table = new TableView<>();
+	private ObservableList<TopicTableItem> localData;
+	private TableView<TopicTableItem> table = new TableView<>();
 
 	private boolean topicListUpdateEnabled = true;
 	private boolean autoNetworkSendEnabled = false;
@@ -44,11 +46,11 @@ public class TopicTable  {
 	public TopicTable(ObservableList<TopicItem> data) {
 		table.setEditable(true);
 
-		TableColumn<TopicItem, String> buttonsCol = new TableColumn("");
-		TableColumn<TopicItem, String> topicCol = new TableColumn("Topic");
-		TableColumn<TopicItem, String> valueCol = new TableColumn(); // new TableColumn("Value");
-		TableColumn<TopicItem, String> hostCol = new TableColumn("Host");
-		TableColumn<TopicItem, String> timeCol = new TableColumn(); // new TableColumn("Time");
+		TableColumn<TopicTableItem, String> buttonsCol = new TableColumn("");
+		TableColumn<TopicTableItem, String> topicCol = new TableColumn("Topic");
+		TableColumn<TopicTableItem, String> valueCol = new TableColumn(); // new TableColumn("Value");
+		TableColumn<TopicTableItem, String> hostCol = new TableColumn("Host");
+		TableColumn<TopicTableItem, String> timeCol = new TableColumn(); // new TableColumn("Time");
 
 		Label timeLabel = new Label("Time");
 		timeLabel.setTooltip(new Tooltip("Time of last update"));
@@ -95,10 +97,10 @@ public class TopicTable  {
 		valueCol.setEditable(true);
 		valueCol.setCellFactory(TextFieldTableCell.forTableColumn());
 		valueCol.setOnEditCommit(
-				new EventHandler<CellEditEvent<TopicItem, String>>() {
+				new EventHandler<CellEditEvent<TopicTableItem, String>>() {
 					@Override
-					public void handle(CellEditEvent<TopicItem, String> t) {
-						((TopicItem) t.getTableView().getItems().get(
+					public void handle(CellEditEvent<TopicTableItem, String> t) {
+						((TopicTableItem) t.getTableView().getItems().get(
 								t.getTablePosition().getRow())
 								).setValue(t.getNewValue());
 						if( autoNetworkSendEnabled )
@@ -115,24 +117,29 @@ public class TopicTable  {
 
 
 		buttonsCol.setCellFactory(
-				new Callback<TableColumn<TopicItem, String>, TableCell<TopicItem, String>>() {
+				new Callback<TableColumn<TopicTableItem, String>, TableCell<TopicTableItem, String>>() {
 					@Override
-					public TableCell<TopicItem, String> call(TableColumn<TopicItem, String> p) {
+					public TableCell<TopicTableItem, String> call(TableColumn<TopicTableItem, String> p) {
 						return new TopicTableButtonCell();
 					}
 
 				});
 
-		topicCol.setCellValueFactory(new PropertyValueFactory<TopicItem, String>("topic"));
-		valueCol.setCellValueFactory(new PropertyValueFactory<TopicItem, String>("value"));
-		hostCol.setCellValueFactory(new PropertyValueFactory<TopicItem, String>("from"));
-		timeCol.setCellValueFactory(new PropertyValueFactory<TopicItem, String>("time"));
+		topicCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("topic"));
+		valueCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("value"));
+		hostCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("from"));
+		timeCol.setCellValueFactory(new PropertyValueFactory<TopicTableItem, String>("time"));
 
 		table.getColumns().addAll(buttonsCol, topicCol, valueCol, hostCol, timeCol);
 
 
-		//ObservableList<TopicItem> 
-		updateLocalData(data);
+		//localData = FXCollections.observableArrayList( data );
+		localData = FXCollections.observableArrayList();
+		table.setItems(localData);
+
+		//ObservableList<TopicTableItem> 
+		//updateLocalData(data);
+		
 		data.addListener(new ListChangeListener<TopicItem>(){
 
 			@Override
@@ -155,8 +162,39 @@ public class TopicTable  {
 	}
 
 	public void updateLocalData(ObservableList<TopicItem> data) {
+
+		/*
 		localData = FXCollections.observableArrayList( data );
 		table.setItems(localData);
+		*/
+		data.forEach( ti -> {
+			
+			//if( localData.contains(ti) ) return;
+
+			final AtomicReference<Boolean> have = new AtomicReference<Boolean>(false);  
+			
+			localData.forEach(lti -> {
+				if( lti.sameHostAndTopic(ti) )
+				{
+					lti.assignFrom(ti);
+					//return;
+					have.set(true);
+				}
+
+			});
+
+			if( !have.get() )
+			{
+				TopicTableItem nti = new TopicTableItem(ti);
+				localData.add(nti);
+			}
+			
+			
+			//localData.add(ti);
+			
+		});
+		
+		table.refresh();
 	}
 
 	private static final Image windowIcon = ImageUtils.getImage("content256.png");
@@ -304,13 +342,13 @@ public class TopicTable  {
 
 	private void search(String findme)
 	{
-		ObservableList<TableColumn<TopicItem, ?>> cols = table.getColumns();
+		ObservableList<TableColumn<TopicTableItem, ?>> cols = table.getColumns();
 		TableColumn col = cols.get(1);
 
 		findme = findme.toLowerCase();
 		//System.out.println("Look for "+findme);
 
-		TableViewSelectionModel<TopicItem> sel = table.getSelectionModel();
+		TableViewSelectionModel<TopicTableItem> sel = table.getSelectionModel();
 		sel.setSelectionMode(SelectionMode.MULTIPLE);
 		sel.clearSelection();
 		

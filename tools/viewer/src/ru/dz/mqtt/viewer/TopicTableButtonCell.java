@@ -2,7 +2,6 @@ package ru.dz.mqtt.viewer;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.ToggleButton;
@@ -10,7 +9,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-public class TopicTableButtonCell extends TableCell<TopicItem, String> {
+public class TopicTableButtonCell extends TableCell<TopicTableItem, String> {
 
 
 	//private static final ImageView sendIcon = ImageUtils.getIcon32("semi_success");
@@ -27,8 +26,8 @@ public class TopicTableButtonCell extends TableCell<TopicItem, String> {
 				TopicTableButtonCell cell = TopicTableButtonCell.this;
 
 				// get Selected Item
-				//TopicItem currentTopic = (TopicItem) TopicTableButtonCell.this.getTableView().getItems().get(TopicTableButtonCell.this.getIndex());
-				TopicItem currentTopic = (TopicItem) cell.getTableView().getItems().get(cell.getIndex());
+				//TopicTableItem currentTopic = (TopicTableItem) TopicTableButtonCell.this.getTableView().getItems().get(TopicTableButtonCell.this.getIndex());
+				TopicTableItem currentTopic = (TopicTableItem) cell.getTableView().getItems().get(cell.getIndex());
 
 				//remove selected item from the table list
 				//data.remove(currentPerson);

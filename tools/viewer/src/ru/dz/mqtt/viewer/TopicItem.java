@@ -3,12 +3,14 @@ package ru.dz.mqtt.viewer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// TODO add packet type
+
 public class TopicItem {
 
 	private String topic;
 	private String value;
 	private String from = "?";
-	private final String time = getCurrentTime();
+	private String time = getCurrentTime();
 
 	public TopicItem(String topic) {
 		this.topic = topic;
@@ -27,6 +29,13 @@ public class TopicItem {
 		this.value = value;
 	}
 
+	public TopicItem(TopicItem src) {
+		this.topic = src.topic;
+		this.value = src.value;
+		this.from  = src.from;
+		this.time = src.time;
+	}
+
 	@Override
 	public String toString() {
 		return time+":  "+topic+"="+value;
@@ -42,4 +51,24 @@ public class TopicItem {
 
 	public String getTime() {		return time;	}
 
+	
+	// TODO assign value and time only? check for host/topic be same?
+	/** Assign all data from src */
+	public void assignFrom(TopicItem src) {
+		this.topic	= src.topic;
+		this.value	= src.value;
+		this.from	= src.from;
+		this.time	= src.time;		
+	}
+
+	public boolean sameTopic( TopicItem t )
+	{
+		return getTopic().equals(t.getTopic());
+	}
+
+	public boolean sameHostAndTopic( TopicItem t )
+	{
+		return getTopic().equals(t.getTopic()) && getFrom().equals(t.getFrom());
+	}
+	
 }
