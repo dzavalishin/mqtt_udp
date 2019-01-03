@@ -21,12 +21,12 @@ if __name__ == "__main__":
     print( "Will send MQTT/UDP packets with random number as a payload" )
     print( "Topic is '"+TOPIC+"'" )
 
-    udp_socket = mqttudp.engine.make_send_socket()
+#    udp_socket = mqttudp.engine.make_send_socket()
 
     while True:
         n = str(random.randint(0, 9))
         print( "Send "+n )
-        mqttudp.engine.send_publish_packet( udp_socket, TOPIC, n )
+        mqttudp.engine.send_publish_packet( TOPIC, n )
         time.sleep(2)
 
 

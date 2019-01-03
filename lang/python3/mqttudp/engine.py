@@ -10,6 +10,17 @@ import mqtt_udp_defs as defs
 from array import array
 
 
+# ------------------------------------------------------------------------
+#
+# Globals
+#
+# ------------------------------------------------------------------------
+
+__SEND_SOCKET = None
+#__SEND_SOCKET = __make_send_socket()
+
+#def init():
+#    __SEND_SOCKET = __make_send_socket()
 
 # ------------------------------------------------------------------------
 #
@@ -98,7 +109,7 @@ def listen(callback):
         if ptype == "pingreq":
 #            print( "Got ping, reply to "+addr )
             try:
-                send_ping_responce(s)
+                send_ping_responce()
             except Exception as e:
                 print( "Can't send ping responce"+str(e) )
         callback(ptype,topic,value,pflags,addr)
@@ -133,7 +144,7 @@ Kill me
 
 '''
 def send_once(topic, payload=b''):
-    udp_socket = make_send_socket()
+    udp_socket = __make_send_socket()
     send_publish_packet( udp_socket, topic, payload ):
     udp_socket.close()
 '''
@@ -152,7 +163,7 @@ def send_once(topic, payload=b''):
 '''
 # simplest entry point, but recreates socket every time
 
-def send_publish_packet( udp_socket, topic, payload=b''):
+def send_publish_packet( topic, payload=b''):
     if isinstance(topic, str):
 	    topic = topic.encode()
 
@@ -160,10 +171,10 @@ def send_publish_packet( udp_socket, topic, payload=b''):
 	    payload = payload.encode()
 
     pkt = make_packet(topic, payload)
-    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
-def make_send_socket():
+def __make_send_socket():
     udp_socket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -172,7 +183,7 @@ def make_send_socket():
 
 '''
 def send_udp_packet(pkt):
-    udp_socket = make_send_socket()
+    udp_socket = __make_send_socket()
     udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
     udp_socket.close()
 '''
@@ -230,9 +241,9 @@ def make_ping_packet():
     return packet
 
 
-def send_ping(udp_socket):
+def send_ping():
     pkt = make_ping_packet()
-    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 def make_ping_responce_packet():
     command = defs.PTYPE_PINGRESP
@@ -247,12 +258,23 @@ def send_ping_responce(udp_socket,addr):
     udp_socket.sendto( pkt, (addr, defs.MQTT_PORT) )
 '''
 
-def send_ping_responce(udp_socket):
+#def send_ping_responce(udp_socket):
+def send_ping_responce():
     pkt = make_ping_responce_packet()
-    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
 #if __name__ == "__main__":
 #	import sys
 #	send_once(sys.argv[1], sys.argv[2])
+
+
+# ------------------------------------------------------------------------
+#
+# Init
+#
+# ------------------------------------------------------------------------
+
+
+__SEND_SOCKET = __make_send_socket()
 

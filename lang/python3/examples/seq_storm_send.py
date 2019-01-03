@@ -22,14 +22,14 @@ if __name__ == "__main__":
     print( "\nNB! This program sends data as fast as possible, you're WARNED!" )
     input( "\nStart seq_storm_check and press ENTER to continue...")
 
-    udp_socket = mqttudp.engine.make_send_socket()
+#    udp_socket = mqttudp.engine.make_send_socket()
 
     n = 0
 
     while True:
         if (n % 10000) == 0:
             print( "Send ", n )
-        mqttudp.engine.send_publish_packet( udp_socket, TOPIC, str(n) )
+        mqttudp.engine.send_publish_packet( TOPIC, str(n) )
         n = n+1
 
 

@@ -14,11 +14,11 @@ import mqttudp.engine
 import random
 import time
 
-send_socket = mqttudp.engine.make_send_socket()
+#send_socket = mqttudp.engine.make_send_socket()
 
 def ping_thread():
     while True:
-        mqttudp.engine.send_ping( send_socket )
+        mqttudp.engine.send_ping()
         time.sleep(1)
 
 
@@ -36,10 +36,10 @@ if __name__ == "__main__":
     print( "Will send MQTT/UDP ping packet and dump all the replies forever" )
     print( "Press ^C to stop" )
 
-    recv_socket = mqttudp.engine.make_recv_socket()
+#    recv_socket = mqttudp.engine.make_recv_socket()
 
 #    send_socket = mqttudp.engine.make_send_socket()
-    mqttudp.engine.send_ping( send_socket )
+    mqttudp.engine.send_ping()
 
     pt = threading.Thread(target=ping_thread, args=())
     pt.start()
