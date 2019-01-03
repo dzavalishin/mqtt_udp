@@ -88,6 +88,6 @@ Here is an [Issue tracker](https://github.com/dzavalishin/mqtt_udp/issues).
 ## Blog
 
 {% for post in site.posts %}
-* **[{{ post.title }}]({{ site.url }}/mqtt_udp{{ post.url }})**
+* **[{{ post.title }}]({{ site.url }}{{ post.url }})**
 {% endfor %}
 
