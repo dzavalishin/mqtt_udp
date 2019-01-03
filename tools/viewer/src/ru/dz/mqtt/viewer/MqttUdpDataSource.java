@@ -80,9 +80,9 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 		} else 
 		if( p instanceof PingReqPacket)
 		{
-			PingRespPacket presp = new PingRespPacket(null);
-			presp.send(ss, ((PingReqPacket) p).getFrom().getInetAddress());
-			//System.out.println(p);
+			// Subserver replies itself now
+			//PingRespPacket presp = new PingRespPacket(null);
+			//presp.send(ss, ((PingReqPacket) p).getFrom().getInetAddress());
 			
 			// TODO hack
 			//TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGREQ, "PingRequest", p.toString());

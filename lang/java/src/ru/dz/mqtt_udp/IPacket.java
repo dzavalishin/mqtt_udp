@@ -67,6 +67,9 @@ public interface IPacket {
 			
 		case mqtt_udp_defs.PTYPE_PINGRESP:
 			return new PingRespPacket(sub, (byte)flags, from);
+
+		case mqtt_udp_defs.PTYPE_SUBSCRIBE:
+			return new SubscribePacket(sub, (byte)flags, from);
 			
 		default:
 				throw new MqttProtocolException("Unknown pkt type "+raw[0]);
