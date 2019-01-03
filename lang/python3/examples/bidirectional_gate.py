@@ -49,6 +49,7 @@ def broker_listen_thread(bclient):
 
 
 def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+    global last
     if ptype != "publish":
         return
     if last.__contains__(topic) and last[topic] == value:
@@ -62,6 +63,8 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
 
 
 def udp_listen_thread(bclient):
+    global last
+    last = {}
     mqttudp.engine.listen(recv_packet_from_udp)
 '''
     s = mqttudp.engine.make_recv_socket()

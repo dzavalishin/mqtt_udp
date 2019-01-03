@@ -20,7 +20,6 @@ SUBSCRIBE_TOPIC="#"
 MQTT_BROKER_HOST="smart."
 #MQTT_BROKER_HOST="iot.eclipse.org"
 
-udp_socket = mqttudp.engine.make_send_socket()
 
 
 
@@ -33,12 +32,8 @@ def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):  # @UnusedVariable
-    print(msg.topic+" "+str(msg.payload))
-
-    # if you send just one message per invocation, this call is simpler
-    #mqttudp.engine.send( msg.topic, msg.payload )
-
-    # but it is better to reuse UDP socket if we publish a lot
+    global udp_socket
+    print("From broker "+ msg.topic+" "+str(msg.payload))
     mqttudp.engine.send( udp_socket, msg.topic, msg.payload )
 
 
@@ -56,6 +51,11 @@ def broker_listen_thread():
 
 if __name__ == "__main__":
     print( "Will resend all the traffic from MQTT broker at "+MQTT_BROKER_HOST+" to MQTT/UDP" )
+
+    global udp_socket
+
+    udp_socket = mqttudp.engine.make_send_socket()
+
     blt = threading.Thread(target=broker_listen_thread, args=())
     blt.start()
     blt.join()

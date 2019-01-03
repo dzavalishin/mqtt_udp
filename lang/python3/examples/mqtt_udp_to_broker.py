@@ -26,6 +26,7 @@ def broker_listen_thread(bclient):
 
 
 def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+    global last
     if ptype != "publish":
         return
     if last.__contains__(topic) and last[topic] == value:
@@ -38,6 +39,9 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
 if __name__ == "__main__":
     print( "Will resend all the MQTT/UDP traffic to MQTT broker at "+MQTT_BROKER_HOST )
 
+    global last
+    last = {}
+
     bclient = broker.Client()
     #client.on_connect = on_connect
     #client.on_message = on_message
@@ -45,10 +49,11 @@ if __name__ == "__main__":
     bclient.connect(MQTT_BROKER_HOST, 1883, 60)
     print("connected", bclient)
 
-    blt = threading.Thread(target=broker_listen_thread, args=(bclient))
+    blt = threading.Thread(target=broker_listen_thread, args=(bclient,))
     blt.start()
 
     mqttudp.engine.listen(recv_packet_from_udp)
+    blt.join()
 
 '''
     s = mqttudp.engine.make_recv_socket()
@@ -63,5 +68,6 @@ if __name__ == "__main__":
         last[topic] = value
         print( topic+"="+value )
         bclient.publish(topic, value, qos=0)
-'''
     blt.join()
+'''
+ 

@@ -29,7 +29,7 @@ class bidirectional(object):
         '''
         now = datetime.datetime.now()
         
-        if not self.dirmap.has_key(topic):
+        if not self.dirmap.__contains__(topic):
             self.dirmap[topic] = (value,now,dir)
             return True
         
