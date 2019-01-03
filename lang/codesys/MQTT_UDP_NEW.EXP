@@ -1,0 +1,146 @@
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM MQTT_PRG
+VAR
+	STEP : INT := 0;
+	socket				:	DINT := SOCKET_INVALID;
+	m_SAddress		:	SOCKADDRESS;
+	wOutPort			:	INT := 1883;
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+
+CASE STEP OF
+
+	0:
+		socket := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
+
+		m_SAddress.sin_family	:= SOCKET_AF_INET;
+		m_SAddress.sin_port	:= SysSockHtons( wOutPort );
+		m_SAddress.sin_addr	:= 16#FFFFFFFF; (* broadcast *)
+
+	1:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_WarmWaterConsumption', GLOBAL_WarmWaterConsumption );
+	2:	MQ_SEND_REAL( socket, m_SAddress,   'PLK0_ColdWaterConsumption', GLOBAL_ColdWaterConsumption );
+
+	3:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_activePa', GLOBAL_activePa_avg * 10 ); (* NB! ÌÝ110 has no multiplier set? *)
+	4:	MQ_SEND_REAL(  socket, m_SAddress,   'PLK0_Va', Va );
+
+	5:	MQ_SEND_REAL( socket, m_SAddress,   'PLK0_Presence', BOOL_TO_REAL( Global_Presence ) );
+
+ELSE
+	IF socket <> SOCKET_INVALID THEN
+		SysSockClose( socket );
+	END_IF
+	socket := SOCKET_INVALID;
+	(* STEP := 0; *)
+END_CASE
+
+
+STEP := STEP + 1;
+
+IF socket = SOCKET_INVALID THEN
+	STEP := 0;
+END_IF
+
+
+END_PROGRAM
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION MQ_SEND_REAL : BOOL
+VAR_INPUT
+	socket				:	DINT;
+	m_SAddress		:	SOCKADDRESS;
+	topic	:	STRING;
+	data	:	REAL;
+END_VAR
+VAR
+END_VAR
+(* @END_DECLARATION := '0' *)
+	MQTT_SEND( socket, topic, REAL_TO_STRING( data ), m_SAddress );
+
+	RETURN;
+END_FUNCTION
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION MQTT_SEND : BOOL
+
+VAR_INPUT
+	socket				:	DINT;
+
+	topic 				:	STRING;
+	data 				:	STRING;
+
+	sock_adr_out		:	SOCKADDRESS;
+END_VAR
+
+VAR
+	tlen				:	DINT;
+	dlen 				:	DINT;
+	total 				: 	DINT;
+	PT 					:	POINTER TO BYTE;
+	buf					:	ARRAY[0..128] OF BYTE;
+
+	bindex 				: 	DINT;
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+
+	tlen := LEN(topic);
+	dlen :=LEN(data);
+
+	total := tlen + dlen + 2 + 2; (* max packet size *)
+
+	IF total >= 127 THEN
+		MQTT_SEND := FALSE;
+		RETURN;
+	END_IF
+
+	buf[0] := 16#30;
+	buf[1] := DINT_TO_BYTE( total - 2 ) AND 16#7F;
+
+	(* buf[2] := SHR( DINT_TO_BYTE( tlen ), 8 ) AND 16#FF; WRONG, chift right byte! *)
+	buf[2] := 0; (* can't be > 127 anyway *)
+	buf[3] := DINT_TO_BYTE( tlen ) AND 16#FF;
+
+	bindex := 4;
+
+	PT := ADR( topic );
+	WHILE tlen > 0 DO
+		tlen := tlen - 1;
+
+		buf[bindex] := PT^;
+
+		PT := PT + 1;
+		bindex := bindex + 1;
+	END_WHILE
+
+	PT := ADR( data );
+	WHILE dlen > 0 DO
+		dlen := dlen - 1;
+
+		buf[bindex] := PT^;
+
+		PT := PT + 1;
+		bindex := bindex + 1;
+	END_WHILE
+
+	SysSockSendTo( socket, ADR( buf[0] ), total, 0, ADR( sock_adr_out ), SIZEOF( sock_adr_out ) ); (* TODO check err *)
+
+	MQTT_SEND := TRUE;
+
+END_FUNCTION
+
+
