@@ -35,7 +35,7 @@ def broker_on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 def broker_on_message(client, userdata, msg):  # @UnusedVariable
     #print( msg )
     if ilock.broker_to_udp(msg.topic, msg.payload):
-        mqttudp.engine.send( udp_send_socket, msg.topic, msg.payload )
+        mqttudp.engine.send_publish_packet( udp_send_socket, msg.topic, msg.payload )
         print("To UDP: "+msg.topic+"="+str(msg.payload))
     else:
         print("BLOCKED to UDP: "+msg.topic+"="+str(msg.payload))

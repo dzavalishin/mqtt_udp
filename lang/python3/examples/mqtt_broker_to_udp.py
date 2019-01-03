@@ -34,7 +34,7 @@ def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 def on_message(client, userdata, msg):  # @UnusedVariable
     global udp_socket
     print("From broker "+ msg.topic+" "+str(msg.payload))
-    mqttudp.engine.send( udp_socket, msg.topic, msg.payload )
+    mqttudp.engine.send_publish_packet( udp_socket, msg.topic, msg.payload )
 
 
 

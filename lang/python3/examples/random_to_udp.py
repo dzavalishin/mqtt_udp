@@ -26,7 +26,7 @@ if __name__ == "__main__":
     while True:
         n = str(random.randint(0, 9))
         print( "Send "+n )
-        mqttudp.engine.send( udp_socket, TOPIC, n )
+        mqttudp.engine.send_publish_packet( udp_socket, TOPIC, n )
         time.sleep(2)
 
 
