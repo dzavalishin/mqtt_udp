@@ -17,7 +17,7 @@ sys.path.append('../mqttudp')
 import threading
 import requests
 import time
-import mqttudp.sub
+import mqttudp.engine
 
 
 OPENHAB_HOST="smart."
@@ -70,16 +70,28 @@ def put_status( key, value ):
 
 
 
+last = {}
+def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+    if ptype != "publish":
+        return
+    if last.__contains__(topic) and last[topic] == value:
+        return
+    last[topic] = value
+    print( topic+"="+value )
+    put_status(topic, value)
+
+
 if __name__ == "__main__":
     print( "Will resend all the MQTT/UDP traffic to OpenHAB host " + OPENHAB_HOST )
+    mqttudp.engine.listen(recv_packet_from_udp)
 #    put_status( "PLK0_Va", "222" )
 
-
-    s = mqttudp.sub.make_recv_socket()
+'''
+    s = mqttudp.engine.make_recv_socket()
     last = {}
     while True:
-        pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.sub.parse_packet(pkt)
+        pkt = mqttudp.engine.recv_udp_packet(s)    
+        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
         if ptype != "publish":
             continue
         if last.__contains__(topic) and last[topic] == value:
@@ -89,8 +101,8 @@ if __name__ == "__main__":
         put_status(topic, value)
 #        time.sleep(5)
 
-    blt.join()
-
+#    blt.join()
+'''
 
 
 

@@ -14,7 +14,7 @@ sys.path.append('..')
 sys.path.append('../mqttudp')
 
 import threading
-import mqttudp.sub
+import mqttudp.engine
 import paho.mqtt.client as broker
 
 MQTT_BROKER_HOST="smart."
@@ -25,6 +25,14 @@ def broker_listen_thread(bclient):
     bclient.loop_forever()
 
 
+def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+    if ptype != "publish":
+        return
+    if last.__contains__(topic) and last[topic] == value:
+        return
+    last[topic] = value
+    print( topic+"="+value )
+    bclient.publish(topic, value, qos=0)
 
 
 if __name__ == "__main__":
@@ -40,11 +48,14 @@ if __name__ == "__main__":
     blt = threading.Thread(target=broker_listen_thread, args=(bclient))
     blt.start()
 
-    s = mqttudp.sub.make_recv_socket()
+    mqttudp.engine.listen(recv_packet_from_udp)
+
+'''
+    s = mqttudp.engine.make_recv_socket()
     last = {}
     while True:
-        pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.sub.parse_packet(pkt)
+        pkt = mqttudp.engine.recv_udp_packet(s)    
+        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
         if ptype != "publish":
             continue
         if last.__contains__(topic) and last[topic] == value:
@@ -52,5 +63,5 @@ if __name__ == "__main__":
         last[topic] = value
         print( topic+"="+value )
         bclient.publish(topic, value, qos=0)
-
+'''
     blt.join()

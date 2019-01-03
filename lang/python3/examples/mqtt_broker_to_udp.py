@@ -12,7 +12,7 @@ sys.path.append('../mqttudp')
 
 import threading
 import paho.mqtt.client as broker
-import mqttudp.pub
+import mqttudp.engine
 
 SUBSCRIBE_TOPIC="#"
 #SUBSCRIBE_TOPIC="$SYS/#"
@@ -20,7 +20,7 @@ SUBSCRIBE_TOPIC="#"
 MQTT_BROKER_HOST="smart."
 #MQTT_BROKER_HOST="iot.eclipse.org"
 
-udp_socket = mqttudp.pub.make_send_socket()
+udp_socket = mqttudp.engine.make_send_socket()
 
 
 
@@ -36,10 +36,10 @@ def on_message(client, userdata, msg):  # @UnusedVariable
     print(msg.topic+" "+str(msg.payload))
 
     # if you send just one message per invocation, this call is simpler
-    #mqttudp.pub.send( msg.topic, msg.payload )
+    #mqttudp.engine.send( msg.topic, msg.payload )
 
     # but it is better to reuse UDP socket if we publish a lot
-    mqttudp.pub.send( udp_socket, msg.topic, msg.payload )
+    mqttudp.engine.send( udp_socket, msg.topic, msg.payload )
 
 
 

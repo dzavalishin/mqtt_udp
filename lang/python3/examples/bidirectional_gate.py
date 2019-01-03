@@ -14,8 +14,7 @@ sys.path.append('..')
 sys.path.append('../mqttudp')
 
 import threading
-import mqttudp.pub
-import mqttudp.sub
+import mqttudp.engine
 import mqttudp.interlock
 import paho.mqtt.client as broker
 
@@ -25,7 +24,7 @@ MQTT_BROKER_HOST="smart."
 #MQTT_BROKER_HOST="iot.eclipse.org"
 
 
-udp_send_socket = mqttudp.pub.make_send_socket()
+udp_send_socket = mqttudp.engine.make_send_socket()
 
 ilock = mqttudp.interlock.bidirectional(5)
 
@@ -36,7 +35,7 @@ def broker_on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 def broker_on_message(client, userdata, msg):  # @UnusedVariable
     #print( msg )
     if ilock.broker_to_udp(msg.topic, msg.payload):
-        mqttudp.pub.send( udp_send_socket, msg.topic, msg.payload )
+        mqttudp.engine.send( udp_send_socket, msg.topic, msg.payload )
         print("To UDP: "+msg.topic+"="+str(msg.payload))
     else:
         print("BLOCKED to UDP: "+msg.topic+"="+str(msg.payload))
@@ -48,12 +47,28 @@ def broker_on_message(client, userdata, msg):  # @UnusedVariable
 def broker_listen_thread(bclient):
     bclient.loop_forever()
 
+
+def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+    if ptype != "publish":
+        return
+    if last.__contains__(topic) and last[topic] == value:
+        return
+    last[topic] = value
+    if ilock.udp_to_broker(topic, value):
+        bclient.publish(topic, value, qos=0)
+        print( "From UDP: "+topic+"="+value )
+    else:
+        print( "BLOCKED from UDP: "+topic+"="+value )
+
+
 def udp_listen_thread(bclient):
-    s = mqttudp.sub.make_recv_socket()
+    mqttudp.engine.listen(recv_packet_from_udp)
+'''
+    s = mqttudp.engine.make_recv_socket()
     last = {}
     while True:
-        pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.sub.parse_packet(pkt)
+        pkt = mqttudp.engine.recv_udp_packet(s)    
+        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
         if ptype != "publish":
             continue
         if last.__contains__(topic) and last[topic] == value:
@@ -64,7 +79,7 @@ def udp_listen_thread(bclient):
             print( "From UDP: "+topic+"="+value )
         else:
             print( "BLOCKED from UDP: "+topic+"="+value )
-
+'''
 
 
 if __name__ == "__main__":

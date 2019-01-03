@@ -12,14 +12,19 @@ import sys
 sys.path.append('..')
 sys.path.append('../mqttudp')
 
-import mqttudp.sub
+import mqttudp.engine
+
+
+def recv_packet(ptype,topic,value,pflags,addr):
+#    print( topic + "=" + value + str(addr) )
+    if ptype != "publish":
+        print( ptype + ", " + topic + "\t\t" + str(addr) )
+        return
+    print( topic+"="+value+ "\t\t" + str(addr) )
+
+
 
 if __name__ == "__main__":
     print( "Will dump all MQTT/UDP packets recv'd" )
-    s = mqttudp.sub.make_recv_socket()
-    while True:
-        pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.sub.parse_packet(pkt)
-        if ptype != "publish":
-            continue
-        print( "'"+topic+"' = '"+value+"'" )
+
+    mqttudp.engine.listen(recv_packet)
