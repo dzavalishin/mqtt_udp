@@ -95,9 +95,12 @@ def listen(callback):
     while True:
         pkt,addr = recv_udp_packet(s)    
         ptype,topic,value,pflags = parse_packet(pkt)
-        if ptype == "ping":
-            print( "Got ping" )
-            send_ping_responce(s,addr)
+        if ptype == "pingreq":
+#            print( "Got ping, reply to "+addr )
+            try:
+                send_ping_responce(s)
+            except Exception as e:
+                print( "Can't send ping responce"+str(e) )
         callback(ptype,topic,value,pflags,addr)
 
 
@@ -232,19 +235,24 @@ def send_ping(udp_socket):
     udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 def make_ping_responce_packet():
-    command = defs.PTYPE_PINGREQ
+    command = defs.PTYPE_PINGRESP
     packet = bytearray()
     packet.append(command)
     pack_remaining_length(packet, 0)
     return packet
 
-
+'''
 def send_ping_responce(udp_socket,addr):
     pkt = make_ping_responce_packet()
     udp_socket.sendto( pkt, (addr, defs.MQTT_PORT) )
+'''
+
+def send_ping_responce(udp_socket):
+    pkt = make_ping_responce_packet()
+    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
-if __name__ == "__main__":
-	import sys
-	send_once(sys.argv[1], sys.argv[2])
+#if __name__ == "__main__":
+#	import sys
+#	send_once(sys.argv[1], sys.argv[2])
 
