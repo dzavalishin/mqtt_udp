@@ -10,9 +10,3 @@ header_pages:
 
 github_username:  dzavalishin
 
-show_downloads: true
-github.zip_url = zip
-
-github:
-    tar_url: tarurl
-
