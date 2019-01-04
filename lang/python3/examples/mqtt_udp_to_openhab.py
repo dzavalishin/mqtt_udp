@@ -18,11 +18,16 @@ import threading
 import requests
 import time
 import mqttudp.engine
+import mqttudp.config as cfg
 
 
-OPENHAB_HOST="smart."
-OPENHAB_PORT="8080"
 
+
+
+#OPENHAB_HOST="smart."
+#OPENHAB_PORT="8080"
+OPENHAB_HOST = cfg.config.get('openhab-gate','host' )
+OPENHAB_PORT = cfg.config.get('openhab-gate','port' )
 
 #def broker_listen_thread(bclient):
 #    bclient.loop_forever()

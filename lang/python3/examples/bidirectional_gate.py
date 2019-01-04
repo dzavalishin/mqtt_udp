@@ -16,11 +16,14 @@ sys.path.append('../mqttudp')
 import threading
 import mqttudp.engine
 import mqttudp.interlock
+import mqttudp.config as cfg
 import paho.mqtt.client as broker
 
-SUBSCRIBE_TOPIC="#"
-
-MQTT_BROKER_HOST="smart."
+SUBSCRIBE_TOPIC=cfg.config.get('mqtt-gate','subscribe' )
+MQTT_BROKER_HOST=cfg.config.get('mqtt-gate','host' )
+MQTT_BROKER_PORT=cfg.config.getint('mqtt-gate','port' )
+#SUBSCRIBE_TOPIC="#"
+#MQTT_BROKER_HOST="smart."
 #MQTT_BROKER_HOST="iot.eclipse.org"
 
 
@@ -74,7 +77,7 @@ if __name__ == "__main__":
     bclient.on_connect = broker_on_connect
     bclient.on_message = broker_on_message
 
-    bclient.connect(MQTT_BROKER_HOST, 1883, 60)
+    bclient.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, 60)
     print("connected", bclient)
 
     blt = threading.Thread(target=broker_listen_thread, args=(bclient,))

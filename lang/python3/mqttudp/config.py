@@ -6,6 +6,7 @@ config['openhab-gate'] = {'port': "8080" }
 
 config['mqtt-gate'] = { 
 #    'host': 'smart.',
+    'port': "1883",
     'subscribe': '#'
     }
 
