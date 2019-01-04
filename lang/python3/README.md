@@ -34,15 +34,16 @@ You can check other languages implementations also - https://github.com/dzavalis
 
 **Send data:**
 
-
+```python
 import mqttudp.engine
 
 if __name__ == "__main__":
     mqttudp.engine.send_publish_packet( "test_topic", "Hello, world!" )
-
+```
 
 **Listen for data:**
 
+```python
 import mqttudp.engine
 
 def recv_packet(ptype,topic,value,pflags,addr):
@@ -53,4 +54,5 @@ def recv_packet(ptype,topic,value,pflags,addr):
 
 if __name__ == "__main__":
     mqttudp.engine.listen(recv_packet)
+```
 
