@@ -73,45 +73,15 @@ if __name__ == "__main__":
 
     mqttudp.engine.listen(recv_packet_from_udp)
 
-'''
-    s = mqttudp.engine.make_recv_socket()
 
-    start_time = time.clock();
 
-    last = 0
-    errors = 0
-    got = 0
-    curr = 0
 
-    while True:
-        pkt = mqttudp.engine.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
 
-        if ptype != "publish":
-            continue
 
-        if topic != SEQ_STORM_TOPIC:
-            continue
 
-# report
-        if (last % STEP) == 0:
-            now = time.clock();
-            speed_s = "?"
-            if now != start_time:
-                speed_s = '{:.0f}'.format( STEP/(now-start_time) )
-                err_percent_s = '{:.1f}'.format( errors*100.0/STEP )
-                print("@ "+str(last)+"\terrors = "+str(errors)+"\tspeed is "+speed_s+" pkt/sec,\terr "+err_percent_s+"%" )
-                errors = 0
-            start_time = now
 
-        curr = int( value )
 
-        got = got + 1
 
-        if curr == last:
-            last = last + 1
-            continue
 
-        errors = errors + 1
-        last = curr + 1
-'''
+
+

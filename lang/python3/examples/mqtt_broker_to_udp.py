@@ -32,7 +32,6 @@ def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):  # @UnusedVariable
-#    global udp_socket
     print("From broker "+ msg.topic+" "+str(msg.payload))
     mqttudp.engine.send_publish_packet( msg.topic, msg.payload )
 
@@ -52,13 +51,11 @@ def broker_listen_thread():
 if __name__ == "__main__":
     print( "Will resend all the traffic from MQTT broker at "+MQTT_BROKER_HOST+" to MQTT/UDP" )
 
-#    global udp_socket
-
-#    udp_socket = mqttudp.engine.make_send_socket()
-
     blt = threading.Thread(target=broker_listen_thread, args=())
     blt.start()
     blt.join()
+
+
 
 
 

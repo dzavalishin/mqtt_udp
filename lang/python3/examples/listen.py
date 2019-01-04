@@ -18,7 +18,6 @@ last = {}
 
 
 def recv_packet(ptype,topic,value,pflags,addr):
-#    print( topic + "=" + value + str(addr) )
     if ptype != "publish":
         print( ptype + ", " + topic + "\t\t" + str(addr) )
         return
@@ -34,19 +33,3 @@ if __name__ == "__main__":
 
     mqttudp.engine.listen(recv_packet)
 
-"""
-    s = mqttudp.engine.make_recv_socket()
-    last = {}
-    while True:
-        pkt = mqttudp.engine.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
-        if ptype == "ping":
-            print( "Got ping" )
-            continue
-        if ptype != "publish":
-            continue
-        if last.__contains__(topic) and last[topic] == value:
-            continue
-        last[topic] = value
-        print( topic+"="+value )
-"""

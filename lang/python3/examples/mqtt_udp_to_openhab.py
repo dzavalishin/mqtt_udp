@@ -86,23 +86,6 @@ if __name__ == "__main__":
     mqttudp.engine.listen(recv_packet_from_udp)
 #    put_status( "PLK0_Va", "222" )
 
-'''
-    s = mqttudp.engine.make_recv_socket()
-    last = {}
-    while True:
-        pkt = mqttudp.engine.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
-        if ptype != "publish":
-            continue
-        if last.__contains__(topic) and last[topic] == value:
-            continue
-        last[topic] = value
-        print( topic+"="+value )
-        put_status(topic, value)
-#        time.sleep(5)
-
-#    blt.join()
-'''
 
 
 

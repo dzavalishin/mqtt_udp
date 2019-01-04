@@ -14,7 +14,7 @@ import mqttudp.engine
 import random
 import time
 
-#send_socket = mqttudp.engine.make_send_socket()
+
 
 def ping_thread():
     while True:
@@ -24,7 +24,6 @@ def ping_thread():
 
 
 def recv_packet(ptype,topic,value,pflags,addr):
-#    print( topic + "=" + value + str(addr) )
     if ptype != "publish":
         print( ptype + ", " + topic + "\t\t" + str(addr) )
         return
@@ -36,9 +35,6 @@ if __name__ == "__main__":
     print( "Will send MQTT/UDP ping packet and dump all the replies forever" )
     print( "Press ^C to stop" )
 
-#    recv_socket = mqttudp.engine.make_recv_socket()
-
-#    send_socket = mqttudp.engine.make_send_socket()
     mqttudp.engine.send_ping()
 
     pt = threading.Thread(target=ping_thread, args=())
@@ -46,18 +42,6 @@ if __name__ == "__main__":
 
     mqttudp.engine.listen(recv_packet)
 
-"""
-    while True:
-        pkt = mqttudp.engine.recv_udp_packet( recv_socket )    
-        ptype,topic,value,pflags = mqttudp.engine.parse_packet( pkt ) 
-
-        if ptype == "publish":
-            print( topic+"="+value )
-        if ptype == "pingreq":
-            print( ptype )
-        if ptype == "pingresp":
-            print( ptype )
-"""
 
 
 

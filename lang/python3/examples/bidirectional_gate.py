@@ -24,7 +24,6 @@ MQTT_BROKER_HOST="smart."
 #MQTT_BROKER_HOST="iot.eclipse.org"
 
 
-#udp_send_socket = mqttudp.engine.make_send_socket()
 
 ilock = mqttudp.interlock.bidirectional(5)
 
@@ -66,23 +65,6 @@ def udp_listen_thread(bclient):
     global last
     last = {}
     mqttudp.engine.listen(recv_packet_from_udp)
-'''
-    s = mqttudp.engine.make_recv_socket()
-    last = {}
-    while True:
-        pkt = mqttudp.engine.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
-        if ptype != "publish":
-            continue
-        if last.__contains__(topic) and last[topic] == value:
-            continue
-        last[topic] = value
-        if ilock.udp_to_broker(topic, value):
-            bclient.publish(topic, value, qos=0)
-            print( "From UDP: "+topic+"="+value )
-        else:
-            print( "BLOCKED from UDP: "+topic+"="+value )
-'''
 
 
 if __name__ == "__main__":

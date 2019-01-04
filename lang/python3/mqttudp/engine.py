@@ -1,11 +1,9 @@
 #!/bin/python
 
-#import struct
 import socket
 import codecs
 import struct
 
-#import defs
 import mqtt_udp_defs as defs
 from array import array
 
@@ -131,38 +129,6 @@ def listen(callback):
 
 
 
-
-
-
-
-
-
-# simplest entry point, but recreates socket every time
-'''
-Kill me
-'''
-
-'''
-def send_once(topic, payload=b''):
-    udp_socket = __make_send_socket()
-    send_publish_packet( udp_socket, topic, payload ):
-    udp_socket.close()
-'''
-
-'''
-#    if isinstance(topic, unicode):
-#        topic = topic.encode('utf-8')
-    topic = topic.encode()
-
-#    if isinstance(payload, unicode):
-#        payload = payload.encode('utf-8')
-    payload = payload.encode()
-
-    pkt = make_packet(topic, payload)
-    send_udp_packet(pkt)
-'''
-# simplest entry point, but recreates socket every time
-
 def send_publish_packet( topic, payload=b''):
     if isinstance(topic, str):
 	    topic = topic.encode()
@@ -181,12 +147,6 @@ def __make_send_socket():
     return udp_socket
 
 
-'''
-def send_udp_packet(pkt):
-    udp_socket = __make_send_socket()
-    udp_socket.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
-    udp_socket.close()
-'''
 
 def pack_remaining_length(packet, remaining_length):
         remaining_bytes = []
@@ -240,10 +200,11 @@ def make_ping_packet():
     pack_remaining_length(packet, 0)
     return packet
 
-
 def send_ping():
     pkt = make_ping_packet()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+
+
 
 def make_ping_responce_packet():
     command = defs.PTYPE_PINGRESP
@@ -252,21 +213,11 @@ def make_ping_responce_packet():
     pack_remaining_length(packet, 0)
     return packet
 
-'''
-def send_ping_responce(udp_socket,addr):
-    pkt = make_ping_responce_packet()
-    udp_socket.sendto( pkt, (addr, defs.MQTT_PORT) )
-'''
-
-#def send_ping_responce(udp_socket):
 def send_ping_responce():
     pkt = make_ping_responce_packet()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
-#if __name__ == "__main__":
-#	import sys
-#	send_once(sys.argv[1], sys.argv[2])
 
 
 # ------------------------------------------------------------------------
@@ -278,3 +229,14 @@ def send_ping_responce():
 
 __SEND_SOCKET = __make_send_socket()
 
+
+# ------------------------------------------------------------------------
+#
+# Main for impatient ones
+#
+# ------------------------------------------------------------------------
+
+
+if __name__ == "__main__":
+	import sys
+	send_publish_packet(sys.argv[1], sys.argv[2])

@@ -55,19 +55,4 @@ if __name__ == "__main__":
     mqttudp.engine.listen(recv_packet_from_udp)
     blt.join()
 
-'''
-    s = mqttudp.engine.make_recv_socket()
-    last = {}
-    while True:
-        pkt = mqttudp.engine.recv_udp_packet(s)    
-        ptype,topic,value,pflags = mqttudp.engine.parse_packet(pkt)
-        if ptype != "publish":
-            continue
-        if last.__contains__(topic) and last[topic] == value:
-            continue
-        last[topic] = value
-        print( topic+"="+value )
-        bclient.publish(topic, value, qos=0)
-    blt.join()
-'''
  

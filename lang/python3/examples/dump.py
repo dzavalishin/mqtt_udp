@@ -16,7 +16,6 @@ import mqttudp.engine
 
 
 def recv_packet(ptype,topic,value,pflags,addr):
-#    print( topic + "=" + value + str(addr) )
     if ptype != "publish":
         print( ptype + ", " + topic + "\t\t" + str(addr) )
         return

@@ -13,5 +13,4 @@ import mqttudp.engine
 
 
 if __name__ == "__main__":
-#    udp_socket = mqttudp.engine.make_send_socket()
     mqttudp.engine.send_publish_packet( sys.argv[1], sys.argv[2] )
