@@ -32,7 +32,7 @@ pkt.send();
 ```java
 PacketSourceServer ss = new PacketSourceServer();
 ss.setSink( pkt -> { 
-    System.out.println("Gpot packet: "+pkt);
+    System.out.println("Got packet: "+pkt);
 
     if (p instanceof PublishPacket) {
         PublishPacket pp = (PublishPacket) p;			
