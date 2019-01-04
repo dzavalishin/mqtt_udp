@@ -26,9 +26,11 @@ merely an MQTT Publish packets broadcast over an UDP.
 
 ## This repository contains
 
-* A simplest MQTT/UDP implementation in some popular programming languages.
+* A simple MQTT/UDP implementation in some popular programming languages.
 * A simplest MQTT to MQTT/UDP bridge implementation in Pyton.
-* A debug application to dump MQTT/UDP traffic (tools/viewer).
+* A tool to send data from MQTT/UDP to OpenHAB 
+* A [debug application](https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help) to dump MQTT/UDP traffic (tools/viewer).
+* Other tools and utilities
 
 ## If you want to help a project
 
@@ -121,8 +123,8 @@ ss.setSink( pkt -> { System.out.println("Got packet: "+pkt);});
 
 ```c
 
-    int fd = mqtt_udp_socket();
-    int rc = mqtt_udp_send_publish( fd, topic, value );
+int fd = mqtt_udp_socket();
+int rc = mqtt_udp_send_publish( fd, topic, value );
 
 ```
 
