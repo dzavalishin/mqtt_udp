@@ -106,21 +106,8 @@ pkt.send();
 
 
 ```java
-public class MqttUdpDataSource extends SubServer {
-
-...
-
-    @Override
-    protected void processPacket(IPacket p) throws IOException {
-        if (p instanceof PublishPacket) {
-            System.out.println("Pub pkt "+p);
-            PublishPacket pp = (PublishPacket) p;			
-            ...
-        }
-
-    }
-
-}
+PacketSourceServer ss = new PacketSourceServer();
+ss.setSink( pkt -> { System.out.println("Gpot packet: "+pkt);});
 
 ```
 
@@ -131,8 +118,8 @@ public class MqttUdpDataSource extends SubServer {
 
 ```c
 
-    int fd = mqtt_udp_socket();
-    int rc = mqtt_udp_send_publish( fd, topic, value );
+int fd = mqtt_udp_socket();
+int rc = mqtt_udp_send_publish( fd, topic, value );
 
 ```
 

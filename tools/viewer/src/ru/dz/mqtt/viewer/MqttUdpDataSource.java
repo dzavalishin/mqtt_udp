@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
+import ru.dz.mqtt_udp.PacketSourceServer;
 import ru.dz.mqtt_udp.PingReqPacket;
 import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
@@ -16,6 +17,7 @@ import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class MqttUdpDataSource extends SubServer implements IDataSource {
+//public class MqttUdpDataSource extends PacketSourceServer implements IDataSource {
 
 	private Consumer<TopicItem> sink;
 	//private DatagramSocket ss;
@@ -27,6 +29,7 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 		start();
 	}
 
+	/* move up
 	private void start() {
 		Runnable target = makeLoopRunnable();
 		Thread t = new Thread(target, "MQTT UDP Recv");
@@ -56,7 +59,7 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			}
 		};
 	}
-
+*/
 	@Override
 	public void setSink(Consumer<TopicItem> sink) {
 		this.sink = sink;

@@ -15,37 +15,87 @@ import ru.dz.mqtt_udp.util.GenericPacket;
 public abstract class SubServer 
 {
 
-	volatile private boolean run;
 	private DatagramSocket ss = SingleSendSocket.get();
 
-	public void loop() throws IOException, MqttProtocolException {
-		DatagramSocket s = GenericPacket.recvSocket();
 	
+	// ------------------------------------------------------------
+	// Incoming data process thread
+	// ------------------------------------------------------------
+	
+	volatile private boolean run;
+
+	public boolean isRunning() { return run; }
+
+
+	public void requestStart()
+	{
+		if(isRunning()) return;
+		start();
+	}
+
+	public void requestStop() { run = false; }
+	
+
+	protected void start() {
+		Runnable target = makeLoopRunnable();
+		Thread t = new Thread(target, "MQTT UDP Recv");
+		t.start();
+	}
+
+	
+	private void loop() throws IOException, MqttProtocolException {
+		DatagramSocket s = GenericPacket.recvSocket();
+
 		run = true;
-		
+
 		while(run)
 		{
 			IPacket p = GenericPacket.recv(s);
 			preprocessPacket(p);			
 			processPacket(p);			
 		}
-		
+
 		s.close();
 	}
 
-	public void requestStop() { run = false; }
-	
-	public boolean isRunning() { return run; }
-	
+
+	private Runnable makeLoopRunnable() {
+		return new Runnable() {
+			@Override
+			public void run() {
+				try {
+					loop();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MqttProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		};
+	}
+
+
+
+	// ------------------------------------------------------------
+	// Packet processing
+	// ------------------------------------------------------------
+
+
+	/**
+	 * Must be overriden in children to process packet 
+	 * @param p
+	 * @throws IOException
+	 */
 	protected abstract void processPacket(IPacket p) throws IOException;
 
-	
+
 	/** 
-	 * Called from SubServer code, does internal protocol
-	 * defined packet processing.
+	 * Does internal protocol defined packet processing.
 	 * @throws IOException 
 	 */
-	protected void preprocessPacket(IPacket p) throws IOException {
+	private void preprocessPacket(IPacket p) throws IOException {
 
 		//if (p instanceof PublishPacket) {		} else 
 		if( p instanceof PingReqPacket)
@@ -57,5 +107,5 @@ public abstract class SubServer
 		//else if( p instanceof PingRespPacket) {		}
 
 	}
-	
+
 }

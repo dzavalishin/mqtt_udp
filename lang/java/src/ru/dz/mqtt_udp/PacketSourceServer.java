@@ -3,54 +3,27 @@ package ru.dz.mqtt_udp;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+/**
+ * Usage:
+ * <pre>
+ * PacketSourceServer ss = new PacketSourceServer();
+ * ss.setSink( pkt -> { System.out.println(pkt);});
+ * </pre>
+ * @author dz
+ *
+ */
 public class PacketSourceServer extends SubServer implements IPacketSource {
 
 	private Consumer<IPacket> sink;
 
-	public PacketSourceServer() {
-		start();
-	}
-	
-	private void start() {
-		Runnable target = makeLoopRunnable();
-		Thread t = new Thread(target, "MQTT UDP Recv");
-		t.start();
-	}
-	
-	public void requestStart()
-	{
-		if(isRunning()) return;
-		start();
-	}
-	
-	
-	private Runnable makeLoopRunnable() {
-		return new Runnable() {
-			@Override
-			public void run() {
-				try {
-					loop();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (MqttProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}
-		};
-	}
-
-	
-	
+	public PacketSourceServer() {		start();	}
+		
 	@Override
-	public void setSink(Consumer<IPacket> sink) {
-		this.sink = sink;
-	}
+	public void setSink(Consumer<IPacket> sink) {		this.sink = sink;	}
 
 	@Override
-	protected void processPacket(IPacket p) throws IOException {
-		sink.accept(p);
-	}
-
+	protected void processPacket(IPacket p) throws IOException {		sink.accept(p);	}
+	
 }
+
+
