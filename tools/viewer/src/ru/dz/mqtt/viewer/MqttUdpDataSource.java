@@ -18,12 +18,12 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 public class MqttUdpDataSource extends SubServer implements IDataSource {
 
 	private Consumer<TopicItem> sink;
-	private DatagramSocket ss;
+	//private DatagramSocket ss;
 
 	public MqttUdpDataSource() throws SocketException 
 	{
 		//ss = GenericPacket.sendSocket();
-		ss = SingleSendSocket.get();
+		//ss = SingleSendSocket.get();
 		start();
 	}
 
