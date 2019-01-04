@@ -19,6 +19,15 @@ public abstract class SubServer
 
 	
 	// ------------------------------------------------------------
+	// Replies on/off
+	// ------------------------------------------------------------
+	
+	private boolean muted = false;
+	public boolean isMuted() {		return muted;	}
+	public void setMuted(boolean muted) {		this.muted = muted;	}
+
+
+	// ------------------------------------------------------------
 	// Incoming data process thread
 	// ------------------------------------------------------------
 	
@@ -51,7 +60,7 @@ public abstract class SubServer
 		while(run)
 		{
 			IPacket p = GenericPacket.recv(s);
-			preprocessPacket(p);			
+			if(!muted) preprocessPacket(p);			
 			processPacket(p);			
 		}
 
