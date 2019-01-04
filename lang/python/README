@@ -2,6 +2,8 @@ MQTT/UDP Python (2.x) implementation.
 
 You can check other languages implementations also - https://github.com/dzavalishin/mqtt_udp
 
+NB! This implementation is outdated and incomplete, see ../python3 instead, please.
+
   mqttudp				- MQTT/UDP library in Python language
 
   examples				- Library usage examples

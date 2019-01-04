@@ -65,3 +65,110 @@ This repository contains tools to support MQTT/UDP integration and test:
 * Random data generator (random_to_udp.py) in [python3/examples](https://github.com/dzavalishin/mqtt_udp/tree/master/python3/examples) directory
 * Send/check for sequentially numbered packets. See seq_storm_send.py and seq_storm_check.py in [python3/examples](https://github.com/dzavalishin/mqtt_udp/tree/master/python3/examples) directory
 
+
+## Code examples
+
+### Python
+
+**Send data:**
+
+```python
+import mqttudp.engine
+
+if __name__ == "__main__":
+    mqttudp.engine.send_publish_packet( "test_topic", "Hello, world!" )
+```
+
+**Listen for data:**
+
+```python
+import mqttudp.engine
+
+def recv_packet(ptype,topic,value,pflags,addr):
+    if ptype != "publish":
+        print( ptype + ", " + topic + "\t\t" + str(addr) )
+        return
+    print( topic+"="+value+ "\t\t" + str(addr) )
+
+if __name__ == "__main__":
+    mqttudp.engine.listen(recv_packet)
+```
+
+
+### Java
+
+**Send data:**
+
+```java
+PublishPacket pkt = new PublishPacket(topic, value);
+pkt.send();
+
+```
+
+**Listen for data:**
+
+
+```java
+public class MqttUdpDataSource extends SubServer {
+
+...
+
+    @Override
+    protected void processPacket(IPacket p) throws IOException {
+        if (p instanceof PublishPacket) {
+            System.out.println("Pub pkt "+p);
+            PublishPacket pp = (PublishPacket) p;			
+            ...
+        }
+
+    }
+
+}
+
+```
+
+### C
+
+**Send data:**
+
+```c
+
+    int fd = mqtt_udp_socket();
+    int rc = mqtt_udp_send_publish( fd, topic, value );
+
+```
+
+**Listen for data:**
+
+```c
+
+int main(int argc, char *argv[])
+{
+    ...
+
+    int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
+
+    ...
+}
+
+int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
+{
+
+    printf( "pkt %x flags %x, id %d",
+            o->ptype, o->pflags, o->pkt_id
+          );
+
+    if( o->topic_len > 0 )
+        printf(" topic '%s'", o->topic );
+
+    if( o->value_len > 0 )
+        printf(" = '%s'", o->value );
+
+    printf( "\n");
+}
+
+
+```
+
+
+
