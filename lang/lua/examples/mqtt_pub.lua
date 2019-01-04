@@ -2,6 +2,9 @@
 
 -- Publish value to MQTT/UDP listeners
 
+package.path = package.path .. "../mqttudp" -- let us test without lib install
+
+
 local mq = require "mqtt_udp_lib"
 
 local udp = mq.make_publish_socket()

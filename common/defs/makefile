@@ -39,5 +39,5 @@ $(FN).py: $(IN)  inc_txt2python/*
 
 $(FN).lua: $(IN)  inc_txt2lua/*
 	$(CPP) -Iinc_txt2lua $(IN) $@
-	$(SENDTO) $(ROOT)/lua/
+	$(SENDTO) $(ROOT)/lua/mqttudp/
 

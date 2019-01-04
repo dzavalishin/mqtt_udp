@@ -1,5 +1,8 @@
 #!/usr/bin/lua
 
+
+package.path = package.path .. "../mqttudp" -- let us test without lib install
+
 --local defs  = require "mqtt_udp_defs"
 local mq = require "mqtt_udp_lib"
 

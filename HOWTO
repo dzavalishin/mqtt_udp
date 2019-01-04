@@ -17,7 +17,7 @@ You can also dump all traffic with:
 
   lang/python/examples/listen.py 
   lang/python3/examples/listen.py 
-  lang/lua/mqtt_sub.lua
+  lang/lua/examples/mqtt_sub.lua
   lang/c/mqtt_udp_listen
 
 
@@ -26,7 +26,7 @@ You can also generate MQTT/UDP traffic with:
 
   lang/python/mqttudp/pub.py
   lang/python3/mqttudp/pub.py
-  lang/lua/mqtt_pub.lua
+  lang/lua/examples/mqtt_pub.lua
   lang/c/mqtt_udp_pub
 
 And (not from cmd line, though) even with:

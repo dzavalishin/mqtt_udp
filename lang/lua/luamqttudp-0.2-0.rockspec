@@ -1,7 +1,7 @@
-package = "LuaMqttUdp"
+package = "mqttudp"
 
 -- TODO somehow get it from defs?
-version = "0.2-0"
+version = "0.3-0"
 
 source = {
    url = "https://github.com/dzavalishin/mqtt_udp"
