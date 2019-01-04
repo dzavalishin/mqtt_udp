@@ -80,8 +80,9 @@ public class TopicItem {
 	static private final SimpleDateFormat ft3 = new SimpleDateFormat("hh:mm:ss");
 	private static String getCurrentTime()
 	{
-		Date dNow = new Date( );
-		return ft3.format(dNow);
+		//Date dNow = new Date( );
+		//return ft3.format(dNow);
+		return java.time.LocalTime.now().toString();
 	}
 	
 	
