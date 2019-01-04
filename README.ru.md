@@ -29,7 +29,7 @@ MQTT - симпатичный и простой протокол, который
 * Простая реализация протокола на нескольких популярных языках
 * Минимальная версия гейта между обычным MQTT и MQTT/UDP на Питоне
 * Транслятор из MQTT/UDP в OpenHub
-* [Отладочное приложение](https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help) чтобы смотреть MQTT/UDP трафик в сети (tools/viewer).
+* [Отладочное приложение](https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help) чтобы смотреть MQTT/UDP трафик в сети ([tools/viewer](tools/viewer)).
 * Другие инструменты и утилиты
 
 ## Если вы хотите помочь проекту
