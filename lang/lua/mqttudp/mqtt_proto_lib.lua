@@ -24,6 +24,13 @@ end
 
 
 
+------------------------------------------------------------------------------
+--
+-- Listen to packets - TODO - move loop to UDP code because of NodeMCU
+--
+------------------------------------------------------------------------------
+
+--[[
 function mqtt_proto_lib.listen( listener )
     local sock = mqtt_proto_lib.make_listen_socket()
 
@@ -33,29 +40,71 @@ function mqtt_proto_lib.listen( listener )
         if data then
             --print("Received: ", data, ip, port, type(data))
             --print("Received from: ", ip, port )
-            --[[udp:sendto(data, ip, port)--]]
+            --udp:sendto(data, ip, port)--
             ptype,topic,val = mqtt_proto_lib.parse_packet(data)
-        --print( "ptype", ptype )
+
+            mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
             listener( ptype, topic, val, ip, port );
         end
         socket.sleep(0.01)
     end
 
+end ]]
+
+
+
+
+
+-- TODO prepare for mqtt_proto_lib.udp_listen(proto_decoder,user_listener)
+function mqtt_proto_lib.proto_decoder(data, ip, port, user_listener)
+    ptype,topic,val = mqtt_proto_lib.parse_packet(data)
+
+    mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
+    user_listener( ptype, topic, val, ip, port );
 end
 
 
---[[
-function mqtt_proto_lib.publish( socket, topic, value )
-    data = mqtt_proto_lib.make_packet( topic, value )
-    mqtt_proto_lib.send_packet( socket, data )
+function mqtt_proto_lib.listen( user_listener )
+    mqtt_proto_lib.udp_listen( mqtt_proto_lib.proto_decoder, user_listener)
 end
-]]
+
+
+function mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
+    -- respond to ping
+    if ptype == "pingreq" then
+        mqtt_proto_lib.pingresp()
+    end
+    -- TODO repond to subscribe
+end
+
+
+
+------------------------------------------------------------------------------
+--
+-- Send packets
+--
+------------------------------------------------------------------------------
+
+
 
 function mqtt_proto_lib.publish( topic, value )
-    data = mqtt_proto_lib.make_packet( topic, value )
+    data = mqtt_proto_lib.make_publish_packet( topic, value )
     mqtt_proto_lib.send_packet( pubfd(), data )
 end
 
+
+function mqtt_proto_lib.pingresp()
+    data = mqtt_proto_lib.make_pingresp_packet()
+    mqtt_proto_lib.send_packet( pubfd(), data )
+end
+
+
+
+------------------------------------------------------------------------------
+--
+-- Make / parse packets
+--
+------------------------------------------------------------------------------
 
 
 
@@ -128,7 +177,7 @@ end
 
 
 
-function mqtt_proto_lib.make_packet( topic, value )
+function mqtt_proto_lib.make_publish_packet( topic, value )
 
     -- print("Topic: '"..topic.."' val '"..value.."'")
 
@@ -153,4 +202,30 @@ end
 
 
 
+function mqtt_proto_lib.make_pingresp_packet()
+
+    pkt = "";
+    pkt = pkt..string.char(defs.PTYPE_PINGRESP);
+    pkt = pkt..string.char(0); -- payload length
+
+    return pkt;
+end
+
+
+
+
+
 return mqtt_proto_lib
+
+
+
+
+
+
+
+
+
+
+
+
+

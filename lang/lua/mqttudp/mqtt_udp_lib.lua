@@ -43,9 +43,6 @@ function mqtt_udp_lib.make_publish_socket()
 end
 
 
---function mqtt_udp_lib.send_packet( data )
---    udp:sendto( data, "255.255.255.255", defs.MQTT_PORT )
---end
 
 function mqtt_udp_lib.send_packet( socket, data )
     socket:sendto( data, "255.255.255.255", defs.MQTT_PORT )
@@ -56,12 +53,26 @@ function mqtt_udp_lib.recv_packet( socket )
     return socket:receivefrom()
 end
 
---[[
-function mqtt_udp_lib.publish( socket, topic, value )
-    data = mqtt_udp_lib.make_packet( topic, value )
-    mqtt_udp_lib.send_packet( socket, data )
+
+-- TODO use me in listen
+
+
+function mqtt_udp_lib.udp_listen(proto_decoder,user_listener)
+
+    local sock = mqtt_udp_lib.make_listen_socket()
+
+    while true do
+
+        data, ip, port = mqtt_udp_lib.recv_packet( sock )
+        if data then
+            proto_decoder(data, ip, port, user_listener)
+        end
+        socket.sleep(0.01)
+    end
+
 end
-]]
+
+
 
 return mqtt_udp_lib
 
