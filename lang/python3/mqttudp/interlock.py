@@ -23,20 +23,20 @@ class bidirectional(object):
         self.dirmap = {}
         
         
-    def bidir_lock(self, topic, value, dir):
+    def bidir_lock(self, topic, value, direction):
         '''
         Returns true if message can pass
         '''
         now = datetime.datetime.now()
         
         if not self.dirmap.__contains__(topic):
-            self.dirmap[topic] = (value,now,dir)
+            self.dirmap[topic] = (value,now,direction)
             return True
         
         st_value,st_time,st_dir = self.dirmap[topic]
-        self.dirmap[topic] = (value,now,dir) # update
+        self.dirmap[topic] = (value,now,direction) # update
         
-        if st_dir == dir:
+        if st_dir == direction:
             return True
         
         # last transaction was in reverse direction, need to check timeout
