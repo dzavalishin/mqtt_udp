@@ -1,6 +1,6 @@
 # MQTT/UDP Python (3.x) implementation.
 
-You can check other languages implementations also - https://github.com/dzavalishin/mqtt_udp
+You can check other languages implementations also - <https://github.com/dzavalishin/mqtt_udp>
 
 ## Dirs
 
