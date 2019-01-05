@@ -1,4 +1,4 @@
-## Bug or feature?
+## Bug or feature
 
 
 ## What is wrong / not implemented
@@ -10,14 +10,14 @@
 ## Correct behaviour is documented in (URL)
 
 
-## Environment:
+## Environment
 
 * GitHub commit:
 * Prog language:
 * OS/hardware:
 
 
-## Fixed/implemented in:
+## Fixed/implemented in
 
 - [ ] Pyhon implementation
 - [ ] Java implementation

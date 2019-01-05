@@ -1,11 +1,11 @@
 #!/bin/python
 
 import socket
-import codecs
+#import codecs
 import struct
 
 import mqtt_udp_defs as defs
-from array import array
+#from array import array
 
 
 # ------------------------------------------------------------------------

@@ -5,7 +5,7 @@ import socket
 
 #import defs
 import mqtt_udp_defs as defs
-from array import array
+#from array import array
 
 BIND_IP = "0.0.0.0"
 #BIND_IP = socket.INADDR_ANY
@@ -32,25 +32,6 @@ def unpack_remaining_length(pkt):
             break
     return remaining_length, pkt
 
-'''
-def parse_packet(pkt):
-    if ord(pkt[0]) != defs.PTYPE_PUBLISH:
-        print( "Unknown packet type" )
-        #print( pkt.type() )
-        for b in pkt:
-            print ord(b)
-        return
-        
-    total_len, pkt = unpack_remaining_length(pkt[1:])
-
-    topic_len = (ord(pkt[1]) & 0xFF) | ((ord(pkt[0]) << 8) & 0xFF)   
-    topic = pkt[2:topic_len+2].encode('UTF-8')    
-    value = pkt[topic_len+2:].encode('UTF-8')
-    
-    #TODO use total_len
-    
-    return topic,value
-'''
 
 def parse_packet(pkt):
     if ord(pkt[0]) == defs.PTYPE_PUBLISH:

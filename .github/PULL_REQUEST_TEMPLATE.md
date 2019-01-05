@@ -1,6 +1,6 @@
 Fixes #
 
-## Fixed/implemented in:
+## Fixed/implemented in
 
 - [ ] Pyhon implementation
 - [ ] Java implementation
