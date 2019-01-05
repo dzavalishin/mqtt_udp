@@ -54,7 +54,7 @@ Turn switch again, of course, until it works!
 In this example I wanted to illustrate that even in this situation UDP
 transport is not really that bad.
 
-## All the data is visible.
+## All the data is visible
 
 That is a topology issue too. Broadcast/multicast nature of MQTT/UDP
 lets you see what is going on on the "bus" exactly the same way as
