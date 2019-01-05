@@ -21,8 +21,9 @@ function mqtt_proto_lib.listen( sock, listener )
             --print("Received: ", data, ip, port, type(data))
             --print("Received from: ", ip, port )
             --[[udp:sendto(data, ip, port)--]]
-            topic,val = mqtt_proto_lib.parse_packet(data)
-            listener( "publish", topic, val, ip, port );
+            ptype,topic,val = mqtt_proto_lib.parse_packet(data)
+        --print( "ptype", ptype )
+            listener( ptype, topic, val, ip, port );
         end
         socket.sleep(0.01)
     end
@@ -69,22 +70,42 @@ function mqtt_proto_lib.parse_packet(pkt)
     local ptype = bit.band( pkt:byte( 1 ), 0xF0 )
     local pflags = bit.band( pkt:byte( 1 ), 0x0F )
 
-    if( ptype ~= defs.PTYPE_PUBLISH ) then
-        return "","";
+    --print( "ptype", ptype )
+
+    if( ptype == defs.PTYPE_PINGREQ ) then
+        return "pingreq","","";
     end
 
-    local total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
+    if( ptype == defs.PTYPE_PINGRESP ) then
+        return "pingresp","","";
+    end
 
-    --print("Total_len: ", total_len);
-    --print("pkt[0]: ", pkt:byte( 1 ) )
+    if( ptype == defs.PTYPE_SUBSCRIBE ) then
+        local total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
 
-    topic_len = bit.bor( bit.band(pkt:byte(2), 0xFF), bit.band(bit.lshift(pkt:byte(1), 8), 0xFF) );
-    topic = pkt:sub( 3, topic_len+2 );
-    value = pkt:sub( topic_len+2+1 );
+        topic_len = bit.bor( bit.band(pkt:byte(2), 0xFF), bit.band(bit.lshift(pkt:byte(1), 8), 0xFF) );
+        topic = pkt:sub( 3, topic_len+2 );
     
-    --[[TODO use total_len--]]
+        --[[TODO use total_len--]]
     
-    return topic,value
+        return "subscribe", topic, ""
+    end
+
+    if( ptype == defs.PTYPE_PUBLISH ) then
+        local total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
+
+        topic_len = bit.bor( bit.band(pkt:byte(2), 0xFF), bit.band(bit.lshift(pkt:byte(1), 8), 0xFF) );
+        topic = pkt:sub( 3, topic_len+2 );
+        value = pkt:sub( topic_len+2+1 );
+    
+        --[[TODO use total_len--]]
+    
+        return "publish", topic, value
+    end
+
+
+    return "?","","";
+
 end
 
 

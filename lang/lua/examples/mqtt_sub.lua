@@ -1,17 +1,22 @@
 #!/usr/bin/lua
 
 
-package.path = package.path .. "../mqttudp" -- let us test without lib install
+--package.path = package.path .. ";../mqttudp" -- let us test without lib install
+--package.path = "../mqttudp;" .. package.path  -- let us test without lib install
+package.path = "../mqttudp/?.lua;" .. package.path  -- let us test without lib install
 
 --local defs  = require "mqtt_udp_defs"
 local mq = require "mqtt_udp_lib"
 
-local listener = function(ptype, topic, value, ip, port )
+local listener = function( ptype, topic, value, ip, port )
     --print("Topic: '"..topic.."'")
     --print("Value: '"..val.."'")
     --print("From: ", ip, port )
-
-    print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
+    if ptype == "publish" then
+        print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
+    else
+        print(ptype.." '"..topic.."' 	from: ", ip, port)
+    end
 end
 
 print("Will listen for MQTT/UDP packets");
