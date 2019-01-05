@@ -39,7 +39,8 @@ int mqtt_udp_bind( int fd ); // prepare to receive data
 int mqtt_udp_send_publish( int fd, char *topic, char *data );
 
 int mqtt_udp_send_ping_request( int fd );
-int mqtt_udp_send_ping_responce( int fd, int ip_addr );
+//int mqtt_udp_send_ping_responce( int fd, int ip_addr );
+int mqtt_udp_send_ping_responce( int fd );
 
 
 // --------------------------------------------------------------------------

@@ -101,7 +101,8 @@ int mqtt_udp_send_ping_request( int fd )
 }
 
 
-int mqtt_udp_send_ping_responce( int fd, int ip_addr )
+//int mqtt_udp_send_ping_responce( int fd, int ip_addr )
+int mqtt_udp_send_ping_responce( int fd )
 {
     return mqtt_udp_send_empty_pkt( fd, PTYPE_PINGRESP );
 }

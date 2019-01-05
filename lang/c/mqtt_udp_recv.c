@@ -114,7 +114,7 @@ int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen
     return 0;
 }
 */
-
+#if 0
 int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen, int *pkt_id_p )
 {
     const char *pstart = pkt;
@@ -170,6 +170,7 @@ int mqtt_udp_parse_subscribe_pkt( const char *pkt, size_t plen, char *topic, siz
 
     return 0;
 }
+#endif
 
 #endif
 
@@ -257,7 +258,8 @@ void mqtt_udp_recv_reply( struct mqtt_udp_pkt *pkt )
     {
     case PTYPE_PINGREQ:
         // TODO err check
-        if( fd > 0 ) mqtt_udp_send_ping_responce( fd, pkt->from_ip );
+        //if( fd > 0 ) mqtt_udp_send_ping_responce( fd, pkt->from_ip );
+        if( fd > 0 ) mqtt_udp_send_ping_responce( fd );
         break;
     //case PTYPE_SUBSCRIBE:
     //case PTYPE_PUBLISH:
