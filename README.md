@@ -23,8 +23,8 @@ merely an MQTT Publish packets broadcast over an UDP.
 
 ## For further reading
 
-* [MQTT/UDP Wiki](../../wiki)
-* [MQTT/UDP Topologies](./dox/Topologies.md)
+*   [MQTT/UDP Wiki](../../wiki)
+*   [MQTT/UDP Topologies](./dox/Topologies.md)
 
 ## This repository contains
 
