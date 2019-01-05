@@ -21,7 +21,7 @@ strlcpy(char       *dst,      /* O - Destination string */
 
     size --;
 
-    srclen = strlen(src);
+    srclen = strnlen(src,size);
 
     /*
      * Copy the appropriate amount...

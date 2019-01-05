@@ -97,7 +97,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     o.topic = malloc( tlen+2 );
     if( o.topic == 0 ) return ENOMEM;
     strlcpy( o.topic, pkt, tlen+1 );
-    o.topic_len = strlen( o.topic );
+    o.topic_len = strnlen( o.topic, MAX_SZ );
 
 
     pkt += tlen;
@@ -117,7 +117,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
         return ENOMEM;
     }
     strlcpy( o.value, pkt, vlen );
-    o.value_len = strlen( o.value );
+    o.value_len = strnlen( o.value, MAX_SZ );
 
 done:
 

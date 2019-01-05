@@ -63,8 +63,8 @@ int mqtt_udp_send_publish( int fd, char *topic, char *data )
     p.ptype = PTYPE_PUBLISH;
     p.topic = topic;
     p.value = data;
-    p.topic_len = strlen( topic );
-    p.value_len = strlen( data );
+    p.topic_len = strnlen( topic, PKT_BUF_SIZE );
+    p.value_len = strnlen( data, PKT_BUF_SIZE );
 
     mqtt_udp_dump_any_pkt( &p );
 

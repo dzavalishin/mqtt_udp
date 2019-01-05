@@ -19,7 +19,7 @@ size_t                            /* O - Length of string */
      * Figure out how much room is left...
      */
 
-    dstlen = strlen(dst);
+    dstlen = strnlen(dst,size);
     size   -= dstlen + 1;
 
     if (!size)
@@ -29,7 +29,7 @@ size_t                            /* O - Length of string */
      * Figure out how much room is needed...
      */
 
-    srclen = strlen(src);
+    srclen = strnlen(src,size);
 
     /*
      * Copy the appropriate amount...
