@@ -111,7 +111,9 @@ public abstract class SubServer
 		{
 			// Reply to ping
 			PingRespPacket presp = new PingRespPacket(null);
-			presp.send(ss, ((PingReqPacket) p).getFrom().getInetAddress());
+			//presp.send(ss, ((PingReqPacket) p).getFrom().getInetAddress());
+			// decided to broadcast ping replies
+			presp.send(ss);
 		}
 		//else if( p instanceof PingRespPacket) {		}
 
