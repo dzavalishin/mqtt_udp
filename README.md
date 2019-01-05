@@ -1,4 +1,7 @@
 # MQTT/UDP
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6a7acc1247124438809fd94e116e15c0)](https://app.codacy.com/app/dzavalishin/mqtt_udp?utm_source=github.com&utm_medium=referral&utm_content=dzavalishin/mqtt_udp&utm_campaign=Badge_Grade_Settings)
+
 Simpified version of MQTT over UDP: Network is broker!
 
 [See Russian version / Русская версия здесь](./README.ru.md)
