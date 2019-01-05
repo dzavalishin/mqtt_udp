@@ -2,6 +2,7 @@ package ru.dz.mqtt_udp;
 
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.NoEncodingRuntimeException;
+import ru.dz.mqtt_udp.util.TopicPacket;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -9,10 +10,9 @@ import java.nio.charset.Charset;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
-public class SubscribePacket extends GenericPacket {
+public class SubscribePacket extends TopicPacket {
 
 
-	private String  topic;
 
 	public SubscribePacket(byte[] raw, byte flags, IPacketAddress from) {
 		super(from);
@@ -30,7 +30,6 @@ public class SubscribePacket extends GenericPacket {
 	}
 
 
-	public String getTopic() {			return topic;	}
 
 	public SubscribePacket(String topic, byte flags) {
 		super(null);
