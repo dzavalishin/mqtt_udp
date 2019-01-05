@@ -13,10 +13,10 @@ merely an MQTT Publish packets broadcast over an UDP.
 * Extremely simple
 * Extremely fast, minimap possible latency
 * Excludes broker (which is single point of failure)
-* Lowers network traffic (each masurement is sent exactly once to all) 
+* Lowers network traffic (each masurement is sent exactly once to all)
 * Reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)
 * Can be supported even on a hardware which can not support TCP - in fact, only UDP send is required
-* Zero configuration - a sensor node needs no setup, it just broadcasts its data.
+* Zero configuration - a sensor node needs no setup, it just broadcasts its data
 * With some extension can be used on simplex channels and/or channels with native broadcast ability (radio,RS485)
 
 ## For further reading

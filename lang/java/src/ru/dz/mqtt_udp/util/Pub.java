@@ -10,7 +10,8 @@ public class Pub {
 		if(args.length != 2)
 		{
 			System.err.println("usage: Pub topic message");
-			System.exit(1);
+			//System.exit(1);
+			return;
 		}
 
 		String topic = args[0];

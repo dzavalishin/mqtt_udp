@@ -31,7 +31,6 @@ You can check other languages implementations also - https://github.com/dzavalis
 
 ## Usage
 
-
 **Send data:**
 
 ```python
@@ -55,4 +54,3 @@ def recv_packet(ptype,topic,value,pflags,addr):
 if __name__ == "__main__":
     mqttudp.engine.listen(recv_packet)
 ```
-

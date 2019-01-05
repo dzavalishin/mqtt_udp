@@ -5,7 +5,7 @@
 	MQTT broker and pump all the updates to MQTT/UDP environment
 '''
 
-# will work even if package is not installed 
+# will work even if package is not installed
 import sys
 sys.path.append('..')
 

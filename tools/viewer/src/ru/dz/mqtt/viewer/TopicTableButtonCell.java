@@ -14,9 +14,9 @@ public class TopicTableButtonCell extends TableCell<TopicTableItem, TableButtons
 	//final TopicTableItem tti;
 	//private static final ImageView sendIcon = ImageUtils.getIcon32("semi_success");
 
-	HBox hb = new HBox(); 
+	private HBox hb = new HBox(); 
 
-	ToggleButton hostButton;
+	private ToggleButton hostButton;
 
 	//final private ObservableList<TopicTableItem> localData;
 

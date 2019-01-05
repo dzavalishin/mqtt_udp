@@ -4,7 +4,7 @@ config = configparser.ConfigParser()
 
 config['openhab-gate'] = {'port': "8080" }
 
-config['mqtt-gate'] = { 
+config['mqtt-gate'] = {
 #    'host': 'smart.',
     'port': "1883",
     'subscribe': '#'
@@ -19,7 +19,7 @@ config.read('mqtt-udp.ini')
 def dump():
     for sec in config:  
         print( '['+ sec + ']' )
-        for key in config[sec]:  
+        for key in config[sec]:
             print( '\t' + key + "=" + config[sec][key] )
 
 

@@ -9,10 +9,10 @@
 import sys
 sys.path.append('..')
 
-import threading
+#import threading
 import mqttudp.pub
 import random
-import time
+#import time
 
 TOPIC="random_data"
 

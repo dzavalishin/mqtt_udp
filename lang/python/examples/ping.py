@@ -8,10 +8,10 @@
 import sys
 sys.path.append('..')
 
-import threading
+#import threading
 import mqttudp.pub
 import mqttudp.sub
-import random
+#import random
 import time
 
 

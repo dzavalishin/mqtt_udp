@@ -17,7 +17,7 @@ if __name__ == "__main__":
     s = mqttudp.sub.make_recv_socket()
     last = {}
     while True:
-        pkt = mqttudp.sub.recv_udp_packet(s)    
+        pkt = mqttudp.sub.recv_udp_packet(s)
         ptype,topic,value = mqttudp.sub.parse_packet(pkt)
         if ptype != "publish":
             continue

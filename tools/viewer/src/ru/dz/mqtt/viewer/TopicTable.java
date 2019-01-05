@@ -148,7 +148,8 @@ public class TopicTable  {
 		data.addListener(new ListChangeListener<TopicItem>(){
 
 			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends TopicItem> c) {
+			//public void onChanged(javafx.collections.ListChangeListener.Change<? extends TopicItem> c) {
+			public void onChanged(Change<? extends TopicItem> c) {
 				if( topicListUpdateEnabled )
 				{
 					//localData = FXCollections.observableArrayList( data );

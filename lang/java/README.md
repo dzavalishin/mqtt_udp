@@ -1,6 +1,5 @@
 # MQTT/UDP protocol Java implementation
 
-
   ru.dz.mqtt_udp.util.Sub	- Listen example
   ru.dz.mqtt_udp.util.Pub	- Send example
 
@@ -17,7 +16,6 @@ Code has no dependencies on Eclipse, so it can be built with any Java environmen
 
 ## Usage
 
-
 **Send data:**
 
 ```java
@@ -27,7 +25,6 @@ pkt.send();
 ```
 
 **Listen for data:**
-
 
 ```java
 PacketSourceServer ss = new PacketSourceServer();

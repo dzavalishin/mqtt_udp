@@ -11,7 +11,6 @@ sys.path.append('../mqttudp')
 
 import threading
 import mqttudp.engine
-import random
 import time
 
 

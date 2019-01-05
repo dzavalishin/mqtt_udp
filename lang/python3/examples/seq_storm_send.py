@@ -11,8 +11,8 @@ sys.path.append('../mqttudp')
 
 import threading
 import mqttudp.engine
-import random
-import time
+#import random
+#import time
 
 TOPIC="sequential_storm"
 

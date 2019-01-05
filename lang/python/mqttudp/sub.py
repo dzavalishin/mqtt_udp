@@ -82,7 +82,7 @@ if __name__ == "__main__":
     s = make_recv_socket()
     last = {}
     while True:
-        pkt = recv_udp_packet(s)    
+        pkt = recv_udp_packet(s)
         ptype,topic,value = parse_packet(pkt)
         #if last.has_key(topic) and last[topic] == value:
         #    continue

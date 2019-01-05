@@ -143,6 +143,7 @@ public class TopicItem {
 		//case mqtt_udp_defs.PTYPE_SUBSCRIBE: return new SubscribePacket(topic, value);
 		case mqtt_udp_defs.PTYPE_PINGREQ: return new PingReqPacket();
 		case mqtt_udp_defs.PTYPE_PINGRESP: return new PingRespPacket();
+		default: break;
 		}
 		
 		throw new RuntimeException("Unknown pkt type 0x"+Integer.toHexString(packetType));
