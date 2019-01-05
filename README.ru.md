@@ -121,9 +121,7 @@ ss.setSink( pkt -> { System.out.println("Got packet: "+pkt); });
 **Send data:**
 
 ```c
-
-int fd = mqtt_udp_socket();
-int rc = mqtt_udp_send_publish( fd, topic, value );
+int rc = mqtt_udp_send_publish( topic, value );
 
 ```
 

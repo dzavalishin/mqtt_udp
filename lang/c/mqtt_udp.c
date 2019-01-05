@@ -54,6 +54,7 @@ int mqtt_udp_socket(void)
     return fd;
 }
 
+
 int mqtt_udp_bind( int fd )
 {
     struct sockaddr_in srcaddr;
@@ -76,6 +77,8 @@ int mqtt_udp_bind( int fd )
 
 int mqtt_udp_get_send_fd( void ) // TODO hack, get fd to send datagrams
 {
+    if( last_socket < 0 )
+        mqtt_udp_socket(); // TODO not thread safe
     return last_socket;
 }
 

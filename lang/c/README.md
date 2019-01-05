@@ -40,9 +40,7 @@ If you have no autoconf tools try 'make -f Makefile.cygwin' or tailor it to your
 **Send data:**
 
 ```c
-
-    int fd = mqtt_udp_socket();
-    int rc = mqtt_udp_send_publish( fd, topic, value );
+    int rc = mqtt_udp_send_publish( topic, value );
 
 ```
 

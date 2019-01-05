@@ -26,7 +26,7 @@
 
 
 
-#define BUFLEN PKT_BUF_SIZE // 64
+//#define BUFLEN PKT_BUF_SIZE // 64
 
 int main(int argc, char *argv[])
 {
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         loop++;
 
     int fd, rc;
-    unsigned char buf[BUFLEN];
+    unsigned char buf[PKT_BUF_SIZE];
 
     fd = mqtt_udp_socket();
 
@@ -55,28 +55,11 @@ int main(int argc, char *argv[])
     }
 
     do {
-#if 1
         int rc = mqtt_udp_recv( fd, mqtt_udp_dump_any_pkt );
         if( rc )
         {
             printf("mqtt_udp_recv err = %d\n", rc );
         }
-#else
-        memset(buf, 0, sizeof(buf));
-        rc = mqtt_udp_recv_pkt( fd, buf, BUFLEN, 0 );
-
-        char topic[BUFLEN];
-        char value[BUFLEN];
-
-        rc = mqtt_udp_parse_pkt( buf, BUFLEN, topic, BUFLEN, value, BUFLEN );
-        if( rc )
-        {
-            printf("not parsed\n");
-            mqtt_udp_dump( buf, BUFLEN );
-        }
-        else
-            printf("'%s' = '%s'\n", topic, value );
-#endif
 
     } while(loop);
 

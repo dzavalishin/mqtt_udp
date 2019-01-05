@@ -3,7 +3,7 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
- * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
  *
  * Generalized MQTT/UDP packet parser
@@ -158,7 +158,9 @@ static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt )
 
 
 // -----------------------------------------------------------------------
+//
 // dump
+//
 // -----------------------------------------------------------------------
 
 

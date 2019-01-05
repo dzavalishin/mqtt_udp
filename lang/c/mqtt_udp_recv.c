@@ -12,13 +12,14 @@
  *
 **/
 
-#include <sys/types.h>
+//#include <sys/types.h>
 //#include <sys/socket.h>
 //#include <netinet/in.h>
 //#include <arpa/inet.h>
 #include <string.h>
+// TODO Just for perror(), remove it and use user error callback!
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 //#include <unistd.h>
 //#include <locale.h>
 //#include <fcntl.h>
@@ -27,11 +28,6 @@
 #include "mqtt_udp.h"
 
 
-
-// --------------------------------------------------------------
-//
-//
-// --------------------------------------------------------------
 
 
 
@@ -115,14 +111,14 @@ int mqtt_udp_recv_loop( process_pkt h )
 
 void mqtt_udp_recv_reply( struct mqtt_udp_pkt *pkt )
 {
-    int fd = mqtt_udp_get_send_fd();
+    //int fd = mqtt_udp_get_send_fd();
 
     switch( pkt->ptype )
     {
     case PTYPE_PINGREQ:
         // TODO err check
         //if( fd > 0 ) mqtt_udp_send_ping_responce( fd, pkt->from_ip );
-        if( fd > 0 ) mqtt_udp_send_ping_responce( fd );
+        mqtt_udp_send_ping_responce();
         break;
     //case PTYPE_SUBSCRIBE:
     //case PTYPE_PUBLISH:

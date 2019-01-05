@@ -18,10 +18,9 @@
 
 #include "mqtt_udp.h"
 
-#define BUFLEN PKT_BUF_SIZE // 512
 
 
-
+/*
 static int pack_len( char *buf, int *blen, int *used, int data_len )
 {
     *used = 0;
@@ -42,19 +41,17 @@ static int pack_len( char *buf, int *blen, int *used, int data_len )
         if( data_len == 0 ) return 0;
     }
 }
+*/
 
 // ----------------------------------------------------
 // Make and send PUBLISH packet
 // ----------------------------------------------------
-//int mqtt_udp_send( int fd, char *topic, char *data )
-//{
-//    return mqtt_udp_send_publish( fd, topic, data );
-//}
 
-int mqtt_udp_send_publish( int fd, char *topic, char *data )
+
+int mqtt_udp_send_publish( char *topic, char *data )
 {
     struct mqtt_udp_pkt p;
-    unsigned char buf[BUFLEN];
+    unsigned char buf[PKT_BUF_SIZE];
     int rc;
     size_t out_size;
 
@@ -66,14 +63,47 @@ int mqtt_udp_send_publish( int fd, char *topic, char *data )
     p.topic_len = strnlen( topic, PKT_BUF_SIZE );
     p.value_len = strnlen( data, PKT_BUF_SIZE );
 
-    mqtt_udp_dump_any_pkt( &p );
+    //mqtt_udp_dump_any_pkt( &p );
 
-    rc = mqtt_udp_build_any_pkt( buf, BUFLEN, &p, &out_size );
+    rc = mqtt_udp_build_any_pkt( buf, PKT_BUF_SIZE, &p, &out_size );
     if( rc ) return rc;
 
-    mqtt_udp_dump( buf, out_size );
+    //mqtt_udp_dump( buf, out_size );
 
-    return mqtt_udp_send_pkt( fd, buf, out_size );
+    return mqtt_udp_send_pkt( mqtt_udp_get_send_fd(), buf, out_size );
+}
+
+
+// ----------------------------------------------------
+// Make and send SUBSCRIBE packet
+// ----------------------------------------------------
+
+
+int mqtt_udp_send_subscribe( char *topic )
+{
+    struct mqtt_udp_pkt p;
+    unsigned char buf[PKT_BUF_SIZE];
+    int rc;
+    size_t out_size;
+
+    char qos = 0;
+
+    mqtt_udp_clear_pkt( &p );
+
+    p.ptype = PTYPE_SUBSCRIBE;
+    p.topic = topic;
+    p.value = &qos;
+    p.topic_len = strnlen( topic, PKT_BUF_SIZE );
+    p.value_len = 1;
+
+    //mqtt_udp_dump_any_pkt( &p );
+
+    rc = mqtt_udp_build_any_pkt( buf, PKT_BUF_SIZE, &p, &out_size );
+    if( rc ) return rc;
+
+    //mqtt_udp_dump( buf, out_size );
+
+    return mqtt_udp_send_pkt( mqtt_udp_get_send_fd(), buf, out_size );
 }
 
 
@@ -81,12 +111,12 @@ int mqtt_udp_send_publish( int fd, char *topic, char *data )
 // Packet with no payload, just type and zero length
 // ----------------------------------------------------
 
-static int mqtt_udp_send_empty_pkt( int fd, char ptype )
+static int mqtt_udp_send_empty_pkt( char ptype )
 {
     unsigned char buf[2];
     buf[0] = ptype;
     buf[1] = 0;
-    return mqtt_udp_send_pkt( fd, buf, sizeof(buf) );
+    return mqtt_udp_send_pkt( mqtt_udp_get_send_fd(), buf, sizeof(buf) );
 }
 
 
@@ -95,16 +125,16 @@ static int mqtt_udp_send_empty_pkt( int fd, char ptype )
 // ----------------------------------------------------
 
 
-int mqtt_udp_send_ping_request( int fd )
+int mqtt_udp_send_ping_request( void )
 {
-    return mqtt_udp_send_empty_pkt( fd, PTYPE_PINGREQ );
+    return mqtt_udp_send_empty_pkt( PTYPE_PINGREQ );
 }
 
 
 //int mqtt_udp_send_ping_responce( int fd, int ip_addr )
-int mqtt_udp_send_ping_responce( int fd )
+int mqtt_udp_send_ping_responce( void )
 {
-    return mqtt_udp_send_empty_pkt( fd, PTYPE_PINGRESP );
+    return mqtt_udp_send_empty_pkt( PTYPE_PINGRESP );
 }
 
 
