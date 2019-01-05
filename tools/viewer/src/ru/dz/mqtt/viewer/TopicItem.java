@@ -1,11 +1,7 @@
 package ru.dz.mqtt.viewer;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PingReqPacket;
 import ru.dz.mqtt_udp.PingRespPacket;
@@ -77,7 +73,7 @@ public class TopicItem {
 		(packetType == mqtt_udp_defs.PTYPE_UNSUBACK);
 	}
 
-	static private final SimpleDateFormat ft3 = new SimpleDateFormat("hh:mm:ss");
+	//static private final SimpleDateFormat ft3 = new SimpleDateFormat("hh:mm:ss");
 	private static String getCurrentTime()
 	{
 		//Date dNow = new Date( );

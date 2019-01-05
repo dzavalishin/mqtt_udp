@@ -5,7 +5,6 @@ import java.net.SocketException;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
-import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubServer;
 
 public class Sub extends SubServer 
@@ -21,11 +20,12 @@ public class Sub extends SubServer
 	protected void processPacket(IPacket p) {
 		System.out.println(p);
 
+		/*
 		if (p instanceof PublishPacket) {
 			PublishPacket pp = (PublishPacket) p;
 
 			// now use pp.getTopic() and pp.getValueString() or pp.getValueRaw()
-		}
+		}*/
 	}
 }
 

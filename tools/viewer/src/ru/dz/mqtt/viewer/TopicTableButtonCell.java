@@ -1,6 +1,5 @@
 package ru.dz.mqtt.viewer;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

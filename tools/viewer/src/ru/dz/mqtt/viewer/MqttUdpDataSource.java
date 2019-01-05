@@ -1,19 +1,14 @@
 package ru.dz.mqtt.viewer;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.function.Consumer;
 
 import ru.dz.mqtt_udp.IPacket;
-import ru.dz.mqtt_udp.MqttProtocolException;
-import ru.dz.mqtt_udp.PacketSourceServer;
 import ru.dz.mqtt_udp.PingReqPacket;
 import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubServer;
-import ru.dz.mqtt_udp.io.SingleSendSocket;
-import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class MqttUdpDataSource extends SubServer implements IDataSource {

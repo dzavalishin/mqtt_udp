@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
@@ -35,7 +33,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.Pair;
 import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
@@ -52,11 +49,11 @@ public class TopicTable  {
 	public TopicTable(ObservableList<TopicItem> data) {
 		table.setEditable(true);
 
-		TableColumn<TopicTableItem, TableButtonsState> buttonsCol = new TableColumn("");
-		TableColumn<TopicTableItem, String> topicCol = new TableColumn("Topic");
-		TableColumn<TopicTableItem, String> valueCol = new TableColumn(); // new TableColumn("Value");
-		TableColumn<TopicTableItem, String> hostCol = new TableColumn("Host");
-		TableColumn<TopicTableItem, String> timeCol = new TableColumn(); // new TableColumn("Time");
+		TableColumn<TopicTableItem, TableButtonsState> buttonsCol = new TableColumn<TopicTableItem, TableButtonsState>("");
+		TableColumn<TopicTableItem, String> topicCol = new TableColumn<TopicTableItem, String>("Topic");
+		TableColumn<TopicTableItem, String> valueCol = new TableColumn<TopicTableItem, String>(); // new TableColumn("Value");
+		TableColumn<TopicTableItem, String> hostCol = new TableColumn<TopicTableItem, String>("Host");
+		TableColumn<TopicTableItem, String> timeCol = new TableColumn<TopicTableItem, String>(); // new TableColumn("Time");
 
 		Label timeLabel = new Label("Time");
 		timeLabel.setTooltip(new Tooltip("Time of last update"));
@@ -349,7 +346,7 @@ public class TopicTable  {
 	private void search(String findme)
 	{
 		ObservableList<TableColumn<TopicTableItem, ?>> cols = table.getColumns();
-		TableColumn col = cols.get(1);
+		TableColumn<TopicTableItem, ?> col = cols.get(1);
 
 		findme = findme.toLowerCase();
 		//System.out.println("Look for "+findme);

@@ -5,15 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
-import ru.dz.mqtt_udp.PingReqPacket;
-import ru.dz.mqtt_udp.PingRespPacket;
-import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.io.IpAddress;
 import ru.dz.mqtt_udp.io.SingleSendSocket;

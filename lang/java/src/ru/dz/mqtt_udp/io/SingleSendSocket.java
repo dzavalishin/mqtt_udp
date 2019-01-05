@@ -3,8 +3,6 @@ package ru.dz.mqtt_udp.io;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-import ru.dz.mqtt_udp.util.GenericPacket;
-
 public class SingleSendSocket {
 
         private static volatile SingleSendSocket instance;
