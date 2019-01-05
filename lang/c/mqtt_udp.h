@@ -95,7 +95,9 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 
 // --------------------------------------------------------------------------
-// Recieve (unfinshed)
+//
+// Receive
+//
 // --------------------------------------------------------------------------
 
 
@@ -112,21 +114,23 @@ void mqtt_udp_recv_reply( struct mqtt_udp_pkt *pkt );
 
 
 // --------------------------------------------------------------------------
-// Was in local.h, use with caution
+//
+// Was in local.h, not to be used outside of lib code
+//
 // --------------------------------------------------------------------------
 
 // Broadcast packet
 int mqtt_udp_send_pkt( int fd, char *data, size_t len );
+
 // send packet to address
 int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
 
-
 // Low level packet recv
 int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr );
-// Parse PUBLISH - obsolete
-// int mqtt_udp_parse_pkt( const char *pkt, size_t plen, char *topic, size_t o_tlen, char *value, size_t o_vlen );
 
 int mqtt_udp_get_send_fd( void ); // TODO hack, get fd to send datagrams
+
+int mqtt_udp_close_fd( int fd );
 
 // --------------------------------------------------------------------------
 // util

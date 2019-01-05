@@ -80,3 +80,10 @@ int mqtt_udp_get_send_fd( void ) // TODO hack, get fd to send datagrams
 }
 
 
+int mqtt_udp_close_fd( int fd ) 
+{
+    return close( fd );
+}
+
+
+
