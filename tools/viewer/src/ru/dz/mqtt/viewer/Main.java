@@ -518,7 +518,8 @@ public class Main extends Application {
 					{
 						setListItem(ti); 
 						addLogItem(ti);
-						addHostItem( new HostItem(ti.getFrom()) );
+						//addHostItem( new HostItem(ti.getFrom()) );
+						addHostItem( new HostItem(ti) );
 
 						flog.logItem(ti);
 					}
