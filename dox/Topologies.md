@@ -16,11 +16,11 @@ one or two sensors is not a problem at all.
 Trying to build corresponding configuration with traditional MQTT or,
 for example, Modbus you will have to:
 
-* Setup broker
-* Setup transport (topic names) for all separate sensors
-* Setup some smart code which detects loss of updates from sensors
-* Still calculate average
-* Feed calculated average back if you want to share data with other system nodes
+*   Setup broker
+*   Setup transport (topic names) for all separate sensors
+*   Setup some smart code which detects loss of updates from sensors
+*   Still calculate average
+*   Feed calculated average back if you want to share data with other system nodes
 
 It is worth mentioning that up to 10% packet loss is not a problem for
 such a setup (even if there is just one sensor), and in a real life if
