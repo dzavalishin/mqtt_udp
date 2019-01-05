@@ -158,6 +158,30 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 ```
 
 
+### Lua
+
+
+**Send data:**
+
+
+```lua
+local mq = require "mqtt_udp_lib"
+mq.publish( topic, val );
+
+```
+
+**Listen for data:**
+
+
+```lua
+local mq = require "mqtt_udp_lib"
+
+local listener = function( ptype, topic, value, ip, port )
+    print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
+end
+
+mq.listen( listener )
+```
 
 
 

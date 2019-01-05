@@ -39,7 +39,7 @@ mq.publish( topic, val );
 ```lua
 local mq = require "mqtt_udp_lib"
 
-local listener = function(ptype, topic, value, ip, port )
+local listener = function( ptype, topic, value, ip, port )
     print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
 end
 
