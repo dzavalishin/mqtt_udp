@@ -7,5 +7,5 @@ for more details.
 
 ## See also
 
-https://github.com/UIPEthernet/UIPEthernet/blob/master/examples/UdpServer/UdpServer.ino
+<https://github.com/UIPEthernet/UIPEthernet/blob/master/examples/UdpServer/UdpServer.ino>
 
