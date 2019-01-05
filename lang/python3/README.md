@@ -29,6 +29,10 @@ You can check other languages implementations also - <https://github.com/dzavali
 
   ping.py					- Send ping and print replies. Not all the implementations respond to ping yet.
 
+## Possible requirements
+
+  Some code examples may require paho-mqtt and websocket-client
+
 ## Usage
 
 **Send data:**

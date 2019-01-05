@@ -259,6 +259,14 @@ public class Main extends Application {
 		
 		Menu sendMenu = new Menu("Send");
 
+		CheckMenuItem replyMenuItem = new CheckMenuItem("Replies");
+		replyMenuItem.setSelected(pingSender.isEnabled());
+		replyMenuItem.setOnAction( new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) { ds.setMuted(!replyMenuItem.isSelected()); } 
+		});
+		
+		
 		CheckMenuItem pingMenuItem = new CheckMenuItem("Ping");
 		pingMenuItem.setSelected(pingSender.isEnabled());
 		pingMenuItem.setOnAction( new EventHandler<ActionEvent>() {			
@@ -267,7 +275,7 @@ public class Main extends Application {
 		});
 		
 		
-		sendMenu.getItems().addAll(pingMenuItem);
+		sendMenu.getItems().addAll(replyMenuItem, pingMenuItem);
 		
 		// ---------- Bar -----------------------------------------
 		
