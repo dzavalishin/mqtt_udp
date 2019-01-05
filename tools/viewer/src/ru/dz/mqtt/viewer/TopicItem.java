@@ -90,8 +90,10 @@ public class TopicItem {
 
 	@Override
 	public String toString() {
-		if(typeWithTopic())
+		if( packetType == mqtt_udp_defs.PTYPE_PUBLISH)
 			return time+":  "+topic+"="+value;
+		else if(typeWithTopic())
+			return time+":  "+IPacket.getPacketTypeName(packetType)+" \ttopic="+topic;
 		else
 			return time+":  "+IPacket.getPacketTypeName(packetType);
 	}

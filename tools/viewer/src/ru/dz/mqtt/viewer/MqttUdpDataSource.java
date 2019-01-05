@@ -9,10 +9,11 @@ import ru.dz.mqtt_udp.PingReqPacket;
 import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubServer;
+import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class MqttUdpDataSource extends SubServer implements IDataSource {
-//public class MqttUdpDataSource extends PacketSourceServer implements IDataSource {
+	//public class MqttUdpDataSource extends PacketSourceServer implements IDataSource {
 
 	private Consumer<TopicItem> sink;
 	//private DatagramSocket ss;
@@ -36,8 +37,8 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 		if(isRunning()) return;
 		start();
 	}
-	
-	
+
+
 	private Runnable makeLoopRunnable() {
 		return new Runnable() {
 			@Override
@@ -54,7 +55,7 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			}
 		};
 	}
-*/
+	 */
 	@Override
 	public void setSink(Consumer<TopicItem> sink) {
 		this.sink = sink;
@@ -75,20 +76,24 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			TopicItem ti = new TopicItem( p.getType(), pp.getTopic(), pp.getValueString() );
 			ti.setFrom(pp.getFrom().toString());
 			sink.accept(ti);
-		} else 
-		if( p instanceof PingReqPacket)
+		} else if( p instanceof SubscribePacket)
+		{
+			SubscribePacket sp = (SubscribePacket) p;			
+			TopicItem ti = new TopicItem( mqtt_udp_defs.PTYPE_SUBSCRIBE, sp.getTopic() );
+			ti.setFrom(p.getFrom().toString());
+			sink.accept(ti);
+		} else if( p instanceof PingReqPacket)
 		{
 			// Subserver replies itself now
 			//PingRespPacket presp = new PingRespPacket(null);
 			//presp.send(ss, ((PingReqPacket) p).getFrom().getInetAddress());
-			
+
 			// TODO hack
 			//TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGREQ, "PingRequest", p.toString());
 			TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGREQ);
 			ti.setFrom(p.getFrom().toString());
 			sink.accept(ti);
-		}else 
-		if( p instanceof PingRespPacket)
+		} else if( p instanceof PingRespPacket)
 		{
 			//PingRespPacket pr = (PingRespPacket)p; 
 			// TODO hack

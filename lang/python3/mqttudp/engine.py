@@ -136,7 +136,7 @@ def send_publish_packet( topic, payload=b''):
     if isinstance(payload, str):
 	    payload = payload.encode()
 
-    pkt = make_packet(topic, payload)
+    pkt = make_publish_packet(topic, payload)
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
@@ -171,7 +171,7 @@ def pack_str16(packet, data):
         packet.extend(data)
 
 
-def make_packet(topic, payload=b''):
+def make_publish_packet(topic, payload=b''):
     # we assume that topic and payload are already properly encoded
 #    assert not isinstance(topic, unicode) and not isinstance(payload, unicode) and payload is not None
 
@@ -188,6 +188,29 @@ def make_packet(topic, payload=b''):
     packet.extend(payload)
 
     return packet
+
+#
+#
+#
+
+def make_subscribe_packet(topic):
+    command = defs.PTYPE_SUBSCRIBE
+    packet = bytearray()
+    packet.append(command)
+
+    remaining_length = 2 + len(topic) + 1
+
+    pack_remaining_length(packet, remaining_length)
+    pack_str16(packet, topic)
+
+    packet.append(0) # QoS byte
+
+    return packet
+
+def send_subscribe(topic):
+    pkt = make_subscribe_packet(topic)
+    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+
 
 #
 # Ping support
