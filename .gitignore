@@ -95,3 +95,4 @@ lang/c/config.h
 lang/c/config.log
 lang/c/config.status
 lang/c/Makefile
+lang/python3/examples/openhab_gate.log

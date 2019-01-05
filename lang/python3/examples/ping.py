@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 '''
 	This program will send PING packet and wait for replies

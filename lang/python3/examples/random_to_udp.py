@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 '''
 	This program will generate random data and send to MQTT/UDP

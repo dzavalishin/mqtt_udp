@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 '''
 	This program will publish one message. Topic is argv[1], value is argv[2]
