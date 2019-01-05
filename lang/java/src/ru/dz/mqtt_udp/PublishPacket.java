@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.util.GenericPacket;
+import ru.dz.mqtt_udp.util.NoEncodingRuntimeException;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class PublishPacket extends GenericPacket {
@@ -41,7 +42,7 @@ public class PublishPacket extends GenericPacket {
 		try {
 			makeMe( topic, (byte) 0, value.getBytes(MQTT_CHARSET) );
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new NoEncodingRuntimeException(e);
 		}
 	}
 	
@@ -50,7 +51,7 @@ public class PublishPacket extends GenericPacket {
 		try {
 			makeMe( topic, flags, value.getBytes(MQTT_CHARSET) );
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new NoEncodingRuntimeException(e);
 		}
 	}
 	
@@ -68,7 +69,7 @@ public class PublishPacket extends GenericPacket {
 		try {
 			tbytes = topic.getBytes(MQTT_CHARSET);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new NoEncodingRuntimeException(e);
 		}
 		
 		int plen = tbytes.length + value.length + 2;

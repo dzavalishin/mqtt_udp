@@ -103,17 +103,19 @@ public class TopicTable  {
 				new EventHandler<CellEditEvent<TopicTableItem, String>>() {
 					@Override
 					public void handle(CellEditEvent<TopicTableItem, String> t) {
-						((TopicTableItem) t.getTableView().getItems().get(
-								t.getTablePosition().getRow())
-								).setValue(t.getNewValue());
+						int row = t.getTablePosition().getRow();
+						ObservableList<TopicTableItem> items = t.getTableView().getItems();
+						//((TopicTableItem) items.get(row)).setValue(t.getNewValue());
+						TopicTableItem item = items.get(row);
+						item.setValue(t.getNewValue());
 						if( autoNetworkSendEnabled )
 						{
-							// TODO if autosend enabled - send,
+							sendRecord(row, item.getTableButtonsState().isLimitSendToHost());
 						}
-						else
+						/*else
 						{
 							// TODO else enable send button in row
-						}
+						}*/
 					}
 				}
 				);
@@ -279,13 +281,12 @@ public class TopicTable  {
 		});
 
 		ToggleButton refreshValueButton = new ToggleButton();
-		refreshValueButton.setTooltip(new Tooltip("Enable automatic value send - not implemented"));
+		refreshValueButton.setTooltip(new Tooltip("Enable automatic value send"));
 		refreshValueButton.setGraphic(ImageUtils.getIcon32("refresh"));
 		refreshValueButton.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
-			public void handle(ActionEvent event) { autoNetworkSendEnabled = refreshValueButton.isSelected(); } // TODO
+			public void handle(ActionEvent event) { autoNetworkSendEnabled = refreshValueButton.isSelected(); }
 		});
-		refreshValueButton.setDisable(true); // TODO implement
 
 
 		ToolBar leftTb = new ToolBar();
@@ -306,7 +307,7 @@ public class TopicTable  {
 	}
 
 
-	TextInputDialog ntd = new TextInputDialog();
+	private final TextInputDialog ntd = new TextInputDialog();
 
 	{
 		Stage stage = (Stage) ntd.getDialogPane().getScene().getWindow();
@@ -328,7 +329,7 @@ public class TopicTable  {
 	}
 
 
-	TextInputDialog std = new TextInputDialog();
+	private final TextInputDialog std = new TextInputDialog();
 
 	{
 		Stage stage = (Stage) std.getDialogPane().getScene().getWindow();
@@ -344,12 +345,12 @@ public class TopicTable  {
 	}
 
 
-	private void search(String findme)
+	private void search(String findmeIn)
 	{
 		ObservableList<TableColumn<TopicTableItem, ?>> cols = table.getColumns();
 		TableColumn<TopicTableItem, ?> col = cols.get(1);
 
-		findme = findme.toLowerCase();
+		String findme = findmeIn.toLowerCase();
 		//System.out.println("Look for "+findme);
 
 		TableViewSelectionModel<TopicTableItem> sel = table.getSelectionModel();

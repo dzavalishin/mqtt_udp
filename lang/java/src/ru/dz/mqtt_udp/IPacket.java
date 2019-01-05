@@ -148,11 +148,11 @@ public interface IPacket {
 	
 	public static String getPacketTypeName(int packetType) 
 	{
-		packetType = packetType >> 4;
+		int pos = packetType >> 4;
 	    
-		if( (packetType < 0) || (packetType > 15) )
+		if( (pos < 0) || (pos > 15) )
 			return "?";
-		return pTYpeNames[packetType];
+		return pTYpeNames[pos];
 	}
 	
 	

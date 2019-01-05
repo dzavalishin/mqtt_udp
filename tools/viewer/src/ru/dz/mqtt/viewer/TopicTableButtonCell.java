@@ -22,13 +22,13 @@ public class TopicTableButtonCell extends TableCell<TopicTableItem, TableButtons
 
 	private TableButtonsState tableButtonsState = null;
 
-	private final TopicTable topicTable;
+	//private final TopicTable topicTable;
 	
 	
 	
 	TopicTableButtonCell(TopicTable topicTable )
 	{
-		this.topicTable = topicTable;
+		//this.topicTable = topicTable;
 		makeButton(ImageUtils.getIcon("options"), "Send to network", new EventHandler<ActionEvent>(){
 
 			@Override

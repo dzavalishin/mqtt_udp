@@ -1,6 +1,8 @@
 package ru.dz.mqtt_udp;
 
 import ru.dz.mqtt_udp.util.GenericPacket;
+import ru.dz.mqtt_udp.util.NoEncodingRuntimeException;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
@@ -54,7 +56,7 @@ public class SubscribePacket extends GenericPacket {
 		try {
 			tbytes = topic.getBytes(MQTT_CHARSET);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new NoEncodingRuntimeException(e);
 		}
 
 		int plen = tbytes.length + 2 + 1; // + QoS byte
