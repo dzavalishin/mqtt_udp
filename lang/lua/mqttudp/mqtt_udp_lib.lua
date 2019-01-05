@@ -9,7 +9,7 @@ local mqtt_udp_lib = require "mqtt_proto_lib"
 
 local defs  = require "mqtt_udp_defs"
 local socket = require "socket"
-local bit = require "bit"
+local bit = require "mybit"
 
 function mqtt_udp_lib.make_listen_socket()
 

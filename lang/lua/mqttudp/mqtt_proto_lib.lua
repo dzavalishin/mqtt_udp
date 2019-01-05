@@ -7,7 +7,7 @@
 local mqtt_proto_lib = {}
 
 local defs  = require "mqtt_udp_defs"
-local bit = require "bit"
+local bit = require "mybit"
 
 
 --local pubfd = mqtt_udp_lib.make_publish_socket()

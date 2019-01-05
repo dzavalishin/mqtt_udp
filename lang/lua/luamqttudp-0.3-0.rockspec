@@ -1,3 +1,6 @@
+-- TODO not ok
+-- learn build from https://github.com/xHasKx/luamqtt/blob/master/luamqtt-1.4.2-1.rockspec
+
 package = "mqttudp"
 
 -- TODO somehow get it from defs?
@@ -28,9 +31,6 @@ build = {
         proto	= "mqtt_proto_lib.lua",
         udp		= "mqtt_udp_lib.lua",
         defs	= "mqtt_udp_defs.lua",
-        pub		= "mqtt_pub.lua",
-        sub		= "mqtt_sub.lua",
-        node	= "mqtt_udp_lib_NodeMCU.lua",
-        wshark	= "wireshark_mqtt_dissector.lua"
+        node	= "mqtt_udp_lib_NodeMCU.lua"
     }
 }

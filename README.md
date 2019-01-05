@@ -112,7 +112,7 @@ pkt.send();
 
 ```java
 PacketSourceServer ss = new PacketSourceServer();
-ss.setSink( pkt -> { System.out.println("Got packet: "+pkt);});
+ss.setSink( pkt -> { System.out.println("Got packet: "+pkt); });
 
 ```
 
