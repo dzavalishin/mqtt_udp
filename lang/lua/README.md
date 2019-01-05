@@ -29,8 +29,7 @@ wireshark_mqtt_dissector.lua - incomplete WireShark protocol dissolver to be abl
 
 ```lua
 local mq = require "mqtt_udp_lib"
-local udp = mq.make_publish_socket()
-mq.publish( udp, topic, val );
+mq.publish( topic, val );
 
 ```
 
@@ -44,8 +43,5 @@ local listener = function(ptype, topic, value, ip, port )
     print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
 end
 
-local udp = mq.make_listen_socket()
-mq.listen( udp, listener )
-
-
+mq.listen( listener )
 ```

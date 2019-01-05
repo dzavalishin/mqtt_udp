@@ -10,9 +10,22 @@ local defs  = require "mqtt_udp_defs"
 local bit = require "bit"
 
 
+--local pubfd = mqtt_udp_lib.make_publish_socket()
+
+local _pub_fd = nil
 
 
-function mqtt_proto_lib.listen( sock, listener )
+function pubfd()
+    if _pub_fd == nil then
+        _pub_fd = mqtt_proto_lib.make_publish_socket()
+    end
+    return _pub_fd
+end
+
+
+
+function mqtt_proto_lib.listen( listener )
+    local sock = mqtt_proto_lib.make_listen_socket()
 
     while true do
         --data, ip, port = sock:receivefrom()
@@ -31,12 +44,17 @@ function mqtt_proto_lib.listen( sock, listener )
 end
 
 
-
+--[[
 function mqtt_proto_lib.publish( socket, topic, value )
     data = mqtt_proto_lib.make_packet( topic, value )
     mqtt_proto_lib.send_packet( socket, data )
 end
+]]
 
+function mqtt_proto_lib.publish( topic, value )
+    data = mqtt_proto_lib.make_packet( topic, value )
+    mqtt_proto_lib.send_packet( pubfd(), data )
+end
 
 
 

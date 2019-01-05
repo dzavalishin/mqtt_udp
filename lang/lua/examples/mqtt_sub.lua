@@ -21,8 +21,8 @@ end
 
 print("Will listen for MQTT/UDP packets");
 
-local udp = mq.make_listen_socket()
-mq.listen( udp, listener )
+--local udp = mq.make_listen_socket()
+mq.listen( listener )
 
 --[[
 while true do
