@@ -92,12 +92,23 @@ function mqtt_proto_lib.publish( topic, value )
     mqtt_proto_lib.send_packet( pubfd(), data )
 end
 
+function mqtt_proto_lib.subscribe( topic )
+    data = mqtt_proto_lib.make_subscribe_packet( topic )
+    mqtt_proto_lib.send_packet( pubfd(), data )
+end
+
+
+
 
 function mqtt_proto_lib.pingresp()
     data = mqtt_proto_lib.make_pingresp_packet()
     mqtt_proto_lib.send_packet( pubfd(), data )
 end
 
+function mqtt_proto_lib.pingreq()
+    data = mqtt_proto_lib.make_pingreq_packet()
+    mqtt_proto_lib.send_packet( pubfd(), data )
+end
 
 
 ------------------------------------------------------------------------------
@@ -201,6 +212,28 @@ function mqtt_proto_lib.make_publish_packet( topic, value )
 end
 
 
+function mqtt_proto_lib.make_subscribe_packet( topic )
+
+    pkt = "";
+    pkt = pkt..string.char(defs.PTYPE_SUBSCRIBE);
+
+    tlen = topic:len()
+    remaining_length = 2 + tlen + 1
+
+    assert( remaining_length < 127 );
+
+    pkt = pkt..string.char( bit.band( remaining_length, 0x7F ) );
+
+    pkt = pkt..string.char( 0 ); -- upper byte of topic len = 0, can't be longer than 127
+    pkt = pkt..string.char( tlen );
+
+    pkt = pkt..topic;
+
+    pkt = pkt..string.char(0); -- QuS byte
+
+    return pkt;
+end
+
 
 function mqtt_proto_lib.make_pingresp_packet()
 
@@ -212,6 +245,14 @@ function mqtt_proto_lib.make_pingresp_packet()
 end
 
 
+function mqtt_proto_lib.make_pingreq_packet()
+
+    pkt = "";
+    pkt = pkt..string.char(defs.PTYPE_PINGREQ);
+    pkt = pkt..string.char(0); -- payload length
+
+    return pkt;
+end
 
 
 
