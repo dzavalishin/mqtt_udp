@@ -114,7 +114,7 @@ class OpenHab:
                     break
                     
             except (requests.exceptions.HTTPError, requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError) as e:
-                log.error("Error, exit: %s" % e.message)
+                log.error("Error, exit: %s" % str(e))
                 break
             #log.debug("received response headers %s" % req.headers)
             log.info("Data Received, streaming connection for %s" % url)
@@ -138,14 +138,22 @@ class OpenHab:
                                 pass
                     else:'''
 
-                    content = json.loads(req.content)
+
+                    for line in req.iter_lines(decode_unicode=True):
+                        if line:
+                            js = json.loads(line)
+                            #print("line="+js)
+                            self.poll_listener(js)
+                            log.info(js)
+
+                    #content = json.loads(req.content)
 
                     #if len(content) == 0:
                     #    raise requests.exceptions.ConnectTimeout("Streaming connection dropped")
                         
                     #log.debug(content)
                     #print(content)
-                    self.poll_listener(content)
+                    #self.poll_listener(content)
 
                     #members = self.extract_content(content)
                     #print(members)
