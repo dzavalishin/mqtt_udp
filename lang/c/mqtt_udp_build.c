@@ -19,7 +19,8 @@
 
 #include "mqtt_udp.h"
 
-static int pack_len( char *buf, int *blen, int *used, int data_len );
+//static int pack_len( char *buf, int *blen, int *used, int data_len );
+static int pack_len( char *buf, size_t *blen, int *used, int data_len );
 
 //static size_t mqtt_udp_decode_size( char **pkt );
 //static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt );
@@ -57,7 +58,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
     int tlen = p->topic ? p->topic_len : 0;
     int dlen = p->value ? p->value_len : 0;
 
-    unsigned char *bp = buf;
+    char *bp = buf;
 
     if( out_len ) *out_len = 0;
 
@@ -113,7 +114,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
 
     }
 
-    if( out_len ) *out_len = bp - (unsigned char *)buf;
+    if( out_len ) *out_len = bp - buf;
 
     return 0;
 }
@@ -133,7 +134,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
 
 
 
-static int pack_len( char *buf, int *blen, int *used, int data_len )
+static int pack_len( char *buf, size_t *blen, int *used, int data_len )
 {
     *used = 0;
     while( 1 )

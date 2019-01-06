@@ -51,7 +51,7 @@ static int pack_len( char *buf, int *blen, int *used, int data_len )
 int mqtt_udp_send_publish( char *topic, char *data )
 {
     struct mqtt_udp_pkt p;
-    unsigned char buf[PKT_BUF_SIZE];
+    char buf[PKT_BUF_SIZE];
     int rc;
     size_t out_size;
 
@@ -82,7 +82,8 @@ int mqtt_udp_send_publish( char *topic, char *data )
 int mqtt_udp_send_subscribe( char *topic )
 {
     struct mqtt_udp_pkt p;
-    unsigned char buf[PKT_BUF_SIZE];
+    //unsigned char buf[PKT_BUF_SIZE];
+    char buf[PKT_BUF_SIZE];
     int rc;
     size_t out_size;
 
@@ -113,7 +114,7 @@ int mqtt_udp_send_subscribe( char *topic )
 
 static int mqtt_udp_send_empty_pkt( char ptype )
 {
-    unsigned char buf[2];
+    char buf[2];
     buf[0] = ptype;
     buf[1] = 0;
     return mqtt_udp_send_pkt( mqtt_udp_get_send_fd(), buf, sizeof(buf) );

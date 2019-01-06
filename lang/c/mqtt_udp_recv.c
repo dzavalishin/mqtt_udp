@@ -41,7 +41,7 @@
 
 int mqtt_udp_recv( int fd, process_pkt callback )
 {
-    unsigned char buf[PKT_BUF_SIZE];
+    char buf[PKT_BUF_SIZE];
     int rc, src_ip;
 
     memset(buf, 0, sizeof(buf));

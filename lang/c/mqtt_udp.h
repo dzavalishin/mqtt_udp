@@ -110,7 +110,7 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len );
 int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
 
 // Low level packet recv
-int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr );
+int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr );
 
 int mqtt_udp_get_send_fd( void ); // TODO hack, get fd to send datagrams
 

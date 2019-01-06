@@ -27,7 +27,7 @@
 
 // TODO other OS bindings
 
-int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_addr )
+int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr )
 {
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
@@ -35,9 +35,11 @@ int mqtt_udp_recv_pkt( int fd, unsigned char *buf, size_t buflen, int *src_ip_ad
     //addr.sin_addr.s_addr = inet_addr(IP);
     //addr.sin_port = htons(MQTT_PORT);
 
-    int slen = sizeof(addr);
+    //int slen = sizeof(addr);
+    socklen_t slen = sizeof(addr);
 
-    memset(buf, 0, sizeof(buf));
+    //memset(buf, 0, sizeof(buf));
+    memset( buf, 0, buflen );
 
     recvfrom(fd, buf, buflen, 0, (struct sockaddr *) &addr, &slen);
 

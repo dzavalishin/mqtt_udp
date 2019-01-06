@@ -21,7 +21,7 @@
 
 
 static size_t mqtt_udp_decode_size( char **pkt );
-static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt );
+static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
 
 // -----------------------------------------------------------------------
@@ -151,7 +151,7 @@ static size_t mqtt_udp_decode_size( char **pkt )
     }
 }
 
-static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt )
+static size_t mqtt_udp_decode_topic_len( const char *pkt )
 {
     return (pkt[0] << 8) | pkt[1];
 }
@@ -194,6 +194,7 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
         printf(" = '%s'", o->value );
 
     printf( "\n");
+    return 0;
 }
 
 
