@@ -194,7 +194,7 @@ Listen for data::
 Listen for packets
 ------------------
 
-See `Example code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/c/mqtt_udp_listen.c>`_.
+See `Example code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/java/src/ru/dz/mqtt_udp/util/Sub.java>`_.
 
 
 Here it is::
@@ -259,6 +259,112 @@ to pass packets received to you. The rest of the story is the same.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.. _python-lang-api:
+
+MQTT/UDP Python Language API Reference
+======================================
+
+As you already guessed, python implementation is native too. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/python3 repository.
+There is also lang/python directory, which is for older 2.x python environment, but it is outdated. Sorry, can't afford to support it. You can backport some
+python3 code, it should be quite easy.
+
+
+Let's begin with examples, as usual.
+
+Send data::
+
+
+    mqttudp.engine.send_publish_packet( "test_topic", "Hello, world!" )
+
+
+
+Listen for data::
+
+
+    def recv_packet(ptype,topic,value,pflags,addr):
+        if ptype != "publish":
+            print( ptype + ", " + topic + "\t\t" + str(addr) )
+            return
+        print( topic+"="+value+ "\t\t" + str(addr) )
+       
+    mqttudp.engine.listen(recv_packet)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.. _lua-lang-api:
+
+MQTT/UDP Lua Language API Reference
+===================================
+
+
+**NB! Lua API is not final, there will be some methods rename.**
+
+You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/lua repository.
+
+
+Basic examples in Lua.
+
+Send data::
+
+
+    local mq = require "mqtt_udp_lib"
+    mq.publish( topic, val );
+
+
+
+Listen for data::
+
+
+    local mq = require "mqtt_udp_lib"
+    
+    local listener = function( ptype, topic, value, ip, port )
+        print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
+    end
+    
+    mq.listen( listener )
 
 
 
