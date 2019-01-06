@@ -45,9 +45,6 @@ MQTT/UDP native implementations are exist in Java, Python, C, Lua and PLC specif
 MQTT/UDP C Language API Reference
 =================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
 
 There is a native MQTT/UDP implementation in C. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/c repository.
 
@@ -140,6 +137,124 @@ And you're done, now ypou have topic and value received.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.. _java-lang-api:
+
+MQTT/UDP Java Language API Reference
+=================================
+
+
+There is a native MQTT/UDP implementation in Java. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/java repository.
+
+
+Again, here are simplest examples.
+
+Send data::
+
+
+    PublishPacket pkt = new PublishPacket(topic, value);
+    pkt.send();
+
+
+
+Listen for data::
+
+
+    PacketSourceServer ss = new PacketSourceServer();
+    ss.setSink( pkt -> { 
+        System.out.println("Got packet: "+pkt);
+    
+        if (p instanceof PublishPacket) {
+            PublishPacket pp = (PublishPacket) p;			
+        }
+    
+    });
+
+
+
+
+Listen for packets
+------------------
+
+See `Example code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/c/mqtt_udp_listen.c>`_.
+
+
+Here it is::
+
+    package ru.dz.mqtt_udp.util;
+    
+    import java.io.IOException;
+    import java.net.SocketException;
+    
+    import ru.dz.mqtt_udp.IPacket;
+    import ru.dz.mqtt_udp.MqttProtocolException;
+    import ru.dz.mqtt_udp.SubServer;
+    
+    public class Sub extends SubServer 
+    {
+    
+        public static void main(String[] args) throws SocketException, IOException, MqttProtocolException 
+        {
+            Sub srv = new Sub();
+            srv.start();
+        }
+
+        @Override
+        protected void processPacket(IPacket p) {
+            System.out.println(p);
+                
+            if (p instanceof PublishPacket) {
+                PublishPacket pp = (PublishPacket) p;
+
+                // now use pp.getTopic() and pp.getValueString() or pp.getValueRaw()
+            }
+        }
+    }
+
+
+Now what we are doung here. Our class `Sub` is based on `SubServer`, which is doing all the reception job, and calls `processPacket`
+when it got some data for you. There are many possible types of packets, but for now we need just one, which is
+`PublishPacket`. Hence we check for type, and convert::
+
+    if (p instanceof PublishPacket) {
+        PublishPacket pp = (PublishPacket) p;
+
+Now we can do what we wish with data we got using `pp.getTopic()` and `pp.getValueString()`.
+
+
+Listen code we've seen in a first example is slightly different::
+
+
+    PacketSourceServer ss = new PacketSourceServer();
+    ss.setSink( pkt -> { 
+        System.out.println("Got packet: "+pkt);
+    
+        if (p instanceof PublishPacket) {
+            PublishPacket pp = (PublishPacket) p;			
+        }
+    
+    });
+
+Used here `PacketSourceServer`, first of all, starts automatically, and uses `Sink` you pass to `setSink`
+to pass packets received to you. The rest of the story is the same.
 
 
 
