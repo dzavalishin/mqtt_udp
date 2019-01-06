@@ -12,11 +12,19 @@ Welcome to MQTT/UDP
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. epigraph::
+
+   Network is a broker.
+
+
+Introduction
+------------
 
 MQTT/UDP is a simplest possible protocol for IoT, smart home applications and robotics. As you can guess from its name, it is based on MQTT (which is quite simple too), but based on UDP.
 
@@ -27,12 +35,116 @@ Fast track for impatient readers: MQTT/UDP native implementations exist in Java,
 * :ref:`python-lang-api`
 * :ref:`lua-lang-api`
 
+Now some words on MQTT/UDP idea. It is quite simple. Broker is a `single point of failure <https://en.wikipedia.org/wiki/Single_point_of_failure>`_ and can be avoided. Actual
+traffic of smart home installation is not too big and comes over a separated (by firewall) network. There are many listeners that need same data, such as:
+
+* main UI subsystem (such as OpenHAB installation)
+* special function controllers (light, climate units)
+* per-room or per-function controllers (kitchen ventilation, bath room sensors, room CO2 sensors, etc)
+* in-room displays (room and outdoor temperature)
+
+All these points generate some information (local sensors, state) and need some other information. By the way, CAN bus/protocol is made for quite the same requirements,
+but is not good for TCP/IP and Ethernet. Actually, to some extent, MQTT/UDP is CAN for Ethernet.
 
 
 
 
 
 
+Possible topologies
+-------------------
+
+Here is a list of more or less obvious use cases for MQTT/UDP
+
+Fault-tolerant sensors 
+^^^^^^^^^^^^^^^^^^^^^^
+
+Some 2-4 temperature sensors are placed in one room and send
+updates every 10 seconds or so. Update topic is the same for all the
+sensors, so that every reader gets mix of all the readings.
+
+Reader should calculate average for last 4-8 readings.
+
+Result: reader gets average temperature in room and failure of
+one or two sensors is not a problem at all.
+
+Trying to build corresponding configuration with traditional MQTT or,
+for example, Modbus you will have to:
+
+*   Setup broker
+*   Setup transport (topic names) for all separate sensors
+*   Setup some smart code which detects loss of updates from sensors
+*   Still calculate average
+*   Feed calculated average back if you want to share data with other system nodes
+
+
+One sensor, many listeners
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+IoT network is a lot of parties, operating together. It is usual that
+many of them need one data source to make a decision. Just as an example,
+my house control system consists of about 10 processing units of different
+size. Many of them need to know if it is dark outside, to understand how
+to control local lighting. Currently I have to distribute light sensor data
+via two possible points of failure - controller it is connected to and
+OpenHub software as a broker. I'm going to swithch to MQTT/UDP and feed
+all the units directly.
+
+Multiple smart switches
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Some wall switches are controlling the same device. All of them send
+and read one topic which translates on/off state for the device.
+
+Of course, if one switch changes the state, all others read the state broadcast
+and note it, so that next time each switch knows, which state it should
+switch to.
+
+It is possible, of course, that UDP packet from some switch will be lost.
+So when you switch it, nothing happens. What do you do in such a situation?
+Turn switch again, of course, until it works!
+
+In this example I wanted to illustrate that even in this situation UDP
+transport is not really that bad.
+
+All the data is visible
+^^^^^^^^^^^^^^^^^^^^^^^
+
+That is a topology issue too. Broadcast/multicast nature of MQTT/UDP
+lets you see what is going on on the "bus" exactly the same way as
+all the parties see. There is a simple tool exist for that in this
+repository, but you can use, for example well known WireShark as well.
+
+
+
+
+
+
+
+Reliability
+-----------
+
+**NB! There's QoS support for MQTT/UDP is in development, which makes it as reliable as TCP version.**
+
+As MQTT/UDP is based on UDP protocol, which does not guarantee packet delivery, one can suppose that MQTT/UDP is not reliable. Is it?
+
+Not at all.
+
+If we use it for repeated updates, such as sensor data transfer, UDP is actually more reliable, than TCP! Really. If our network drops each
+second packet, TCP connection will be effectively dead, attempting to resend again and again outdated packets which are not needed anymore.
+And MQTT/UDP will just loose half of readings, which is not really a problem for 99% of installations. So, TCP helps just if packet loss rate
+is quite low.
+
+Actualy, I made simple test [#f1]_ to ckeck UDP reliability. One host in my house's local net was generating MQTT/UDP traffic as fast as 
+possible and other checked packets to be sequent, counting speed and error rate. Two IPTV units was started to show HD content and one 
+of the computers was copying some few GBytes to file server. Result was quite surprising: MQTT/UDP error rate grew to... 0.4% with about 50K
+packets/second, but TV sets stopped showing, being, obviusly, starved.
+
+Anyway, I'm going to add completely reliable mode to MQTT/UDP in near future.
+
+.. rubric:: Footnotes
+
+.. [#f1] Corresponding tools are in repository and you can run such test yourself.
 
 .. _c-lang-api:
 
@@ -105,7 +217,7 @@ Now lets get through the packet structure definition::
 Listen for packets
 ------------------
 
-See `Example code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/c/mqtt_udp_listen.c>`_.
+See `Example C code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/c/mqtt_udp_listen.c>`_.
 
 For listening for data from the network you need just some of fields. First, you have to check
 that packet is transferring item data::
@@ -176,7 +288,7 @@ UDP IO interface
 Default implementation uses POSIX API to communicate with network, but for 
 embedded use you can redefine corresponding functions.
 
-Receive UDP packet. Must return sender's address in `src_ip_addr`::
+Receive UDP packet. Must return sender's address in ``src_ip_addr``::
 
     int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr );
 
@@ -205,7 +317,7 @@ Close UDP socket::
 .. _java-lang-api:
 
 MQTT/UDP Java Language API Reference
-=================================
+====================================
 
 
 There is a native MQTT/UDP implementation in Java. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/java repository.
@@ -240,7 +352,7 @@ Listen for data::
 Listen for packets
 ------------------
 
-See `Example code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/java/src/ru/dz/mqtt_udp/util/Sub.java>`_.
+See `Example Java code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/java/src/ru/dz/mqtt_udp/util/Sub.java>`_.
 
 
 Here it is::
@@ -276,14 +388,14 @@ Here it is::
     }
 
 
-Now what we are doung here. Our class `Sub` is based on `SubServer`, which is doing all the reception job, and calls `processPacket`
+Now what we are doung here. Our class ``Sub`` is based on ``SubServer``, which is doing all the reception job, and calls ``processPacket``
 when it got some data for you. There are many possible types of packets, but for now we need just one, which is
-`PublishPacket`. Hence we check for type, and convert::
+``PublishPacket``. Hence we check for type, and convert::
 
     if (p instanceof PublishPacket) {
         PublishPacket pp = (PublishPacket) p;
 
-Now we can do what we wish with data we got using `pp.getTopic()` and `pp.getValueString()`.
+Now we can do what we wish with data we got using ``pp.getTopic()`` and ``pp.getValueString()``.
 
 
 Listen code we've seen in a first example is slightly different::
@@ -299,7 +411,7 @@ Listen code we've seen in a first example is slightly different::
     
     });
 
-Used here `PacketSourceServer`, first of all, starts automatically, and uses `Sink` you pass to `setSink`
+Used here ``PacketSourceServer``, first of all, starts automatically, and uses ``Sink`` you pass to ``setSink``
 to pass packets received to you. The rest of the story is the same.
 
 
@@ -356,11 +468,11 @@ Listen for data::
 All functions
 -------------
 
-* `send_ping()` - send PINGREQ packet.
-* `send_ping_responce()` - send PINGRESP packet. It is sent automatically, you don't have to.
-* `listen(callback)` - listen for incoming packets.
-* `send_publish_packet( topic, payload)` - this what is mostly used.
-* `send_subscribe(topic)` - ask other party to send corresponding item again. This is optional.
+* ``send_ping()`` - send PINGREQ packet.
+* ``send_ping_responce()`` - send PINGRESP packet. It is sent automatically, you don't have to.
+* ``listen(callback)`` - listen for incoming packets.
+* ``send_publish_packet( topic, payload)`` - this what is mostly used.
+* ``send_subscribe(topic)`` - ask other party to send corresponding item again. This is optional.
 
 
 
