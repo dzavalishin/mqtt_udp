@@ -1,8 +1,3 @@
-.. MQTT/UDP documentation master file, created by
-   sphinx-quickstart on Sun Jan  6 20:00:08 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to MQTT/UDP
 ===================
 
@@ -18,9 +13,8 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. epigraph::
 
-   Network is a broker.
+*Network is a broker*
 
 
 Introduction
@@ -146,10 +140,32 @@ Anyway, I'm going to add completely reliable mode to MQTT/UDP in near future.
 
 .. [#f1] Corresponding tools are in repository and you can run such test yourself.
 
+
+Packets and general logic
+=========================
+
+It is extremely simple to use MQTT/UDP. Basic use case is: one party sends ``PUBLISH`` packets,
+other receives, selecting for itself ones with topics it needs. That is all. No connect,
+no subscribe, no broker address to configure - we're broadcasting.
+
+For most applications it is all that you need. But there are 3 other packet types that possibly can 
+be used.
+
+``SUBSCRIBE`` - MQTT/UDP uses this as a request to resend some topic value. It is not automated in any way by library code (but will be),
+so you have to respond to such a packet manually, if you want. It is intended for remote configuration use to let configuration
+program to request settings values from nodes. This is to be implemented later.
+
+``PINGREQ`` - Ping request, ask all nodes to reply. This is for remote configuration also, it helps config program to detect all nodes on the network.
+Library code automatically replies to ``PINGREQ`` with ``PINGRESP``.
+
+``PINGRESP`` - reply to ping. You don't need to send it manually. It is done automatically.
+
+I'm going to use ``PUBACK`` packet later to support reliable delivery
+
 .. _c-lang-api:
 
-MQTT/UDP C Language API Reference
-=================================
+C Language API Reference
+========================
 
 
 There is a native MQTT/UDP implementation in C. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/c repository.
@@ -316,8 +332,8 @@ Close UDP socket::
 
 .. _java-lang-api:
 
-MQTT/UDP Java Language API Reference
-====================================
+Java Language API Reference
+===========================
 
 
 There is a native MQTT/UDP implementation in Java. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/java repository.
@@ -436,8 +452,8 @@ to pass packets received to you. The rest of the story is the same.
 
 .. _python-lang-api:
 
-MQTT/UDP Python Language API Reference
-======================================
+Python Language API Reference
+=============================
 
 As you already guessed, python implementation is native too. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/python3 repository.
 There is also lang/python directory, which is for older 2.x python environment, but it is outdated. Sorry, can't afford to support it. You can backport some
@@ -503,8 +519,8 @@ All functions
 
 .. _lua-lang-api:
 
-MQTT/UDP Lua Language API Reference
-===================================
+Lua Language API Reference
+==========================
 
 
 **NB! Lua API is not final, there will be some methods rename.**
@@ -532,6 +548,53 @@ Listen for data::
     end
     
     mq.listen( listener )
+
+
+
+Connectors
+==========
+
+Classic MQTT
+------------
+
+It is obvious that MQTT/UDP can be used together with traditional MQTT, so there's a simple gateway to 
+pass traffic back and forth. It is written in Python and copies everything from one side to another and
+back. There's interlock logic introduced that prevents loops by not passing same topic message in reverse 
+direction for some 5 seconds.
+
+OpenHAB
+-------
+
+At the moment there is just one way gateway, from MQTT/UDP to OpenHAB. Bidirectional one is in development.
+
+
+Scripts
+=======
+
+There are Python scripts I made to help myself testing MQTT/UDP library. Some of them are written in C and Lua too
+but most exist just in Python version.
+
+
+* **random_to_udp.py** - send random numbers with 2 sec interval, to test reception.
+* **dump.py** - just show all traffic.
+* **ping.py** - send ping and show responces. Note that running ping.py will resond to itself too.
+* **subscribe.py** - send subscribe request.
+* **seq_storm_send.py** - send sequential data with no speed limit (use -s to set limit, though).
+* **seq_storm_check.py** - check traffic sent by *seq_storm_send.py* and calculate speed and error rate.
+
+
+
+
+Traffic viewer
+==============
+
+A GUI tool to view what's going on and send data too.
+
+.. image:: ../TrafficViewerScreen_Jan2019.png
+
+Read more at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
+
+
 
 
 
