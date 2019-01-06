@@ -20,7 +20,7 @@ prefix         = /usr/local
 
 LIB=libmqttudp.a
 
-goal:: all run
+goal:: all
 
 all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe
 

@@ -1,7 +1,7 @@
 CFLAGS += -g
 #CC=gcc
 
-goal:: all run
+goal:: all
 
 all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen
 
