@@ -132,6 +132,8 @@ if __name__ == "__main__":
 
     oh.get_status_stream("/rest/sitemaps/default")
     #oh.get_status_stream("/rest/items/CCU825_Sound_1")
+
+    # broken
     #oh.get_status_stream("/rest/items/gPersist")
 
 
