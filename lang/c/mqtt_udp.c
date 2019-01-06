@@ -50,7 +50,7 @@ int mqtt_udp_socket(void)
 		//    error("setsockopt(SO_REUSEADDR) failed");
     }
 
-    last_socket = fd;
+    //last_socket = fd;
     return fd;
 }
 
@@ -74,11 +74,11 @@ int mqtt_udp_bind( int fd )
 */
 }
 
-
+// TODO move to separate source file to let user replace other funcs
 int mqtt_udp_get_send_fd( void ) // TODO hack, get fd to send datagrams
 {
     if( last_socket < 0 )
-        mqtt_udp_socket(); // TODO not thread safe
+        last_socket = mqtt_udp_socket(); // TODO not thread safe
     return last_socket;
 }
 

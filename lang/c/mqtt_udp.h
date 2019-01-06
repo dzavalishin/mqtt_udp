@@ -90,6 +90,7 @@ int mqtt_udp_recv_loop( process_pkt callback );
 
 void mqtt_udp_dump( const char *buf, size_t len );
 
+int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 
 
@@ -138,7 +139,6 @@ void mqtt_udp_recv_reply( struct mqtt_udp_pkt *pkt );
 void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p );
 int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size_t *out_len );
 int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_pkt callback );
-int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 
 // --------------------------------------------------------------------------

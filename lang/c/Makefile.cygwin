@@ -2,6 +2,7 @@
 
 CFLAGS += -g -O2
 CC=gcc
+#CC=clang-5.0
 #AR=@AR@
 AR=ar
 RANLIB=ranlib

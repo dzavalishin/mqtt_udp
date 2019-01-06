@@ -10,11 +10,6 @@ Welcome to MQTT/UDP
    :maxdepth: 2
    :caption: Contents:
 
-MQTT/UDP is a simplest possible protocol for IoT, smart home applications and robotics.
-
-
-As you can guess from its name, it is based on MQTT (which is quite simple too), but based on UDP.
-
 
 Indices and tables
 ==================
@@ -23,16 +18,15 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+MQTT/UDP is a simplest possible protocol for IoT, smart home applications and robotics. As you can guess from its name, it is based on MQTT (which is quite simple too), but based on UDP.
 
-Fast track
-----------
-
-MQTT/UDP native implementations are exist in Java, Python, C, Lua and PLC specific ST language. See corresponding references:
+Fast track for impatient readers: MQTT/UDP native implementations exist in Java, Python, C, Lua and PLC specific ST language. See corresponding references:
 
 * :ref:`c-lang-api`
 * :ref:`java-lang-api`
 * :ref:`python-lang-api`
 * :ref:`lua-lang-api`
+
 
 
 
@@ -135,24 +129,76 @@ Now get topic and data from packet you got::
 And you're done, now ypou have topic and value received.
 
 
+Includes
+--------
+
+There's just one::
+
+    #include "mqtt_udp.h"
+
+
+Functions
+---------
+
+Send PUBLISH packet::
+
+    int mqtt_udp_send_publish( char *topic, char *data );
+
+Send SUBSCRIBE packet::
+
+    int mqtt_udp_send_subscribe( char *topic );
+
+Send PINGREQ packet, ask others to respond::
+
+    int mqtt_udp_send_ping_request( void );
+
+Send PINGREST packet, tell that you're alive::
+
+    int mqtt_udp_send_ping_responce( void );
+
+
+Start loop for packet reception, providing callback to be called 
+when packet arrives::
+
+    typedef int (*process_pkt)( struct mqtt_udp_pkt *pkt );
+
+    int mqtt_udp_recv_loop( process_pkt callback );
+
+Dump packet structure. Handy to debug things::
+
+    int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 
 
+UDP IO interface
+----------------
 
+Default implementation uses POSIX API to communicate with network, but for 
+embedded use you can redefine corresponding functions.
 
+Receive UDP packet. Must return sender's address in `src_ip_addr`::
 
+    int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr );
 
+Broadcast UDP packet::
 
+    int mqtt_udp_send_pkt( int fd, char *data, size_t len );
 
+Send UDP packet (actually not used now, but can be later)::
 
+    int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
 
+Create UDP socket which can be used to send or broadcast::
 
+    int mqtt_udp_socket(void);
 
+Prepare socket for reception on MQTT_PORT::
 
+    int mqtt_udp_bind( int fd )
 
+Close UDP socket::
 
-
-
+    int mqtt_udp_close_fd( int fd ) 
 
 
 
@@ -306,6 +352,15 @@ Listen for data::
        
     mqttudp.engine.listen(recv_packet)
 
+
+All functions
+-------------
+
+* `send_ping()` - send PINGREQ packet.
+* `send_ping_responce()` - send PINGRESP packet. It is sent automatically, you don't have to.
+* `listen(callback)` - listen for incoming packets.
+* `send_publish_packet( topic, payload)` - this what is mostly used.
+* `send_subscribe(topic)` - ask other party to send corresponding item again. This is optional.
 
 
 
