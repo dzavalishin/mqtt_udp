@@ -24,13 +24,15 @@
 
 void mqtt_udp_dump( const char *buf, size_t len )
 {
-    for(int i = 0; i < len; i++)
+    int i;
+
+    for(i = 0; i < len; i++)
     {
         printf("0x%x ", buf[i]);
     }
     printf("\n");
 
-    for(int i = 0; i < len; i++)
+    for(i = 0; i < len; i++)
     {
         printf("%c", ((buf[i] > ' ') && (buf[i] < 0x7F)) ? buf[i] : '.'   );
     }
