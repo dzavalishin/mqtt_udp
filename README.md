@@ -1,7 +1,9 @@
 # MQTT/UDP
 Simpified version of MQTT over UDP: Network is broker!
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c498fc36dbea4e41a05f4ba5a8c0ff96)](https://www.codacy.com/app/dzavalishin/mqtt_udp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dzavalishin/mqtt_udp&amp;utm_campaign=Badge_Grade)  [![Build Status](https://travis-ci.org/dzavalishin/mqtt_udp.svg?branch=master)](https://travis-ci.org/dzavalishin/mqtt_udp)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c498fc36dbea4e41a05f4ba5a8c0ff96)](https://www.codacy.com/app/dzavalishin/mqtt_udp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dzavalishin/mqtt_udp&amp;utm_campaign=Badge_Grade) 
+[![Build Status](https://travis-ci.org/dzavalishin/mqtt_udp.svg?branch=master)](https://travis-ci.org/dzavalishin/mqtt_udp) 
+[![Documentation Status](https://readthedocs.org/projects/mqtt-udp/badge/?version=latest)](https://mqtt-udp.readthedocs.io/en/latest/?badge=latest)
 
 [See Russian version / Русская версия здесь](./README.ru.md)
 
