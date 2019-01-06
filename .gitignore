@@ -91,6 +91,8 @@ c/config.log
 c/autom4te.cache/requests
 c/autom4te.cache/output.0
 
+dox/build/
+
 lang/c/config.h
 lang/c/config.log
 lang/c/config.status
