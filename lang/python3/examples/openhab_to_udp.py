@@ -6,35 +6,60 @@
 import openhab
 
 
-def process_item( topic, value ):
-    print(topic+"="+value)
+new_items = {}
+
+def process_item( topic, value, type ):
+    global new_items
+    if type == "NumberItem":
+        try:
+            num = float(value)
+            value = str(num)
+        except Exception:
+            pass
+    if not new_items.__contains__(topic):
+        #print(topic+"="+value)
+        new_items[topic]=value
 
 
 def extract_item(i):
     #print("item="+str(hp))
-    process_item( i["name"], i["state"] )
+    process_item( i["name"], i["state"], i["type"] )
 
+# one widget or array
 def extract_widget(data):
-    print("wi="+str(data))
-    if not data.__contains__("widget"):
-        print("unknown="+str(data))
-        return
-
+    #print("wia="+str(data))
     wi = data["widget"]
 
+    #if not data.__contains__("widgetId"):
+    #    #print("unknown="+str(data))
+    #    extract_widget_el(data)
+    #    return
+
+    if isinstance(wi, dict):
+        #print("unknown="+str(data))
+        extract_widget_el(wi)
+        return
+
+
     for wiel in wi:
-        #print("wiel="+str(wiel))
-        #if "widget" in wiel:
-        if wiel.__contains__("widget"):
-            extract_widget(wiel)
-        #if "linkedPage" in wiel:
-        elif wiel.__contains__("linkedPage"):
-            extract_widget(wiel["linkedPage"])
-        #elif "item" in wiel:
-        elif wiel.__contains__("item"):
-            extract_item(wiel["item"])
-        else:
-            print("unknown []="+str(data))
+        extract_widget_el(wiel)
+
+# one widget exactly
+def extract_widget_el(wiel):
+    #print("wiel="+str(wiel))
+
+    #print("wiel="+str(wiel))
+    #if "widget" in wiel:
+    if wiel.__contains__("widget"):
+        extract_widget(wiel)
+    #if "linkedPage" in wiel:
+    elif wiel.__contains__("linkedPage"):
+        extract_widget(wiel["linkedPage"])
+    #elif "item" in wiel:
+    elif wiel.__contains__("item"):
+        extract_item(wiel["item"])
+    else:
+        print("unknown []="+str(data))
 
 def extract_content(content):
     """ extract the "members" or "items" from content, and make a list """
@@ -55,10 +80,10 @@ def extract_content(content):
             pass
         elif ct == "NumberItem":
             #members = content["item"]       #its a single item dict *not sure this is a thing*
-            process_item( content["name"], content["state"] )
+            process_item( content["name"], content["state"], ct )
         elif ct == "SwitchItem":
             #members = content["item"]       #its a single item dict *not sure this is a thing*
-            process_item( content["name"], content["state"] )
+            process_item( content["name"], content["state"], ct )
         else:
             members = content               #its a single item dict
     elif "homepage" in content:               #sitemap response
@@ -77,18 +102,22 @@ def extract_content(content):
         #log.debug(members)
         print("unknown format: "+str(content))
     
-    if isinstance(members, dict):   #if it's a dict not a list
-        members = [members]         #make it a list (otherwise it's already a list of items...)
+    #if isinstance(members, dict):   #if it's a dict not a list
+    #    members = [members]         #make it a list (otherwise it's already a list of items...)
         
-    return members
+    #return members
 
 
 
 def listener(msg):
+    global new_items
+    new_items = {}
     #print("msg="+str(msg))
     print("")
     extract_content(msg)
-    #print(members)
+    #print(new_items)
+    for topic in new_items:
+        print( topic+"="+new_items[topic] )
 
 
 if __name__ == "__main__":

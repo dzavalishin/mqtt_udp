@@ -5,6 +5,7 @@
 import requests
 import json
 import base64
+import time
 
 import logging as log
  
@@ -101,6 +102,7 @@ class OpenHab:
                 log.info("Starting streaming connection for %s" % url)
             else:
                 log.info("Restarting (#%d) streaming connection after disconnect for %s" % (connect, url))
+                time.sleep(2) # TODO hack we skip a second because connection restarts just after reading everything sent. that is wrong.
             try:
                 req = requests.get(url, params=payload, timeout=(310.0, 310),   #timeout is (connect timeout, read timeout) note! read timeout is 310 as openhab timeout is 300
                                 headers=self.polling_header(), stream=True)
@@ -175,58 +177,4 @@ class OpenHab:
         if item in self.streaming_threads:
             del(self.streaming_threads[item])
             log.debug("removed %s from streaming_threads" % item)
-
-    '''
-    def polling_header(self):
-        """ Header for OpenHAB REST request - streaming """
-        
-        self.auth = base64.encodestring('%s:%s'
-                        %(self.username, self.password)
-                        ).replace('\n', '')
-        return {
-            #"Authorization" : "Basic %s" % self.auth,
-            "X-Atmosphere-Transport" : "streaming",
-            #"X-Atmosphere-tracking-id" : self.atmos_id,
-            "Accept" : "application/json"}
-
-    def basic_header(self):
-        """ Header for OpenHAB REST request - standard """
-        
-        self.auth = base64.encodestring('%s:%s'
-                        %(self.username, self.password)
-                        ).replace('\n', '')
-        return {
-                #"Authorization" : "Basic %s" %self.auth,
-                "Content-type": "text/plain"}
-    '''
-
-    def extract_content(self, content):
-        """ extract the "members" or "items" from content, and make a list """
-
-        print(content)
-
-        # sitemap items have "id" and "widget" keys. "widget is a list of "item" dicts. no "type" key.
-        # items items have a "type" key which is something like "ColorItem", "DimmerItem" and so on, then "name" and "state". they are dicts
-        # items groups have a "type" "GroupItem", then "name" and "state" (of the group) "members" is a list of item dicts as above
-        
-        if "type" in content:                   #items response
-            if content["type"] == "GroupItem":
-                # At top level (for GroupItem), there is type, name, state, link and members list
-                members = content["members"]    #list of member items
-            elif content["type"] == "item":
-                members = content["item"]       #its a single item dict *not sure this is a thing* 
-            else:
-                members = content               #its a single item dict
-        elif "widget" in content:               #sitemap response
-            members = content["widget"]["item"] #widget is a list of items, (could be GroupItems) these are dicts
-        elif "item" in content:
-            members = content["item"]           #its a single item dict
-        else:
-            members = content                   #don't know...
-        #log.debug(members)
-        
-        if isinstance(members, dict):   #if it's a dict not a list
-            members = [members]         #make it a list (otherwise it's already a list of items...)
-            
-        return members
 
