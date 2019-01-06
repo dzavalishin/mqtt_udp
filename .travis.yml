@@ -1,0 +1,10 @@
+language: c
+compiler:
+  - clang
+  - gcc
+ 
+ script:
+   - cd lang/c
+   - ./configure
+   - make
+   
