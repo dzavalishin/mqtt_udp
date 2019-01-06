@@ -3,8 +3,8 @@ compiler:
   - clang
   - gcc
  
- script:
-   - cd lang/c
-   - ./configure
-   - make
+script:
+  - cd lang/c
+  - ./configure
+  - make
    
