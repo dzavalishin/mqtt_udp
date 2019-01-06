@@ -5,6 +5,7 @@ Welcome to MQTT/UDP
    :maxdepth: 2
    :caption: Contents:
 
+Version |version|
 
 Indices and tables
 ------------------
@@ -596,7 +597,14 @@ Read more at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP
 
 
 
+Links
+=====
 
+GitHUb: https://github.com/dzavalishin/mqtt_udp
+
+Error reports and feature requests: https://github.com/dzavalishin/mqtt_udp/issues
+
+If you use MQTT/UDP, please let me know by adding issue at GitHub. :)
 
 
 
