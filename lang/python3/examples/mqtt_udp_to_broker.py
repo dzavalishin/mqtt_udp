@@ -24,6 +24,8 @@ import paho.mqtt.client as broker
 MQTT_BROKER_HOST=cfg.config.get('mqtt-gate','host' )
 MQTT_BROKER_PORT=cfg.config.getint('mqtt-gate','port' )
 
+last = {}
+
 
 def broker_listen_thread(bclient):
     bclient.loop_forever()
@@ -43,8 +45,7 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
 if __name__ == "__main__":
     print( "Will resend all the MQTT/UDP traffic to MQTT broker at "+MQTT_BROKER_HOST )
 
-    global last
-    last = {}
+    #global last
 
     bclient = broker.Client()
     #client.on_connect = on_connect

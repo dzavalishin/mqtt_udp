@@ -123,22 +123,23 @@ class OpenHab:
             connect += 1
             try:
                 while self.connected:
-                    message = ''
-                    content = {}
+                    #message = ''
+                    #content = {}
                     #print(req.content)
-                    '''if False:
 
-                        for char in req.iter_content():   #read content 1 character at a time
-                            try:
-                                if char:
-                                    #log.debug(char)
-                                    message += str(char)
-                                    content = json.loads(message)
-                                    break
-                                
-                            except ValueError:      #keep reading until json.loads returns a value
-                                pass
-                    else:'''
+                    #if False:
+                    #
+                    #    for char in req.iter_content():   #read content 1 character at a time
+                    #        try:
+                    #            if char:
+                    #                #log.debug(char)
+                    #                message += str(char)
+                    #                content = json.loads(message)
+                    #                break
+                    #
+                    #        except ValueError:      #keep reading until json.loads returns a value
+                    #            pass
+                    #else:
 
 
                     for line in req.iter_lines(decode_unicode=True):

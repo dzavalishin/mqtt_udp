@@ -23,6 +23,14 @@ STEP=10000
 
 
 
+start_time = time.clock();
+
+last = 0
+errors = 0
+got = 0
+curr = 0
+
+
 
 
 def recv_packet_from_udp(ptype,topic,value,pflags,addr):
@@ -59,18 +67,12 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
 
 
 if __name__ == "__main__":
-    global last, errors, got, curr, start_time
+    #global last, errors, got, curr, start_time
     
 
     print( "Will listen for MQTT/UDP packets with sequential number as a payload, topic is '"+SEQ_STORM_TOPIC+"'" )
     print( "\nStart seq_storm_send now...")
 
-    start_time = time.clock();
-
-    last = 0
-    errors = 0
-    got = 0
-    curr = 0
 
     mqttudp.engine.listen(recv_packet_from_udp)
 
