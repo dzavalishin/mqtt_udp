@@ -72,6 +72,7 @@ for example, Modbus you will have to:
 *   Still calculate average
 *   Feed calculated average back if you want to share data with other system nodes
 
+.. image:: illustrations/AveragedSensors.svg
 
 One sensor, many listeners
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
