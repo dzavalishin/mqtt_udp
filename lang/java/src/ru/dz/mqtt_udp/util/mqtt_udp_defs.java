@@ -2,7 +2,7 @@ package ru.dz.mqtt_udp.util;
 /* This code is generated, do not change */
 public class mqtt_udp_defs {
 public static final int PACKAGE_VERSION_MAJOR = 0;
-public static final int PACKAGE_VERSION_MINOR = 3;
+public static final int PACKAGE_VERSION_MINOR = 4;
 public static final int PTYPE_CONNECT = 0x10;
 public static final int PTYPE_CONNACK = 0x20;
 public static final int PTYPE_PUBLISH = 0x30;
