@@ -20,6 +20,20 @@ __SEND_SOCKET = None
 #def init():
 #    __SEND_SOCKET = __make_send_socket()
 
+
+
+# ------------------------------------------------------------------------
+#
+# Getters/Setters
+#
+# ------------------------------------------------------------------------
+
+muted = False
+
+def set_muted(mode: bool):
+    global muted
+    muted = mode
+
 # ------------------------------------------------------------------------
 #
 # Receive
@@ -104,7 +118,7 @@ def listen(callback):
     while True:
         pkt,addr = recv_udp_packet(s)    
         ptype,topic,value,pflags = parse_packet(pkt)
-        if ptype == "pingreq":
+        if (not muted) and (ptype == "pingreq"):
 #            print( "Got ping, reply to "+addr )
             try:
                 send_ping_responce()
