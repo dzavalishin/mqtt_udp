@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='mqttudp',
-    version='0.4-0',
+    version='@release@',
     description='An MQTT/UDP implementation in Python',
     long_description="MQTT/UDP is a simplest brokerless variation of MQTT protocol based on UDP broadcast. See https://github.com/dzavalishin/mqtt_udp for more prog. languages and info.",
     author='Dmitry Zavalishin',

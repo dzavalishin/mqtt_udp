@@ -1,5 +1,7 @@
 MQTT/UDP Python (2.x) implementation.
 
+This code is outdated, please use ../python3 instead
+
 You can check other languages implementations also - https://github.com/dzavalishin/mqtt_udp
 
 NB! This implementation is outdated and incomplete, see ../python3 instead, please.
