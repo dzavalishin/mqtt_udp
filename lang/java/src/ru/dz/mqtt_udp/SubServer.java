@@ -24,6 +24,10 @@ public abstract class SubServer
 	
 	private boolean muted = false;
 	public boolean isMuted() {		return muted;	}
+	/** 
+	 * Set muted mode. In muted mode server loop won't respond to any incoming packets
+	 * (such as PINGREQ) automatically.
+	 */
 	public void setMuted(boolean muted) {		this.muted = muted;	}
 
 
@@ -36,15 +40,23 @@ public abstract class SubServer
 	public boolean isRunning() { return run; }
 
 
+	/**
+	 * Request to start reception loop thread.
+	 */
 	public void requestStart()
 	{
 		if(isRunning()) return;
 		start();
 	}
 
+	/**
+	 * Request to stop reception loop thread.
+	 */
 	public void requestStop() { run = false; }
 	
-
+	/**
+	 * Worker: start reception loop thread.
+	 */
 	protected void start() {
 		Runnable target = makeLoopRunnable();
 		Thread t = new Thread(target, "MQTT UDP Recv");
@@ -93,8 +105,8 @@ public abstract class SubServer
 
 
 	/**
-	 * Must be overriden in children to process packet 
-	 * @param p
+	 * Must be overridden in children to process packet 
+	 * @param p packet to process
 	 * @throws IOException
 	 */
 	protected abstract void processPacket(IPacket p) throws IOException;
@@ -110,7 +122,7 @@ public abstract class SubServer
 		if( p instanceof PingReqPacket)
 		{
 			// Reply to ping
-			PingRespPacket presp = new PingRespPacket(null);
+			PingRespPacket presp = new PingRespPacket();
 			//presp.send(ss, ((PingReqPacket) p).getFrom().getInetAddress());
 			// decided to broadcast ping replies
 			presp.send(ss);

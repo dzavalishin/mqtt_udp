@@ -6,13 +6,26 @@ import java.nio.charset.Charset;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.NoEncodingRuntimeException;
+import ru.dz.mqtt_udp.util.TopicPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
-public class PublishPacket extends GenericPacket {
+/**
+ * PUBLISH packet. Carries actual topic data update.
+ * @author dz
+ *
+ */
+public class PublishPacket extends TopicPacket {
 
-	private String  topic;
+	//private String  topic;
 	private byte[]  value;
 
+	
+	/**
+	 * Construct from incoming UDP data. 
+	 * @param raw Data from UDP packet, starting after packet type and length.
+	 * @param flags Flags from packet header.
+	 * @param from Source IP address.
+	 */
 	public PublishPacket(byte[] raw, byte flags, IPacketAddress from) {
 		super(from);
 		this.flags = flags;
@@ -28,15 +41,33 @@ public class PublishPacket extends GenericPacket {
 	}
 
 	
-	public String getTopic() {			return topic;	}
-	public byte[] getValueRaw() {		return value;	}	
+	/**
+	 * Get value as byte array.
+	 * @return Packet value.
+	 */
+	public byte[] getValueRaw() {		return value;	}
+	/**
+	 * Get value as string.
+	 * @return Packet value.
+	 */
 	public String getValueString() {	return new String(value, Charset.forName(MQTT_CHARSET));	}
-	
+
+	/**
+	 * Create packet to be sent.
+	 * @param topic Topic string.
+	 * @param flags Protocol flags.
+	 * @param value Value as byte array.
+	 */
 	public PublishPacket(String topic, byte flags, byte[] value) {
 		super(null);
 		makeMe( topic, flags, value );
 	}
 
+	/**
+	 * Create packet to be sent.
+	 * @param topic Topic string.
+	 * @param value Value string.
+	 */
 	public PublishPacket(String topic, String value) {
 		super(null);
 		try {
@@ -46,6 +77,12 @@ public class PublishPacket extends GenericPacket {
 		}
 	}
 	
+	/**
+	 * Create packet to be sent.
+	 * @param topic Topic string.
+	 * @param flags Protocol flags.
+	 * @param value Value as string.
+	 */
 	public PublishPacket(String topic, byte flags, String value) {
 		super(null);
 		try {
@@ -62,7 +99,11 @@ public class PublishPacket extends GenericPacket {
 	}
 	
 	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see ru.dz.mqtt_udp.IPacket#toBytes()
+	 */
 	@Override
 	public byte[] toBytes() {
 		byte[] tbytes;
