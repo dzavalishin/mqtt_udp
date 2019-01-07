@@ -7,8 +7,8 @@ Welcome to MQTT/UDP
 
 Version |version|
 
-Indices and tables
-------------------
+.. rem Indices and tables
+.. rem ------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
