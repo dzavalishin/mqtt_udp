@@ -18,7 +18,8 @@ def make_recv_socket():
     return udp_socket
 
 def recv_udp_packet(udp_socket):
-    data, addr = udp_socket.recvfrom(2048)
+    #data, addr = udp_socket.recvfrom(2048)
+    data, _ = udp_socket.recvfrom(2048)
     return data
 
 def unpack_remaining_length(pkt):

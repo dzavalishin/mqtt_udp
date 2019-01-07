@@ -33,7 +33,8 @@ class bidirectional(object):
             self.dirmap[topic] = (value,now,direction)
             return True
         
-        st_value,st_time,st_dir = self.dirmap[topic]
+        #st_value,st_time,st_dir = self.dirmap[topic]
+        _,st_time,st_dir = self.dirmap[topic]
         self.dirmap[topic] = (value,now,direction) # update
         
         if st_dir == direction:

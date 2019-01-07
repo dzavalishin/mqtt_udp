@@ -8,9 +8,9 @@ import openhab
 
 new_items = {}
 
-def process_item( topic, value, type ):
+def process_item( topic, value, ptype ):
     global new_items
-    if type == "NumberItem":
+    if ptype == "NumberItem":
         try:
             num = float(value)
             value = str(num)
@@ -85,7 +85,8 @@ def extract_content(content):
             #members = content["item"]       #its a single item dict *not sure this is a thing*
             process_item( content["name"], content["state"], ct )
         else:
-            members = content               #its a single item dict
+            #members = content               #its a single item dict
+			pass
     elif "homepage" in content:               #sitemap response
         hp=content["homepage"]
         #print(wi)
