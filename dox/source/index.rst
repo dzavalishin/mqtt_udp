@@ -74,6 +74,8 @@ for example, Modbus you will have to:
 
 .. figure:: illustrations/AveragedSensors.*
 
+   Typical MQTT/UDP use case.
+
    This diagram shows three sensors duplicating each other. For example,
    three outer temperature sensors. Wall display, history database and
    main smarthome unit get copy of all data from sensors. Malfunction of
@@ -663,6 +665,24 @@ A GUI tool to view what's going on and send data too.
 
 Read more at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
 
+
+Network
+=======
+
+Current implementation of MQTT/UDP has no security support. It is supposed that later some
+kind of packet digital signature will be added. At the moment I suppose that protocol can
+be used in comletely secure networks or for not really important data.
+
+.. figure:: illustrations/IdealHomeNet.*
+
+   Ideal structure of network.
+
+   Segment for a smart home is separated from local network for usual computers. MQTT/UDP
+   data can be forwarded there on firewall, but not backwards.
+
+Actually I personally use MQTT/UDP in typical home network, separated from Internet with NAT but with 
+no separation between smart home and other computers. I do think that would my home network be hacked
+into, intervention into the smart home system is the lesser of possible evils.
 
 
 Links
