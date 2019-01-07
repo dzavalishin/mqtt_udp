@@ -72,7 +72,12 @@ for example, Modbus you will have to:
 *   Still calculate average
 *   Feed calculated average back if you want to share data with other system nodes
 
-.. image:: illustrations/AveragedSensors.svg
+.. figure:: illustrations/AveragedSensors.*
+
+   This diagram shows three sensors duplicating each other. For example,
+   three outer temperature sensors. Wall display, history database and
+   main smarthome unit get copy of all data from sensors. Malfunction of
+   any unit does not make any problemn for others.
 
 One sensor, many listeners
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
