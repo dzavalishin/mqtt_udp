@@ -7,6 +7,7 @@ import ru.dz.mqtt_udp.PingReqPacket;
 import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.util.GenericPacket;
+import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 // TODO rename to PacketItem, make subclasses per type
@@ -148,23 +149,20 @@ public class TopicItem {
 		default: break;
 		}
 		
-		throw new RuntimeException("Unknown pkt type 0x"+Integer.toHexString(packetType));
+		// TODO not runtime exception?
+		throw new MqttUdpRuntimeException("Unknown pkt type 0x"+Integer.toHexString(packetType));
 	}
 
-	// TODO use one global socket
 	public void sendToAll() throws IOException
 	{
 		GenericPacket pkt = toPacket();
 		pkt.send();
 	}
 
-	// TODO use one global socket
 	public void sendTo(InetAddress addr) throws IOException
 	{
 		GenericPacket pkt = toPacket();
-		//DatagramSocket fd = GenericPacket.sendSocket();
 		pkt.send( addr );
-		//fd.close();
 	}
 	
 	

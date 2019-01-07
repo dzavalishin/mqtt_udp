@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -508,7 +509,7 @@ public class Main extends Application {
 		try {
 			ds = new MqttUdpDataSource();
 		} catch (SocketException e) {
-			throw new RuntimeException(e);
+			throw new MqttUdpRuntimeException(e);
 		}
 		ds.setSink(ti -> { 
 			Platform.runLater(new Runnable(){

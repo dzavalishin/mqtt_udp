@@ -3,6 +3,8 @@ package ru.dz.mqtt_udp.io;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
+
 /**
  * Singleton for UDP send socket.
  */
@@ -36,7 +38,7 @@ public class SingleSendSocket {
 			try {
 				sock = sendSocket();
 			} catch (SocketException e) {
-				throw new RuntimeException("Can't create send socket", e);
+				throw new MqttUdpRuntimeException("Can't create send socket", e);
 			}
 		}
 
