@@ -482,8 +482,10 @@ Listen for data::
     mqttudp.engine.listen(recv_packet)
 
 
-All functions
--------------
+Module mqttudp.engine
+---------------------
+
+Main package, implements MQTT/UDP protocol.
 
 * ``send_ping()`` - send PINGREQ packet.
 * ``send_ping_responce()`` - send PINGRESP packet. It is sent automatically, you don't have to.
@@ -494,25 +496,85 @@ All functions
 
 
 
+Module mqttudp.config
+---------------------
+
+Additional module, sets up configuration file reader. Most command line utilities use it to get settings.
+It reads ``mqtt-udp.ini`` file in current directory. Here is an example::
+
+
+    [DEFAULT]
+    host = smart.
+    
+    [mqtt-gate]          # Settings for MQTT to MQTT/UDP gate
+    login = 
+    password = 
+    
+    subscribe=#
+    #host = smart.       # See [DEFAULT] above
+    
+    #blacklist=/topic    # Regexp to check if topic is forbidden to relay
+    #blacklist=/openhab
+    
+    [openhab-gate]
+    #port=8080           # There's builtin default
+    #host = smart.       # Settings for MQTT/UDP to OpehHAB gate
+    
+
+
+Usage::
+
+    import mqttudp.config as cfg
+    
+    cfg.setGroup('mqtt-gate')           # set ours .ini file [section]
+    
+    blackList=cfg.get('blacklist')      # read setting
 
 
 
+Module mqttudp.interlock
+------------------------
+
+Additional module, used by bidiractional gateways to prevent loop traffic.
+
+Usage::
+
+    # Init interlock object which will
+    # forbid reverse direction traffic
+    # for 5 seconds after message passed
+    # in one direction.
+    
+    ilock = mqttudp.interlock.bidirectional(5) 
+
+    # Check if we can pass forward
+
+    if ilock.broker_to_udp(msg.topic, msg.payload):
+        mqttudp.engine.send_publish_packet( msg.topic, msg.payload )
+        print("To UDP: "+msg.topic+"="+str(msg.payload))
+    else:
+        print("BLOCKED to UDP: "+msg.topic+"="+str(msg.payload))
+
+    # and back
+
+    if ilock.udp_to_broker(topic, value):
+        bclient.publish(topic, value, qos=0)
+        print( "From UDP: "+topic+"="+value )
+    else:
+        print( "BLOCKED from UDP: "+topic+"="+value )
+
+Value is not actually used in current implementation. It is passed
+for later and smarter versions.
 
 
 
+Module mqttudp.mqtt_udp_defs
+----------------------------
 
 
+This module is not for user code, it is used internally. But you can get library release version from it::
 
-
-
-
-
-
-
-
-
-
-
+    PACKAGE_VERSION_MAJOR = 0
+    PACKAGE_VERSION_MINOR = 4
 
 
 
