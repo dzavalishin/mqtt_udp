@@ -1,6 +1,5 @@
 package ru.dz.mqtt_udp;
 
-import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.NoEncodingRuntimeException;
 import ru.dz.mqtt_udp.util.TopicPacket;
 
@@ -13,6 +12,12 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 public class SubscribePacket extends TopicPacket {
 
 
+	/**
+	 * Construct from incoming UDP data. 
+	 * @param raw Data from UDP packet, starting after packet type and length.
+	 * @param flags Flags from packet header.
+	 * @param from Source IP address.
+	 */
 
 	public SubscribePacket(byte[] raw, byte flags, IPacketAddress from) {
 		super(from);
@@ -20,22 +25,25 @@ public class SubscribePacket extends TopicPacket {
 		int tlen = IPacket.decodeTopicLen( raw );
 
 		topic = new String(raw, 2, tlen, Charset.forName(MQTT_CHARSET));
-
-		//int vlen = raw.length - tlen - 2;		
-		//value = new byte[vlen];	
-		//System.arraycopy( raw, tlen+2, value, 0, vlen );
-
 		// TODO byte of QoS - do we need it?
- 
 	}
 
 
 
+	/**
+	 * Create packet to be sent.
+	 * @param topic Topic string.
+	 * @param flags Protocol flags.
+	 */
 	public SubscribePacket(String topic, byte flags) {
 		super(null);
 		makeMe( topic, flags );
 	}
 
+	/**
+	 * Create packet to be sent.
+	 * @param topic Topic string.
+	 */
 	public SubscribePacket(String topic) {
 		super(null);
 		makeMe( topic, (byte) 0 );
@@ -49,6 +57,10 @@ public class SubscribePacket extends TopicPacket {
 
 
 
+	/*
+	 * (non-Javadoc)
+	 * @see ru.dz.mqtt_udp.IPacket#toBytes()
+	 */
 	@Override
 	public byte[] toBytes() {
 		byte[] tbytes;
@@ -78,10 +90,13 @@ public class SubscribePacket extends TopicPacket {
 		return String.format("MQTT/UDP SUBSCRIBE '%s'", getTopic() );
 	}
 
-
-	public byte getFlags() {		return flags;	}
+	
 	//public void setFlags(byte flags) {		this.flags = flags;	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see ru.dz.mqtt_udp.IPacket#getType()
+	 */
 	@Override
 	public int getType() {
 		return mqtt_udp_defs.PTYPE_SUBSCRIBE;

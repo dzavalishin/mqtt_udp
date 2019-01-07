@@ -3,12 +3,15 @@ package ru.dz.mqtt_udp.io;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+/**
+ * Singleton for UDP send socket.
+ */
 public class SingleSendSocket {
 
         private static volatile SingleSendSocket instance;
 
         /**
-         * Singleton for UDP send socket
+         * Singleton for UDP send socket.
          * @return socket to send with
          */
         public static DatagramSocket get()  

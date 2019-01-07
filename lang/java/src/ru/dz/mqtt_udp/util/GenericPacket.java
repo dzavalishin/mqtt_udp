@@ -12,20 +12,41 @@ import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.io.IpAddress;
 import ru.dz.mqtt_udp.io.SingleSendSocket;
 
+/**
+ * Network IO work horse for MQTT/UDP packets.
+ * @author dz
+ *
+ */
+
 public abstract class GenericPacket implements IPacket {
 
-	//private static final int  MQTT_PORT = 1883;
+	/** 
+	 * Broadcast IP address.
+	 */
 	private static final byte[] broadcast =  { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF } ;
 	
-	//protected byte    type;
+	/**
+	 * Packet header flags.
+	 */
 	protected byte    flags = 0;
+	
+	/**
+	 * Packet source address, if packet is received from net. 
+	 * Locally created ones have null here.
+	 */
 	protected IPacketAddress from;
 	
-	
-	public GenericPacket(IPacketAddress from) {
+	/**
+	 * Construct packet from network.
+	 * @param from Sender's address.
+	 */
+	protected GenericPacket(IPacketAddress from) {
 		this.from = from;
 	}
 
+	/**
+	 * Construct packet to be sent.
+	 */
 	protected GenericPacket() {
 		this.from = null;
 	}
@@ -44,8 +65,8 @@ public abstract class GenericPacket implements IPacket {
 
 	/**
 	 * Create new socket to listen to MQTT/UDP packets.
-	 * @return socket
-	 * @throws SocketException
+	 * @return Created socket.
+	 * @throws SocketException If unable.
 	 */
 	public static DatagramSocket recvSocket() throws SocketException
 	{
@@ -63,32 +84,26 @@ public abstract class GenericPacket implements IPacket {
 	}
 
 	/**
-	 * Create socket, broadcast me, delete socket.
-	 * @throws IOException
+	 * Broadcast me using default send socket.
+	 * @throws IOException If unable.
 	 */
 	public void send() throws IOException
 	{
-		//DatagramSocket s = sendSocket();
-		//send(s);
-		//s.close();
 		send(SingleSendSocket.get());
 	}
 	
 	/**
-	 * Create socket, send me, delete socket.
-	 * @throws IOException
+	 * Send me using default send socket.
+	 * @throws IOException If unable.
 	 */
 	public void send(InetAddress addr) throws IOException {
-		//DatagramSocket s = sendSocket();
-		//send(s,addr);
-		//s.close();
 		send(SingleSendSocket.get(),addr);
 	}
 	
 	/**
 	 * Broadcast me using given socket. 
 	 * @param sock Socket must be made with sendSocket() method.
-	 * @throws IOException
+	 * @throws IOException If unable.
 	 */
 	public void send(DatagramSocket sock) throws IOException
 	{
@@ -97,14 +112,13 @@ public abstract class GenericPacket implements IPacket {
 		InetAddress address = InetAddress.getByAddress(broadcast);
 		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
 		sock.send(p);
-		//System.out.println("UDP broadcast "+pkt.length);
 	}
 
 	/**
 	 * Send me to given address. 
 	 * @param sock Socket must be made with sendSocket() method.
 	 * @param address Host to send to
-	 * @throws IOException
+	 * @throws IOException If unable.
 	 */
 	public void send(DatagramSocket sock, InetAddress address) throws IOException
 	{
@@ -117,16 +131,30 @@ public abstract class GenericPacket implements IPacket {
 
 	
 
-	
+	/**
+	 * Wait for packet to come in.
+	 * @return Packet received.
+	 * @throws SocketException As is.
+	 * @throws IOException As is. 
+	 * @throws MqttProtocolException What we got is not a valid MQTT/UDP packet.
+	 * /
 	public static IPacket recv() throws SocketException, IOException, MqttProtocolException
 	{
 		DatagramSocket s = recvSocket();
 		IPacket o = recv(s);
 		s.close();
 		return o;
-	}
+	}*/
 
 	
+	/**
+	 * Wait for packet to come in.
+	 * @param s Socket to use.
+	 * @return Packet received.
+	 * @throws SocketException As is.
+	 * @throws IOException As is. 
+	 * @throws MqttProtocolException What we got is not a valid MQTT/UDP packet.
+	 */
 	public static IPacket recv(DatagramSocket s) throws IOException, MqttProtocolException
 	{
 		// some embedded systems can't fragment UDP and
@@ -148,8 +176,17 @@ public abstract class GenericPacket implements IPacket {
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 * @see ru.dz.mqtt_udp.IPacket#getFrom()
+	 */
+	@Override
 	public IPacketAddress getFrom() { return from; }
 	
+	/**
+	 * Get packet flags. QoS, etc.
+	 */
+	public byte getFlags() {		return flags;	}
 	
 	@Override
 	public String toString() {		
@@ -158,8 +195,6 @@ public abstract class GenericPacket implements IPacket {
 
 
 	
-	// -------------------------------------------------------
-	// binary rep
 	
 	
 	

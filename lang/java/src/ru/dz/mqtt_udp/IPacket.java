@@ -3,14 +3,32 @@ package ru.dz.mqtt_udp;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
+/**
+ * Interface of general MQTT/UDP packet.
+ * @author dz
+ *
+ */
+
 public interface IPacket {
 
 	public static final String MQTT_CHARSET = "UTF-8";
 
+	/**
+	 * Generate network representation of packet to be sent.
+	 * @return UDP packet contents.
+	 */
 	public byte[] toBytes();
 
+	/**
+	 * Get packet sender address.
+	 * @return IP address.
+	 */
 	public IPacketAddress getFrom();
 
+	/**
+	 * Get packet type byte, as sent over the net (& 0xF0).
+	 * @return Packet type byte.
+	 */
 	public int getType();
 
 	
@@ -28,8 +46,7 @@ public interface IPacket {
 	 * @throws MqttProtocolException on incorrect binary packet data
 	 */
 	public static IPacket fromBytes( byte[] raw, IPacketAddress from ) throws MqttProtocolException
-	{
-		
+	{		
 	    int dlen = 0;
 	    int pos = 1;
 
@@ -77,7 +94,12 @@ public interface IPacket {
 		
 	}
 
-	
+
+	/**
+	 * Decode 2-byte string length.
+	 * @param pkt Binary packet data.
+	 * @return Decoded length.
+	 */
 	public static int decodeTopicLen( byte [] pkt )
 	{
 	    int ret = 0;
@@ -92,6 +114,9 @@ public interface IPacket {
 
 	/**
 	 * Rename to encodePacketHeader?
+	 * 
+	 * Encode total packet length. Encoded as variable length byte sequence, 7 bits per byte.
+	 * 
 	 * @param pkt packet payload bytes
 	 * @param packetType type ( & 0xF0 )
 	 * @param flags flags
@@ -146,6 +171,11 @@ public interface IPacket {
 			"? 0xFF",
 	};
 	
+	/**
+	 * Get packet type name.
+	 * @param packetType as in incoming byte (& 0xF0).
+	 * @return Type string.
+	 */
 	public static String getPacketTypeName(int packetType) 
 	{
 		int pos = packetType >> 4;
