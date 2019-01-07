@@ -11,11 +11,16 @@ sys.path.append('..')
 sys.path.append('../mqttudp')
 
 import threading
+#import re
+
 import paho.mqtt.client as broker
+
 import mqttudp.engine
 import mqttudp.config as cfg
 
 
+
+cfg.setGroup('mqtt-gate')
 
 SUBSCRIBE_TOPIC=cfg.config.get('mqtt-gate','subscribe' )
 MQTT_BROKER_HOST=cfg.config.get('mqtt-gate','host' )
@@ -26,7 +31,11 @@ MQTT_BROKER_PORT=cfg.config.getint('mqtt-gate','port' )
 #MQTT_BROKER_HOST="smart."
 #MQTT_BROKER_HOST="iot.eclipse.org"
 
+#print( "'"+str(MQTT_BROKER_PORT)+"'" )
 
+#blackList='/openhab'
+#blackList=cfg.config.get('mqtt-gate','blacklist' )
+blackList=cfg.get('blacklist' )
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -38,6 +47,11 @@ def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):  # @UnusedVariable
+#    if (len(blackList) > 0) and (re.match( blackList, msg.topic )):
+    if cfg.check_black_list(msg.topic, blackList):
+        print("From broker BLACKLIST "+ msg.topic+" "+str(msg.payload))
+        return
+
     print("From broker "+ msg.topic+" "+str(msg.payload))
     mqttudp.engine.send_publish_packet( msg.topic, msg.payload )
 

@@ -14,10 +14,18 @@ sys.path.append('..')
 sys.path.append('../mqttudp')
 
 import threading
+#import re
+
 import mqttudp.engine
 import mqttudp.interlock
 import mqttudp.config as cfg
+
 import paho.mqtt.client as broker
+
+
+cfg.set_group('mqtt-gate')
+blackList=cfg.get('blacklist' )
+
 
 SUBSCRIBE_TOPIC=cfg.config.get('mqtt-gate','subscribe' )
 MQTT_BROKER_HOST=cfg.config.get('mqtt-gate','host' )
@@ -36,6 +44,10 @@ def broker_on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 
 def broker_on_message(client, userdata, msg):  # @UnusedVariable
     #print( msg )
+#    if (len(blackList) > 0) and (re.match( blackList, msg.topic )):
+    if cfg.check_black_list(msg.topic, blackList):
+        print("To UDP BLACKLIST: "+ msg.topic+" "+str(msg.payload))
+        return
     if ilock.broker_to_udp(msg.topic, msg.payload):
         mqttudp.engine.send_publish_packet( msg.topic, msg.payload )
         print("To UDP: "+msg.topic+"="+str(msg.payload))
