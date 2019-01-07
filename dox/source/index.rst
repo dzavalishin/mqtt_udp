@@ -173,8 +173,16 @@ I'm going to use ``PUBACK`` packet later to support reliable delivery
 
 .. _c-lang-api:
 
+
+
+
+API Reference
+=============
+
+
+
 C Language API Reference
-========================
+------------------------
 
 
 There is a native MQTT/UDP implementation in C. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/c repository.
@@ -240,7 +248,7 @@ Now lets get through the packet structure definition::
 
 
 Listen for packets
-------------------
+^^^^^^^^^^^^^^^^^^
 
 See `Example C code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/c/mqtt_udp_listen.c>`_.
 
@@ -267,7 +275,7 @@ And you're done, now ypou have topic and value received.
 
 
 Includes
---------
+^^^^^^^^
 
 There's just one::
 
@@ -275,7 +283,7 @@ There's just one::
 
 
 Functions
----------
+^^^^^^^^^
 
 Send PUBLISH packet::
 
@@ -308,7 +316,7 @@ Dump packet structure. Handy to debug things::
 
 
 UDP IO interface
-----------------
+^^^^^^^^^^^^^^^^
 
 Default implementation uses POSIX API to communicate with network, but for 
 embedded use you can redefine corresponding functions.
@@ -342,7 +350,7 @@ Close UDP socket::
 .. _java-lang-api:
 
 Java Language API Reference
-===========================
+---------------------------
 
 
 There is a native MQTT/UDP implementation in Java. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/java repository.
@@ -375,7 +383,7 @@ Listen for data::
 
 
 Listen for packets
-------------------
+^^^^^^^^^^^^^^^^^^
 
 See `Example Java code <https://github.com/dzavalishin/mqtt_udp/blob/master/lang/java/src/ru/dz/mqtt_udp/util/Sub.java>`_.
 
@@ -462,7 +470,7 @@ to pass packets received to you. The rest of the story is the same.
 .. _python-lang-api:
 
 Python Language API Reference
-=============================
+-----------------------------
 
 As you already guessed, python implementation is native too. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/python3 repository.
 There is also lang/python directory, which is for older 2.x python environment, but it is outdated. Sorry, can't afford to support it. You can backport some
@@ -491,7 +499,7 @@ Listen for data::
 
 
 Module mqttudp.engine
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 Main package, implements MQTT/UDP protocol.
 
@@ -505,7 +513,7 @@ Main package, implements MQTT/UDP protocol.
 
 
 Module mqttudp.config
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 Additional module, sets up configuration file reader. Most command line utilities use it to get settings.
 It reads ``mqtt-udp.ini`` file in current directory. Here is an example::
@@ -541,7 +549,7 @@ Usage::
 
 
 Module mqttudp.interlock
-------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Additional module, used by bidiractional gateways to prevent loop traffic.
 
@@ -576,7 +584,7 @@ for later and smarter versions.
 
 
 Module mqttudp.mqtt_udp_defs
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 This module is not for user code, it is used internally. But you can get library release version from it::
@@ -591,7 +599,7 @@ This module is not for user code, it is used internally. But you can get library
 .. _lua-lang-api:
 
 Lua Language API Reference
-==========================
+--------------------------
 
 
 **NB! Lua API is not final, there will be some methods rename.**
@@ -622,8 +630,11 @@ Listen for data::
 
 
 
+Integration and tools
+=====================
+
 Connectors
-==========
+----------
 
 Classic MQTT
 ------------
@@ -661,7 +672,11 @@ Traffic viewer
 
 A GUI tool to view what's going on and send data too.
 
-.. image:: ../TrafficViewerScreen_Jan2019.png
+.. figure:: ../TrafficViewerScreen_Jan2019.png
+
+   Screenshot of MQTT/UDP viewer tool
+
+It is supposed that this tool can be used as remote configuration for MQTT/UDP nodes on the network.
 
 Read more at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
 
