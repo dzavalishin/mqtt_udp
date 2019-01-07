@@ -490,7 +490,7 @@ All functions
 * ``listen(callback)`` - listen for incoming packets.
 * ``send_publish_packet( topic, payload)`` - this what is mostly used.
 * ``send_subscribe(topic)`` - ask other party to send corresponding item again. This is optional.
-
+* ``set_muted(mode: bool)`` - turn off protocol replies. Use for send-only daemons which do not need to be discovered.
 
 
 
@@ -578,7 +578,7 @@ but most exist just in Python version.
 
 * **random_to_udp.py** - send random numbers with 2 sec interval, to test reception.
 * **dump.py** - just show all traffic.
-* **ping.py** - send ping and show responces. Note that running ping.py will resond to itself too.
+* **ping.py** - send ping and show responces. By using set_muted(mode: bool) function it turns off protocol replies so it will not resond to itself.
 * **subscribe.py** - send subscribe request.
 * **seq_storm_send.py** - send sequential data with no speed limit (use -s to set limit, though).
 * **seq_storm_check.py** - check traffic sent by *seq_storm_send.py* and calculate speed and error rate.
