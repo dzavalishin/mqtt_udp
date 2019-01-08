@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"ru.dz.mqtt_udp"},{"l":"ru.dz.mqtt_udp.io"},{"l":"ru.dz.mqtt_udp.util"}]
