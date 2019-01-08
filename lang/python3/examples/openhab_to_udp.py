@@ -12,7 +12,7 @@ import time
 import mqttudp.engine
 import mqttudp.interlock
 
-import openhab
+import mqttudp.openhab as openhab
 import mqttudp.config as cfg
 
 
@@ -98,10 +98,8 @@ def extract_content(content):
             #members = content["members"]    #list of member items
             pass
         elif ct == "NumberItem":
-            #members = content["item"]       #its a single item dict *not sure this is a thing*
             process_item( content["name"], content["state"], ct )
         elif ct == "SwitchItem":
-            #members = content["item"]       #its a single item dict *not sure this is a thing*
             process_item( content["name"], content["state"], ct )
         else:
             #members = content               #its a single item dict
@@ -112,20 +110,13 @@ def extract_content(content):
         extract_widget(hp)
     elif "widget" in content:               #sitemap response
         #print(wi)
-        #members = content["widget"]["item"] #widget is a list of items, (could be GroupItems) these are dicts
         extract_widget(content)
     elif "item" in content:
-        #members = content["item"]           #its a single item dict
         extract_item(content["item"])
     else:
-        #members = content                   #don't know...
         #log.debug(members)
         print("unknown format: "+str(content))
     
-    #if isinstance(members, dict):   #if it's a dict not a list
-    #    members = [members]         #make it a list (otherwise it's already a list of items...)
-        
-    #return members
 
 
 # do not repeat item in 10 seconds if value is the same

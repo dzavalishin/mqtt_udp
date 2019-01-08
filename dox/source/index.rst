@@ -1,17 +1,16 @@
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
 
 Welcome to MQTT/UDP
 ===================
 
-Version |version|
-
-
 .. only:: html
 
+   Package version |version|
+   
    You can get this document in `PDF format`_.
 
 .. _PDF format: https://media.readthedocs.org/pdf/mqtt-udp/latest/mqtt-udp.pdf
@@ -631,7 +630,7 @@ for later and smarter versions.
         print("From broker REPEAT BLOCKED "+topic+" "+value)
 
 
-It checks if value is chaneged. Changed values are permitted to pass through.
+It checks if value is changed. Such values are permitted to pass through.
 Unchanged ones will pass only if time (10 seconds in this example) is passed
 since previous item come through.
 
@@ -655,8 +654,9 @@ This module is not for user code, it is used internally. But you can get library
 Lua Language API Reference
 --------------------------
 
+.. NOTE::
 
-**NB! Lua API is not final, there will be some methods rename.**
+   Lua API is not final, there will be some methods rename.
 
 You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/lua repository.
 
