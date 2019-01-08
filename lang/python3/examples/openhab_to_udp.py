@@ -86,7 +86,7 @@ def extract_content(content):
             process_item( content["name"], content["state"], ct )
         else:
             #members = content               #its a single item dict
-			pass
+            pass
     elif "homepage" in content:               #sitemap response
         hp=content["homepage"]
         #print(wi)
@@ -125,17 +125,21 @@ if __name__ == "__main__":
     oh = openhab.OpenHab()
     oh.set_poll_listener(listener)
 
-    #oh.get_status("gPersist")
+    if True:
+        #oh.get_status("/rest/items/CCU825_Sound_1")
+        oh.get_status("/rest/sitemaps/default")
 
-    #oh.get_status_stream("/rest/sitemaps/default/0000") #connects, but empty
-
-    # next ones work
-
-    oh.get_status_stream("/rest/sitemaps/default")
-    #oh.get_status_stream("/rest/items/CCU825_Sound_1")
-
-    # broken
-    #oh.get_status_stream("/rest/items/gPersist")
+    else:
+    
+        #oh.get_status_stream("/rest/sitemaps/default/0000") #connects, but empty
+    
+        # next ones work
+    
+        oh.get_status_stream("/rest/sitemaps/default")
+        #oh.get_status_stream("/rest/items/CCU825_Sound_1")
+    
+        # broken
+        #oh.get_status_stream("/rest/items/gPersist")
 
 
 

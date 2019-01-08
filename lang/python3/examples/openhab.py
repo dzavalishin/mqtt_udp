@@ -32,23 +32,24 @@ class OpenHab:
         """
         # When an item in Group NAME changes we will get all items in the group
         # and need to determine which has changed
-        url = 'http://%s:%s/rest/items/%s'%(self.openhab_host,
-                                        self.openhab_port, name)
+        url = 'http://%s:%s%s'%(self.openhab_host, self.openhab_port, name)
         payload = {'type': 'json'}
         try:
+            print("request "+url)
             req = requests.get(url, params=payload,
                                 headers=self.polling_header())
             if req.status_code != requests.codes.ok:
                 req.raise_for_status()
             # Try to parse JSON response
             # At top level, there is type, name, state, link and members array
-            members = req.json()["members"]
-            dump_members(members)
+            print(req.json())
+            #members = req.json()["members"]
+            #dump_members(members)
         except Exception as e:
             print(e)
 
 
-
+    """
     def dump_members(members):
         for member in members:
             # Each member has a type, name, state and link
@@ -62,7 +63,7 @@ class OpenHab:
             self.prev_state_dict[name] = state
             if do_publish:
                 self.publish(name, state)
-
+    """
 
     def streaming_header(self):
         # Header for OpenHAB REST request - streaming

@@ -531,6 +531,7 @@ Main package, implements MQTT/UDP protocol.
 * ``set_muted(mode: bool)`` - turn off protocol replies. Use for send-only daemons which do not need to be discovered.
 
 
+.. _python-ini-file:
 
 Module mqttudp.config
 ^^^^^^^^^^^^^^^^^^^^^
@@ -659,6 +660,9 @@ Connectors
 
 Project includes two simple connectors. One joins MQTT/UDP with classical MQTT, other connects to OpenHAB.
 
+All the tools read ``mqtt-udp.ini`` file, see :ref:`python-ini-file` for detailed description. You have, at 
+least, to set host name for both tools.
+
 Classic MQTT
 ^^^^^^^^^^^^
 
@@ -667,11 +671,14 @@ pass traffic back and forth. It is written in Python and copies everything from 
 back. There's interlock logic introduced that prevents loops by not passing same topic message in reverse 
 direction for some 5 seconds.
 
+To run connector go to ``lang/python3/examples`` directory and start ``bidirectional_gate.py`` program.
+
 OpenHAB
 ^^^^^^^
 
 At the moment there is just one way gateway, from MQTT/UDP to OpenHAB. Bidirectional one is in development.
 
+To run connector go to ``lang/python3/examples`` directory and start ``mqtt_udp_to_openhab.py`` program.
 
 Scripts
 -------
@@ -701,7 +708,11 @@ A GUI tool to view what's going on and send data too.
 
 It is supposed that this tool can be used as remote configuration for MQTT/UDP nodes on the network.
 
-Read more at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
+To run program go to project root directory and start ``mqtt_udp_view.cmd`` or ``mqtt_udp_view`` depending on your OS. You will
+need Java 8 and JavaFX installed for it to run. Please download it from http://java.com or
+try to use OpenJDK. (I did not yet.)
+
+Actual user giode is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
 
 
 Network
