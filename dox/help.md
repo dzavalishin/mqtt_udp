@@ -4,3 +4,5 @@
 
 <http://docutils.sourceforge.net/docs/ref/rst/directives.html>
 
+<https://www.ericholscher.com/blog/2016/jul/1/sphinx-and-rtd-for-writers/>
+

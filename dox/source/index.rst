@@ -7,6 +7,12 @@ Welcome to MQTT/UDP
 
 Version |version|
 
+.. only:: html
+
+   You can get this document in `PDF format`_.
+
+.. _PDF format: https://media.readthedocs.org/pdf/mqtt-udp/latest/mqtt-udp.pdf
+
 .. rem Indices and tables
 .. rem ------------------
 
@@ -15,15 +21,17 @@ Version |version|
 * :ref:`search`
 
 
-*Network is a broker*
-
-
 Introduction
 ------------
+
 
 MQTT/UDP is a simplest possible protocol for IoT, smart home applications and robotics. As you can guess from its name, it is based on MQTT (which is quite simple too), but based on UDP.
 
 Fast track for impatient readers: MQTT/UDP native implementations exist in Java, Python, C, Lua and PLC specific ST language. See corresponding references:
+
+.. sidebar:: *Network is a broker*
+
+   Your network does most of the broker's work.
 
 * :ref:`c-lang-api`
 * :ref:`java-lang-api`
@@ -127,7 +135,9 @@ repository, but you can use, for example well known WireShark as well.
 Reliability
 -----------
 
-**NB! There's QoS support for MQTT/UDP is in development, which makes it as reliable as TCP version.**
+.. NOTE::
+
+   There's QoS support for MQTT/UDP is in development, which makes it as reliable as TCP version.
 
 As MQTT/UDP is based on UDP protocol, which does not guarantee packet delivery, one can suppose that MQTT/UDP is not reliable. Is it?
 
@@ -472,9 +482,12 @@ to pass packets received to you. The rest of the story is the same.
 Python Language API Reference
 -----------------------------
 
-As you already guessed, python implementation is native too. You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/python3 repository.
-There is also lang/python directory, which is for older 2.x python environment, but it is outdated. Sorry, can't afford to support it. You can backport some
-python3 code, it should be quite easy.
+As you already guessed, python implementation is native too. You can browse 
+sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/python3 
+repository.
+There is also lang/python directory, which is for older 2.x python environment, 
+but it is outdated. Sorry, can't afford to support it. If you need python 2.x, 
+you can backport some python3 code, it should be quite easy.
 
 
 Let's begin with examples, as usual.
@@ -633,11 +646,14 @@ Listen for data::
 Integration and tools
 =====================
 
+
 Connectors
 ----------
 
+Project includes two simple connectors. One joins MQTT/UDP with classical MQTT, other connects to OpenHAB.
+
 Classic MQTT
-------------
+^^^^^^^^^^^^
 
 It is obvious that MQTT/UDP can be used together with traditional MQTT, so there's a simple gateway to 
 pass traffic back and forth. It is written in Python and copies everything from one side to another and
@@ -645,13 +661,13 @@ back. There's interlock logic introduced that prevents loops by not passing same
 direction for some 5 seconds.
 
 OpenHAB
--------
+^^^^^^^
 
 At the moment there is just one way gateway, from MQTT/UDP to OpenHAB. Bidirectional one is in development.
 
 
 Scripts
-=======
+-------
 
 There are Python scripts I made to help myself testing MQTT/UDP library. Some of them are written in C and Lua too
 but most exist just in Python version.
@@ -668,7 +684,7 @@ but most exist just in Python version.
 
 
 Traffic viewer
-==============
+--------------
 
 A GUI tool to view what's going on and send data too.
 
