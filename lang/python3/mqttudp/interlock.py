@@ -5,7 +5,7 @@ Created on 24.12.2017
 '''
 import datetime
 
-class bidirectional(object):
+class Bidirectional(object):
     '''
     Bidirectional interlock to protect from message loops
     when pumping data from UDP to broker and back.
@@ -58,6 +58,58 @@ class bidirectional(object):
         
         
         
+
+class Timer(object):
+    '''
+    Timer lock used to prevent too frequent update.
+    
+    It will check for previous value and update time,
+    and let update if value is different or time spent.
+    '''
+
+
+    def __init__(self, timeout=20):
+        '''
+        timeout is in seconds, time for duplicate value can
+        be published again
+        '''
+        self.timeout = timeout
+        self.dirmap = {}
+        
+        
+    def can_pass(self, topic, value ):
+        '''
+        Returns true if message can pass
+        '''
+        now = datetime.datetime.now()
+
+        # not yet - pass
+        if not self.dirmap.__contains__(topic):
+            self.dirmap[topic] = (value,now)
+            return True
+        
+        st_value,st_time = self.dirmap[topic]
+        self.dirmap[topic] = (value,now) # update
+
+        # value is different - TODO for numerics add delta to check within
+        if st_value != value:
+            return True
+        
+        # value is the same, check time spent
+        
+        delta = now - st_time  
+
+        if delta.total_seconds() > self.timeout:
+            return True
+        
+        return False
+        
+        
+    # TODO def get_timed_out( self ) # Return list of timed out items to resend them if no update comes through too long
+        
+        
+
+
         
         
         

@@ -53,12 +53,14 @@ These are really simple programs to integrate MQTT/UDP to other IoT systems.
 
 * mqtt_broker_to_udp.py will copy all traffic from MQTT to MQTT/UDP.
 
-* And bidirectional_gate.py integrates MQTT/UDP and MQTT in both ways.
+* And mqtt_bidir_gate.py integrates MQTT/UDP and MQTT in both ways.
 
 It has simple loop prevention engine inside which stops same PUBLISH packet to come
 in reverse direction in 5 seconds after it comes forward.
 
 * mqtt_udp_to_openhab.py will copy all MQTT/UDP traffic to OpenHAB.
+
+* openhab_to_udp.py will copy all default sitemap items from OpenHAB to MQTT/UDP
 
 Of course we need bidirectional gateway for OpenHAB too.
 

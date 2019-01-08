@@ -1,11 +1,30 @@
 #!/usr/bin/env python3
 
-#               NB!! Broken!
+# will work even if package is not installed
+import sys
+sys.path.append('..')
+sys.path.append('../mqttudp')
 
+import threading
+import time
+#import re
+
+import mqttudp.engine
+import mqttudp.interlock
 
 import openhab
+import mqttudp.config as cfg
 
 
+cfg.setGroup('openhab-gate')
+
+blackList=cfg.get('blacklist' )
+
+verbose = cfg.getboolean('verbose' )
+
+
+
+# actually, interlock.Timer does it
 new_items = {}
 
 def process_item( topic, value, ptype ):
@@ -109,25 +128,48 @@ def extract_content(content):
     #return members
 
 
+# do not repeat item in 10 seconds if value is the same
+it = mqttudp.interlock.Timer(10)
 
 def listener(msg):
     global new_items
     new_items = {}
     #print("msg="+str(msg))
-    print("")
+    #print("")
     extract_content(msg)
     #print(new_items)
     for topic in new_items:
-        print( topic+"="+new_items[topic] )
+        value = new_items[topic]
+        #print( topic+"="+value )
+        if cfg.check_black_list(topic, blackList):
+            if verbose:
+                print("From OpenHAB BLACKLIST "+ topic+" "+value)
+            return
+
+        if it.can_pass( topic, value ):
+            if verbose:
+                print("From broker "+topic+" "+value)
+            mqttudp.engine.send_publish_packet( topic, value )
+        else:
+            if verbose:
+                print("From broker REPEAT BLOCKED "+topic+" "+value)
 
 
 if __name__ == "__main__":
     oh = openhab.OpenHab()
     oh.set_poll_listener(listener)
 
+    oh.set_host( cfg.get('host' ) )
+    oh.set_port( cfg.get('port' ) )
+
+    print('''Gate from OpenHAB tp MQTT/UDP.
+Will translate all updated topics to MQTT/UDP.''')
+
     if True:
-        #oh.get_status("/rest/items/CCU825_Sound_1")
-        oh.get_status("/rest/sitemaps/default")
+        while True:
+            #oh.get_status("/rest/items/CCU825_Sound_1")
+            oh.get_status("/rest/sitemaps/default")
+            time.sleep( 1 ) # not more than once a second
 
     else:
     

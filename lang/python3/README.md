@@ -19,11 +19,14 @@ You can check other languages implementations also - <https://github.com/dzavali
   listen.py					- Print packets only if content is changeg
 
   mqtt_udp_to_openhab.py 	- Translate all the data to OpenHAB REST API
+  openhab_to_udp.py			- Translate all the data from OpenHAB REST API (default sitemap) to MQTT/UDP
 
   seq_storm_send.py 		- Send seqentially numbered packets as fast as possible
   seq_storm_check.py 		- Check packets for sequentialness and calc speed
 
-  bidirectional_gate.py		- Translate data between MQTT/UDP and traditional MQTT
+  mqtt_bidir_gate.py		- Translate data between MQTT/UDP and traditional MQTT
+  mqtt_broker_to_udp.py		- One way, to MQTT/UDP
+  mqtt_udp_to_broker.py		- One way, from MQTT/UDP
 
   random_to_udp.py			- Generate traffic with random numbers
 

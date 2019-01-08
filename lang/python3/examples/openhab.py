@@ -17,7 +17,7 @@ class OpenHab:
 
     def __init__(self):
         """Constructor"""
-        print("c'tor")
+
         self.openhab_host = "smart."
         self.openhab_port = "8080"
         self.connected = True
@@ -35,35 +35,18 @@ class OpenHab:
         url = 'http://%s:%s%s'%(self.openhab_host, self.openhab_port, name)
         payload = {'type': 'json'}
         try:
-            print("request "+url)
+            #print("request "+url)
             req = requests.get(url, params=payload,
                                 headers=self.polling_header())
             if req.status_code != requests.codes.ok:
                 req.raise_for_status()
             # Try to parse JSON response
-            # At top level, there is type, name, state, link and members array
-            print(req.json())
-            #members = req.json()["members"]
-            #dump_members(members)
+            ##print(req.json())
+            self.poll_listener(req.json())
         except Exception as e:
             print(e)
 
 
-    """
-    def dump_members(members):
-        for member in members:
-            # Each member has a type, name, state and link
-            name = member["name"]
-            state = member["state"]
-            do_publish = True
-            # Pub unless we had key before and it hasn't changed
-            if name in self.prev_state_dict:
-                if self.prev_state_dict[name] == state:
-                    do_publish = False
-            self.prev_state_dict[name] = state
-            if do_publish:
-                self.publish(name, state)
-    """
 
     def streaming_header(self):
         # Header for OpenHAB REST request - streaming
@@ -95,14 +78,16 @@ class OpenHab:
 
 
     def get_status_stream(self, item):
-        """
+        '''
+        NB. Broken.
+
         Request updates for any item in item from OpenHAB.
         streaming will not respond until item updates. Can also use 
         Sitemap page id (eg /rest/sitemaps/name/0000) as long as it
         contains items (not just groups of groups)
         auto reconnects while parent.connected is true.
-        This is meant to be run as a thread
-        """
+        This is meant to be run as a thread.
+        '''
         
         connect = 0     #just keep track of number of disconnects/reconnects
         
@@ -196,4 +181,24 @@ class OpenHab:
         if item in self.streaming_threads:
             del(self.streaming_threads[item])
             log.debug("removed %s from streaming_threads" % item)
+
+
+    # --------------------------------------------------------------------
+    #
+    # Getters/Setters
+    #
+    # --------------------------------------------------------------------
+
+
+
+    def set_host(self, host):
+        self.openhab_host = host
+
+    def set_port(self, port):
+        self.openhab_port = port
+
+
+
+
+
 

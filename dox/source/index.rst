@@ -557,6 +557,7 @@ It reads ``mqtt-udp.ini`` file in current directory. Here is an example::
     #port=8080           # There's builtin default
     #host = smart.       # Settings for MQTT/UDP to OpehHAB gate
     
+    #blacklist=/topic    # Regexp to check if topic is forbidden to relay
 
 
 Usage::
@@ -671,14 +672,17 @@ pass traffic back and forth. It is written in Python and copies everything from 
 back. There's interlock logic introduced that prevents loops by not passing same topic message in reverse 
 direction for some 5 seconds.
 
-To run connector go to ``lang/python3/examples`` directory and start ``bidirectional_gate.py`` program.
+To run connector go to ``lang/python3/examples`` directory and start ``mqtt_bidir_gate.py`` program.
+
+There are also unidirectional gates ``mqtt_broker_to_udp.py`` and ``mqtt_udp_to_broker.py``.
 
 OpenHAB
 ^^^^^^^
 
-At the moment there is just one way gateway, from MQTT/UDP to OpenHAB. Bidirectional one is in development.
+At the moment there is just two one way gateways, from MQTT/UDP to OpenHAB and back. Bidirectional one is in development.
 
-To run connector go to ``lang/python3/examples`` directory and start ``mqtt_udp_to_openhab.py`` program.
+To run connector go to ``lang/python3/examples`` directory and start ``mqtt_udp_to_openhab.py`` or
+``openhab_to_udp.py`` program.
 
 Scripts
 -------

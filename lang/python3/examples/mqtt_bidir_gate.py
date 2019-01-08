@@ -36,7 +36,7 @@ MQTT_BROKER_PORT=cfg.config.getint('mqtt-gate','port' )
 
 
 
-ilock = mqttudp.interlock.bidirectional(5)
+ilock = mqttudp.interlock.Bidirectional(5)
 
 def broker_on_connect(client, userdata, rc, unkn):  # @UnusedVariable
     print("Connected with result code "+str(rc))

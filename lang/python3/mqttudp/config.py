@@ -4,8 +4,14 @@ import re
 config = configparser.ConfigParser()
 
 
+config['DEFAULT'] = {
+    'verbose' : True    # debug mode, application will chat a lot
+    }
+
+
 config['openhab-gate'] = {
-    'port': "8080" 
+    'port': "8080",
+    'blacklist' : '^\\$'   # regexp: prevent matching topics to come through, match on MQTT/UDP side
     }
 
 config['mqtt-gate'] = {
@@ -46,11 +52,14 @@ def get(item):
     global caller_group
     return config.get( caller_group, item )
 
+def getboolean(item):
+    #global caller_group
+    return config.getboolean( caller_group, item )
 
 
 
 def check_black_list(topic,blacklist):
-    print(topic,blacklist)
+    #print(topic,blacklist)
     return (len(blacklist) > 0) and (re.match( blacklist, topic ))
 
 
