@@ -22,8 +22,11 @@ blackList=cfg.get('blacklist' )
 
 verbose = cfg.getboolean('verbose' )
 
+dc = openhab.Decoder()
 
 
+
+'''
 # actually, interlock.Timer does it
 new_items = {}
 
@@ -116,21 +119,21 @@ def extract_content(content):
     else:
         #log.debug(members)
         print("unknown format: "+str(content))
-    
+'''
 
 
 # do not repeat item in 10 seconds if value is the same
 it = mqttudp.interlock.Timer(10)
 
 def listener(msg):
-    global new_items
-    new_items = {}
+    #global new_items
+    dc.new_items = {}
     #print("msg="+str(msg))
     #print("")
-    extract_content(msg)
+    dc.extract_content(msg)
     #print(new_items)
-    for topic in new_items:
-        value = new_items[topic]
+    for topic in dc.new_items:
+        value = dc.new_items[topic]
         #print( topic+"="+value )
         if cfg.check_black_list(topic, blackList):
             if verbose:
@@ -147,7 +150,7 @@ def listener(msg):
 
 
 if __name__ == "__main__":
-    oh = openhab.OpenHab()
+    oh = openhab.RestIO()
     oh.set_poll_listener(listener)
 
     oh.set_host( cfg.get('host' ) )

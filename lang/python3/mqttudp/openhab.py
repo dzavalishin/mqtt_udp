@@ -13,7 +13,7 @@ import logging as log
 log.basicConfig(filename="openhab_gate.log", level=log.INFO)
  
 
-class OpenHab:
+class RestIO:
 
     def __init__(self):
         """Constructor"""
@@ -200,5 +200,101 @@ class OpenHab:
 
 
 
+class Decoder:
+    ''' Decode OpenHAB JSON '''
 
-
+    def __init__(self):
+        """Constructor"""
+        self.new_items = {}
+    
+    def process_item(self,  topic, value, ptype ):
+        if ptype == "NumberItem":
+            try:
+                num = float(value)
+                value = str(num)
+            except Exception:
+                pass
+        if not self.new_items.__contains__(topic):
+            #print(topic+"="+value)
+            self.new_items[topic]=value
+    
+    
+    def extract_item(self, i):
+        #print("item="+str(hp))
+        self.process_item( i["name"], i["state"], i["type"] )
+    
+    # one widget or array
+    def extract_widget(self, data):
+        #print("wia="+str(data))
+        wi = data["widget"]
+    
+        #if not data.__contains__("widgetId"):
+        #    #print("unknown="+str(data))
+        #    self.extract_widget_el(data)
+        #    return
+    
+        if isinstance(wi, dict):
+            #print("unknown="+str(data))
+            self.extract_widget_el(wi)
+            return
+    
+    
+        for wiel in wi:
+            self.extract_widget_el(wiel)
+    
+    # one widget exactly
+    def extract_widget_el(self, wiel):
+        #print("wiel="+str(wiel))
+    
+        #print("wiel="+str(wiel))
+        #if "widget" in wiel:
+        if wiel.__contains__("widget"):
+            self.extract_widget(wiel)
+        #if "linkedPage" in wiel:
+        elif wiel.__contains__("linkedPage"):
+            self.extract_widget(wiel["linkedPage"])
+        #elif "item" in wiel:
+        elif wiel.__contains__("item"):
+            self.extract_item(wiel["item"])
+        else:
+            print("unknown []="+str(data))
+    
+    def extract_content(self, content):
+        """ extract the "members" or "items" from content, and make a list """
+    
+        # sitemap items have "id" and "widget" keys. "widget is a list of "item" dicts. no "type" key.
+        # items items have a "type" key which is something like "ColorItem", "DimmerItem" and so on, then "name" and "state". they are dicts
+        # items groups have a "type" "GroupItem", then "name" and "state" (of the group) "members" is a list of item dicts as above
+    
+        
+        if "type" in content:                   #items response
+    
+            ct = content["type"]
+            #print("type="+ct)
+    
+            if ct == "GroupItem":
+                # At top level (for GroupItem), there is type, name, state, link and members list
+                #members = content["members"]    #list of member items
+                pass
+            elif ct == "NumberItem":
+                self.process_item( content["name"], content["state"], ct )
+            elif ct == "SwitchItem":
+                self.process_item( content["name"], content["state"], ct )
+            else:
+                #members = content               #its a single item dict
+                pass
+        elif "homepage" in content:               #sitemap response
+            hp=content["homepage"]
+            #print(wi)
+            self.extract_widget(hp)
+        elif "widget" in content:               #sitemap response
+            #print(wi)
+            self.extract_widget(content)
+        elif "item" in content:
+            self.extract_item(content["item"])
+        else:
+            #log.debug(members)
+            print("unknown format: "+str(content))
+    
+    
+    
