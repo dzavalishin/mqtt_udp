@@ -1,11 +1,13 @@
 Welcome to MQTT/UDP
 ===================
 
+Version |version|
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-Version |version|
 
 .. only:: html
 
@@ -16,16 +18,20 @@ Version |version|
 .. rem Indices and tables
 .. rem ------------------
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. rem .. only:: html
+
+.. rem   * :ref:`genindex`
+.. rem   * :ref:`modindex`
+.. rem   * :ref:`search`
 
 
 Introduction
 ------------
 
 
-MQTT/UDP is a simplest possible protocol for IoT, smart home applications and robotics. As you can guess from its name, it is based on MQTT (which is quite simple too), but based on UDP.
+MQTT/UDP is a simplest possible protocol for IoT, smart home applications and 
+robotics. As you can guess from its name, it is based on MQTT (which is quite 
+simple too), but based on UDP and needs no broker.
 
 Fast track for impatient readers: MQTT/UDP native implementations exist in Java, Python, C, Lua and PLC specific ST language. See corresponding references:
 
@@ -179,9 +185,7 @@ Library code automatically replies to ``PINGREQ`` with ``PINGRESP``.
 
 ``PINGRESP`` - reply to ping. You don't need to send it manually. It is done automatically.
 
-I'm going to use ``PUBACK`` packet later to support reliable delivery
-
-.. _c-lang-api:
+I'm going to use ``PUBACK`` packet later to support reliable delivery.
 
 
 
@@ -190,6 +194,7 @@ API Reference
 =============
 
 
+.. _c-lang-api:
 
 C Language API Reference
 ------------------------
@@ -307,7 +312,7 @@ Send PINGREQ packet, ask others to respond::
 
     int mqtt_udp_send_ping_request( void );
 
-Send PINGREST packet, tell that you're alive::
+Send PINGRESP packet, tell that you're alive::
 
     int mqtt_udp_send_ping_responce( void );
 
