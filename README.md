@@ -26,7 +26,7 @@ merely an MQTT Publish packets broadcast over an UDP.
 ## For further reading
 
 *   [MQTT/UDP Wiki](../../wiki)
-*   [MQTT/UDP Topologies](./dox/Topologies.md)
+*   [Documentation](https://mqtt-udp.readthedocs.io/en/latest/)
 
 ## This repository contains
 
