@@ -11,7 +11,8 @@ config['DEFAULT'] = {
 
 config['openhab-gate'] = {
     'port': "8080",
-    'blacklist' : '^\\$'   # regexp: prevent matching topics to come through, match on MQTT/UDP side
+    'blacklist' : '^\\$',   # regexp: prevent matching topics to come through, match on MQTT/UDP side
+    'sitemap'	: 'default'
     }
 
 config['mqtt-gate'] = {
