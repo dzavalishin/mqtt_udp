@@ -8,12 +8,12 @@ Requires=network.target
 # We suppose mosquitto by default
 After=mosquitto.service
 
-#ConditionPathExists=/opt/mqttudp/python/gate.sh
+#ConditionPathExists=/opt/mqttudp/python/mqtt_gate.sh
 
 [Service]
 Type=forking
 WorkingDirectory=/opt/mqttudp
-ExecStart=/opt/mqttudp/python/gate.sh
+ExecStart=/opt/mqttudp/python/mqtt_gate.sh
 Restart=allways
 RestartSec=5
 GuessMainPID=yes

@@ -48,6 +48,8 @@ def set_group(group):
     global caller_group
     caller_group = group
 
+
+
 def get(item):
     global caller_group
     return config.get( caller_group, item )
@@ -56,9 +58,16 @@ def getboolean(item):
     #global caller_group
     return config.getboolean( caller_group, item )
 
+def getint(item):
+    return config.getint( caller_group, item )
+
+def getfloat(item):
+    return config.getfloat( caller_group, item )
+
 
 
 def check_black_list(topic,blacklist):
+    ''' Check for topic to be in black list regular expression '''
     #print(topic,blacklist)
     return (len(blacklist) > 0) and (re.match( blacklist, topic ))
 
