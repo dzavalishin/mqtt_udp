@@ -23,43 +23,62 @@ sitemap         = cfg.get('sitemap' )
 verbose         = cfg.getboolean('verbose' )
 
 
+oh = openhab.RestIO()
+
 dc = openhab.Decoder()
 
 
-
-
+# back/forth loop lock
+ilock = mqttudp.interlock.Bidirectional(5)
 
 # do not repeat item in 10 seconds if value is the same
 it = mqttudp.interlock.Timer(10)
 
+
+
+
+# ------------------------------------------------------------------------
+#
+# From OpenHAB to UDP
+#
+# ------------------------------------------------------------------------
+
+
+# TODO logging
+def send_to_udp( topic, value ):
+
+    if not ilock.broker_to_udp( topic, value ):
+        if verbose:
+            print("From OpenHAB BLOCKED: "+topic+"="+value)
+
+    if cfg.check_black_list(topic, blackList):
+        if verbose:
+            print("From OpenHAB BLACKLIST "+topic+" "+value)
+        return
+
+    if it.can_pass( topic, value ):
+        if verbose:
+            print("From OpenHAB "+topic+" "+value)
+        mqttudp.engine.send_publish_packet( topic, value )
+    else:
+        if verbose:
+            print("From OpenHAB REPEAT BLOCKED "+topic+" "+value)
+
+
+
 def listener(msg):
 
     dc.new_items = {}
-    #print("msg="+str(msg))
 
     dc.extract_content(msg)
-    #print(new_items)
+
     for topic in dc.new_items:
         value = dc.new_items[topic]
-        #print( topic+"="+value )
-        if cfg.check_black_list(topic, blackList):
-            if verbose:
-                print("From OpenHAB BLACKLIST "+ topic+" "+value)
-            return
-
-        if it.can_pass( topic, value ):
-            if verbose:
-                print("From broker "+topic+" "+value)
-            mqttudp.engine.send_publish_packet( topic, value )
-        else:
-            if verbose:
-                print("From broker REPEAT BLOCKED "+topic+" "+value)
-
+        send_to_udp( topic, value )
 
 
 
 def ohb_listen_thread():
-    oh = openhab.RestIO()
     oh.set_poll_listener(listener)
 
     oh.set_host( cfg.get('host' ) )
@@ -67,20 +86,64 @@ def ohb_listen_thread():
 
 
     while True:
-        oh.get_status("/rest/sitemaps/default")
+        oh.get_status("/rest/sitemaps/"+sitemap)
+        #oh.get_status("/rest/sitemaps/default")
         time.sleep( 1 ) # not more than once a second
 
 
+# ------------------------------------------------------------------------
+#
+# From UDP to OpenHAB
+#
+# ------------------------------------------------------------------------
 
+#todo use mqttudp.interlock.Timer too
+last = {}
+def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+
+    if ptype != "publish":
+        return
+
+    if last.__contains__(topic) and last[topic] == value:
+        return
+
+    last[topic] = value
+
+    if cfg.check_black_list(topic, blackList):
+        if verbose:
+            print("To OpenHAB BLACKLIST "+ topic+" "+value)
+        return
+
+    if not ilock.udp_to_broker(topic, value):
+        print( "To OpenHAB BLOCKED: "+topic+"="+value )
+        return
+
+    print( "To OpenHAB "+topic+"="+value )
+    oh.put_status(topic, value)
+
+
+
+def udp_listen_thread():
+    mqttudp.engine.listen(recv_packet_from_udp)
+
+
+
+
+# ------------------------------------------------------------------------
+#
+# Main
+#
+# ------------------------------------------------------------------------
 
 
 if __name__ == "__main__":
     print('''Bidirectional OpenHAB + MQTT/UDP gate.
 Will translate all topics btween OpenHAB and MQTT/UDP.''')
+    print("OpenHAB SiteMap='"+sitemap+"'")
 
 
-    olt = threading.Thread(target=ohb_listen_thread, args=(bclient,))
-    ult = threading.Thread(target=udp_listen_thread, args=(bclient,))
+    olt = threading.Thread(target=ohb_listen_thread, args=())
+    ult = threading.Thread(target=udp_listen_thread, args=())
 
     olt.start()
     ult.start()

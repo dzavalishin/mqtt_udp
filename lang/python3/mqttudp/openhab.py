@@ -11,7 +11,9 @@ import logging as log
  
 # add filemode="w" to overwrite
 log.basicConfig(filename="openhab_gate.log", level=log.INFO)
- 
+
+# TODO logging!!
+
 
 class RestIO:
 
@@ -21,6 +23,19 @@ class RestIO:
         self.openhab_host = "smart."
         self.openhab_port = "8080"
         self.connected = True
+
+
+
+    def put_status( self, key, value ):
+        """ Put a status update to OpenHAB  key is item, value is state """
+        url = 'http://%s:%s/rest/items/%s/state'%(self.openhab_host, self.openhab_port, key)
+        req = requests.put(url, data=value, headers=self.basic_header())
+        if req.status_code != requests.codes.ok:
+            print( "Can't reach "+url )
+    #        req.raise_for_status()     
+
+
+
 
     def set_poll_listener(self,listener):
         self.poll_listener = listener

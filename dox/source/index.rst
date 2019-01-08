@@ -575,6 +575,8 @@ It reads ``mqtt-udp.ini`` file in current directory. Here is an example::
     
     #blacklist=/topic    # Regexp to check if topic is forbidden to relay
 
+    # which sitemap to use for reading data from openhab
+    #sitemap=default
 
 Usage::
 
