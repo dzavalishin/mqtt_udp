@@ -26,12 +26,12 @@ MQTT - симпатичный и простой протокол, который
 ## Для дальнейшего чтения
 
 *   [MQTT/UDP Wiki](../../wiki)
-*   [MQTT topologies](./dox/Topologies.md)
+*   [Документация](https://mqtt-udp.readthedocs.io/en/latest/) - пока только на английском, извиняюсь.
 
 ## Что в этом репозитории
 
 *   Простая реализация протокола на нескольких популярных языках
-*   Минимальная версия гейта между обычным MQTT и MQTT/UDP на Питоне
+*   Минимальная версия гейта между обычным MQTT/UDP и MQTT/OpenHAB на Питоне
 *   Транслятор из MQTT/UDP в OpenHub
 *   [Отладочное приложение](https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help) чтобы смотреть MQTT/UDP трафик в сети ([tools/viewer](tools/viewer)).
 *   Другие инструменты и утилиты
