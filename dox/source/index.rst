@@ -717,10 +717,15 @@ There is an example of service configuration file ``mqttudpgate.service`` for Un
 OpenHAB
 ^^^^^^^
 
-At the moment there is just two one way gateways, from MQTT/UDP to OpenHAB and back. Bidirectional one is in development.
+At the moment there are two one way gateways, from MQTT/UDP to OpenHAB and back, and one complete bidirectional gateway.
 
-To run connector go to ``lang/python3/examples`` directory and start ``mqtt_udp_to_openhab.py`` or
-``openhab_to_udp.py`` program.
+To run connector go to ``lang/python3/examples`` directory and start ``mqtt_udp_to_openhab.py``,
+``openhab_to_udp.py``, or ``openhab_bidir_gate.py`` program.
+
+Minimal configuration required is to set OpenHAB host name in section ``[openhab-gate]`` of ``mqtt-udp.ini`` file.
+Gateway uses OpenHAB sitemap to get list of items to read. By default it uses sitemap named ``default``. If your
+OpenHAB setup most populated sitemap is not default one, please set sitemap name in .ini file too.
+
 
 Scripts
 -------
