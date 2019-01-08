@@ -163,9 +163,12 @@ packets/second, but TV sets stopped showing, being, obviusly, starved.
 
 Anyway, I'm going to add completely reliable mode to MQTT/UDP in near future.
 
+.. rem TODO some graph of packet loss rate?
+
 .. rubric:: Footnotes
 
 .. [#f1] Corresponding tools are in repository and you can run such test yourself.
+
 
 
 Packets and general logic
@@ -587,16 +590,16 @@ Usage::
 Module mqttudp.interlock
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Additional module, used by bidiractional gateways to prevent loop traffic.
+Additional module, implements two classes: ``Bidirectional`` and ``Timer``.
 
-Usage::
+``Bidirectional`` is used by bidiractional gateways to prevent loop traffic::
 
     # Init interlock object which will
     # forbid reverse direction traffic
     # for 5 seconds after message passed
     # in one direction.
     
-    ilock = mqttudp.interlock.bidirectional(5) 
+    ilock = mqttudp.interlock.Bidirectional(5) 
 
     # Check if we can pass forward
 
@@ -616,6 +619,21 @@ Usage::
 
 Value is not actually used in current implementation. It is passed
 for later and smarter versions.
+
+``Timer`` prevents updates from coming too frequently::
+
+    it = mqttudp.interlock.Timer(10)
+
+    if it.can_pass( topic, value ):
+        print("From broker "+topic+" "+value)
+        mqttudp.engine.send_publish_packet( topic, value )
+    else:
+        print("From broker REPEAT BLOCKED "+topic+" "+value)
+
+
+It checks if value is chaneged. Changed values are permitted to pass through.
+Unchanged ones will pass only if time (10 seconds in this example) is passed
+since previous item come through.
 
 
 

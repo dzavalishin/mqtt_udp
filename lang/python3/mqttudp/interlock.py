@@ -89,10 +89,10 @@ class Timer(object):
             return True
         
         st_value,st_time = self.dirmap[topic]
-        self.dirmap[topic] = (value,now) # update
 
         # value is different - TODO for numerics add delta to check within
         if st_value != value:
+            self.dirmap[topic] = (value,now) # update
             return True
         
         # value is the same, check time spent
@@ -100,6 +100,7 @@ class Timer(object):
         delta = now - st_time  
 
         if delta.total_seconds() > self.timeout:
+            self.dirmap[topic] = (value,now) # update
             return True
         
         return False
