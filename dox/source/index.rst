@@ -850,6 +850,14 @@ try to use OpenJDK. (I did not yet.)
 Actual user giode is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
 
 
+.. rem Cook Book
+.. rem =========
+
+.. rem main bus
+.. rem python raspberry sensors displays
+.. rem scripting
+.. rem desktop programs and debug
+
 
 Addendums
 =========
@@ -882,7 +890,27 @@ FAQ
 
 **Q:** There's MQTT-SN, aren't you repeating it?
 
-**A:** MQTT-Sn still needs broker. And MQTT/UDP still simpler. :)
+**A:** 
+
+MQTT-SN still needs broker. And MQTT/UDP still simpler. :)
+
+
+**Q:** Why such a set of languages?
+
+**A:** 
+
+C is for embedded use. I want it to be easy to build smert sensor or wall display/control unit
+based on MQTT/UDP.
+
+Python is for gateways and scripting. Writing small command line program or daemon in Python is easy.
+Also, there is a lot of Python drivers for various sensors and displays on Raspberry/Orange/Banana/whatever PI.
+
+Java is for serios programming and GUI apps. Viewer was easy thing to do with JavaFX.
+
+Lua is for NodeMCU and, possibly, other embedded platforms.
+
+CodeSys is evil you can't escape.
+
 
 
 
