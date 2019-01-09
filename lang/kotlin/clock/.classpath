@@ -3,5 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.jetbrains.kotlin.core.KOTLIN_CONTAINER"/>
+	<classpathentry kind="lib" path="G:/mqtt_udp/lang/java/mqtt_udp.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
