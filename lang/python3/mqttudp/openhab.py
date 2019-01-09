@@ -35,6 +35,15 @@ class RestIO:
     #        req.raise_for_status()     
 
 
+    def post_command( self, key, value ):
+        """ Post a command to OpenHAB - key is item, value is command """
+        url = 'http://%s:%s/rest/items/%s'%(self.openhab_host, self.openhab_port, key)
+        req = requests.post(url, data=value, headers=self.basic_header())
+        if (req.status_code != requests.codes.ok) and (req.status_code != 201):
+            print( "Can't reach "+url+" code="+str(req.status_code)+", text '"+req.text+"'" )
+            #req.raise_for_status()
+
+
 
 
     def set_poll_listener(self,listener):

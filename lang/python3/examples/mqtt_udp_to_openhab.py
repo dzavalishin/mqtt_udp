@@ -20,18 +20,27 @@ import requests
 import mqttudp.engine
 import mqttudp.config as cfg
 
+import mqttudp.openhab as openhab
 
-
+cfg.setGroup('openhab-gate')
 
 
 #OPENHAB_HOST="smart."
 #OPENHAB_PORT="8080"
-OPENHAB_HOST = cfg.config.get('openhab-gate','host' )
-OPENHAB_PORT = cfg.config.get('openhab-gate','port' )
+#OPENHAB_HOST = cfg.config.get('openhab-gate','host' )
+#OPENHAB_PORT = cfg.config.get('openhab-gate','port' )
+
+
+oh = openhab.RestIO()
+oh.set_host( cfg.get('host' ) )
+oh.set_port( cfg.get('port' ) )
+
+
+
 
 #def broker_listen_thread(bclient):
 #    bclient.loop_forever()
-
+'''
 
 def polling_header(atmos_id):
     """ Header for OpenHAB REST request - polling """
@@ -73,7 +82,7 @@ def put_status( key, value ):
         print( "Can't reach "+url )
         #req.raise_for_status()     
 
-
+'''
 
 last = {}
 def recv_packet_from_udp(ptype,topic,value,pflags,addr):
@@ -84,11 +93,11 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
     last[topic] = value
     print( topic+"="+value )
     #put_status(topic, value)
-    post_command(topic, value)
+    oh.post_command(topic, value)
 
 
 if __name__ == "__main__":
-    print( "Will resend all the MQTT/UDP traffic to OpenHAB host " + OPENHAB_HOST )
+    print( "Will resend all the MQTT/UDP traffic to OpenHAB host " + cfg.get('host' ) )
     mqttudp.engine.listen(recv_packet_from_udp)
 #    put_status( "PLK0_Va", "222" )
 
