@@ -144,7 +144,7 @@ def listen(callback):
 
 
 
-def send_publish_packet( topic, payload=b''):
+def send_publish( topic, payload=b''):
     if isinstance(topic, str):
 	    topic = topic.encode()
 
@@ -244,7 +244,7 @@ def send_ping():
 
 
 
-def make_ping_responce_packet():
+def make_ping_responce():
     command = defs.PTYPE_PINGRESP
     packet = bytearray()
     packet.append(command)
@@ -277,4 +277,4 @@ __SEND_SOCKET = __make_send_socket()
 
 if __name__ == "__main__":
 	import sys
-	send_publish_packet(sys.argv[1], sys.argv[2])
+	send_publish(sys.argv[1], sys.argv[2])

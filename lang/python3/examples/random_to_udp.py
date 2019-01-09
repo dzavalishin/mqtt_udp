@@ -24,7 +24,7 @@ if __name__ == "__main__":
     while True:
         n = str(random.randint(0, 9))
         print( "Send "+n )
-        mqttudp.engine.send_publish_packet( TOPIC, n )
+        mqttudp.engine.send_publish( TOPIC, n )
         time.sleep(2)
 
 

@@ -72,7 +72,7 @@ end
 function mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
     -- respond to ping
     if ptype == "pingreq" then
-        mqtt_proto_lib.pingresp()
+        mqtt_proto_lib.send_pingresp()
     end
     -- TODO repond to subscribe
 end
@@ -87,12 +87,12 @@ end
 
 
 
-function mqtt_proto_lib.publish( topic, value )
+function mqtt_proto_lib.send_publish( topic, value )
     data = mqtt_proto_lib.make_publish_packet( topic, value )
     mqtt_proto_lib.send_packet( pubfd(), data )
 end
 
-function mqtt_proto_lib.subscribe( topic )
+function mqtt_proto_lib.send_subscribe( topic )
     data = mqtt_proto_lib.make_subscribe_packet( topic )
     mqtt_proto_lib.send_packet( pubfd(), data )
 end
@@ -100,12 +100,12 @@ end
 
 
 
-function mqtt_proto_lib.pingresp()
+function mqtt_proto_lib.send_pingresp()
     data = mqtt_proto_lib.make_pingresp_packet()
     mqtt_proto_lib.send_packet( pubfd(), data )
 end
 
-function mqtt_proto_lib.pingreq()
+function mqtt_proto_lib.send_pingreq()
     data = mqtt_proto_lib.make_pingreq_packet()
     mqtt_proto_lib.send_packet( pubfd(), data )
 end

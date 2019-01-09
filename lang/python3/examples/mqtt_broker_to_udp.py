@@ -53,7 +53,7 @@ def on_message(client, userdata, msg):  # @UnusedVariable
         return
 
     print("From broker "+ msg.topic+" "+str(msg.payload))
-    mqttudp.engine.send_publish_packet( msg.topic, msg.payload )
+    mqttudp.engine.send_publish( msg.topic, msg.payload )
 
 
 

@@ -13,4 +13,4 @@ import mqttudp.engine
 
 
 if __name__ == "__main__":
-    mqttudp.engine.send_publish_packet( sys.argv[1], sys.argv[2] )
+    mqttudp.engine.send_publish( sys.argv[1], sys.argv[2] )

@@ -82,7 +82,7 @@ This repository contains tools to support MQTT/UDP integration and test:
 import mqttudp.engine
 
 if __name__ == "__main__":
-    mqttudp.engine.send_publish_packet( "test_topic", "Hello, world!" )
+    mqttudp.engine.send_publish( "test_topic", "Hello, world!" )
 ```
 
 **Listen for data:**

@@ -29,7 +29,7 @@ wireshark_mqtt_dissector.lua - incomplete WireShark protocol dissolver to be abl
 
 ```lua
 local mq = require "mqtt_udp_lib"
-mq.publish( topic, val );
+mq.send_publish( topic, val );
 
 ```
 

@@ -59,7 +59,7 @@ def send_to_udp( topic, value ):
     if it.can_pass( topic, value ):
         if verbose:
             print("From OpenHAB "+topic+" "+value)
-        mqttudp.engine.send_publish_packet( topic, value )
+        mqttudp.engine.send_publish( topic, value )
     else:
         if verbose:
             print("From OpenHAB REPEAT BLOCKED "+topic+" "+value)

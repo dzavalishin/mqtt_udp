@@ -519,7 +519,7 @@ Let's begin with examples, as usual.
 Send data::
 
 
-    mqttudp.engine.send_publish_packet( "test_topic", "Hello, world!" )
+    mqttudp.engine.send_publish( "test_topic", "Hello, world!" )
 
 
 
@@ -543,7 +543,7 @@ Main package, implements MQTT/UDP protocol.
 * ``send_ping()`` - send PINGREQ packet.
 * ``send_ping_responce()`` - send PINGRESP packet. It is sent automatically, you don't have to.
 * ``listen(callback)`` - listen for incoming packets.
-* ``send_publish_packet( topic, payload)`` - this what is mostly used.
+* ``send_publish( topic, payload)`` - this what is mostly used.
 * ``send_subscribe(topic)`` - ask other party to send corresponding item again. This is optional.
 * ``set_muted(mode: bool)`` - turn off protocol replies. Use for send-only daemons which do not need to be discovered.
 
@@ -606,7 +606,7 @@ Additional module, implements two classes: ``Bidirectional`` and ``Timer``.
     # Check if we can pass forward
 
     if ilock.broker_to_udp(msg.topic, msg.payload):
-        mqttudp.engine.send_publish_packet( msg.topic, msg.payload )
+        mqttudp.engine.send_publish( msg.topic, msg.payload )
         print("To UDP: "+msg.topic+"="+str(msg.payload))
     else:
         print("BLOCKED to UDP: "+msg.topic+"="+str(msg.payload))
@@ -628,7 +628,7 @@ for later and smarter versions.
 
     if it.can_pass( topic, value ):
         print("From broker "+topic+" "+value)
-        mqttudp.engine.send_publish_packet( topic, value )
+        mqttudp.engine.send_publish( topic, value )
     else:
         print("From broker REPEAT BLOCKED "+topic+" "+value)
 
@@ -659,7 +659,7 @@ Lua Language API Reference
 
 .. NOTE::
 
-   Lua API is not final, there will be some methods rename.
+   Lua API is not final.
 
 You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/lua repository.
 
@@ -670,7 +670,7 @@ Send data::
 
 
     local mq = require "mqtt_udp_lib"
-    mq.publish( topic, val );
+    mq.send_publish( topic, val );
 
 
 

@@ -143,7 +143,7 @@ def listener(msg):
         if it.can_pass( topic, value ):
             if verbose:
                 print("From broker "+topic+" "+value)
-            mqttudp.engine.send_publish_packet( topic, value )
+            mqttudp.engine.send_publish( topic, value )
         else:
             if verbose:
                 print("From broker REPEAT BLOCKED "+topic+" "+value)
