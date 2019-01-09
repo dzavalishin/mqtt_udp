@@ -59,9 +59,9 @@ def post_command( key, value ):
     url = 'http://%s:%s/rest/items/%s'%(OPENHAB_HOST, OPENHAB_PORT, key)
     req = requests.post(url, data=value,
                             headers=basic_header())
-    if req.status_code != requests.codes.ok:
-        print( "Can't reach "+url )
-#        req.raise_for_status()
+    if (req.status_code != requests.codes.ok) and (req.status_code != 201):
+        print( "Can't reach "+url+" code="+str(req.status_code)+", text '"+req.text+"'" )
+        #req.raise_for_status()
 
 
 
@@ -71,7 +71,7 @@ def put_status( key, value ):
     req = requests.put(url, data=value, headers=basic_header())
     if req.status_code != requests.codes.ok:
         print( "Can't reach "+url )
-#        req.raise_for_status()     
+        #req.raise_for_status()     
 
 
 
@@ -83,7 +83,8 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
         return
     last[topic] = value
     print( topic+"="+value )
-    put_status(topic, value)
+    #put_status(topic, value)
+    post_command(topic, value)
 
 
 if __name__ == "__main__":
