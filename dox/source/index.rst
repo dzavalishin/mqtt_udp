@@ -44,6 +44,7 @@ Fast track for impatient readers: MQTT/UDP native implementations exist in Java,
 * :ref:`java-lang-api`
 * :ref:`python-lang-api`
 * :ref:`lua-lang-api`
+* :ref:`st-lang-api`
 
 Now some words on MQTT/UDP idea. It is quite simple. Broker is a `single point of failure <https://en.wikipedia.org/wiki/Single_point_of_failure>`_ and can be avoided. Actual
 traffic of smart home installation is not too big and comes over a separated (by firewall) network. There are many listeners that need same data, such as:
@@ -686,6 +687,93 @@ Listen for data::
 
 
 
+.. _st-lang-api:
+
+CodeSys ST Language API Reference
+---------------------------------
+
+.. NOTE::
+
+   This implementation ise currently send only.
+
+Sorry, due to PLC limitations, there is no clear API in this code example, just integrated protocol
+and client code example. 
+
+PLC is specific: it runs all its programs in loop and it is assumed that each program is running
+without blocking and does not spend too much time each loop cycle. There's usually a watch dog
+that checks for it. Hence, ST implementation is cycling, sending just one topic per loop cycle.
+
+Actual API is simple::
+
+    FUNCTION MQTT_SEND : BOOL
+    
+    VAR_INPUT
+            socket          : DINT;
+    
+            topic           : STRING;
+            data            : STRING;
+    
+            sock_adr_out    : SOCKADDRESS;
+    END_VAR
+    
+
+    FUNCTION MQ_SEND_REAL : BOOL
+    VAR_INPUT
+            socket          : DINT;
+            m_SAddress      : SOCKADDRESS;
+
+            topic           : STRING;
+            data            : REAL;
+    END_VAR
+
+
+
+Here is how it is used in main program::
+
+    PROGRAM MQTT_PRG
+    VAR
+            STEP         : INT  := 0;
+            socket       : DINT := SOCKET_INVALID;
+            wOutPort     : INT  := 1883;
+            m_SAddress   : SOCKADDRESS;
+    
+    END_VAR
+    
+    CASE STEP OF
+    
+            0:
+                    socket := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
+    
+                    m_SAddress.sin_family := SOCKET_AF_INET;
+                    m_SAddress.sin_port	  := SysSockHtons( wOutPort );
+                    m_SAddress.sin_addr	  := 16#FFFFFFFF; (* broadcast *)
+    
+            1:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_WarmWaterConsumption', GLOBAL_WarmWaterConsumption );
+            2:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_ColdWaterConsumption', GLOBAL_ColdWaterConsumption );
+    
+            3:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_activePa', GLOBAL_activePa_avg * 10 );
+            4:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_Va', Va );
+    
+    ELSE
+            IF socket <> SOCKET_INVALID THEN
+                    SysSockClose( socket );
+            END_IF
+            socket := SOCKET_INVALID;
+    END_CASE
+
+    STEP := STEP + 1;
+    
+    IF socket = SOCKET_INVALID THEN
+            STEP := 0;
+    END_IF
+    
+    END_PROGRAM
+
+
+
+
+
+
 Integration and tools
 =====================
 
@@ -762,8 +850,14 @@ try to use OpenJDK. (I did not yet.)
 Actual user giode is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
 
 
+
+Addendums
+=========
+
+
+
 Network
-=======
+-------
 
 Current implementation of MQTT/UDP has no security support. It is supposed that later some
 kind of packet digital signature will be added. At the moment I suppose that protocol can
@@ -781,18 +875,25 @@ no separation between smart home and other computers. I do think that would my h
 into, intervention into the smart home system is the lesser of possible evils.
 
 
+
+
+FAQ
+---
+
+**Q:** There's MQTT-SN, aren't you repeating it?
+
+**A:** MQTT-Sn still needs broker. And MQTT/UDP still simpler. :)
+
+
+
 Links
-=====
+-----
 
 GitHUb: https://github.com/dzavalishin/mqtt_udp
 
 Error reports and feature requests: https://github.com/dzavalishin/mqtt_udp/issues
 
 If you use MQTT/UDP, please let me know by adding issue at GitHub. :)
-
-
-
-
 
 
 

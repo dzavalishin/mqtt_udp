@@ -99,7 +99,7 @@ END_VAR
 (* @END_DECLARATION := '0' *)
 
 	tlen := LEN(topic);
-	dlen :=LEN(data);
+	dlen := LEN(data);
 
 	total := tlen + dlen + 2 + 2; (* max packet size *)
 
