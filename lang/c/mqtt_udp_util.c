@@ -10,12 +10,10 @@
  *
 **/
 
+#include "config.h"
+
 #include <sys/types.h>
-//#include <string.h>
 #include <stdio.h>
-//#include <stdlib.h>
-//#include <locale.h>
-//#include <errno.h>
 
 #include "mqtt_udp.h"
 

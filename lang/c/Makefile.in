@@ -28,7 +28,10 @@ run::
 	./mqtt_udp_sub
 
 clean::
-	-rm *.o *.exe autom4te.cache/* config.h config.status config.log $(LIB)
+	-rm *.o *.exe 
+
+cleanall:: clean
+	-rm autom4te.cache/* config.h config.status config.log $(LIB)
 	-rmdir autom4te.cache
 
 OBJS  = udp_send_pkt.o udp_recv_pkt.o 

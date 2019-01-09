@@ -10,23 +10,18 @@
  *
 **/
 
-//#include <sys/types.h>
-//#include <sys/socket.h>
-//#include <netinet/in.h>
-//#include <arpa/inet.h>
+#include "config.h"
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-//#include <locale.h>
-//#include <fcntl.h>
 #include <errno.h>
 
 #include "mqtt_udp.h"
 
 
 
-//#define BUFLEN PKT_BUF_SIZE // 64
 
 int main(int argc, char *argv[])
 {

@@ -10,10 +10,26 @@
  *
 **/
 
+#include "config.h"
+
+#ifdef HAVE_SOCKET
+#  include <sys/socket.h>
+#endif
+
+#ifdef HAVE_NETINET_IN_H
+#  include <netinet/in.h>
+#endif
+
+#ifdef HAVE_ARPA_INET_H
+#  include <arpa/inet.h>
+#endif
+
+#ifdef __MINGW32__
+//#  include "winsock.h"
+#  include "ws2tcpip.h"
+#endif
+
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

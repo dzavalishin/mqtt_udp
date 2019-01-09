@@ -10,10 +10,35 @@
  *
 **/
 
+// TODO MINGW http://mingw.5.n7.nabble.com/Link-error-undefined-reference-to-htonl-4-with-MinGW-td502.html
+// TODO MINGW add -lws2_32 and WSAStartup()
+/*
+    WSADATA wsa;
+
+    err = WSAStartup(MAKEWORD(2,2),&wsa);
+*/
+
+#include "config.h"
+
+#ifdef HAVE_SOCKET
+#  include <sys/socket.h>
+#endif
+
+#ifdef HAVE_NETINET_IN_H
+#  include <netinet/in.h>
+#endif
+
+#ifdef HAVE_ARPA_INET_H
+#  include <arpa/inet.h>
+#endif
+
+#ifdef __MINGW32__
+//#  include "winsock.h"
+#  include "ws2tcpip.h"
+#endif
+
+
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,7 +87,11 @@ int mqtt_udp_bind( int fd )
     memset(&srcaddr, 0, sizeof(srcaddr));
 
     srcaddr.sin_family = AF_INET;
+#ifdef __MINGW32__
     srcaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+#else
+    srcaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+#endif
     srcaddr.sin_port = htons(MQTT_PORT);
 
     return bind(fd, (struct sockaddr *) &srcaddr, sizeof(srcaddr));
