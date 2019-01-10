@@ -32,7 +32,8 @@ dc = openhab.Decoder()
 ilock = mqttudp.interlock.Bidirectional(5)
 
 # do not repeat item in 10 seconds if value is the same
-it = mqttudp.interlock.Timer(10)
+it_to_udp = mqttudp.interlock.Timer(10)
+it_to_ohb = mqttudp.interlock.Timer(10)
 
 
 
@@ -46,6 +47,9 @@ it = mqttudp.interlock.Timer(10)
 
 # TODO logging
 def send_to_udp( topic, value ):
+    if not it_to_udp.can_pass( topic, value ):
+        if verbose:
+            print("From OpenHAB REPEAT BLOCKED "+topic+" "+value)
 
     if not ilock.broker_to_udp( topic, value ):
         if verbose:
@@ -56,13 +60,11 @@ def send_to_udp( topic, value ):
             print("From OpenHAB BLACKLIST "+topic+" "+value)
         return
 
-    if it.can_pass( topic, value ):
-        if verbose:
-            print("From OpenHAB "+topic+" "+value)
-        mqttudp.engine.send_publish( topic, value )
-    else:
-        if verbose:
-            print("From OpenHAB REPEAT BLOCKED "+topic+" "+value)
+    if verbose:
+        print("From OpenHAB "+topic+" "+value)
+
+    mqttudp.engine.send_publish( topic, value )
+
 
 
 
@@ -104,6 +106,10 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
     if ptype != "publish":
         return
 
+    if not it_to_ohb.can_pass( topic, value ):
+        if verbose:
+            print("To OpenHAB REPEAT BLOCKED "+topic+" "+value)
+
     if last.__contains__(topic) and last[topic] == value:
         return
 
@@ -119,7 +125,8 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
         return
 
     print( "To OpenHAB "+topic+"="+value )
-    oh.put_status(topic, value)
+    #oh.put_status(topic, value)
+    oh.post_command(topic, value)
 
 
 

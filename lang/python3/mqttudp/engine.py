@@ -244,7 +244,7 @@ def send_ping():
 
 
 
-def make_ping_responce():
+def make_ping_responce_packet():
     command = defs.PTYPE_PINGRESP
     packet = bytearray()
     packet.append(command)

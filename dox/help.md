@@ -6,3 +6,5 @@
 
 <https://www.ericholscher.com/blog/2016/jul/1/sphinx-and-rtd-for-writers/>
 
+<https://draft-edx-style-guide.readthedocs.io/en/latest/ExampleRSTFile.html>
+
