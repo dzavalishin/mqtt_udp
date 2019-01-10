@@ -1,10 +1,38 @@
 import configparser
+import logging
 import re
+
+
+# ------------------------------------------------------------------------
+#
+# Log
+#
+# ------------------------------------------------------------------------
+
+
+log = logging.getLogger("mqtt-udp")
+#logger.setLevel(logging.ERROR)
+
+# First to stdout
+
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stdout_handler.setFormatter(formatter)
+log.addHandler(stdout_handler)
+
+# ------------------------------------------------------------------------
+#
+# Config
+#
+# ------------------------------------------------------------------------
+
 
 config = configparser.ConfigParser()
 
 
 config['DEFAULT'] = {
+    'logfile' : '',     # no log file by default
     'verbose' : True    # debug mode, application will chat a lot
     }
 
@@ -26,7 +54,6 @@ config['mqtt-gate'] = {
     'blacklist' : '^\\$'   # regexp: prevent matching topics to come through, match on MQTT/UDP side
     }
 
-
 config.read('mqtt-udp.ini')
 
 
@@ -41,13 +68,36 @@ def dump():
 
 caller_group = ''
 
-def setGroup(group):
-    global caller_group
-    caller_group = group
+# Set config file group, also turn logging to file on, if set in conf
 
 def set_group(group):
     global caller_group
     caller_group = group
+
+    log_file = get("logfile");
+    if len(log_file) > 0:
+
+        fh = logging.FileHandler(log_file)
+     
+        formatter = logging.Formatter('%(asctime)s  %(levelname)s:%(name)s  %(message)s')
+        fh.setFormatter(formatter)
+        
+        # add handler to logger object
+        log.addHandler(fh)
+        
+        verbose = getboolean('verbose' )
+        if verbose:
+            fh.setLevel(logging.INFO)
+    
+        log.info("Started: "+group)
+
+        log.removeHandler(stdout_handler)
+
+def setGroup(group):
+    set_group(group):
+
+
+
 
 
 

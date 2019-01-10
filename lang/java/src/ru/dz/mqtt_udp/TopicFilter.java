@@ -43,11 +43,13 @@ public class TopicFilter implements Predicate<String> {
 					return false;
 				
 				// both continue
-				if( (topicName.charAt(tc) == '/') && (filter.charAt(tc) == '/') )
+				if( (topicName.charAt(tc) == '/') && (filter.charAt(fc) == '/') )
 				{
 					tc++; fc++;
 					continue; // path part eaten
 				}
+				// one of them is not '/' ?
+				return false;
 			}
 			
 			// TODO check it to be at end?
@@ -67,18 +69,20 @@ public class TopicFilter implements Predicate<String> {
 					return false;
 
 				// both continue
-				if( (topicName.charAt(tc) == '/') && (filter.charAt(tc) == '/') )
+				if( (topicName.charAt(tc) == '/') && (filter.charAt(fc) == '/') )
 				{
 					tc++; fc++;
 					break; // path part eaten
 				}
 				// both continue
 
-				if( topicName.charAt(tc) != filter.charAt(tc) )
+				if( topicName.charAt(tc) != filter.charAt(fc) )
 				{
 					return false;
 				}
-				
+
+				// continue
+				tc++; fc++;				
 			}
 			
 			
