@@ -257,6 +257,90 @@ def send_ping_responce():
 
 
 
+# ------------------------------------------------------------------------
+#
+# Topic match
+#
+# ------------------------------------------------------------------------
+
+
+def match( tfilter, topicName ):
+		
+    tc = 0;
+    fc = 0;
+    
+    tlen = len( topicName )
+    flen = len( tfilter )
+    
+    while True:
+    
+        # begin of path part
+        
+        if tfilter[fc] == '+':
+    
+            fc+= 1; # eat +
+            # matches one path part, skip all up to / or end in topic
+            while (tc < tlen) and (topicName[tc] != '/'):
+                tc+= 1; # eat all non slash
+            
+            # now either both have /, or both at end
+            
+            # both finished
+            if (tc == tlen) and ( fc == flen ):
+                return True;
+    
+            # one finished, other not
+            if (tc == tlen) != ( fc == flen ):
+                return False;
+            
+            # both continue
+            if (topicName[tc] == '/') and (tfilter[fc] == '/'):
+                tc+= 1;
+                fc+= 1;
+                continue; # path part eaten
+    
+            # one of them is not '/' ?
+            return False;
+    
+        
+        # TODO check it to be at end?
+        # we came to # in tfilter, done
+        if tfilter[fc] == '#':
+            return True
+    
+        # check parts to be equal
+        while True:
+    
+            # both finished
+            if (tc == tlen) and ( fc == flen ):
+                return True;
+    
+            # one finished
+            if (tc == tlen) or ( fc == flen ):
+                return False;
+    
+            # both continue
+            if (topicName[tc] == '/') and (tfilter[fc] == '/'):
+                tc+= 1;
+                fc+= 1;
+                break; # path part eaten
+
+            # both continue
+    
+            if topicName[tc] != tfilter[fc]:
+                return False;
+
+            # continue
+            tc+= 1;
+            fc+= 1;
+    
+    
+        
+
+
+
+
+
 
 # ------------------------------------------------------------------------
 #
