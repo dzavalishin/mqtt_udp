@@ -35,6 +35,7 @@ OBJS  = udp_send_pkt.o udp_recv_pkt.o
 OBJS += mqtt_udp.o mqtt_udp_util.o
 OBJS += mqtt_udp_parse.o mqtt_udp_build.o
 OBJS += mqtt_udp_send.o mqtt_udp_recv.o
+OBJS += mqtt_udp_match.o
 OBJS += strlcat.o strlcpy.o
 
 

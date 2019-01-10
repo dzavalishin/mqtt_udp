@@ -87,6 +87,8 @@ int mqtt_udp_recv_loop( process_pkt callback );
 // util
 // --------------------------------------------------------------------------
 
+// does check topic name against wildcarded string, return 1 on match
+int mqtt_udp_match( char *filter, char *topicName );
 
 void mqtt_udp_dump( const char *buf, size_t len );
 
