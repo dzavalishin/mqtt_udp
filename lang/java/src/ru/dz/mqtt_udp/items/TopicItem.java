@@ -1,4 +1,4 @@
-package ru.dz.mqtt.viewer;
+package ru.dz.mqtt_udp.items;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -6,7 +6,6 @@ import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PingReqPacket;
 import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
-import ru.dz.mqtt_udp.items.AbstractItem;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;

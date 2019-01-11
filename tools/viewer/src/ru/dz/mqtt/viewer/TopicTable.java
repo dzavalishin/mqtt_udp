@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import ru.dz.mqtt_udp.SubscribePacket;
+import ru.dz.mqtt_udp.items.TopicItem;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class TopicTable  {

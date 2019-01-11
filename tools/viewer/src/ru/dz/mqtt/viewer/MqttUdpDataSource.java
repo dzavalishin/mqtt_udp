@@ -10,54 +10,21 @@ import ru.dz.mqtt_udp.PingRespPacket;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubServer;
 import ru.dz.mqtt_udp.SubscribePacket;
+import ru.dz.mqtt_udp.items.TopicItem;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
+import ru.dz.mqtt_udp.items.AbstractItem;
 
 public class MqttUdpDataSource extends SubServer implements IDataSource {
-	//public class MqttUdpDataSource extends PacketSourceServer implements IDataSource {
 
-	private Consumer<TopicItem> sink;
-	//private DatagramSocket ss;
+	private Consumer<AbstractItem> sink;
 
 	public MqttUdpDataSource() throws SocketException 
 	{
-		//ss = GenericPacket.sendSocket();
-		//ss = SingleSendSocket.get();
 		start();
 	}
 
-	/* move up
-	private void start() {
-		Runnable target = makeLoopRunnable();
-		Thread t = new Thread(target, "MQTT UDP Recv");
-		t.start();
-	}
-
-	public void requestStart()
-	{
-		if(isRunning()) return;
-		start();
-	}
-
-
-	private Runnable makeLoopRunnable() {
-		return new Runnable() {
-			@Override
-			public void run() {
-				try {
-					loop();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (MqttProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}
-		};
-	}
-	 */
 	@Override
-	public void setSink(Consumer<TopicItem> sink) {
+	public void setSink(Consumer<AbstractItem> sink) {
 		this.sink = sink;
 	}
 
