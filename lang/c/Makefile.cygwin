@@ -20,6 +20,7 @@ distdir        = $(tarname)-$(version)
 prefix         = /usr/local
 
 LIB=libmqttudp.a
+LIBV=libmqttudp.0.1.a
 
 goal:: all
 

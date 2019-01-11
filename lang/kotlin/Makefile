@@ -13,7 +13,7 @@ TOPTARGETS := all clean test build
 
 ALLDIRS := $(wildcard */.)
 
-EXCLUDE_DIRS := 
+EXCLUDE_DIRS := clock/.
 
 SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS))
 

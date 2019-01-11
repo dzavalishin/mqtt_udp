@@ -3,8 +3,6 @@ default::
 	@echo doing make all by default
 	$(MAKE) all
 
-#	echo -------------- TODO -----------------------
-
 
 # build - make all build files
 build:: all

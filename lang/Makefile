@@ -3,8 +3,6 @@ default::
 	@echo doing make all by default
 	$(MAKE) all
 
-#	echo -------------- TODO -----------------------
-
 
 # build - make all build files
 build:: all
@@ -13,7 +11,7 @@ TOPTARGETS := all clean test build
 
 ALLDIRS := $(wildcard */.)
 
-EXCLUDE_DIRS := 
+EXCLUDE_DIRS := codesys/. kotlin/.
 
 SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS))
 

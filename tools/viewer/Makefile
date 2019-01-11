@@ -1,10 +1,11 @@
-all: check
+all::
+	ant -f makeJar.xml 
 
 clean:
-	-rm *.o
+	-rm -r bin/*
 
-build::
-	echo nothing to do
+build:: all
+	cp MqttUdpViewer.jar mqtt_udp_view mqtt_udp_view.cmd  ../../build
 
 test::
 	echo -------------------- TODO ---------------------

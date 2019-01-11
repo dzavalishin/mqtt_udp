@@ -19,10 +19,14 @@ distdir        = $(tarname)-$(version)
 prefix         = @prefix@
 
 LIB=libmqttudp.a
+LIBV=libmqttudp.@PACKAGE_VERSION@.a
 
 goal:: all
 
 all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe
+
+build:: all
+	cp $(LIB) $(LIBV) ../../build
 
 run::
 	./mqtt_udp_sub
@@ -47,7 +51,7 @@ library:: libmqttudp.a
 $(LIB): $(OBJS)
 	$(AR) rc $@ $(OBJS)
 	$(RANLIB) $@
-	cp $@ libmqttudp.@PACKAGE_VERSION@.a
+	cp $@ $(LIBV)
 
 mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
