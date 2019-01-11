@@ -11,7 +11,9 @@ TOPTARGETS := all clean test build
 
 ALLDIRS := $(wildcard */.)
 
-EXCLUDE_DIRS := codesys/. kotlin/.
+# TODO arduino
+
+EXCLUDE_DIRS := codesys/. kotlin/. arduino/.
 
 SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS))
 
