@@ -380,6 +380,25 @@ Close UDP socket::
     int mqtt_udp_close_fd( int fd ) 
 
 
+Service
+^^^^^^^
+
+Match topic name against a pattern, processing `+` and `#` wildcards, returns 1 on match::
+
+   mqtt_udp_match( wildcard, topic name )
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .. _java-lang-api:
 
@@ -482,10 +501,25 @@ Used here ``PacketSourceServer``, first of all, starts automatically, and uses `
 to pass packets received to you. The rest of the story is the same.
 
 
+Packet classes
+^^^^^^^^^^^^^^
+
+There are ``PublishPacket``, ``SubscribePacket``, ``PingReqPacket`` and ``PingRespPacket``. Usage is extremely simple::
+
+   new PingReqPacket().send();
 
 
 
 
+Service
+^^^^^^^
+
+Match topic name against a pattern, processing `+` and `#` wildcards, returns true on match::
+
+   TopicFilter tf = new TopicFilter("aaa/+/bbb");
+   boolean matches = tf.test("aaa/ccc/bbb") );
+
+TopicFlter is a Predicate (functional interface implementation).
 
 
 
@@ -546,6 +580,13 @@ Main package, implements MQTT/UDP protocol.
 * ``send_publish( topic, payload)`` - this what is mostly used.
 * ``send_subscribe(topic)`` - ask other party to send corresponding item again. This is optional.
 * ``set_muted(mode: bool)`` - turn off protocol replies. Use for send-only daemons which do not need to be discovered.
+
+
+Match topic name against a pattern, processing `+` and `#` wildcards, returns True on match::
+
+   import mqttudp.engine as me
+   me.match("aaa/+/bbb", "aaa/ccc/bbb")
+
 
 
 .. _python-ini-file:
@@ -647,6 +688,16 @@ This module is not for user code, it is used internally. But you can get library
 
     PACKAGE_VERSION_MAJOR = 0
     PACKAGE_VERSION_MINOR = 4
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -850,17 +901,52 @@ try to use OpenJDK. (I did not yet.)
 Actual user giode is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
 
 
-.. rem Cook Book
-.. rem =========
-
-.. rem main bus
-.. rem python raspberry sensors displays
-.. rem scripting
-.. rem desktop programs and debug
 
 
 Addendums
 =========
+
+
+Cook Book
+---------
+
+Even if you think that MQTT/UDP is not for you and can't be used as primary transport in your project, there are
+other possibilities to use it together with traditional IoT infrastructure
+
+Displays
+^^^^^^^^
+
+Send a copy of all the items state to MQTT/UDP and use it to bring data to hardware and software displays. For example, this
+project includes an example program (see ``tools/tray``) to display some MQTT/UDP items via an icon in a desktop
+tray. Being a Java program it should work in Windows, MacOS and Unix.
+
+.. rem TODO screenshot
+
+
+Sensors and integrations
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+It is not really easy to write a native Java connector for OpenHAB. Write it in Python for MQTT/UDP and 
+translate data from MQTT/UDP to OpenHAB. It is really easy.
+
+By the way, there is quite a lot of sensors drivers in Python for Raspberry and clones.
+
+Don't like Raspberry? Use Arduino or some ARM CPU unit and C version of MQTT/UDP.
+
+.. rem TODO example project code!
+
+
+.. rem NB!! Need very stable and fast bidir gateway for that. It is not now.
+.. rem Scripting
+.. rem ^^^^^^^^^
+
+.. rem Writing (and debugging!) a script for OpenHAB is not an easy task. Setting up bidirectional 
+.. rem gate between MQTT/UDP and OpenHAB enables you to write scripts on MQTT/UDP side.
+
+
+
+.. rem main bus
+.. rem desktop programs and debug
 
 
 
@@ -891,26 +977,24 @@ FAQ
 **Q:** There's MQTT-SN, aren't you repeating it?
 
 **A:** 
-
-MQTT-SN still needs broker. And MQTT/UDP still simpler. :)
+   MQTT-SN still needs broker. And MQTT/UDP still simpler. :)
 
 
 **Q:** Why such a set of languages?
 
 **A:** 
-
-C is for embedded use. I want it to be easy to build smert sensor or wall display/control unit
-based on MQTT/UDP.
-
-Python is for gateways and scripting. Writing small command line program or daemon in Python is easy.
-Also, there is a lot of Python drivers for various sensors and displays on Raspberry/Orange/Banana/whatever PI.
-
-Java is for serios programming and GUI apps. Viewer was easy thing to do with JavaFX.
-
-Lua is for NodeMCU and, possibly, other embedded platforms.
-
-CodeSys is evil you can't escape.
-
+   **C** is for embedded use. I want it to be easy to build smert sensor or wall display/control unit
+   based on MQTT/UDP.
+   
+   **Python** is for gateways and scripting. Writing small command line program or daemon in Python is easy.
+   Also, there is a lot of Python drivers for various sensors and displays on Raspberry/Orange/Banana/whatever PI.
+   
+   **Java** is for serious programming and GUI apps. Viewer was easy thing to do with JavaFX.
+   
+   **Lua** is for NodeMCU and, possibly, other embedded platforms.
+   
+   **CodeSys** is evil you can't escape.
+   
 
 
 
