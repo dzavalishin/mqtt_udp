@@ -35,6 +35,9 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 	@Override
 	protected void processPacket(IPacket p) throws IOException {
 
+		sink.accept( AbstractItem.fromPacket(p) );
+		
+		/*
 		if (p instanceof PublishPacket) {
 
 			//System.out.println("Pub pkt "+p);
@@ -77,7 +80,7 @@ public class MqttUdpDataSource extends SubServer implements IDataSource {
 			ti.setFrom(p.getFrom().toString());
 			sink.accept(ti);
 		}
-
+		*/
 	}
 
 }

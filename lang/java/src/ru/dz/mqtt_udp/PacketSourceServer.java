@@ -9,6 +9,9 @@ import java.util.function.Consumer;
  * PacketSourceServer ss = new PacketSourceServer();
  * ss.setSink( pkt -> { System.out.println(pkt);});
  * </pre>
+ * 
+ * <p>Starts automatically.</p>
+ * 
  * @author dz
  *
  */
@@ -29,7 +32,7 @@ public class PacketSourceServer extends SubServer implements IPacketSource {
 	public void setSink(Consumer<IPacket> sink) {		this.sink = sink;	}
 
 	@Override
-	protected void processPacket(IPacket p) throws IOException {		sink.accept(p);	}
+	protected void processPacket(IPacket p) throws IOException { if(sink != null ) sink.accept(p);	}
 	
 }
 

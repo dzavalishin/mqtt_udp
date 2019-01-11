@@ -1,8 +1,19 @@
 package ru.dz.mqtt_udp.config;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
+import ru.dz.mqtt_udp.IPacket;
+import ru.dz.mqtt_udp.IPacketMultiSource;
+import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubServer;
+import ru.dz.mqtt_udp.SubscribePacket;
+import ru.dz.mqtt_udp.items.AbstractItem;
+import ru.dz.mqtt_udp.items.TopicItem;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 /**
  * <p>Remote configuration data provider</p>
@@ -13,19 +24,43 @@ import ru.dz.mqtt_udp.SubServer;
  *
  */
 
-public class Provider {
+public class Provider implements Consumer<IPacket> {
 
-	private SubServer ss; // no, need one that can serve multiple listeners with thread pool
-	private ArrayList topics = new ArrayList<>();
+	//private SubServer ss; // no, need one that can serve multiple listeners with thread pool
+	//private ArrayList topics = new ArrayList<>();
+	Map<String,TopicItem> items = new HashMap<>();
 	
-	public Provider(SubServer ss) 
+	public Provider(IPacketMultiSource ms) 
 	{
-		this.ss = ss;	
+		ms.addPacketSink(this);	
 	}
 
 	public void addTopic(String topicName, String topicValue)
 	{
+		// TODO need class PublishTopicItem?
+		items.put(topicName, new TopicItem(mqtt_udp_defs.PTYPE_PUBLISH, topicName, topicValue));
 		
+	}
+
+	@Override
+	public void accept(IPacket t) {
+		if( !(t instanceof SubscribePacket) ) 
+			return;
+
+		SubscribePacket sp = (SubscribePacket) t;
+
+		if( !items.containsKey(sp.getTopic()) )
+			return;
+
+		TopicItem it = items.get(sp.getTopic());
+		
+		PublishPacket pp = new PublishPacket(it.getTopic(), it.getValue());
+		try {
+			pp.send();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }
