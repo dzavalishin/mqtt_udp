@@ -1,3 +1,6 @@
+BUILD_FILES=MqttUdpTray.jar MqttUdpTray.exe 
+
+
 all::
 	ant -f makeJar.xml 
 
@@ -5,7 +8,7 @@ clean:
 	-rm -r bin/*
 
 build:: all
-	cp MqttUdpViewer.jar mqtt_udp_view mqtt_udp_view.cmd  ../../build
+	cp $(BUILD_FILES)  ../../build
 
 test::
 	echo -------------------- TODO ---------------------

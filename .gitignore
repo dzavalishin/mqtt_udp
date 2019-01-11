@@ -97,3 +97,4 @@ lang/python3/examples/openhab_gate.log
 lang/c/mqtt_udp_pub
 lang/c/mqtt_udp_sub
 
+tools/tray/launch4j.log
