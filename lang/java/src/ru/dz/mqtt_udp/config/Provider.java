@@ -1,5 +1,7 @@
 package ru.dz.mqtt_udp.config;
 
+import java.util.ArrayList;
+
 import ru.dz.mqtt_udp.SubServer;
 
 /**
@@ -14,7 +16,8 @@ import ru.dz.mqtt_udp.SubServer;
 public class Provider {
 
 	private SubServer ss; // no, need one that can serve multiple listeners with thread pool
-
+	private ArrayList topics = new ArrayList<>();
+	
 	public Provider(SubServer ss) 
 	{
 		this.ss = ss;	
