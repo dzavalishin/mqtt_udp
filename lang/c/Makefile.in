@@ -1,6 +1,8 @@
 # @configure_input@
 
 CFLAGS += @CFLAGS@
+# make dependencies files
+CFLAGS += -MD -MP 
 CC=@CC@
 #AR=@AR@
 AR=ar
@@ -65,3 +67,4 @@ mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
 mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
+-include $(exclude README.md, $(wildcard *.md))
