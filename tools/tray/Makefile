@@ -1,4 +1,4 @@
-BUILD_FILES=MqttUdpTray.jar MqttUdpTray.exe 
+BUILD_FILES=MqttUdpTray.jar MqttUdpTray.exe mqttudptray.ini 
 
 
 all::

@@ -10,7 +10,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javax.swing.JOptionPane;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PacketSourceServer;
@@ -21,19 +24,34 @@ public class Main {
 
 	private static TrayIcon tIcon;
 	private static SystemTray tray = SystemTray.getSystemTray();
+	
 	private String topic1Val = "?";
 	private String topic2Val = "?";
 
+	private String userMessage = "No data received";
+
+	private static Config cfg;
+	/*
 	private String topic1 = "PLK0_activePa";
 	private String topic2 = "PLK0_Va";
 	private String topic1Header = "Power consumption";
 	private String topic2Header = "Mains Voltage";
 
-	private String userMessage = "No data received";
 	private String controlTopic = "GroupGuestMain";
-
+	*/
+	
 	public static void main(String[] args) 
 	{
+		try {
+			cfg = new Config();
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "mqttudptray.ini not found");
+			return;
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "io error");
+			return;
+		}
+		
 		Main m = new Main();
 		m.run();
 		PacketSourceServer ss = new PacketSourceServer();
@@ -47,18 +65,18 @@ public class Main {
 
 		PublishPacket pp = (PublishPacket) pkt;
 
-		System.out.println("topic = "+pp.getTopic());
+		//System.out.println("topic = "+pp.getTopic());
 
-		if(pp.getTopic().equals( topic1 ))
+		if(pp.getTopic().equals( cfg.topic1 ))
 			topic1Val = pp.getValueString();
 
-		if(pp.getTopic().equals( topic2 ))
+		if(pp.getTopic().equals( cfg.topic2 ))
 			topic2Val = pp.getValueString();
 
 		userMessage = 
-				topic1Header +" "+topic1Val+
+				cfg.topic1Header +" "+topic1Val+
 				"\n"+
-				topic2Header +" "+topic2Val;				
+				cfg.topic2Header +" "+topic2Val;				
 
 		tIcon.setToolTip( userMessage );		
 
@@ -107,15 +125,18 @@ public class Main {
 	}
 
 	private void makeMenu(PopupMenu trayMenu) {
+		if(cfg.controlTopic != null)
+		{
 		{
 			MenuItem mi = new MenuItem("Light ON");
 			trayMenu.add(mi);
-			mi.addActionListener(e -> setItem( controlTopic, "ON"));
+			mi.addActionListener(e -> setItem( cfg.controlTopic, "ON"));
 		}
 		{
 			MenuItem mi = new MenuItem("Light OFF");
 			trayMenu.add(mi);
-			mi.addActionListener(e -> setItem( controlTopic, "OFF"));
+			mi.addActionListener(e -> setItem( cfg.controlTopic, "OFF"));
+		}
 		}
 		trayMenu.addSeparator();
 		{
@@ -177,26 +198,5 @@ public class Main {
 		return mouseListener;
 	}
 
-	/*
-	 * 
-	private void sleepForever()
-	{
-		while(true)
-		{
-			try {
-				synchronized (this) {					
-					wait(1000);
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	 
-	 *
-	 */
 	
 }
