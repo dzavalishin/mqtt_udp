@@ -13,14 +13,23 @@ ALLDIRS := $(wildcard */.)
 
 # TODO arduino
 
-EXCLUDE_DIRS := codesys/. kotlin/. arduino/.
+# TODO wrong! we have to exec build there!
+
+#EXCLUDE_DIRS := codesys/. kotlin/. arduino/. c/. lua/. python/. python3/.
+EXCLUDE_DIRS := codesys/. kotlin/. arduino/. c/. 
 
 SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS))
 
-$(TOPTARGETS):: $(SUBDIRS)
+$(TOPTARGETS):: $(SUBDIRS) c/.
 
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 .PHONY: $(TOPTARGETS) $(SUBDIRS)
 	
+c/.:: c/Makefile
+	$(MAKE) -C $@ $(MAKECMDGOALS)
+	
+
+c/Makefile: c/Makefile.in
+	cd c ; sh configure
