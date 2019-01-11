@@ -52,6 +52,8 @@ public class Provider implements Consumer<IPacket> {
 		if( !items.containsKey(sp.getTopic()) )
 			return;
 
+		System.out.println("Got request for "+sp.getTopic());
+		
 		TopicItem it = items.get(sp.getTopic());
 		
 		PublishPacket pp = new PublishPacket(it.getTopic(), it.getValue());

@@ -105,6 +105,7 @@ public class Requester implements Consumer<IPacket> {
 				return;
 
 			TopicItem ai = (TopicItem) AbstractItem.fromPacket(pp);
+			System.out.println("Got request for "+ai.getTopic());
 			items.put(ai.getTopic(), ai);
 		}
 	}
