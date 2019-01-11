@@ -10,4 +10,11 @@ SRCFILES += $(patsubst %,$(SRC)/%,$(FILES))
 
 
 all:
-	cp $(SRCFILES) $(LIB)
+	echo -------------- TODO -----------------------
+# do not copy - ther're changed too much, need test first
+#	cp $(SRCFILES) $(LIB)
+
+# TODO
+# arduino --verify UdpPublish_MQTT.ino 
+
+# see https://github.com/arduino/Arduino/blob/master/build/shared/manpage.adoc
