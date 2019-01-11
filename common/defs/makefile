@@ -10,15 +10,24 @@ VER_MINOR=4
 # unused yet
 SUB_MINOR=0
 
-goal:: preprocessors $(OUT) 
+all::
+	echo nothing to do
+
+version:: preprocessors $(OUT) 
 
 CPP=cpp -P -C
 SENDTO=cp $@ 
 
 ROOT=../../lang
 
-clean:
+clean::
 	rm $(OUT)
+
+test::
+	echo no test here
+
+build::
+	echo nothing to build here
 
 conv_version::
 	echo "" > conv_version 
