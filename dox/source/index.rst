@@ -1006,7 +1006,7 @@ FAQ
 
 .. rem Requirements:
 .. rem * binutils, make, gcc, python 3.6+, lua 5.2+
-.. rem * java jdk 1.8 or later, ant, JUnit 4
+.. rem * java jdk 1.8 or later, ant, JUnit 4, launch4j
 
 Links
 -----

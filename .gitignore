@@ -98,3 +98,4 @@ lang/c/mqtt_udp_pub
 lang/c/mqtt_udp_sub
 
 tools/tray/launch4j.log
+tools/viewer/launch4j.log
