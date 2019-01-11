@@ -1,6 +1,19 @@
 # Minimal makefile for Sphinx documentation
 #
 
+all::
+	sphinx-build source build
+
+build::
+	echo -------------- TODO -----------------------
+
+clean::
+	echo -------------- TODO -----------------------
+
+
+test::
+	echo nothing to test
+
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sh -c sphinx-build

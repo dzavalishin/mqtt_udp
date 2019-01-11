@@ -997,6 +997,15 @@ FAQ
    
 
 
+.. rem Building all
+.. rem ------------
+
+.. rem First of all, you don't have to make all. Most things are made for you. See build directory.
+
+.. rem Threre are two tested environments for complete build: Windows Cygwin and Linux.
+
+.. rem Requirements:
+.. rem * binutils, make, gcc, python 3.6+, lua 5.2+
 
 Links
 -----

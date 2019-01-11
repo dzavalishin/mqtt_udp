@@ -1,3 +1,5 @@
+# ------------    I AM GENERATED! DO NOT EDIT ME!    ------------ 
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
