@@ -10,7 +10,6 @@ default::
 #	$(MAKE) -C c
 
 #clean::
-	# kernel
 #	$(MAKE) -C common/defs clean
 #	$(MAKE) -C c clean
 
