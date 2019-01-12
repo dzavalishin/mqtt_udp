@@ -1,6 +1,7 @@
 import configparser
 import logging
 import re
+import sys
 
 
 # ------------------------------------------------------------------------
@@ -17,8 +18,9 @@ log = logging.getLogger("mqtt-udp")
 
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-stdout_handler.setFormatter(formatter)
+#formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stdout_formatter = logging.Formatter('%(levelname)s: %(message)s')
+stdout_handler.setFormatter(stdout_formatter)
 log.addHandler(stdout_handler)
 
 # ------------------------------------------------------------------------
@@ -79,8 +81,8 @@ def set_group(group):
 
         fh = logging.FileHandler(log_file)
      
-        formatter = logging.Formatter('%(asctime)s  %(levelname)s:%(name)s  %(message)s')
-        fh.setFormatter(formatter)
+        file_formatter = logging.Formatter('%(asctime)s  %(levelname)s:%(name)s  %(message)s')
+        fh.setFormatter(file_formatter)
         
         # add handler to logger object
         log.addHandler(fh)
@@ -88,13 +90,15 @@ def set_group(group):
         verbose = getboolean('verbose' )
         if verbose:
             fh.setLevel(logging.INFO)
-    
+        else:
+            log.removeHandler(stdout_handler)
+
         log.info("Started: "+group)
 
-        log.removeHandler(stdout_handler)
 
+# deprecated
 def setGroup(group):
-    set_group(group):
+    set_group(group)
 
 
 
