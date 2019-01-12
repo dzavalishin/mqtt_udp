@@ -5,17 +5,10 @@ default::
 	@echo doing make all by default
 	$(MAKE) all
 
-#all::
-#	$(MAKE) -C common/defs
-#	$(MAKE) -C c
-
-#clean::
-#	$(MAKE) -C common/defs clean
-#	$(MAKE) -C c clean
-
-#test::
-	#$(MAKE) -C test
-
+travis_ci:: all test
+	@echo 
+	@echo --------
+	@echo All done
 
 
 

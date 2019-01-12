@@ -7,4 +7,6 @@ script:
   - cd lang/c
   - sh ./configure
   - make
-   
+  - cd ../..
+  - make travis_ci
+
