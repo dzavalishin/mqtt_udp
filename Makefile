@@ -5,10 +5,10 @@ default::
 	@echo doing make all by default
 	$(MAKE) all
 
-travis_ci:: all test
-	@echo 
-	@echo --------
-	@echo All done
+#travis_ci:: all test
+#	@echo 
+#	@echo --------
+#	@echo All done
 
 
 
