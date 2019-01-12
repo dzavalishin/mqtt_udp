@@ -93,9 +93,13 @@ lang/c/config.h
 lang/c/config.log
 lang/c/config.status
 lang/c/Makefile
-lang/python3/examples/openhab_gate.log
 lang/c/mqtt_udp_pub
 lang/c/mqtt_udp_sub
+
+lang/python3/examples/openhab_gate.log
+lang/python3/build/*
+
+
 
 tools/tray/launch4j.log
 tools/viewer/launch4j.log
