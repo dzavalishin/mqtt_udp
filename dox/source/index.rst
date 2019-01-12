@@ -905,28 +905,33 @@ System Tray Informer
 --------------------
 
 There is a simple program that adds an icon to a system tray. This icon lets you see some data from MQTT/UDP or control one
-OpenHAB item. Being a Java program it should run on MacOS and Linux, but it was not tested yet. It is shown on a :ref:`trayRight` and :ref:`trayLeft`
-figures like it looks in Windows.
+OpenHAB item. Being a Java program it should run on MacOS and Linux, but it was not tested with Linux yet. 
+Illustrations show how it looks in Windows and Mac OS.
+
+.. rem It is shown on a :ref:`WinTrayRight` and :ref:`WinTrayLeft` figures like it looks in Windows. 
 
 
-.. _trayRight:
+.. _WinTrayRight:
 
 .. figure:: illustrations/TrayInfo.png 
 
-   Tray icon informer
+   Windows: tray icon informer
 
    This informer is shown when you press right mouse button.
    It shows two items defined in .ini file, see reference.
    In this example mains voltage and total power consumption
    are shown.
 
-.. _trayLeft:
+.. _WinTrayLeft:
 
 .. figure:: illustrations/TrayMenu.png 
 
-   Tray icon menu
+   Windows: tray icon menu
 
    Menu is shown when right mouse button is pressed.
+
+
+
 
 Setting up
 ^^^^^^^^^^
@@ -958,6 +963,27 @@ Running
 In any OS you will need ``MqttUdpTray.jar`` and ``mqttudptray.ini``. There is ``MqttUdpTray.exe`` 
 for windows. In other systems (with Java 8 installed) please execute ``javaw -jar MqttUdpTray.jar``
 or ``java -jar MqttUdpTray.jar`` command.
+
+
+.. _MacTrayMenu:
+
+.. figure:: illustrations/MacOSMenu.png 
+
+   Tray icon menu
+
+   Menu is shown when left mouse button is pressed.
+
+
+.. _MacTrayMouseOver:
+
+.. figure:: illustrations/MacOSMouseOver.png 
+
+   Tray icon on mouse over
+
+   Tooltip is shown when mouse is over the icon.
+
+
+
 
 
 Addendums
