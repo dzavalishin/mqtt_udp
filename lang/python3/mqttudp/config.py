@@ -80,14 +80,14 @@ def set_group(group):
     if len(log_file) > 0:
 
         fh = logging.FileHandler(log_file)
-     
+
         file_formatter = logging.Formatter('%(asctime)s  %(levelname)s:%(name)s  %(message)s')
         fh.setFormatter(file_formatter)
         
         # add handler to logger object
         log.addHandler(fh)
         
-        verbose = getboolean('verbose' )
+        verbose = getboolean('verbose')
         if verbose:
             fh.setLevel(logging.INFO)
         else:
