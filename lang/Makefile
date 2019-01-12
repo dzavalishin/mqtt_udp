@@ -18,9 +18,9 @@ ALLDIRS := $(wildcard */.)
 #EXCLUDE_DIRS := codesys/. kotlin/. arduino/. c/. lua/. python/. python3/.
 EXCLUDE_DIRS := codesys/. kotlin/. arduino/. c/. 
 
-SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS))
+SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS)) c/test
 
-$(TOPTARGETS):: $(SUBDIRS) c/.
+$(TOPTARGETS):: $(SUBDIRS) c/. 
 
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
