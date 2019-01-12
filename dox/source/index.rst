@@ -962,7 +962,7 @@ Running
 
 In any OS you will need ``MqttUdpTray.jar`` and ``mqttudptray.ini``. There is ``MqttUdpTray.exe`` 
 for windows. In other systems (with Java 8 installed) please execute ``javaw -jar MqttUdpTray.jar``
-or ``java -jar MqttUdpTray.jar`` command.
+or ``java -jar MqttUdpTray.jar`` command. All the files are in the ``build`` directory.
 
 
 .. _MacTrayMenu:

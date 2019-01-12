@@ -2,11 +2,16 @@
 
 from setuptools import setup, find_packages
 
+
+with open("README.md", "r") as fh:
+    f_long_description = fh.read()
+
 setup(
     name='mqttudp',
     version='0.4-0',
     description='An MQTT/UDP implementation in Python',
-    long_description="MQTT/UDP is a simplest brokerless variation of MQTT protocol based on UDP broadcast. See https://github.com/dzavalishin/mqtt_udp for more prog. languages and info.",
+    long_description=f_long_description,
+    long_description_content_type="text/markdown",
     author='Dmitry Zavalishin',
     author_email='dz@dz.ru',
     url='https://github.com/dzavalishin/mqtt_udp',
@@ -29,3 +34,4 @@ setup(
     #      '/path/to/icons', ['myApp/icons/a.ico', 'myApp/icons/e.ico']
     #)],
 )
+
