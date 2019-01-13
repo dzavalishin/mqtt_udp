@@ -12,7 +12,7 @@ import sys
 
 
 log = logging.getLogger("mqtt-udp")
-#logger.setLevel(logging.ERROR)
+log.setLevel(logging.DEBUG)
 
 # First to stdout
 
@@ -79,6 +79,7 @@ def set_group(group):
     log_file = get("logfile");
     if len(log_file) > 0:
 
+#        print("Will log to "+log_file)
         fh = logging.FileHandler(log_file)
 
         file_formatter = logging.Formatter('%(asctime)s  %(levelname)s:%(name)s  %(message)s')
@@ -92,6 +93,7 @@ def set_group(group):
             fh.setLevel(logging.INFO)
         else:
             log.removeHandler(stdout_handler)
+            fh.setLevel(logging.ERROR)
 
         log.info("Started: "+group)
 

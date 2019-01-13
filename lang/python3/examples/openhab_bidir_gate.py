@@ -48,6 +48,7 @@ it_to_ohb = mqttudp.interlock.Timer(10)
 
 # TODO logging
 def send_to_udp( topic, value ):
+#    print("From OpenHAB incoming "+topic+" "+value)
     if not it_to_udp.can_pass( topic, value ):
 #        if verbose:
 #            print("From OpenHAB REPEAT BLOCKED "+topic+" "+value)
