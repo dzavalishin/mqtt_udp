@@ -1,4 +1,4 @@
-package test.ru.dz.mqtt_udp;
+package test.java.ru.dz.mqtt_udp;
 
 import static org.junit.Assert.*;
 

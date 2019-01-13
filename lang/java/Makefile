@@ -1,4 +1,5 @@
-all: mqtt_udp.jar 
+all: # mqtt_udp.jar 
+	mvn
 
 clean:
 	-rm -r bin/*
@@ -7,8 +8,7 @@ build:: all mqtt_udp.jar
 	cp mqtt_udp.jar ../../build
 
 test::
-	echo -------------------- TODO ---------------------
-
+	mvn test
 
 
 mqtt_udp.jar::
