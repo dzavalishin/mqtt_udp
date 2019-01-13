@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ru.dz.mqtt_udp</groupId>
+  <artifactId>mqtt_udp</artifactId>
+  <version>0.0.1</version> <!-- ${project.version} -->
+  <packaging>jar</packaging>
+ 
+  <name>MUTT/UDP java library</name>
+  <description>Simple, easy but powerful MQTT based UDP broadcast protocol</description>
+  <url>https://github.com/dzavalishin/mqtt_udp</url>
+ 
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://raw.githubusercontent.com/dzavalishin/mqtt_udp/master/lang/java/LICENSE</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+ 
+  <scm>
+    <url>https://github.com/dzavalishin/mqtt_udp.git</url>
+  </scm>
+ 
+ 
+  <issueManagement>
+  	<url>https://github.com/dzavalishin/mqtt_udp/issues</url>
+  </issueManagement>
+  <ciManagement>
+  	<url>https://travis-ci.org/dzavalishin/mqtt_udp</url>
+  </ciManagement>
+
+<!--
+<dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12.0</version>
+            <scope>test</scope>
+        </dependency>
+</dependencies>
+-->
+
+<build>
+    <!--defaultGoal>install</defaultGoal-->
+    <defaultGoal>package</defaultGoal>
+    <directory>${basedir}/target</directory>
+    <finalName>${poject.artifactId}-${poject.version}</finalName>
+</build>
+
+
+
+
+
+
+
+
+
+
+
+</project>
