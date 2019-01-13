@@ -16,7 +16,7 @@
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src">
+            <fileset dir="src/main/java">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -30,7 +30,7 @@
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
-            <src path="src"/>
+            <src path="src/main/java"/>
             <classpath refid="mqtt_udp.classpath"/>
         </javac>
     </target>
