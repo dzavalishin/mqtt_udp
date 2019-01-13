@@ -9,8 +9,9 @@ See also ../../tools/viewer, simple visual MQTT/UDP traffic viewer written in Ja
 
 ## Build
 
-I am building this with Eclipse. There is build.xml included, but it also 
-depends on Eclipse.
+I am building this with Eclipse. 
+
+There is maven pom.xml bundled, so it can be built with mvn.
 
 Code has no dependencies on Eclipse, so it can be built with any Java environment.
 

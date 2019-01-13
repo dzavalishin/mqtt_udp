@@ -6,6 +6,11 @@ import org.junit.Test;
 
 import ru.dz.mqtt_udp.TopicFilter;
 
+/**
+ * Test for topic filtering.
+ * @author dz
+ *
+ */
 public class TopicFilterTest {
 
 	@Test
