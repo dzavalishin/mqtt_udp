@@ -4,10 +4,10 @@ compiler:
   - gcc
  
 script:
-  - make test
   - cd lang/c
   - sh ./configure
   - make
 #  - cd ../..
+#  - make test
 #  - make travis_ci
 
