@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: mqttudp
-Version: 0.1.post0
+Version: 0.1.post1
 Summary: An MQTT/UDP implementation in Python
 Home-page: https://github.com/dzavalishin/mqtt_udp
 Author: Dmitry Zavalishin
@@ -76,6 +76,6 @@ Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
-Classifier: Topic :: Internet :: MQTT
-Classifier: Topic :: Internet :: IoT
+Classifier: Topic :: Internet
+Classifier: Topic :: System :: Networking
 Description-Content-Type: text/markdown

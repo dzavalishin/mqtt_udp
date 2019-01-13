@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='mqttudp',
-    version='0.1-0',
+    version='0.1-1',
     description='An MQTT/UDP implementation in Python',
     long_description=f_long_description,
     long_description_content_type="text/markdown",
@@ -27,8 +27,8 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Topic :: Internet :: MQTT',
-        'Topic :: Internet :: IoT',
+        'Topic :: Internet',
+        'Topic :: System :: Networking',
     ],
     #data_files=[(
     #      '/path/to/icons', ['myApp/icons/a.ico', 'myApp/icons/e.ico']

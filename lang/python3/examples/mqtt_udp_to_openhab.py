@@ -12,7 +12,7 @@ Based on examples from https://github.com/openhab/openhab1-addons/wiki/Samples-R
 # will work even if package is not installed
 import sys
 sys.path.append('..')
-sys.path.append('../mqttudp')
+#sys.path.append('../mqttudp')
 
 #import threading
 import requests

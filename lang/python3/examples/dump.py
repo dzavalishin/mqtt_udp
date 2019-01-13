@@ -10,7 +10,7 @@ Listen to all the traffic on MQTT/UDP, print
 # will work even if package is not installed
 import sys
 sys.path.append('..')
-sys.path.append('../mqttudp')
+#sys.path.append('../mqttudp')
 
 import mqttudp.engine
 

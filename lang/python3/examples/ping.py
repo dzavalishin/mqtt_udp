@@ -7,7 +7,7 @@
 # will work even if package is not installed
 import sys
 sys.path.append('..')
-sys.path.append('../mqttudp')
+#sys.path.append('../mqttudp')
 
 import threading
 import mqttudp.engine
