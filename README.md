@@ -16,7 +16,7 @@ merely an MQTT Publish packets broadcast over an UDP.
 ## MQTT/UDP is 
 
 *   Extremely simple
-*   Extremely fast, minimap possible latency
+*   Extremely fast, minimal possible latency
 *   Excludes broker (which is single point of failure)
 *   Lowers network traffic (each masurement is sent exactly once to all)
 *   Reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)
