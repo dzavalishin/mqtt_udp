@@ -20,7 +20,10 @@ import mqttudp.config as cfg
 
 
 
-cfg.setGroup('mqtt-gate')
+cfg.set_group('mqtt-gate')
+log = cfg.log
+
+
 
 SUBSCRIBE_TOPIC=cfg.config.get('mqtt-gate','subscribe' )
 MQTT_BROKER_HOST=cfg.config.get('mqtt-gate','host' )
@@ -40,7 +43,8 @@ blackList=cfg.get('blacklist' )
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
-    print("Connected with result code "+str(rc))
+    #print("Connected with result code "+str(rc))
+    log.info( "Connected with result code " + str(rc) )
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     client.subscribe(SUBSCRIBE_TOPIC)
@@ -49,10 +53,12 @@ def on_connect(client, userdata, rc, unkn):  # @UnusedVariable
 def on_message(client, userdata, msg):  # @UnusedVariable
 #    if (len(blackList) > 0) and (re.match( blackList, msg.topic )):
     if cfg.check_black_list(msg.topic, blackList):
-        print("From broker BLACKLIST "+ msg.topic+" "+str(msg.payload))
+        #print("From broker BLACKLIST "+ msg.topic+" "+str(msg.payload))
+        log.info( "From broker BLACKLIST "+ msg.topic+" "+str(msg.payload) )
         return
 
-    print("From broker "+ msg.topic+" "+str(msg.payload))
+    #print("From broker "+ msg.topic+" "+str(msg.payload))
+    log.info( "From broker "+ msg.topic+" "+str(msg.payload) )
     mqttudp.engine.send_publish( msg.topic, msg.payload )
 
 
@@ -63,7 +69,8 @@ def broker_listen_thread():
         client.on_message = on_message
 
         client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, 60)
-        print("connected", client)
+        #print("connected", client)
+        log.info( "connected" + str(client) )
 
         client.loop_forever()
 
