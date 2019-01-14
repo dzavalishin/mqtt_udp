@@ -890,7 +890,7 @@ A GUI tool to view what's going on and send data too.
 
 .. figure:: ../TrafficViewerScreen_Jan2019.png
 
-   Screenshot of MQTT/UDP viewer tool
+   Screenshot of MQTT/UDP viewer tool (Windows)
 
 It is supposed that this tool can be used as remote configuration for MQTT/UDP nodes on the network.
 
@@ -898,7 +898,18 @@ To run program go to project root directory and start ``mqtt_udp_view.cmd`` or `
 need Java 8 and JavaFX installed for it to run. Please download it from http://java.com or
 try to use OpenJDK. (I did not yet.)
 
-Actual user giode is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
+Actual user guide is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
+
+.. figure:: illustrations/MqttUdpViewer_MacOS.png
+
+   Screenshot of MQTT/UDP viewer tool (Mac OS)
+
+   Being written in Java viewer works on Mac OS. It also must run on other
+   operating systems with Java, but I did not tried it yet.
+
+To run viewer you will need MqttUdpViewer.jar - on any OS ``java -jar MqttUdpViewer.jar`` will start
+program. For Windows there is MqttUdpViewer.exe which is a starter for MqttUdpViewer.jar,
+so in widows you can start it with ``MqttUdpViewer`` command.
 
 
 System Tray Informer
