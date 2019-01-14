@@ -34,7 +34,7 @@ run::
 	./mqtt_udp_sub
 
 clean::
-	-rm *.o *.exe 
+	-rm *.o *.d *.exe 
 
 cleanall:: clean
 	-rm autom4te.cache/* config.h config.status config.log $(LIB)
