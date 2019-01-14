@@ -10,6 +10,10 @@ VER_MINOR=4
 # unused yet
 SUB_MINOR=0
 
+
+default::
+	echo make version
+
 all::
 	echo nothing to do
 
@@ -37,7 +41,7 @@ conv_version::
 
 $(FN).java: $(IN)  inc_txt2java/* makefile
 	$(CPP) -Iinc_txt2java $(IN) $@
-	$(SENDTO) $(ROOT)/java/src/ru/dz/mqtt_udp/util/
+	$(SENDTO) $(ROOT)/java/src/main/java/ru/dz/mqtt_udp/util/
 
 
 $(FN).h: $(IN)  inc_txt2c/* makefile

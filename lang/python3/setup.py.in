@@ -27,8 +27,8 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Topic :: Internet :: MQTT',
-        'Topic :: Internet :: IoT',
+        'Topic :: Internet',
+        'Topic :: System :: Networking',
     ],
     #data_files=[(
     #      '/path/to/icons', ['myApp/icons/a.ico', 'myApp/icons/e.ico']
