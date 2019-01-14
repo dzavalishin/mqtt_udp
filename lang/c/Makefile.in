@@ -68,3 +68,5 @@ mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
 
 -include $(exclude README.md, $(wildcard *.md))
+-include $(wildcard *.d)
+

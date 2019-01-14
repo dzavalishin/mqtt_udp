@@ -3,12 +3,14 @@ language: c
 compiler:
   - clang
   - gcc
- 
+
+# NB! make test needs c lib to be built and it does not make it 
+#itself. fix make test!
 script:
-#  - make test
   - cd lang/c
   - sh ./configure
   - make
-#  - cd ../..
+  - cd ../..
+  - make test
 #  - make travis_ci
 
