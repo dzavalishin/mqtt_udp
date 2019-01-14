@@ -91,7 +91,7 @@ def parse_packet(pkt):
         #topic = str( codecs.encode( str( pkt[2:topic_len+2] ), 'UTF-8' ) )
         #value = str( codecs.encode( str( pkt[topic_len+2:] ), 'UTF-8' ) )
         topic = str( pkt[2:topic_len+2], 'UTF-8' )
-        value = str( pkt[topic_len+2:], 'UTF-8' )
+        value = str( pkt[topic_len+2:total_len], 'UTF-8' )
     
         #TODO use total_len
     
