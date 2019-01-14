@@ -3,8 +3,9 @@
 
 package = "mqttudp"
 
--- TODO somehow get it from defs?
-version = "0.3-0"
+
+-- version = "0.4"
+version = "0.4-0"
 
 source = {
    url = "https://github.com/dzavalishin/mqtt_udp"
@@ -28,9 +29,9 @@ dependencies = {
 build = {
     type = "builtin",
     modules = {
-        proto	= "mqtt_proto_lib.lua",
-        udp		= "mqtt_udp_lib.lua",
-        defs	= "mqtt_udp_defs.lua",
-        node	= "mqtt_udp_lib_NodeMCU.lua"
+        proto   = "mqtt_proto_lib.lua",
+        udp     = "mqtt_udp_lib.lua",
+        defs    = "mqtt_udp_defs.lua",
+        node    = "mqtt_udp_lib_NodeMCU.lua"
     }
 }
