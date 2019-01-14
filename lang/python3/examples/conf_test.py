@@ -2,7 +2,7 @@
 
 import sys
 sys.path.append('..')
-sys.path.append('../mqttudp')
+#sys.path.append('../mqttudp')
 
 import mqttudp.config as cfg
 

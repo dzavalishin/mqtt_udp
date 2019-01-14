@@ -1,10 +1,14 @@
+dist: trusty
 language: c
 compiler:
   - clang
   - gcc
  
 script:
+#  - make test
   - cd lang/c
   - sh ./configure
   - make
-   
+#  - cd ../..
+#  - make travis_ci
+

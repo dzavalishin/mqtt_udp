@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="icons"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mqtt_udp"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/uilib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

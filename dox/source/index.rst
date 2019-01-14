@@ -901,6 +901,89 @@ try to use OpenJDK. (I did not yet.)
 Actual user giode is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help
 
 
+System Tray Informer
+--------------------
+
+There is a simple program that adds an icon to a system tray. This icon lets you see some data from MQTT/UDP or control one
+OpenHAB item. Being a Java program it should run on MacOS and Linux, but it was not tested with Linux yet. 
+Illustrations show how it looks in Windows and Mac OS.
+
+.. rem It is shown on a :ref:`WinTrayRight` and :ref:`WinTrayLeft` figures like it looks in Windows. 
+
+
+.. _WinTrayRight:
+
+.. figure:: illustrations/TrayInfo.png 
+
+   Windows: tray icon informer
+
+   This informer is shown when you press right mouse button.
+   It shows two items defined in .ini file, see reference.
+   In this example mains voltage and total power consumption
+   are shown.
+
+.. _WinTrayLeft:
+
+.. figure:: illustrations/TrayMenu.png 
+
+   Windows: tray icon menu
+
+   Menu is shown when right mouse button is pressed.
+
+
+
+
+Setting up
+^^^^^^^^^^
+
+This program reads an ``mqttudptray.ini`` configuration file on start::
+
+
+   topic1=PLK0_activePa
+   topic2=PLK0_Va
+   
+   topic1header=Power consumption
+   topic2header=Mains Voltage
+   
+   # experimental
+   #
+   controltopic=GroupGuestMain
+   
+You can define which two topics will be displayed, and what human readable names they have.
+The ``controltopic`` setting is for controlling light (or other ON/OFF switch) via
+OpenHAB. If defined, *Light on* and *Light off* menu items of a tray icon will send ON and OFF
+values to corresponding topic.
+
+Current version of MQTT/UDP does not support QoS, and, possiblly on/off message can be lost.
+That is why this function is marked as experimental.
+
+Running
+^^^^^^^
+
+In any OS you will need ``MqttUdpTray.jar`` and ``mqttudptray.ini``. There is ``MqttUdpTray.exe`` 
+for windows. In other systems (with Java 8 installed) please execute ``javaw -jar MqttUdpTray.jar``
+or ``java -jar MqttUdpTray.jar`` command. All the files are in the ``build`` directory.
+
+
+.. _MacTrayMenu:
+
+.. figure:: illustrations/MacOSMenu.png 
+
+   Tray icon menu
+
+   Menu is shown when left mouse button is pressed.
+
+
+.. _MacTrayMouseOver:
+
+.. figure:: illustrations/MacOSMouseOver.png 
+
+   Tray icon on mouse over
+
+   Tooltip is shown when mouse is over the icon.
+
+
+
 
 
 Addendums
@@ -1006,7 +1089,7 @@ FAQ
 
 .. rem Requirements:
 .. rem * binutils, make, gcc, python 3.6+, lua 5.2+
-.. rem * java jdk 1.8 or later, ant, JUnit 4
+.. rem * java jdk 1.8 or later, ant, JUnit 4, launch4j
 
 Links
 -----

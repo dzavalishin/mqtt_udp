@@ -1,4 +1,6 @@
-import engine
+name = "mqttudp"
+
+import mqttudp.engine
 
 
 

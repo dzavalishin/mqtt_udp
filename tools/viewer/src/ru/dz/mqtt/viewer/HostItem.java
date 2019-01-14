@@ -1,5 +1,7 @@
 package ru.dz.mqtt.viewer;
 
+import ru.dz.mqtt_udp.items.AbstractItem;
+
 public class HostItem implements Comparable<HostItem>{
 
 	private String from;
@@ -8,7 +10,7 @@ public class HostItem implements Comparable<HostItem>{
 	// TODO IPacketAddress?
 	//public HostItem(String hostName ) {		this.hostName = hostName;	}
 
-	public HostItem(TopicItem ti) {
+	public HostItem(AbstractItem ti) {
 		this.from = ti.getFrom();
 		this.time = ti.getTime();
 		//ti.get

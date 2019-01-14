@@ -1,6 +1,7 @@
 import configparser
 import logging
 import re
+import sys
 
 
 # ------------------------------------------------------------------------
@@ -11,14 +12,15 @@ import re
 
 
 log = logging.getLogger("mqtt-udp")
-#logger.setLevel(logging.ERROR)
+log.setLevel(logging.DEBUG)
 
 # First to stdout
 
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-stdout_handler.setFormatter(formatter)
+#formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stdout_formatter = logging.Formatter('%(levelname)s: %(message)s')
+stdout_handler.setFormatter(stdout_formatter)
 log.addHandler(stdout_handler)
 
 # ------------------------------------------------------------------------
@@ -77,24 +79,28 @@ def set_group(group):
     log_file = get("logfile");
     if len(log_file) > 0:
 
+#        print("Will log to "+log_file)
         fh = logging.FileHandler(log_file)
-     
-        formatter = logging.Formatter('%(asctime)s  %(levelname)s:%(name)s  %(message)s')
-        fh.setFormatter(formatter)
+
+        file_formatter = logging.Formatter('%(asctime)s  %(levelname)s:%(name)s  %(message)s')
+        fh.setFormatter(file_formatter)
         
         # add handler to logger object
         log.addHandler(fh)
         
-        verbose = getboolean('verbose' )
+        verbose = getboolean('verbose')
         if verbose:
             fh.setLevel(logging.INFO)
-    
+        else:
+            log.removeHandler(stdout_handler)
+            fh.setLevel(logging.ERROR)
+
         log.info("Started: "+group)
 
-        log.removeHandler(stdout_handler)
 
+# deprecated
 def setGroup(group):
-    set_group(group):
+    set_group(group)
 
 
 

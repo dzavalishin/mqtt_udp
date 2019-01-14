@@ -1,5 +1,7 @@
 package ru.dz.mqtt.viewer;
 
+import ru.dz.mqtt_udp.items.TopicItem;
+
 public class TopicTableItem extends TopicItem {
 
 	private TableButtonsState tableButtonsState = new TableButtonsState();

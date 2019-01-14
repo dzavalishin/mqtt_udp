@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 
-#               NB!! Broken!
-
 import requests
 import json
 import base64
 import time
 
-import logging as log
+#import logging as log
+import logging
  
 # add filemode="w" to overwrite
-log.basicConfig(filename="openhab_gate.log", level=log.INFO)
+#log.basicConfig(filename="openhab_gate.log", level=log.INFO)
+log = logging.getLogger("mqtt-udp.openhab")
 
-# TODO logging!!
 
 
 class RestIO:

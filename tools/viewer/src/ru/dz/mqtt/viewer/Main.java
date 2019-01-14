@@ -15,6 +15,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import ru.dz.mqtt_udp.items.TopicItem;
+import ru.dz.mqtt_udp.items.AbstractItem;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 import javafx.scene.Scene;
@@ -200,9 +202,9 @@ public class Main extends Application {
 	}
 
 
-	private ListView<TopicItem> logListView = new ListView<TopicItem>();
-	private ObservableList<TopicItem> logItems = FXCollections.observableArrayList ();
-	private void addLogItem(TopicItem i)
+	private ListView<AbstractItem> logListView = new ListView<AbstractItem>();
+	private ObservableList<AbstractItem> logItems = FXCollections.observableArrayList ();
+	private void addLogItem(AbstractItem i)
 	{
 		logItems.add(0,i);
 		if( logItems.size() > 400 )
@@ -219,7 +221,7 @@ public class Main extends Application {
 	}
 
 	private HBox makeContent() {
-		ListView<ru.dz.mqtt.viewer.TopicItem> listv = makeListView();
+		ListView<ru.dz.mqtt_udp.items.TopicItem> listv = makeListView();
 
 		HBox hbox = new HBox(listv);
 		hbox.setFillHeight(true);
@@ -435,19 +437,24 @@ public class Main extends Application {
 
 
 	private ListView<TopicItem> topicListView = new ListView<TopicItem>();
-	private void setListItem(TopicItem item)
+	private void setListItem(AbstractItem item)
 	{
 		if(!item.typeWithTopic()) return;
 		
+		if(! (item instanceof TopicItem) ) 
+			return;
+		
+		TopicItem ti = (TopicItem) item;
+			
 		// Dumb code, sorry
 		int nItems = listItems.size();
 		for( int j = 0; j < nItems; j++ )
 		{
 			TopicItem ci = listItems.get(j);
-			if(ci.getTopic().equals(item.getTopic()) )
+			if(ci.getTopic().equals(ti.getTopic()) )
 			{
 				listItems.remove(j);
-				listItems.add(j, item);
+				listItems.add(j, ti);
 
 				MultipleSelectionModel<TopicItem> sm = topicListView.getSelectionModel();
 				if(sm.isEmpty())
@@ -457,7 +464,7 @@ public class Main extends Application {
 			}
 		}
 
-		listItems.add(0, item);
+		listItems.add(0, ti);
 
 		MultipleSelectionModel<TopicItem> sm = topicListView.getSelectionModel();
 		if(sm.isEmpty())

@@ -4,6 +4,7 @@ Simpified version of MQTT over UDP: Network is broker!
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c498fc36dbea4e41a05f4ba5a8c0ff96)](https://www.codacy.com/app/dzavalishin/mqtt_udp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dzavalishin/mqtt_udp&amp;utm_campaign=Badge_Grade) 
 [![Build Status](https://travis-ci.org/dzavalishin/mqtt_udp.svg?branch=master)](https://travis-ci.org/dzavalishin/mqtt_udp) 
 [![Documentation Status](https://readthedocs.org/projects/mqtt-udp/badge/?version=latest)](https://mqtt-udp.readthedocs.io/en/latest/?badge=latest)
+[![PyPI version](https://badge.fury.io/py/mqttudp.svg)](https://badge.fury.io/py/mqttudp)
 
 [See Russian version / Русская версия здесь](./README.ru.md)
 
@@ -15,7 +16,7 @@ merely an MQTT Publish packets broadcast over an UDP.
 ## MQTT/UDP is 
 
 *   Extremely simple
-*   Extremely fast, minimap possible latency
+*   Extremely fast, minimal possible latency
 *   Excludes broker (which is single point of failure)
 *   Lowers network traffic (each masurement is sent exactly once to all)
 *   Reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)

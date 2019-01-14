@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import ru.dz.mqtt_udp.items.AbstractItem;
+import ru.dz.mqtt_udp.items.TopicItem;
+
 public class FileLogger {
 	private BufferedWriter writer = null;
 
@@ -25,7 +28,7 @@ public class FileLogger {
 		writer = null;
 	}
 	
-	public void logItem(TopicItem ti)
+	public void logItem(AbstractItem ti)
 	{
 		String s = ti.toString();
 		try {			
