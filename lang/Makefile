@@ -18,7 +18,8 @@ ALLDIRS := $(wildcard */.)
 #EXCLUDE_DIRS := codesys/. kotlin/. arduino/. c/. lua/. python/. python3/.
 EXCLUDE_DIRS := codesys/. kotlin/. arduino/. c/. 
 
-SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS)) c/test
+SUBDIRS := $(filter-out $(EXCLUDE_DIRS), $(ALLDIRS)) 
+#c/test
 
 $(TOPTARGETS):: $(SUBDIRS) c/. 
 
