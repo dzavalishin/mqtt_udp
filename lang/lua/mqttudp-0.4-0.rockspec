@@ -7,11 +7,15 @@ package = "mqttudp"
 -- version = "0.4"
 version = "0.4-0"
 
-source = {
-   url = "https://github.com/dzavalishin/mqtt_udp"
+source = 
+{
+   url = "https://github.com/dzavalishin/mqtt_udp",
+   tag = "v0.4-0",
+
 }
 
-description = {
+description = 
+{
    summary = "MQTT/UDP implementation in Lua.",
    detailed = [[
       MQTT/UDP is simplest possible UDP broadcast based IoT protocol.
@@ -19,19 +23,26 @@ description = {
       IoT devices. See homepage for more info and other languages.
    ]],
    homepage = "https://github.com/dzavalishin/mqtt_udp", -- All the MQTT/UDP project
+   license = "MIT/X11"
 }
 
-dependencies = {
+dependencies = 
+{
    "lua >= 5.1, < 5.4"
    -- If you depend on other rocks, add them here
 }
 
-build = {
+build = 
+{
     type = "builtin",
-    modules = {
-        proto   = "mqtt_proto_lib.lua",
-        udp     = "mqtt_udp_lib.lua",
-        defs    = "mqtt_udp_defs.lua",
-        node    = "mqtt_udp_lib_NodeMCU.lua"
+    modules = 
+    {
+        proto   = "mqttudp/mqtt_proto_lib.lua",
+        udp     = "mqttudp/mqtt_udp_lib.lua",
+        defs    = "mqttudp/mqtt_udp_defs.lua",
+        node    = "mqttudp/mqtt_udp_lib_NodeMCU.lua",
+        bit53   = "mqttudp/bit53.lua",
+        mybit   = "mqttudp/mybit.lua",
     }
 }
+
