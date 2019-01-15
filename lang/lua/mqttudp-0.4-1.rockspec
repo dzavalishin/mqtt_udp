@@ -1,17 +1,13 @@
--- TODO not ok
--- learn build from https://github.com/xHasKx/luamqtt/blob/master/luamqtt-1.4.2-1.rockspec
-
 package = "mqttudp"
 
 
--- version = "0.4"
-version = "0.4-0"
+version = "0.4-1"
 
 source = {
-   file = "lua_mqttudp-0.4-0.tar.gz",
-   --dir = "mqttudp",
+   file = "lua_mqttudp-0.4-1.tar.gz",
+   ---dir = "mqttudp",
    dir = ".",
-   url = "https://github.com/dzavalishin/mqtt_udp/blob/master/lang/lua/lua_mqttudp-0.4-0.tar.gz?raw=true",
+   url = "https://github.com/dzavalishin/mqtt_udp/blob/master/lang/lua/lua_mqttudp-0.4-1.tar.gz?raw=true",
 }
 
 description = {

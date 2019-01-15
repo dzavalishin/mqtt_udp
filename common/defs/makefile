@@ -8,7 +8,7 @@ OUT= conv_version  $(FN).java $(FN).h $(FN).py $(FN).lua
 VER_MAJOR=0
 VER_MINOR=4
 # unused yet
-SUB_MINOR=0
+SUB_MINOR=1
 
 
 default::

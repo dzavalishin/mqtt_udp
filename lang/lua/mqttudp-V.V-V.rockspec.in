@@ -9,7 +9,8 @@ version = "@release@"
 
 source = {
    file = "lua_mqttudp-@release@.tar.gz",
-   dir = "mqttudp",
+   ---dir = "mqttudp",
+   dir = ".",
    url = "https://github.com/dzavalishin/mqtt_udp/blob/master/lang/lua/lua_mqttudp-@release@.tar.gz?raw=true",
 }
 
