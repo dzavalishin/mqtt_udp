@@ -49,6 +49,8 @@ Fast track for impatient readers: MQTT/UDP native implementations exist in Java,
 Now some words on MQTT/UDP idea. It is quite simple. Broker is a `single point of failure <https://en.wikipedia.org/wiki/Single_point_of_failure>`_ and can be avoided. Actual
 traffic of smart home installation is not too big and comes over a separated (by firewall) network. There are many listeners that need same data, such as:
 
+.. index:: single: OpenHAB
+
 * main UI subsystem (such as OpenHAB installation)
 * special function controllers (light, climate units)
 * per-room or per-function controllers (kitchen ventilation, bath room sensors, room CO2 sensors, etc)
@@ -109,6 +111,9 @@ via two possible points of failure - controller it is connected to and
 OpenHub software as a broker. I'm going to swithch to MQTT/UDP and feed
 all the units directly.
 
+
+.. index:: single: UDP
+
 Multiple smart switches
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -139,6 +144,7 @@ repository, but you can use, for example well known WireShark as well.
 
 
 
+.. index:: single: UDP
 
 Reliability
 -----------
@@ -224,12 +230,15 @@ There is a native MQTT/UDP implementation in C. You can browse sources at https:
 
 Lets begin with a simplest examples.
 
+.. index:: single: send
+
 Send data::
 
 
     int rc = mqtt_udp_send_publish( topic, value );
 
 
+.. index:: single: listen
 
 Listen for data::
 
@@ -281,6 +290,8 @@ Now lets get through the packet structure definition::
     };
 
 
+.. index:: single: listen
+
 Listen for packets
 ^^^^^^^^^^^^^^^^^^
 
@@ -316,6 +327,8 @@ There's just one::
     #include "mqtt_udp.h"
 
 
+.. index:: single: send
+
 Functions
 ^^^^^^^^^
 
@@ -348,6 +361,7 @@ Dump packet structure. Handy to debug things::
     int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 
+.. index:: single: UDP
 
 UDP IO interface
 ^^^^^^^^^^^^^^^^
@@ -411,6 +425,8 @@ There is a native MQTT/UDP implementation in Java. You can browse sources at htt
 
 Again, here are simplest examples.
 
+.. index:: single: send
+
 Send data::
 
 
@@ -418,6 +434,7 @@ Send data::
     pkt.send();
 
 
+.. index:: single: listen
 
 Listen for data::
 
@@ -501,6 +518,8 @@ Used here ``PacketSourceServer``, first of all, starts automatically, and uses `
 to pass packets received to you. The rest of the story is the same.
 
 
+.. index:: single: send
+
 Packet classes
 ^^^^^^^^^^^^^^
 
@@ -550,12 +569,15 @@ you can backport some python3 code, it should be quite easy.
 
 Let's begin with examples, as usual.
 
+.. index:: single: send
+
 Send data::
 
 
     mqttudp.engine.send_publish( "test_topic", "Hello, world!" )
 
 
+.. index:: single: listen
 
 Listen for data::
 
@@ -588,6 +610,8 @@ Match topic name against a pattern, processing `+` and `#` wildcards, returns Tr
    me.match("aaa/+/bbb", "aaa/ccc/bbb")
 
 
+
+.. index:: single: OpenHAB
 
 .. _python-ini-file:
 
@@ -679,9 +703,11 @@ Unchanged ones will pass only if time (10 seconds in this example) is passed
 since previous item come through.
 
 
+.. module:: mqttudp.mqtt_udp_defs
 
 Module mqttudp.mqtt_udp_defs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 
 This module is not for user code, it is used internally. But you can get library release version from it::
@@ -708,14 +734,16 @@ This module is not for user code, it is used internally. But you can get library
 Lua Language API Reference
 --------------------------
 
-.. NOTE::
+.. rem NOTE::
 
-   Lua API is not final.
+.. rem   Lua API is not final.
 
 You can browse sources at https://github.com/dzavalishin/mqtt_udp/tree/master/lang/lua repository.
 
 
 Basic examples in Lua.
+
+.. index:: single: send
 
 Send data::
 
@@ -724,6 +752,7 @@ Send data::
     mq.send_publish( topic, val );
 
 
+.. index:: single: listen
 
 Listen for data::
 
@@ -737,10 +766,12 @@ Listen for data::
     mq.listen( listener )
 
 
+.. index:: single: send
+
 Send packets
 ^^^^^^^^^^^^
 
-There are functions to send packets::
+There are functions to send different kinds of packets::
 
    local mq = require "mqttudp"
 
@@ -766,68 +797,73 @@ PLC is specific: it runs all its programs in loop and it is assumed that each pr
 without blocking and does not spend too much time each loop cycle. There's usually a watch dog
 that checks for it. Hence, ST implementation is cycling, sending just one topic per loop cycle.
 
-Actual API is simple::
+.. index:: single: send
+
+Actual API is simple:
+
+.. code-block:: pascal
 
     FUNCTION MQTT_SEND : BOOL
     
     VAR_INPUT
-            socket          : DINT;
-    
-            topic           : STRING;
-            data            : STRING;
-    
-            sock_adr_out    : SOCKADDRESS;
+        socket          : DINT;
+
+        topic           : STRING;
+        data            : STRING;
+
+        sock_adr_out    : SOCKADDRESS;
     END_VAR
     
 
     FUNCTION MQ_SEND_REAL : BOOL
     VAR_INPUT
-            socket          : DINT;
-            m_SAddress      : SOCKADDRESS;
+        socket          : DINT;
+        m_SAddress      : SOCKADDRESS;
 
-            topic           : STRING;
-            data            : REAL;
+        topic           : STRING;
+        data            : REAL;
     END_VAR
 
 
 
-Here is how it is used in main program::
+Here is how it is used in main program:
+
+.. code-block:: pascal
 
     PROGRAM MQTT_PRG
     VAR
-            STEP         : INT  := 0;
-            socket       : DINT := SOCKET_INVALID;
-            wOutPort     : INT  := 1883;
-            m_SAddress   : SOCKADDRESS;
+        STEP         : INT  := 0;
+        socket       : DINT := SOCKET_INVALID;
+        wOutPort     : INT  := 1883;
+        addr         : SOCKADDRESS;
     
     END_VAR
     
     CASE STEP OF
-    
-            0:
-                    socket := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
-    
-                    m_SAddress.sin_family := SOCKET_AF_INET;
-                    m_SAddress.sin_port	  := SysSockHtons( wOutPort );
-                    m_SAddress.sin_addr	  := 16#FFFFFFFF; (* broadcast *)
-    
-            1:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_WarmWaterConsumption', GLOBAL_WarmWaterConsumption );
-            2:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_ColdWaterConsumption', GLOBAL_ColdWaterConsumption );
-    
-            3:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_activePa', GLOBAL_activePa_avg * 10 );
-            4:	MQ_SEND_REAL( socket, m_SAddress,  'PLK0_Va', Va );
+        0:
+            socket := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
+
+            addr.sin_family := SOCKET_AF_INET;
+            addr.sin_port   := SysSockHtons( wOutPort );
+            addr.sin_addr   := 16#FFFFFFFF; (* broadcast *)
+
+        1:  MQ_SEND_REAL( socket, addr,  'PLK0_WarmWater', WarmWaterConsumption );
+        2:  MQ_SEND_REAL( socket, addr,  'PLK0_ColdWater', ColdWaterConsumption );
+
+        3:  MQ_SEND_REAL( socket, addr,  'PLK0_activePa', activePa_avg );
+        4:  MQ_SEND_REAL( socket, addr,  'PLK0_Va', Va );
     
     ELSE
-            IF socket <> SOCKET_INVALID THEN
-                    SysSockClose( socket );
-            END_IF
-            socket := SOCKET_INVALID;
+        IF socket <> SOCKET_INVALID THEN
+            SysSockClose( socket );
+        END_IF
+        socket := SOCKET_INVALID;
     END_CASE
 
     STEP := STEP + 1;
     
     IF socket = SOCKET_INVALID THEN
-            STEP := 0;
+        STEP := 0;
     END_IF
     
     END_PROGRAM
@@ -864,6 +900,9 @@ There are also unidirectional gates ``mqtt_broker_to_udp.py`` and ``mqtt_udp_to_
 There is an example of service configuration file ``mqttudpgate.service`` for Unix ``systemctl`` service control tools.
 
 .. rem TODO ``systemctl enable mqttudpgate.service``? autostart, start/stop/status
+
+
+.. index:: single: OpenHAB
 
 OpenHAB
 ^^^^^^^
@@ -924,6 +963,9 @@ program. For Windows there is MqttUdpViewer.exe which is a starter for MqttUdpVi
 so in widows you can start it with ``MqttUdpViewer`` command.
 
 
+
+.. index:: single: OpenHAB
+
 System Tray Informer
 --------------------
 
@@ -931,7 +973,7 @@ There is a simple program that adds an icon to a system tray. This icon lets you
 OpenHAB item. Being a Java program it should run on MacOS and Linux, but it was not tested with Linux yet. 
 Illustrations show how it looks in Windows and Mac OS.
 
-.. rem It is shown on a :ref:`WinTrayRight` and :ref:`WinTrayLeft` figures like it looks in Windows. 
+.. rem It is shown on a :ref:`WinTrayRight` and :ref:`WinTrayLeft` figures like it looks in Windows. :ref:`MacTrayMouseOver`
 
 
 .. _WinTrayRight:
@@ -1029,11 +1071,14 @@ Displays
 ^^^^^^^^
 
 Send a copy of all the items state to MQTT/UDP and use it to bring data to hardware and software displays. For example, this
-project includes an example program (see ``tools/tray``) to display some MQTT/UDP items via an icon in a desktop
+project includes an example program (``tools/tray`` directory, see figure :ref:`MacTrayMouseOver` ) to display some MQTT/UDP items via an icon in a desktop
 tray. Being a Java program it should work in Windows, MacOS and Unix.
 
 .. rem TODO screenshot
 
+
+
+.. index:: single: OpenHAB
 
 Sensors and integrations
 ^^^^^^^^^^^^^^^^^^^^^^^^
