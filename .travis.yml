@@ -4,6 +4,11 @@ compiler:
   - clang
   - gcc
 
+
+before_install:
+  - sudo apt-get install -y lua5.2
+
+
 # NB! make test needs c lib to be built and it does not make it 
 #itself. fix make test!
 script:
