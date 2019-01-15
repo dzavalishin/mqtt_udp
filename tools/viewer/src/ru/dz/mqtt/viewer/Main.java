@@ -421,8 +421,10 @@ public class Main extends Application {
 
 		toolBarUpdateButton.setGraphic( updateEnabled ? runIcon : stopIcon );
 		
+		/* not needed as we do not occupy udp port exclusively
 		if( updateEnabled ) ds.requestStart();
 		else				ds.requestStop();
+		*/
 	}
 
 	private void showAboutAlert() {
