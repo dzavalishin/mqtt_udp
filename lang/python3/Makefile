@@ -9,5 +9,6 @@ build::
 	echo -------------------- TODO ---------------------
 
 test::
+	chmod a+rx test/*.py
 	cd test ; ./regress_test.py 
 
