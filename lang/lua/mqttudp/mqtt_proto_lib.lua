@@ -113,7 +113,7 @@ end
 
 ------------------------------------------------------------------------------
 --
--- Make / parse packets
+-- Parse packets
 --
 ------------------------------------------------------------------------------
 
@@ -188,6 +188,13 @@ end
 
 
 
+------------------------------------------------------------------------------
+--
+-- Make packets
+--
+------------------------------------------------------------------------------
+
+
 function mqtt_proto_lib.make_publish_packet( topic, value )
 
     -- print("Topic: '"..topic.."' val '"..value.."'")
@@ -254,6 +261,113 @@ function mqtt_proto_lib.make_pingreq_packet()
     return pkt;
 end
 
+
+------------------------------------------------------------------------------
+--
+-- Topic match 
+--
+------------------------------------------------------------------------------
+
+
+
+function mqtt_proto_lib.match( tfilter, topicName )
+		
+    tc = 0;
+    fc = 0;
+    
+    tlen = topicName:len()
+    flen = tfilter:len()
+    
+    while true do
+    
+        -- begin of path part
+        
+        if tfilter[fc] == '+' then
+    
+            fc = fc + 1; -- eat +
+            -- matches one path part, skip all up to / or end in topic
+            while (tc < tlen) and (topicName[tc] ~= '/') do
+                tc = tc + 1; -- eat all non slash
+            end
+
+            -- now either both have /, or both at end
+            
+            -- both finished
+            if (tc == tlen) and ( fc == flen ) then
+                return true;
+            end
+
+            -- one finished, other not
+            if (tc == tlen) ~= ( fc == flen ) then
+                return false;
+            end
+            
+            -- both continue
+            if (topicName[tc] == '/') and (tfilter[fc] == '/') then
+                tc = tc + 1;
+                fc = fc + 1;
+                -- continue; -- path part eaten
+            else
+                -- one of them is not '/' ?
+                return false;
+            end
+
+        end
+        
+        -- TODO check it to be at end?
+        -- we came to # in tfilter, done
+        if tfilter[fc] == '#' then
+            return true
+        end
+    
+        -- check parts to be equal
+        while true do
+    
+            -- both finished
+            if (tc == tlen) and ( fc == flen ) then
+                return true;
+            end
+    
+            -- one finished
+            if (tc == tlen) or ( fc == flen ) then
+                return false;
+            end
+
+            -- both continue
+            if (topicName[tc] == '/') and (tfilter[fc] == '/') then
+                tc = tc + 1;
+                fc = fc + 1;
+                break; -- path part eaten
+            end
+
+            -- both continue
+    
+            if topicName[tc] ~= tfilter[fc] then
+                return false;
+            end
+
+            -- continue
+            tc = tc + 1;
+            fc = fc + 1;
+        end
+
+    end -- while
+
+end
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------
+--
+-- End
+--
+------------------------------------------------------------------------------
 
 
 return mqtt_proto_lib
