@@ -10,11 +10,11 @@
 ]]
 
 --local mqtt_udp_lib = {}
-local mqtt_udp_lib = require "mqtt_proto_lib"
+local mqtt_udp_lib = require "mqttudp.mqtt_proto_lib"
 
-local defs  = require "mqtt_udp_defs"
+local defs  = require "mqttudp.mqtt_udp_defs"
 --local socket = require "socket"
-local bit = require "mybit"
+local bit = require "mqttudp.mybit"
 local mcunet = require "net"
 
 function mqtt_udp_lib.make_listen_socket()
