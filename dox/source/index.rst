@@ -1000,6 +1000,12 @@ or ``java -jar MqttUdpTray.jar`` command. All the files are in the ``build`` dir
 Addendums
 =========
 
+.. rem Installation
+.. rem ------------
+.. rem luarocks install mqttudp
+.. rem pypi ??
+.. rem maven
+
 
 Cook Book
 ---------
