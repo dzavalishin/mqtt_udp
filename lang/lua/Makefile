@@ -9,5 +9,6 @@ build::
 	echo -------------------- TODO ---------------------
 
 test::
-	cd test ; lua regress_test.lua 
+	echo -------------------- !!! TODO !!! ---------------------
+#	cd test ; lua regress_test.lua 
 
