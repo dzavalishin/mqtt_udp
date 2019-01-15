@@ -8,3 +8,4 @@
 
 <https://draft-edx-style-guide.readthedocs.io/en/latest/ExampleRSTFile.html>
 
+<https://media.readthedocs.org/pdf/brandons-sphinx-tutorial/latest/brandons-sphinx-tutorial.pdf>

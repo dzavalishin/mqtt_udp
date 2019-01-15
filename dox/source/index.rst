@@ -1,7 +1,7 @@
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
+.. rem    :caption: Contents:
 
 
 Welcome to MQTT/UDP
@@ -720,7 +720,7 @@ Basic examples in Lua.
 Send data::
 
 
-    local mq = require "mqtt_udp_lib"
+    local mq = require "mqttudp"
     mq.send_publish( topic, val );
 
 
@@ -728,7 +728,7 @@ Send data::
 Listen for data::
 
 
-    local mq = require "mqtt_udp_lib"
+    local mq = require "mqttudp"
     
     local listener = function( ptype, topic, value, ip, port )
         print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
@@ -736,6 +736,18 @@ Listen for data::
     
     mq.listen( listener )
 
+
+Send packets
+^^^^^^^^^^^^
+
+There are functions to send packets::
+
+   local mq = require "mqttudp"
+
+   mq.send_pingreq()
+   mq.send_pingresp()
+   mq.send_subscribe( topic )
+   mq.send_publish( topic, value )
 
 
 .. _st-lang-api:
@@ -905,7 +917,7 @@ Actual user guide is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wi
    Screenshot of MQTT/UDP viewer tool (Mac OS)
 
    Being written in Java viewer works on Mac OS. It also must run on other
-   operating systems with Java, but I did not tried it yet.
+   operating systems with Java, but it was not yet tested.
 
 To run viewer you will need MqttUdpViewer.jar - on any OS ``java -jar MqttUdpViewer.jar`` will start
 program. For Windows there is MqttUdpViewer.exe which is a starter for MqttUdpViewer.jar,
