@@ -21,7 +21,7 @@ void assertFalse( int i ) { assertTrue( !i ); }
 void testPlain()
 {
     char * tf = "aaa/ccc/bbb";
-    printf("testPlain ");
+    printf("\ttestPlain ");
     assertTrue( mqtt_udp_match( tf, "aaa/ccc/bbb") );
     assertFalse( mqtt_udp_match( tf, "aaa/c/bbb") );
     assertFalse( mqtt_udp_match( tf, "aaa/ccccc/bbb") );
@@ -33,7 +33,7 @@ void testPlain()
 void testPlus()
 {
     char * tf = "aaa/+/bbb";
-    printf("testPlus ");
+    printf("\ttestPlus ");
     assertTrue( mqtt_udp_match( tf, "aaa/ccc/bbb") );
     assertTrue( mqtt_udp_match( tf, "aaa/c/bbb") );
     assertTrue( mqtt_udp_match( tf, "aaa/ccccc/bbb") );
@@ -45,7 +45,7 @@ void testPlus()
 void testSharp()
 {
     char * tf = "aaa/#";
-    printf("testSharp ");
+    printf("\ttestSharp ");
     assertTrue( mqtt_udp_match( tf, "aaa/ccc/bbb") );
     assertTrue( mqtt_udp_match( tf, "aaa/c/bbb") );
     assertTrue( mqtt_udp_match( tf, "aaa/ccccc/bbb") );

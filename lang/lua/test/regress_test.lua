@@ -6,29 +6,32 @@ local me = require "mqttudp"
 
 
 function testPlain()
+    print( "\ttestPlain" )
     assert( me.match("aaa/ccc/bbb", "aaa/ccc/bbb") );
     assert( not me.match("aaa/ccc/bbb", "aaa/c/bbb") );
     assert( not me.match("aaa/ccc/bbb", "aaa/ccccc/bbb") );
     assert( not me.match("aaa/ccc/bbb", "aaa/ccccc/ccc") );
-    print( "testPlain PASSED" )
+    print( "\ttestPlain PASSED" )
 end
 
 
 function testPlus()
+    print( "\ttestPlus" )
     assert( me.match("aaa/+/bbb", "aaa/ccc/bbb") );
     assert( me.match("aaa/+/bbb", "aaa/c/bbb") );
     assert( me.match("aaa/+/bbb", "aaa/ccccc/bbb") );
     assert( not me.match("aaa/+/bbb", "aaa/ccccc/ccc") );
-    print( "testPlus PASSED" )
+    print( "\ttestPlus PASSED" )
 end
 
 
 function testSharp()
+    print( "\ttestSharp" )
     assert( me.match("aaa/#", "aaa/ccc/bbb") );
     assert( me.match("aaa/#", "aaa/c/bbb") );
     assert( me.match("aaa/#", "aaa/ccccc/bbb") );
     assert( not me.match("aaa/#", "aba/ccccc/ccc") );
-    print( "testSharp PASSED" )
+    print( "\ttestSharp PASSED" )
 end
 
 

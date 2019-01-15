@@ -40,6 +40,11 @@ cleanall:: clean
 	-rm autom4te.cache/* config.h config.status config.log $(LIB)
 	-rmdir autom4te.cache
 
+test:: all
+	$(MAKE) -C test test
+
+
+
 OBJS  = udp_send_pkt.o udp_recv_pkt.o 
 OBJS += mqtt_udp.o mqtt_udp_util.o
 OBJS += mqtt_udp_parse.o mqtt_udp_build.o

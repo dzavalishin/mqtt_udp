@@ -272,8 +272,8 @@ end
 
 function mqtt_proto_lib.match( tfilter, topicName )
 		
-    tc = 0;
-    fc = 0;
+    tc = 1;
+    fc = 1;
     
     tlen = topicName:len()
     flen = tfilter:len()
@@ -282,28 +282,28 @@ function mqtt_proto_lib.match( tfilter, topicName )
     
         -- begin of path part
         
-        if tfilter[fc] == '+' then
+        if tfilter:sub(fc,fc) == '+' then
     
             fc = fc + 1; -- eat +
             -- matches one path part, skip all up to / or end in topic
-            while (tc < tlen) and (topicName[tc] ~= '/') do
+            while (tc <= tlen) and (topicName:sub(tc,tc) ~= '/') do
                 tc = tc + 1; -- eat all non slash
             end
 
             -- now either both have /, or both at end
             
             -- both finished
-            if (tc == tlen) and ( fc == flen ) then
+            if (tc > tlen) and ( fc > flen ) then
                 return true;
             end
 
             -- one finished, other not
-            if (tc == tlen) ~= ( fc == flen ) then
+            if (tc > tlen) ~= ( fc > flen ) then
                 return false;
             end
             
             -- both continue
-            if (topicName[tc] == '/') and (tfilter[fc] == '/') then
+            if (topicName:sub(tc,tc) == '/') and (tfilter:sub(fc,fc) == '/') then
                 tc = tc + 1;
                 fc = fc + 1;
                 -- continue; -- path part eaten
@@ -316,7 +316,7 @@ function mqtt_proto_lib.match( tfilter, topicName )
         
         -- TODO check it to be at end?
         -- we came to # in tfilter, done
-        if tfilter[fc] == '#' then
+        if tfilter:sub(fc,fc) == '#' then
             return true
         end
     
@@ -324,17 +324,17 @@ function mqtt_proto_lib.match( tfilter, topicName )
         while true do
     
             -- both finished
-            if (tc == tlen) and ( fc == flen ) then
+            if (tc > tlen) and ( fc > flen ) then
                 return true;
             end
     
             -- one finished
-            if (tc == tlen) or ( fc == flen ) then
+            if (tc > tlen) or ( fc > flen ) then
                 return false;
             end
 
             -- both continue
-            if (topicName[tc] == '/') and (tfilter[fc] == '/') then
+            if (topicName:sub(tc,tc) == '/') and (tfilter:sub(fc,fc) == '/') then
                 tc = tc + 1;
                 fc = fc + 1;
                 break; -- path part eaten
@@ -342,7 +342,7 @@ function mqtt_proto_lib.match( tfilter, topicName )
 
             -- both continue
     
-            if topicName[tc] ~= tfilter[fc] then
+            if topicName:sub(tc,tc) ~= tfilter:sub(fc,fc) then
                 return false;
             end
 

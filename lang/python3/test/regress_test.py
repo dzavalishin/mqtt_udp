@@ -18,7 +18,7 @@ def testPlain():
     assert( not me.match("aaa/ccc/bbb", "aaa/c/bbb") );
     assert( not me.match("aaa/ccc/bbb", "aaa/ccccc/bbb") );
     assert( not me.match("aaa/ccc/bbb", "aaa/ccccc/ccc") );
-    print( "testPlain PASSED" )
+    print( "\ttestPlain PASSED" )
 
 
 def testPlus():
@@ -26,14 +26,14 @@ def testPlus():
     assert( me.match("aaa/+/bbb", "aaa/c/bbb") );
     assert( me.match("aaa/+/bbb", "aaa/ccccc/bbb") );
     assert( not me.match("aaa/+/bbb", "aaa/ccccc/ccc") );
-    print( "testPlus PASSED" )
+    print( "\ttestPlus PASSED" )
 
 def testSharp():
     assert( me.match("aaa/#", "aaa/ccc/bbb") );
     assert( me.match("aaa/#", "aaa/c/bbb") );
     assert( me.match("aaa/#", "aaa/ccccc/bbb") );
     assert( not me.match("aaa/#", "aba/ccccc/ccc") );
-    print( "testSharp PASSED" )
+    print( "\ttestSharp PASSED" )
 
 
 
