@@ -1,0 +1,154 @@
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM LISTEN
+VAR
+	socket				:	DINT := SOCKET_INVALID;
+	PORT				:	INT := 1883;
+	m_SAddress		:	SOCKADDRESS;
+
+	MU					:	MQTT_UDP_LISTEN;
+
+	IVAL				:	UINT;
+END_VAR
+(* @END_DECLARATION := '0' *)
+	IF socket = SOCKET_INVALID THEN
+		socket := SysSockCreate( SOCKET_AF_INET, SOCKET_DGRAM, SOCKET_IPPROTO_UDP );
+
+		IF socket = SOCKET_INVALID THEN
+			(* TODO report error *)
+			RETURN;
+		END_IF
+
+		m_SAddress.sin_family	:= SOCKET_AF_INET;
+		m_SAddress.sin_port	:= SysSockHtons( PORT );
+		m_SAddress.sin_addr	:= SOCKET_INADDR_ANY;
+
+		SysSockSetOption( socket, SOCKET_SOL, SOCKET_SO_REUSEADDR, 0, 0 );
+		SysSockBind( socket, ADR( m_SAddress ), SIZEOF( m_SAddress ) );
+		SysSockSetOption( socket, SOCKET_SOL, SOCKET_FIONBIO, 0, 0 );
+	END_IF
+
+	MU(  socket := socket  );
+
+	IF MU.error THEN
+		(* TODO report error *)
+		SysSockClose( socket );
+		socket := SOCKET_INVALID;
+		RETURN;
+	END_IF
+
+	IF MU.TOPIC = 'PLK_LIGHT' THEN
+		IVAL := STRING_TO_INT( MU.DATA );
+	END_IF
+
+
+
+
+END_PROGRAM
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '\/MQTT_UDP' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+FUNCTION_BLOCK MQTT_UDP_LISTEN
+
+VAR_INPUT
+	socket				:	DINT;
+END_VAR
+
+VAR_OUTPUT
+	topic 				:	STRING(128);
+	data 				:	STRING(128);
+	recvd				:	BOOL;
+	error				:	BOOL;
+END_VAR
+
+VAR
+
+	BUF				:	ARRAY[0..1535] OF BYTE;
+
+	READ_ADDR		:	SOCKADDRESS;
+	READ_BYTES		:	DINT;
+
+	TOTAL_LEN		:	UINT;
+	TOPIC_LEN		:	UINT;
+	DATA_LEN			:	UINT;
+
+	IN					: POINTER TO BYTE;
+	OUT				: POINTER TO BYTE;
+	CNT				: UINT;
+
+
+END_VAR
+(* @END_DECLARATION := '0' *)
+	recvd := FALSE;
+	error := FALSE;
+
+	IF socket = SOCKET_INVALID THEN
+		RETURN;
+	END_IF
+
+	READ_BYTES := SysSockRecvFrom( socket, ADR( BUF[0] ), SIZEOF(BUF), 0, ADR( READ_ADDR ), SIZEOF( READ_ADDR ) );
+
+	IF READ_BYTES < 0 THEN
+		error := TRUE;
+		RETURN;
+	END_IF
+
+	IF READ_BYTES = 0 THEN
+		RETURN;
+	END_IF
+
+	(* Have packet *)
+
+	(* Unknown type or too long for us *)
+	(*IF (BUF[0] <> 16#30) OR (BUF[1] > 127) OR (BUF[1] < 0) OR (BUF[2] <> 0) THEN *)
+	IF (BUF[0] <> 16#30) OR (BUF[1] > 127) OR (BUF[1] < 0) THEN
+		(* error := TRUE; *)
+		RETURN;
+	END_IF
+
+	TOTAL_LEN := BUF[1];
+(*
+	TOPIC_LEN := SHL( BYTE_TO_INT( BUF[2]), 8 );
+	TOPIC_LEN := TOPIC_LEN OR BYTE_TO_INT(BUF[3]);
+*)
+	TOPIC_LEN := BYTE_TO_INT(BUF[3]); (* Can't be > 127 anyway *)
+
+	IF ( TOPIC_LEN > 127 ) OR( TOPIC_LEN < 0 ) THEN
+		(* error := TRUE; *)
+		RETURN;
+	END_IF
+
+	DATA_LEN := TOTAL_LEN - TOPIC_LEN - 2;
+
+	IF (TOPIC_LEN > 127) OR (DATA_LEN > 127) THEN
+		RETURN;
+	END_IF
+
+	OUT 	:= ADR( TOPIC );
+	IN		:= ADR( BUF[4] );
+
+	FOR CNT := 1 TO TOPIC_LEN DO
+		OUT^ := IN^;
+		IN := IN + 1;
+		OUT := OUT + 1;
+	END_FOR;
+
+
+	OUT 	:= ADR( DATA );
+
+	FOR CNT := 1 TO DATA_LEN DO
+		OUT^ := IN^;
+		IN := IN + 1;
+		OUT := OUT + 1;
+	END_FOR;
+
+	recvd := TRUE;
+
+END_FUNCTION_BLOCK
