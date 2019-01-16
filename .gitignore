@@ -104,3 +104,4 @@ lang/python3/build/*
 
 tools/tray/launch4j.log
 tools/viewer/launch4j.log
+*.log

@@ -544,7 +544,7 @@ Match topic name against a pattern, processing `+` and `#` wildcards, returns tr
 
 TopicFlter is a Predicate (functional interface implementation).
 
-
+.. rem TODO example of incoming packets filtering
 
 
 

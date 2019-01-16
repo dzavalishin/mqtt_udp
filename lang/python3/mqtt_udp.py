@@ -1,5 +1,7 @@
 #!/bin/python
 
+# todo Kill Me
+
 import threading
 import paho.mqtt.client as mqtt
 import mqttudp.pub
