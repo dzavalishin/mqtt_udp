@@ -7,7 +7,7 @@ import java.util.function.Consumer;
  * Usage:
  * <pre>
  * PacketSourceServer ss = new PacketSourceServer();
- * ss.setSink( pkt -> { System.out.println(pkt);});
+ * ss.setSink( pkt -&gt; { System.out.println(pkt);});
  * </pre>
  * 
  * <p>Starts automatically.</p>

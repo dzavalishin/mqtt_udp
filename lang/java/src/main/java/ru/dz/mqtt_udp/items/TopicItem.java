@@ -46,6 +46,10 @@ public class TopicItem extends AbstractItem {
 		assertHasTopic();
 	}
 
+	/**
+	 * Make from other item.
+	 * @param src TopicItem to copy.
+	 */
 	public TopicItem(TopicItem src) {
 		super(src);
 		this.packetType = src.packetType;

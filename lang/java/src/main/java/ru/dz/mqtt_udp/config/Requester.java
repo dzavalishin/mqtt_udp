@@ -90,7 +90,7 @@ public class Requester implements Consumer<IPacket> {
 	}
 
 	/**
-	 * Implementation of Consumer<IPacket> interface.
+	 * Implementation of Consumer&lt;IPacket&gt; interface.
 	 * Sink to put received packets to.
 	 */
 	@Override

@@ -14,7 +14,7 @@ import ru.dz.mqtt_udp.items.AbstractItem;
  * Usage:
  * <pre>
  * PacketSourceServer ss = new PacketSourceServer();
- * ss.addPacketSink( pkt -> { System.out.println(pkt);});
+ * ss.addPacketSink( pkt -&gt; { System.out.println(pkt);});
  * 
  * confing.Provider p = new(); 
  * ss.addPacketSink( p );

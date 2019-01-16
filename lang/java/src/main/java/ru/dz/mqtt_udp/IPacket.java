@@ -11,6 +11,7 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public interface IPacket {
 
+	/** MQTT/UDP character set */
 	public static final String MQTT_CHARSET = "UTF-8";
 
 	/**
@@ -26,7 +27,7 @@ public interface IPacket {
 	public IPacketAddress getFrom();
 
 	/**
-	 * Get packet type byte, as sent over the net (& 0xF0).
+	 * Get packet type byte, as sent over the net (&amp; 0xF0).
 	 * @return Packet type byte.
 	 */
 	public int getType();
@@ -118,7 +119,7 @@ public interface IPacket {
 	 * Encode total packet length. Encoded as variable length byte sequence, 7 bits per byte.
 	 * 
 	 * @param pkt packet payload bytes
-	 * @param packetType type ( & 0xF0 )
+	 * @param packetType type ( &amp; 0xF0 )
 	 * @param flags flags
 	 * @return encoded packet to send to UDP
 	 */
@@ -173,7 +174,7 @@ public interface IPacket {
 	
 	/**
 	 * Get packet type name.
-	 * @param packetType as in incoming byte (& 0xF0).
+	 * @param packetType as in incoming byte (&amp; 0xF0).
 	 * @return Type string.
 	 */
 	public static String getPacketTypeName(int packetType) 
