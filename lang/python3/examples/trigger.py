@@ -29,25 +29,39 @@ VALUE_LIMIT=218
 TRIGGER_TOPIC="tray/message"
 
 # Snooze time, seconds
-snooze = 5
+SNOOZE = 30
+
+
+
+start_time = time.time() - SNOOZE - 1; # first one must trigger
 
 
 def recv_packet(ptype,topic,value,pflags,addr):
+    global start_time
+
     if ptype != "publish":
         return
 
     if topic != LISTEN_TOPIC:
         return
 
-    print( "Got " + value )
+    #print( "Got " + value )
 
     iv = float( value )
     if iv < VALUE_LIMIT:
         return
 
-    print( "Send "+value )
+    now = time.time();
+    #print( "\t\t time "+str(now)+ " start " + str(start_time) )
 
-    mqttudp.engine.send_publish(TRIGGER_TOPIC, "Waning, voltage is too high: " + value )
+    if now < (start_time + SNOOZE):
+        #print( "\tSKIP " )
+        return
+
+    start_time = time.time();
+    #print( "\tSend" )
+
+    mqttudp.engine.send_publish(TRIGGER_TOPIC, "Warning, voltage is too high: " + value )
 
     #time.sleep(2)
 
