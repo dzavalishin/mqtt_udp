@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PacketSourceServer;
@@ -24,6 +26,8 @@ import ru.dz.mqtt_udp.util.image.ImageUtils;
 
 public class Main {
 
+	private static final String TRIGGER_TOPIC = "tray/message";
+	
 	private static TrayIcon tIcon;
 	private static SystemTray tray = SystemTray.getSystemTray();
 	
@@ -79,6 +83,16 @@ public class Main {
 				cfg.topic2Header +" "+topic2Val;				
 
 		tIcon.setToolTip( userMessage );		
+
+		if(pp.getTopic().equals( TRIGGER_TOPIC ))
+		{
+			//Platform.runLater
+			SwingUtilities.invokeLater( () -> {
+	            tIcon.displayMessage(
+	            		"Trigger", pp.getValueString(),
+		                TrayIcon.MessageType.INFO);
+			} );
+		}
 
 		// TODO if under limit - popup a message?
 	}
