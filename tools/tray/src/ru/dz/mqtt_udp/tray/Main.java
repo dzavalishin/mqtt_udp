@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PacketSourceServer;
 import ru.dz.mqtt_udp.PublishPacket;
+import ru.dz.mqtt_udp.util.ErrorType;
+import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.image.ImageUtils;
 
 public class Main {
@@ -64,8 +66,6 @@ public class Main {
 			return;
 
 		PublishPacket pp = (PublishPacket) pkt;
-
-		//System.out.println("topic = "+pp.getTopic());
 
 		if(pp.getTopic().equals( cfg.topic1 ))
 			topic1Val = pp.getValueString();
@@ -151,7 +151,7 @@ public class Main {
 			new PublishPacket(topic, val).send();
 		} catch (IOException e) {
 			// TODO Logger? 
-			e.printStackTrace();
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
 		};
 	}
 
@@ -168,7 +168,7 @@ public class Main {
 		MouseListener mouseListener = new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
-				//System.out.println("Tray Icon - Mouse clicked!");
+
 				if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) 
 				{
 					tIcon.displayMessage(
@@ -179,19 +179,19 @@ public class Main {
 
 
 			public void mouseEntered(MouseEvent e) {
-				//System.out.println("Tray Icon - Mouse entered!");                 
+                 
 			}
 
 			public void mouseExited(MouseEvent e) {
-				//System.out.println("Tray Icon - Mouse exited!");                 
+                 
 			}
 
 			public void mousePressed(MouseEvent e) {
-				//System.out.println("Tray Icon - Mouse pressed!");                 
+                 
 			}
 
 			public void mouseReleased(MouseEvent e) {
-				//System.out.println("Tray Icon - Mouse released!");                 
+                
 			}
 		};		
 
