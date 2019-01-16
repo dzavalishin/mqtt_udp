@@ -394,12 +394,14 @@ Close UDP socket::
     int mqtt_udp_close_fd( int fd ) 
 
 
+.. index:: single: match
+
 Service
 ^^^^^^^
 
 Match topic name against a pattern, processing `+` and `#` wildcards, returns 1 on match::
 
-   mqtt_udp_match( wildcard, topic name )
+   int ok = mqtt_udp_match( wildcard, topic_name )
 
 
 
@@ -530,6 +532,8 @@ There are ``PublishPacket``, ``SubscribePacket``, ``PingReqPacket`` and ``PingRe
 
 
 
+.. index:: single: match
+
 Service
 ^^^^^^^
 
@@ -603,6 +607,8 @@ Main package, implements MQTT/UDP protocol.
 * ``send_subscribe(topic)`` - ask other party to send corresponding item again. This is optional.
 * ``set_muted(mode: bool)`` - turn off protocol replies. Use for send-only daemons which do not need to be discovered.
 
+
+.. index:: single: match
 
 Match topic name against a pattern, processing `+` and `#` wildcards, returns True on match::
 
@@ -779,6 +785,17 @@ There are functions to send different kinds of packets::
    mq.send_pingresp()
    mq.send_subscribe( topic )
    mq.send_publish( topic, value )
+
+
+.. index:: single: match
+
+Service
+^^^^^^^
+
+Match topic name against a pattern, processing `+` and `#` wildcards, returns ``true`` on match::
+
+   local mu = require "mqttudp"
+   local ok = mu.match( wildcard, topic_name )
 
 
 .. _st-lang-api:
