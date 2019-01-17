@@ -79,13 +79,44 @@ def unpack_remaining_length(pkt):
     return remaining_length, pkt
 
 
+def parse_ttr( tag, value ):
+    print("TTR tag="+str(tag))
+    return (str(tag),)
+
+def parse_ttrs(pktrest):
+    ttr_tag = pktrest[0]
+    ttr_len = pktrest[1] # TODO decode len!
+
+    #print("TTRs len "+str(len(pktrest)))
+    #print("TTR len "+str(ttr_len))
+
+    if ttr_len & 0x80:
+        print("TTR len > 0x7F: "+str(ttr_len))
+        return
+    
+    ttr = parse_ttr( ttr_tag, pktrest[2:ttr_len+1] )
+    if len(pktrest) > ttr_len+2:
+        ttrs = parse_ttrs(pktrest[ttr_len+2:])
+    else:
+        ttrs = ()
+    
+    ttrs += ttr
+    
+    return ttrs 
+
 def parse_packet(pkt):
     ptype = pkt[0] & 0xF0
     pflags = pkt[0] & 0x0F
+    total_len, pkt = unpack_remaining_length(pkt[1:])
+    
+    if len(pkt) > total_len:
+        #print("have TTR")
+        ttrs = parse_ttrs( pkt[total_len:] )
+        print(ttrs)
+    
     if ptype == defs.PTYPE_PUBLISH:
 
         # move up - all packets need it?
-        total_len, pkt = unpack_remaining_length(pkt[1:])
 
         topic_len = (pkt[1] & 0xFF) | ((pkt[0] << 8) & 0xFF)   
         #topic = str( codecs.encode( str( pkt[2:topic_len+2] ), 'UTF-8' ) )

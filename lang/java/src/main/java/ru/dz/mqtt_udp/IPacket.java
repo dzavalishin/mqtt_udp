@@ -158,6 +158,7 @@ public interface IPacket {
 	    System.arraycopy(buf, 0, out, 0, bp);
 	    System.arraycopy(pkt, 0, out, bp, pkt.length );
 	    
+	    // Encode in Tagged Tail Records - packet extensions
 	    byte[] ttrbin = encodeTTR( ttr, out );
 	    //byte[] ttrbin = out;
 	    
@@ -166,7 +167,15 @@ public interface IPacket {
 		return ttrbin;
 	}
 
-
+	/**
+	 * <p>Have 'classic' MQTT packet at input, extend it with Tagged Tail Records.</p>
+	 * 
+	 * <p>Add packet number if one is missing. Add signature.</p>
+	 * 
+	 * @param ttrs Collection of TTRs to add.
+	 * @param packetBeginning Classic packet.
+	 * @return Extended packet.
+	 */
 	public static byte[] encodeTTR( AbstractCollection<TaggedTailRecord> ttrs, byte[] packetBeginning ) 
 	{
 		ArrayList<byte[]> outs = new ArrayList<>();
