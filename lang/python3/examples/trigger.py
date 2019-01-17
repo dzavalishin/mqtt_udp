@@ -23,7 +23,7 @@ import mqttudp.engine
 LISTEN_TOPIC="PLK0_Va"
 
 # Will trigger message if value is above
-VALUE_LIMIT=218
+VALUE_LIMIT=225
 
 # System tray applicattion listens to it
 TRIGGER_TOPIC="tray/message"

@@ -8,6 +8,7 @@ import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 
 public class TTR_Signature extends TaggedTailRecord {
+	private final static byte myTag = (byte)'s'; 
 
 	private static Charset cs;
 	
@@ -23,7 +24,7 @@ public class TTR_Signature extends TaggedTailRecord {
 	}
 
 	public TTR_Signature(String signature) {
-		super( (byte)'s', -1 );
+		super( myTag, -1 );
 		sig = signature;
 	}
 	

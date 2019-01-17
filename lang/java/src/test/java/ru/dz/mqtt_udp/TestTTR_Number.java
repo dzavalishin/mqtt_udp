@@ -23,7 +23,7 @@ public class TestTTR_Number {
 	@Test
 	public void testTTR_NumberByteByteArrayInt() {
 		TTR_Number r = new TTR_Number( (byte)'n', netin, 4 );
-		assertEquals(TEST_VALUE, r.getPacketNumber());
+		assertEquals(TEST_VALUE, r.getValue());
 	}
 
 }
