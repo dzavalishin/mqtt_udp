@@ -174,7 +174,7 @@ function mqtt_proto_lib.parse_packet(pkt)
 
         topic_len = bit.bor( bit.band(pkt:byte(2), 0xFF), bit.band(bit.lshift(pkt:byte(1), 8), 0xFF) );
         topic = pkt:sub( 3, topic_len+2 );
-        value = pkt:sub( topic_len+2+1 );
+        value = pkt:sub( topic_len+2+1, total_len+2 );
     
         --[[TODO use total_len--]]
     

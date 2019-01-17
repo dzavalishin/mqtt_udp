@@ -1,6 +1,15 @@
 package ru.dz.mqtt_udp;
 
+import java.util.AbstractCollection;
+import java.util.ArrayList;
+
+import ru.dz.mqtt_udp.hmac.HMAC;
 import ru.dz.mqtt_udp.io.IPacketAddress;
+import ru.dz.mqtt_udp.proto.TTR_PacketNumber;
+import ru.dz.mqtt_udp.proto.TTR_Signature;
+import ru.dz.mqtt_udp.proto.TaggedTailRecord;
+import ru.dz.mqtt_udp.util.ErrorType;
+import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 /**
@@ -123,7 +132,7 @@ public interface IPacket {
 	 * @param flags flags
 	 * @return encoded packet to send to UDP
 	 */
-	public static byte[] encodeTotalLength(byte[] pkt, int packetType, byte flags) {
+	public static byte[] encodeTotalLength(byte[] pkt, int packetType, byte flags, AbstractCollection<TaggedTailRecord> ttr ) {
 		int data_len = pkt.length;
 		
 		byte[] buf = new byte[4]; // can't sent very long packets over UDP, 16 bytes are surely ok
@@ -143,13 +152,71 @@ public interface IPacket {
 	    } while( data_len > 0 );
 
 	    int tlen = pkt.length + bp;
-		
+
 	    byte[] out = new byte[tlen];
 	    
 	    System.arraycopy(buf, 0, out, 0, bp);
 	    System.arraycopy(pkt, 0, out, bp, pkt.length );
 	    
-		return out;
+	    byte[] ttrbin = encodeTTR( ttr, out );
+	    //byte[] ttrbin = out;
+	    
+	    
+		//return out;
+		return ttrbin;
+	}
+
+
+	public static byte[] encodeTTR( AbstractCollection<TaggedTailRecord> ttrs, byte[] packetBeginning ) 
+	{
+		ArrayList<byte[]> outs = new ArrayList<>();
+
+		boolean haveNumber = false;
+		
+		if( ttrs != null )
+			for( TaggedTailRecord r : ttrs )
+		{
+			if( r instanceof TTR_Signature )
+			{
+				GlobalErrorHandler.handleError(ErrorType.Protocol, "Signature must be generated here");
+				continue;
+			}
+
+			if( r instanceof TTR_PacketNumber )
+				haveNumber = true;
+
+			outs.add(r.toBytes());
+		}
+
+		// Add packet number to list, if none
+		if( !haveNumber )
+			outs.add(new TTR_PacketNumber().toBytes());
+
+		int totalLen = packetBeginning.length;
+		for( byte[] bb : outs )
+		{
+			totalLen += bb.length;
+		}
+		
+		byte [] presig = new byte[totalLen+TTR_Signature.SIGLEN];
+		
+		System.arraycopy(packetBeginning, 0, presig, 0, packetBeginning.length);
+
+		int pos = packetBeginning.length;
+		for( byte[] bb : outs )
+		{
+			System.arraycopy(bb, 0, presig, pos, bb.length);
+			pos += bb.length;
+		}
+		
+		byte[] signature = HMAC.hmacDigestMD5(presig, "signPasword");
+		
+		TTR_Signature sig = new TTR_Signature(signature);
+
+		byte[] sigBytes = sig.toBytes();
+		System.arraycopy( sigBytes, 0, presig, pos, TTR_Signature.SIGLEN);
+		
+		return presig;
 	}
 
 

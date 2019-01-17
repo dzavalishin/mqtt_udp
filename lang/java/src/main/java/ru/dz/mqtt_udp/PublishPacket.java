@@ -123,7 +123,7 @@ public class PublishPacket extends TopicPacket {
 		System.arraycopy(value, 0, pkt, tbytes.length + 2, value.length );
 		
 		//return IPacket.encodeTotalLength(pkt, IPacket.PT_PUBLISH);
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBLISH, flags );
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBLISH, flags, null );
 	}
 
 	@Override

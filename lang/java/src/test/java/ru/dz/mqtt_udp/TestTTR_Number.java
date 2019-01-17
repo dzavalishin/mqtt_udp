@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import ru.dz.mqtt_udp.proto.TTR_Number;
+import ru.dz.mqtt_udp.proto.TTR_PacketNumber;
 
 public class TestTTR_Number {
 
@@ -14,7 +14,7 @@ public class TestTTR_Number {
 
 	@Test
 	public void testToBytes() {
-		TTR_Number r = new TTR_Number( TEST_VALUE );
+		TTR_PacketNumber r = new TTR_PacketNumber( TEST_VALUE );
 		
 		byte[] bytes = r.toBytes();
 		assertArrayEquals(test, bytes);
@@ -22,7 +22,7 @@ public class TestTTR_Number {
 
 	@Test
 	public void testTTR_NumberByteByteArrayInt() {
-		TTR_Number r = new TTR_Number( (byte)'n', netin, 4 );
+		TTR_PacketNumber r = new TTR_PacketNumber( (byte)'n', netin, 4 );
 		assertEquals(TEST_VALUE, r.getValue());
 	}
 

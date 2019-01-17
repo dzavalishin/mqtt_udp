@@ -1,7 +1,11 @@
 package ru.dz.mqtt_udp.proto;
 
 import java.nio.ByteOrder;
+import java.util.AbstractCollection;
+import java.util.ArrayList;
 
+import ru.dz.mqtt_udp.util.ErrorType;
+import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
 
 /**
@@ -60,7 +64,7 @@ public abstract class TaggedTailRecord {
 	private static TaggedTailRecord decodeRecord( byte tag, byte[] rec, int rawLength) {
 		switch(tag)
 		{
-		case 'n':	return new TTR_Number( tag, rec, rawLength );
+		case 'n':	return new TTR_PacketNumber( tag, rec, rawLength );
 		case 's':	return new TTR_Signature( tag, rec, rawLength );
 		}
 
@@ -110,4 +114,40 @@ public abstract class TaggedTailRecord {
 	}	
 
 
+	/*
+	public static ArrayList<TaggedTailRecord> preprocessBeforeSend( AbstractCollection<TaggedTailRecord> in )
+	{
+		ArrayList<TaggedTailRecord> out = new ArrayList<>(in.size());
+		
+		TaggedTailRecord sig = null;
+		boolean haveNumber = false;
+		
+		if( in != null )
+			for( TaggedTailRecord r : in )
+		{
+			if( r instanceof TTR_Signature )
+			{
+				sig = r;
+				continue;
+			}
+
+			if( r instanceof TTR_PacketNumber )
+				haveNumber = true;
+			
+			out.add(r);
+		}
+		
+		// Add packet number to list, if none
+		if( !haveNumber )
+			out.add(new TTR_PacketNumber());
+		
+		// Signature must be last one - NO, it is impossible for signature to be here
+		if( sig != null )
+			//out.add(sig);
+			//throw new MqttUdpRuntimeException("Signature must be generated later");
+			GlobalErrorHandler.handleError(ErrorType.Protocol, "Signature must be generated later");
+		
+		return out;
+	}
+	*/
 }

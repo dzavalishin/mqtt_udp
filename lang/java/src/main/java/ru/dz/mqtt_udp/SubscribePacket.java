@@ -82,7 +82,7 @@ public class SubscribePacket extends TopicPacket {
 
 		pkt[tbytes.length + 2] = 0; // Requested QoS is allways zero now - TODO add property
 		
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_SUBSCRIBE, flags );
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_SUBSCRIBE, flags, null );
 	}
 
 	@Override
