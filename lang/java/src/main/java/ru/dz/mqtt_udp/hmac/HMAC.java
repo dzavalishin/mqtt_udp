@@ -28,14 +28,40 @@ public class HMAC {
 	}
 
 
-	public static String hmacDigest(String msg, String keyString, String algo) {
+
+	
+	public static String hmacDigestMD5(byte[] msg, String keyString) {
+		return hmacDigest(msg, keyString, "HmacMD5");
+	}
+	
+	public static String hmacDigestSHA256(byte[] msg, String keyString) {
+		return hmacDigest(msg, keyString, "HmacSHA256");
+	}
+	
+	
+	
+	public static String hmacDigest(String msg, String keyString, String algo) 
+	{
+		
+		try {
+			return hmacDigest(msg.getBytes("ASCII"), keyString, algo);
+		} catch (UnsupportedEncodingException e) {
+			GlobalErrorHandler.handleError(ErrorType.Unexpected, e);
+			return null;
+		}
+		
+	}
+
+
+
+	public static String hmacDigest(byte[] msg, String keyString, String algo) {
 		String digest = null;
 		try {
 			SecretKeySpec key = new SecretKeySpec((keyString).getBytes("UTF-8"), algo);
 			Mac mac = Mac.getInstance(algo);
 			mac.init(key);
 
-			byte[] bytes = mac.doFinal(msg.getBytes("ASCII"));
+			byte[] bytes = mac.doFinal(msg);
 
 			StringBuffer hash = new StringBuffer();
 			for (int i = 0; i < bytes.length; i++) {
@@ -51,4 +77,12 @@ public class HMAC {
 		}
 		return digest;
 	}
+
+
+
+
+
+
+
+
 }
