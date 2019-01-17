@@ -80,8 +80,22 @@ def unpack_remaining_length(pkt):
 
 
 def parse_ttr( tag, value ):
-    print("TTR tag="+str(tag))
-    return (str(tag),)
+    #print("TTR tag="+str(tag))
+    #print("TTR val="+str(value))
+    #print("TTR type="+str(type(value)))
+    #print("TTR len="+str(len(value)))
+        
+        
+    if tag == 110:
+        num,  = struct.unpack("I", value)
+        me = ( "PacketNumber", num )
+        #me = ( "PacketNumber", struct.unpack("I", str(value,"ASCII")) )
+    elif tag == 115:
+        #num,  = struct.unpack("I", value)
+        me = ( "MD5", value.hex() )
+    else:
+        me =(str(tag),value)
+    return (me,)
 
 def parse_ttrs(pktrest):
     ttr_tag = pktrest[0]
@@ -94,7 +108,7 @@ def parse_ttrs(pktrest):
         print("TTR len > 0x7F: "+str(ttr_len))
         return
     
-    ttr = parse_ttr( ttr_tag, pktrest[2:ttr_len+1] )
+    ttr = parse_ttr( ttr_tag, pktrest[2:ttr_len+2] )
     if len(pktrest) > ttr_len+2:
         ttrs = parse_ttrs(pktrest[ttr_len+2:])
     else:
@@ -112,7 +126,8 @@ def parse_packet(pkt):
     if len(pkt) > total_len:
         #print("have TTR")
         ttrs = parse_ttrs( pkt[total_len:] )
-        print(ttrs)
+        #print(ttrs)
+        # TODO process me
     
     if ptype == defs.PTYPE_PUBLISH:
 
