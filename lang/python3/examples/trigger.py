@@ -47,7 +47,13 @@ def recv_packet(ptype,topic,value,pflags,addr):
 
     #print( "Got " + value )
 
-    iv = float( value )
+    # can't convert - ignore
+    try:
+        iv = float( value )
+    except ValueError:
+        return
+
+
     if iv < VALUE_LIMIT:
         return
 
