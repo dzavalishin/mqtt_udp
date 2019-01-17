@@ -6,5 +6,5 @@ package ru.dz.mqtt_udp.util;
  *
  */
 public enum ErrorType {
-	IO, Timeout, Protocol
+	IO, Timeout, Protocol, Unexpected
 }
