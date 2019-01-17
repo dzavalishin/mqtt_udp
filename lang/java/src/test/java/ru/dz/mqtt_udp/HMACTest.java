@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class HMAC {
+public class HMACTest {
 
 	private String key = "key";
 	private String msg = "text";
