@@ -9,3 +9,5 @@
 <https://draft-edx-style-guide.readthedocs.io/en/latest/ExampleRSTFile.html>
 
 <https://media.readthedocs.org/pdf/brandons-sphinx-tutorial/latest/brandons-sphinx-tutorial.pdf>
+
+<http://mt2007-cat.ru/catnip/index.html>
