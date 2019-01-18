@@ -27,8 +27,8 @@ import ru.dz.mqtt_udp.items.AbstractItem;
  */
 public class PacketSourceMultiServer extends SubServer implements IPacketMultiSource {
 
-	public PacketSourceMultiServer() {
-	}
+	//public PacketSourceMultiServer() {
+	//}
 
 
 	private List< Consumer<IPacket> > plist = new ArrayList<>(); 

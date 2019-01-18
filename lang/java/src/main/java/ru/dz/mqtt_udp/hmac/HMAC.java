@@ -1,16 +1,14 @@
 package ru.dz.mqtt_udp.hmac;
 
 
+import java.io.UnsupportedEncodingException;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
-
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 
 public class HMAC {

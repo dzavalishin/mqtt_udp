@@ -1,4 +1,7 @@
 /**
+ * 
+ * <p>Protocol implementation details</p>
+ * 
  * @author dz
  *
  */

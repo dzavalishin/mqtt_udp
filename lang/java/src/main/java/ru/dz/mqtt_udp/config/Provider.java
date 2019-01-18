@@ -1,7 +1,6 @@
 package ru.dz.mqtt_udp.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -9,9 +8,7 @@ import java.util.function.Consumer;
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.IPacketMultiSource;
 import ru.dz.mqtt_udp.PublishPacket;
-import ru.dz.mqtt_udp.SubServer;
 import ru.dz.mqtt_udp.SubscribePacket;
-import ru.dz.mqtt_udp.items.AbstractItem;
 import ru.dz.mqtt_udp.items.TopicItem;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 

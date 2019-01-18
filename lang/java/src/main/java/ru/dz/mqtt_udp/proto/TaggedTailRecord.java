@@ -1,13 +1,10 @@
 package ru.dz.mqtt_udp.proto;
 
 import java.nio.ByteOrder;
-import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
 
-import ru.dz.mqtt_udp.util.ErrorType;
-import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
 
 /**
