@@ -1,1 +1,2 @@
+#!/bin/sh
 tar -czf lua_mqttudp-@release@.tar.gz mqttudp/*

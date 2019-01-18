@@ -14,7 +14,7 @@ import sys
 sys.path.append('..')
 #sys.path.append('../mqttudp')
 
-import requests
+#import requests
 import mqttudp.engine
 import mqttudp.config as cfg
 
