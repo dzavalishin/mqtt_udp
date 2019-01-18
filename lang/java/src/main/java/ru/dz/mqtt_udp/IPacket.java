@@ -54,6 +54,7 @@ public interface IPacket {
 	
 	/**
 	 * Construct packet object from binary data (recvd from net).
+	 * 
 	 * @param raw binary data from UDP packet
 	 * @param from source address
 	 * @return Packet object
@@ -62,11 +63,11 @@ public interface IPacket {
 	public static IPacket fromBytes( byte[] raw, IPacketAddress from ) throws MqttProtocolException
 	{		
 	    int total_len = 0;
-	    int pos = 1;
+	    int headerEnd = 1;
 
 	    while(true)
 	    {
-	        byte b = raw[pos++];
+	        byte b = raw[headerEnd++];
 	        total_len |= b & ~0x80;
 
 	        if( (b & 0x80) == 0 )
@@ -75,17 +76,26 @@ public interface IPacket {
 	        total_len <<= 7;
 	    }
 
-	    int slen = raw.length - pos;
+	    // total_len is length of classic MQTT packet's 
+	    // payload, not including type byte & length field 
+	    
+	    int recvLen = raw.length - headerEnd;
+	    
+	    // recvLen is all the packet size minus header
 	    
 	    Collection<TaggedTailRecord> ttrs = null;
-	    if(slen > total_len) 
+	    
+	    // We have bytes after classic MQTT packet, must be TTRs, decode 'em
+	    if(recvLen > total_len) 
 	    {
-	    	int tail_len = slen - total_len; 
+	    	int tail_len = recvLen - total_len; // TTRs size 
 	    	byte [] ttrs_bytes = new byte[tail_len];
-	    	slen = total_len; 
+	    	recvLen = total_len; // TODO why not just use total_len below? 
 
-	    	System.arraycopy(raw, total_len+pos, ttrs_bytes, 0, tail_len);
+	    	// Get a copy of all TTRs
+	    	System.arraycopy(raw, total_len+headerEnd, ttrs_bytes, 0, tail_len);
 	    	
+	    	// Decode them all, noting where signature TTR starts
 	    	AtomicReference<Integer> signaturePos = new AtomicReference<Integer>(-1);
 			ttrs = TaggedTailRecord.fromBytesAll(ttrs_bytes, signaturePos);
 			
@@ -94,32 +104,43 @@ public interface IPacket {
 					System.out.println(ttr);
 			}*/
 			
+			// If we have signature TTR in packet, check it
 			int sigPos = signaturePos.get();
+			
+			// We are in strict sig cjeck mode?
+			if( (sigPos < 0) && Engine.isSignatureRequired() )
+				throw new MqttProtocolException("Unsigned packet");
+
+			// Have signature - check it
 			if(sigPos >= 0)
 			{
+				// fromBytesAll() calcs signature position in ttrs_bytes, add preceding parts lengths
 				sigPos += total_len;
-				sigPos += pos;
+				sigPos += headerEnd;
+				
+				// ------------------------------------------------------------
 				// We have signature in packet we got, and we know its position 
 				// in incoming packet. Calculate ours and check.
+				// ------------------------------------------------------------
 
+				// Copy out part of packet that is signed and must be checked
 				byte [] sig_check_bytes = new byte[sigPos];
 				System.arraycopy(raw, 0, sig_check_bytes, 0, sigPos);
 				
 				/*if(true)
 				{
-					byte[] our_signature = HMAC.hmacDigestMD5(sig_check_bytes, "signPassword"); // TODO get password
+					byte[] our_signature = HMAC.hmacDigestMD5(sig_check_bytes, Engine.getSignatureKey());
 					ByteArray.dumpBytes("our", our_signature);
 				}*/
 				
+				// Look for the signature TTR
 				for( TaggedTailRecord ttr : ttrs )
 				{
 					if (ttr instanceof TTR_Signature) {
 						TTR_Signature ts = (TTR_Signature) ttr;
 
 						//ByteArray.dumpBytes("his", ts.getSignature());
-
-						
-						boolean sigCorrect = ts.check(sig_check_bytes, "signPassword"); // TODO get password
+						boolean sigCorrect = ts.check(sig_check_bytes, Engine.getSignatureKey());
 						if(!sigCorrect)
 							throw new MqttProtocolException("Incorrect packet signature");
 						break;
@@ -128,11 +149,11 @@ public interface IPacket {
 			}
 	    }
 	    
-	    if( slen < total_len)
-	    	throw new MqttProtocolException("packet decoded size ("+total_len+") > packet length ("+slen+")");
+	    if( recvLen < total_len)
+	    	throw new MqttProtocolException("packet decoded size ("+total_len+") > packet length ("+recvLen+")");
 	    
-	    byte[] sub = new byte[slen];	    
-	    System.arraycopy(raw, pos, sub, 0, slen);
+	    byte[] sub = new byte[recvLen];	    
+	    System.arraycopy(raw, headerEnd, sub, 0, recvLen);
 	    
 	    int ptype = 0xF0 & (int)(raw[0]);
 	    int flags = 0x0F & (int)(raw[0]);
@@ -282,13 +303,11 @@ public interface IPacket {
 		byte [] toSign = new byte[totalLen];
 		System.arraycopy(presig, 0, toSign, 0, totalLen);
 		
-		//byte[] signature = HMAC.hmacDigestMD5(presig, "signPassword"); // TODO get password!
-		byte[] signature = HMAC.hmacDigestMD5(toSign, "signPassword"); // TODO get password!
+		byte[] signature = HMAC.hmacDigestMD5(toSign, Engine.getSignatureKey()); 
 		
 		TTR_Signature sig = new TTR_Signature(signature);
 
 		byte[] sigBytes = sig.toBytes();
-		//System.arraycopy( sigBytes, 0, presig, pos, TTR_Signature.SIGLEN);
 		System.arraycopy( sigBytes, 0, presig, pos, TTR_Signature.SIGLEN);
 		
 		return presig;
