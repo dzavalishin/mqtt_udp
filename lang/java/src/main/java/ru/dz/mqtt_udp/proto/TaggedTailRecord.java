@@ -3,6 +3,8 @@ package ru.dz.mqtt_udp.proto;
 import java.nio.ByteOrder;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicReference;
 
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
@@ -32,6 +34,55 @@ public abstract class TaggedTailRecord {
 	}
 
 
+	/**
+	 * <p>Decode tail of packet, all the attached TTRs.
+	 * 
+	 * <p>Finds out and returns position of Signature TTR, so that outside code can
+	 * check if packet signed ok. Outside code must calculate signature locally
+	 * for part of the packet preceding signature TTR. Including, of course,
+	 * classic MQTT packet part.
+	 * 
+	 * @param raw Tail of the packet, everything after the classic MQTT payload size.
+	 * @param signaturePos (Return!) Position of signature TTR in raw.  
+	 * @return Collection of TTRs discovered.
+	 */
+	public static Collection<TaggedTailRecord> fromBytesAll(  byte[] raw, AtomicReference<Integer> signaturePos )
+	{
+		ArrayList<TaggedTailRecord> out = new ArrayList<>();
+		
+		int sig_pos = -1;
+		
+		final int len = raw.length;
+		int eaten = 0;
+		
+		while( (len - eaten) > 0)
+		{
+			int tailLen = len-eaten;
+			byte[] tail = new byte[tailLen];
+			System.arraycopy(raw, eaten, tail, 0, tailLen);
+			TaggedTailRecord ttr = fromBytes(tail);
+			out.add(ttr);
+			
+			if( ttr instanceof TTR_Signature )
+			{
+				// We need to record signature position to be able to
+				// calculate local signature, which is calculated for
+				// part of the packet preceding signature TTR.
+				//
+				// NB!
+				// Size of classical MQTT packet must be added outside.
+				//
+				sig_pos = eaten;
+			}
+			
+			eaten += ttr.getRawLength();
+		}
+		
+		signaturePos.set(sig_pos);
+		return out;
+	}
+	
+	
 	public static TaggedTailRecord fromBytes(  byte[] raw )
 	{
 		int rawLength = 1; // tag
