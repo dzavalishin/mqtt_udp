@@ -87,7 +87,7 @@ def parse_ttr( tag, value ):
         
         
     if tag == 110:
-        num,  = struct.unpack("I", value)
+        num,  = struct.unpack("!I", value)
         me = ( "PacketNumber", num )
         #me = ( "PacketNumber", struct.unpack("I", str(value,"ASCII")) )
     elif tag == 115:
