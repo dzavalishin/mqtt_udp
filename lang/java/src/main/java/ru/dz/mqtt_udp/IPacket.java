@@ -89,10 +89,10 @@ public interface IPacket {
 	    	AtomicReference<Integer> signaturePos = new AtomicReference<Integer>(-1);
 			ttrs = TaggedTailRecord.fromBytesAll(ttrs_bytes, signaturePos);
 			
-			{
+			/*{
 				for( TaggedTailRecord ttr : ttrs )
 					System.out.println(ttr);
-			}
+			}*/
 			
 			int sigPos = signaturePos.get();
 			if(sigPos >= 0)
