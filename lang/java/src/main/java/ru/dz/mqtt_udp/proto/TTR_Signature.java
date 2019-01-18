@@ -1,7 +1,11 @@
 package ru.dz.mqtt_udp.proto;
 
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import ru.dz.mqtt_udp.hmac.HMAC;
+import ru.dz.mqtt_udp.util.ByteArray;
 
 public class TTR_Signature extends TaggedTailRecord {
 	private final static byte myTag = (byte)'s'; 
@@ -34,7 +38,11 @@ public class TTR_Signature extends TaggedTailRecord {
 	 */
 	public boolean check( byte[] data, String keyString )
 	{
-		return sig.equals( HMAC.hmacDigestMD5( data, keyString ) );
+		byte[] our = HMAC.hmacDigestMD5( data, keyString );
+		//ByteArray.dumpBytes("our", our );
+		//ByteArray.dumpBytes("his", sig );
+		//return sig.equals( our );
+		return Arrays.equals(sig, our);
 	}
 
 	@Override
@@ -47,5 +55,17 @@ public class TTR_Signature extends TaggedTailRecord {
 			return null;
 		}*/
 	}
+
+	public byte[] getSignature() {
+		return sig;
+	}
+
+	
+	@Override
+	public String toString() {
+		//return String.format("TTR Signature %[B", sig);
+		return "TTR Signature";
+	}
+
 	
 }

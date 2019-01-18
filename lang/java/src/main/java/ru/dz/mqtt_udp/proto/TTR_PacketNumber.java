@@ -2,6 +2,8 @@ package ru.dz.mqtt_udp.proto;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import jdk.internal.org.objectweb.asm.tree.analysis.Value;
+
 public class TTR_PacketNumber extends TTR_AbstractInteger {
 
 	private final static byte myTag = (byte)'n'; 
@@ -25,7 +27,12 @@ public class TTR_PacketNumber extends TTR_AbstractInteger {
 		super( myTag, next.incrementAndGet() );
 	}
 	
+
 	
+	@Override
+	public String toString() {
+		return String.format("TTR PacketNumber %d", getValue());
+	}
 
 
 }

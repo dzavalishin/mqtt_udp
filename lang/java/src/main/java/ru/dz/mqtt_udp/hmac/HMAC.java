@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import ru.dz.mqtt_udp.util.ByteArray;
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
@@ -26,8 +27,12 @@ public class HMAC {
 
 
 	
-	public static byte[] hmacDigestMD5(byte[] msg, String keyString) {
-		return hmacDigest(msg, keyString, "HmacMD5");
+	public static byte[] hmacDigestMD5(byte[] msg, String keyString) 
+	{
+		//ByteArray.dumpBytes("To Sign", msg);
+		byte[] d = hmacDigest(msg, keyString, "HmacMD5");
+		//ByteArray.dumpBytes("Signed", d);
+		return d;
 	}
 	
 	public static byte[] hmacDigestSHA256(byte[] msg, String keyString) {

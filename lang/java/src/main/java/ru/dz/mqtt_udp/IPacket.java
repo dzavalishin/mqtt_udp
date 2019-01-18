@@ -10,6 +10,7 @@ import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.proto.TTR_PacketNumber;
 import ru.dz.mqtt_udp.proto.TTR_Signature;
 import ru.dz.mqtt_udp.proto.TaggedTailRecord;
+import ru.dz.mqtt_udp.util.ByteArray;
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
@@ -93,23 +94,32 @@ public interface IPacket {
 					System.out.println(ttr);
 			}
 			
-			Integer sigPos = signaturePos.get();
+			int sigPos = signaturePos.get();
 			if(sigPos >= 0)
 			{
+				sigPos += total_len;
+				sigPos += pos;
 				// We have signature in packet we got, and we know its position 
 				// in incoming packet. Calculate ours and check.
 
 				byte [] sig_check_bytes = new byte[sigPos];
 				System.arraycopy(raw, 0, sig_check_bytes, 0, sigPos);
 				
-				//byte[] our_signature = HMAC.hmacDigestMD5(sig_check_bytes, "signPasword"); // TODO get password
-
+				/*if(true)
+				{
+					byte[] our_signature = HMAC.hmacDigestMD5(sig_check_bytes, "signPassword"); // TODO get password
+					ByteArray.dumpBytes("our", our_signature);
+				}*/
+				
 				for( TaggedTailRecord ttr : ttrs )
 				{
 					if (ttr instanceof TTR_Signature) {
 						TTR_Signature ts = (TTR_Signature) ttr;
+
+						//ByteArray.dumpBytes("his", ts.getSignature());
+
 						
-						boolean sigCorrect = ts.check(sig_check_bytes, "signPasword"); // TODO get password
+						boolean sigCorrect = ts.check(sig_check_bytes, "signPassword"); // TODO get password
 						if(!sigCorrect)
 							throw new MqttProtocolException("Incorrect packet signature");
 						break;
@@ -258,6 +268,7 @@ public interface IPacket {
 		}
 		
 		byte [] presig = new byte[totalLen+TTR_Signature.SIGLEN];
+		//byte [] presig = new byte[totalLen];
 		
 		System.arraycopy(packetBeginning, 0, presig, 0, packetBeginning.length);
 
@@ -267,12 +278,17 @@ public interface IPacket {
 			System.arraycopy(bb, 0, presig, pos, bb.length);
 			pos += bb.length;
 		}
+
+		byte [] toSign = new byte[totalLen];
+		System.arraycopy(presig, 0, toSign, 0, totalLen);
 		
-		byte[] signature = HMAC.hmacDigestMD5(presig, "signPasword"); // TODO get password!
+		//byte[] signature = HMAC.hmacDigestMD5(presig, "signPassword"); // TODO get password!
+		byte[] signature = HMAC.hmacDigestMD5(toSign, "signPassword"); // TODO get password!
 		
 		TTR_Signature sig = new TTR_Signature(signature);
 
 		byte[] sigBytes = sig.toBytes();
+		//System.arraycopy( sigBytes, 0, presig, pos, TTR_Signature.SIGLEN);
 		System.arraycopy( sigBytes, 0, presig, pos, TTR_Signature.SIGLEN);
 		
 		return presig;
