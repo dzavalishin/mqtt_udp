@@ -48,7 +48,8 @@ public class Main extends Application {
 	private FileLogger flog = new FileLogger();
 	private FileChooser fch = new FileChooser();
 
-	protected boolean updateEnabled = true;
+	volatile protected boolean updateEnabled = true;
+	volatile protected boolean displayPings = false;
 
 	private ObservableList<TopicItem> listItems = FXCollections.observableArrayList();
 	private TopicTable generalTopicTable = new TopicTable(listItems);
@@ -256,7 +257,9 @@ public class Main extends Application {
 
 		CheckMenuItem viewHostsMenuItem = new CheckMenuItem("Hosts view");
 
-		displayMenu.getItems().addAll(updateMenuItem, new SeparatorMenuItem(), viewHostsMenuItem);
+		CheckMenuItem showPingsMenuItem = new CheckMenuItem("Display Ping/Responce");
+
+		displayMenu.getItems().addAll(updateMenuItem, new SeparatorMenuItem(), viewHostsMenuItem, showPingsMenuItem);
 
 		// ---------- Send ----------------------------------------
 		
@@ -285,6 +288,15 @@ public class Main extends Application {
 		MenuBar mb = new MenuBar(fileMenu,displayMenu,sendMenu);
 
 
+		showPingsMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) {
+				displayPings = showPingsMenuItem.isSelected();
+			}
+		});
+		showPingsMenuItem.setSelected(false);
+		displayPings = false;
+		
 		viewHostsMenuItem.setSelected(true);
 		viewHostsMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
@@ -526,8 +538,11 @@ public class Main extends Application {
 				public void run() {
 					if( updateEnabled )
 					{
-						setListItem(ti); 
-						addLogItem(ti);
+						if( displayPings || (!ti.isPingOrResponce()) )
+						{
+							setListItem(ti); 
+							addLogItem(ti);
+						}
 						//addHostItem( new HostItem(ti.getFrom()) );
 						addHostItem( new HostItem(ti) );
 

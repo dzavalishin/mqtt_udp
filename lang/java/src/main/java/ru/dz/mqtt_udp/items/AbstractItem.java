@@ -56,6 +56,13 @@ public abstract class AbstractItem {
 				(packetType == mqtt_udp_defs.PTYPE_UNSUBACK);
 	}
 
+	public boolean isPingOrResponce() {
+		return 
+				(packetType == mqtt_udp_defs.PTYPE_PINGREQ) || 
+				(packetType == mqtt_udp_defs.PTYPE_PINGRESP) 
+				;
+	}
+
 
 
 
@@ -162,6 +169,7 @@ public abstract class AbstractItem {
 		pkt.send( addr );
 	}
 
+	
 
 
 }
