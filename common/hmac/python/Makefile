@@ -3,7 +3,7 @@ all::
 
 clean::
 	echo -------------------- TODO ---------------------
-¹	-rm *.o
+#	-rm *.o
 
 build::
 	echo nothing to do
