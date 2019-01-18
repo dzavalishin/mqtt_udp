@@ -6,11 +6,18 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.util.Collection;
+import java.util.Optional;
+
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.io.IpAddress;
 import ru.dz.mqtt_udp.io.SingleSendSocket;
+import ru.dz.mqtt_udp.proto.TTR_PacketNumber;
+import ru.dz.mqtt_udp.proto.TTR_ReplyTo;
+import ru.dz.mqtt_udp.proto.TTR_Signature;
+import ru.dz.mqtt_udp.proto.TaggedTailRecord;
 
 /**
  * Network IO work horse for MQTT/UDP packets.
@@ -194,8 +201,72 @@ public abstract class GenericPacket implements IPacket {
 	}
 
 
+	/**
+	 * <p>
+	 * <b>Internal use only.</b>
+	 * </p>
+	 * <p>
+	 * Apply data from TTRs to constructed packet.
+	 * </p>
+	 * @param ttrs Tagged Tail Records to apply
+	 * @return Self
+	 */
+	public IPacket applyTTRs(Collection<TaggedTailRecord> ttrs)
+	{
+		if( ttrs == null )
+			return this;
+		
+		for( TaggedTailRecord ttr : ttrs )
+			applyTTR(ttr);
+		
+		return this;
+	}
+
+	private void applyTTR(TaggedTailRecord ttr) 
+	{
+		if (ttr instanceof TTR_Signature) {
+			// just ignore, checked outside
+		}
+		
+		else if (ttr instanceof TTR_PacketNumber) {
+			TTR_PacketNumber t = (TTR_PacketNumber) ttr;			
+			setPacketNumber( t.getValue() );
+		}
+		
+		else if (ttr instanceof TTR_ReplyTo) {
+			TTR_ReplyTo r = (TTR_ReplyTo) ttr;			
+			setReplyToPacketNumber( r.getValue() );
+		}
+		
+		else 
+		{
+			GlobalErrorHandler.handleError(ErrorType.Protocol, "Unknown TTR: "+ttr);
+		}
+	}
+	
+
+	private Optional<Integer> replyToPacketNumber = Optional.empty();
+
+	public Optional<Integer> getReplyToPacketNumber() {
+		return replyToPacketNumber;
+	}
+
+	public void setReplyToPacketNumber( int replyToPacketNumber ) {
+		this.replyToPacketNumber = Optional.ofNullable( replyToPacketNumber );
+	}
+	
+
 	
 	
-	
+	private Optional<Integer> packetNumber = Optional.empty();
+
+	public Optional<Integer> getPacketNumber() {
+		return packetNumber;
+	}
+
+	public void setPacketNumber(int packetNumber) {
+		this.packetNumber = Optional.ofNullable(packetNumber);
+	}
+
 	
 }

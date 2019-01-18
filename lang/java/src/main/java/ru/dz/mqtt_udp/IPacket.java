@@ -2,6 +2,8 @@ package ru.dz.mqtt_udp;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicReference;
 
 import ru.dz.mqtt_udp.hmac.HMAC;
 import ru.dz.mqtt_udp.io.IPacketAddress;
@@ -9,6 +11,7 @@ import ru.dz.mqtt_udp.proto.TTR_PacketNumber;
 import ru.dz.mqtt_udp.proto.TTR_Signature;
 import ru.dz.mqtt_udp.proto.TaggedTailRecord;
 import ru.dz.mqtt_udp.util.ErrorType;
+import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
@@ -57,26 +60,66 @@ public interface IPacket {
 	 */
 	public static IPacket fromBytes( byte[] raw, IPacketAddress from ) throws MqttProtocolException
 	{		
-	    int dlen = 0;
+	    int total_len = 0;
 	    int pos = 1;
 
 	    while(true)
 	    {
 	        byte b = raw[pos++];
-	        dlen |= b & ~0x80;
+	        total_len |= b & ~0x80;
 
 	        if( (b & 0x80) == 0 )
 	            break;
 
-	        dlen <<= 7;
+	        total_len <<= 7;
 	    }
 
 	    int slen = raw.length - pos;
 	    
-	    if(slen > dlen) slen = dlen; // TODO log warning
+	    Collection<TaggedTailRecord> ttrs = null;
+	    if(slen > total_len) 
+	    {
+	    	int tail_len = slen - total_len; 
+	    	byte [] ttrs_bytes = new byte[tail_len];
+	    	slen = total_len; 
+
+	    	System.arraycopy(raw, total_len+pos, ttrs_bytes, 0, tail_len);
+	    	
+	    	AtomicReference<Integer> signaturePos = new AtomicReference<Integer>(-1);
+			ttrs = TaggedTailRecord.fromBytesAll(ttrs_bytes, signaturePos);
+			
+			{
+				for( TaggedTailRecord ttr : ttrs )
+					System.out.println(ttr);
+			}
+			
+			Integer sigPos = signaturePos.get();
+			if(sigPos >= 0)
+			{
+				// We have signature in packet we got, and we know its position 
+				// in incoming packet. Calculate ours and check.
+
+				byte [] sig_check_bytes = new byte[sigPos];
+				System.arraycopy(raw, 0, sig_check_bytes, 0, sigPos);
+				
+				//byte[] our_signature = HMAC.hmacDigestMD5(sig_check_bytes, "signPasword"); // TODO get password
+
+				for( TaggedTailRecord ttr : ttrs )
+				{
+					if (ttr instanceof TTR_Signature) {
+						TTR_Signature ts = (TTR_Signature) ttr;
+						
+						boolean sigCorrect = ts.check(sig_check_bytes, "signPasword"); // TODO get password
+						if(!sigCorrect)
+							throw new MqttProtocolException("Incorrect packet signature");
+						break;
+					}
+				}
+			}
+	    }
 	    
-	    if( slen < dlen)
-	    	throw new MqttProtocolException("packet decoded size ("+dlen+") > packet length ("+slen+")");
+	    if( slen < total_len)
+	    	throw new MqttProtocolException("packet decoded size ("+total_len+") > packet length ("+slen+")");
 	    
 	    byte[] sub = new byte[slen];	    
 	    System.arraycopy(raw, pos, sub, 0, slen);
@@ -84,26 +127,33 @@ public interface IPacket {
 	    int ptype = 0xF0 & (int)(raw[0]);
 	    int flags = 0x0F & (int)(raw[0]);
 	    
+	    GenericPacket p;
 		switch(ptype)
 		{
 		case mqtt_udp_defs.PTYPE_PUBLISH:
-			return new PublishPacket(sub, (byte)flags, from);
+			p = new PublishPacket(sub, (byte)flags, from);
+			break;
 
 		case mqtt_udp_defs.PTYPE_PINGREQ:
-			return new PingReqPacket(sub, (byte)flags, from);
+			p = new PingReqPacket(sub, (byte)flags, from);
+			break;
 			
 		case mqtt_udp_defs.PTYPE_PINGRESP:
-			return new PingRespPacket(sub, (byte)flags, from);
+			p = new PingRespPacket(sub, (byte)flags, from);
+			break;
 
 		case mqtt_udp_defs.PTYPE_SUBSCRIBE:
-			return new SubscribePacket(sub, (byte)flags, from);
+			p = new SubscribePacket(sub, (byte)flags, from);
+			break;
 			
 		default:
 				throw new MqttProtocolException("Unknown pkt type "+raw[0]);
 		}
 		
+		return p.applyTTRs(ttrs);
 	}
 
+	
 
 	/**
 	 * Decode 2-byte string length.
@@ -218,7 +268,7 @@ public interface IPacket {
 			pos += bb.length;
 		}
 		
-		byte[] signature = HMAC.hmacDigestMD5(presig, "signPasword");
+		byte[] signature = HMAC.hmacDigestMD5(presig, "signPasword"); // TODO get password!
 		
 		TTR_Signature sig = new TTR_Signature(signature);
 

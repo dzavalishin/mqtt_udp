@@ -90,6 +90,8 @@ public abstract class TaggedTailRecord {
 
 		while(true)
 		{
+			rawLength++;
+
 			byte b = raw[pos++];
 			dlen |= b & ~0x80;
 
@@ -97,7 +99,6 @@ public abstract class TaggedTailRecord {
 				break;
 
 			dlen <<= 7;
-			rawLength++;
 		}
 
 		rawLength += dlen;
