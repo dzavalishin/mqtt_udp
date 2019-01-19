@@ -56,7 +56,9 @@ end
 
 -- TODO use me in listen
 
-
+--- Loop forever listening to incoming network data
+-- @param #function proto_decoder Function to decode received data with
+-- @param #function user_listener Function to call when packet is parsed
 function mqtt_udp_lib.udp_listen(proto_decoder,user_listener)
 
     local sock = mqtt_udp_lib.make_listen_socket()

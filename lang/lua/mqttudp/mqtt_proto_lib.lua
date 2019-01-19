@@ -54,7 +54,13 @@ end ]]
 
 
 
-
+--- Main internal callback to be called on raw data coming from socket
+-- 
+-- @param #bytse data Packet contents
+-- @param #ip address ip Packet source address
+-- @param #int port Packet source port
+-- @param #function user_listener Sser's function to pass received and decoded packet to.
+-- 
 -- TODO prepare for mqtt_proto_lib.udp_listen(proto_decoder,user_listener)
 function mqtt_proto_lib.proto_decoder(data, ip, port, user_listener)
     ptype,topic,val = mqtt_proto_lib.parse_packet(data)

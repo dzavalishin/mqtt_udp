@@ -4,6 +4,8 @@ package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without 
 
 local me = require "mqttudp"
 
+--- Regress test for match function
+-- Tests plain comparison, with no wildcards
 
 function testPlain()
     print( "\ttestPlain" )
@@ -14,6 +16,8 @@ function testPlain()
     print( "\ttestPlain PASSED" )
 end
 
+--- Regress test for match function
+-- Tests '+' wildcard
 
 function testPlus()
     print( "\ttestPlus" )
@@ -24,6 +28,8 @@ function testPlus()
     print( "\ttestPlus PASSED" )
 end
 
+--- Regress test for match function
+-- Tests '#' wildcard
 
 function testSharp()
     print( "\ttestSharp" )
