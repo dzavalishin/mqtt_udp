@@ -11,7 +11,7 @@
 #
 #
 
-com_port = 'COM5'
+com_port = '/dev/com5'
 baud_rate = 115200
 # baud_rate = 9600
 hardware_has_rts_reset = False

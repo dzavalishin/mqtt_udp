@@ -35,10 +35,10 @@ print("Wait for 10s");  -- let us reset if script is buggy
 net_timer = tmr.create()
 
 # Just wait 5 sec
-wait_timer = tmr.create() -- Создаем таймер
+wait_timer = tmr.create() 
 wait_timer:register(10000, tmr.ALARM_SINGLE, 
 
-    function (t) -- таймер выполниться один раз через 5 сек 
+    function (t) 
 
         print("Look for net");
         net_timer:start();
@@ -46,7 +46,7 @@ wait_timer:register(10000, tmr.ALARM_SINGLE,
         t:unregister()
     end)
 
-wait_timer:start()  -- стартуем таймер
+wait_timer:start()  
 
 
 net_timer:register( tmr.ALARM_AUTO, 500, 
@@ -60,5 +60,27 @@ net_timer:register( tmr.ALARM_AUTO, 500,
             dofile("main.lua") -- Start program itself
         end
     end)
+
+
+
+
+function timer_sleep(sec)
+
+
+sleep_timer = tmr.create() -- РЎРѕР·РґР°РµРј С‚Р°Р№РјРµСЂ
+sleep_timer:register(sec*1000, tmr.ALARM_SINGLE, 
+
+    function (t) -- С‚Р°Р№РјРµСЂ РІС‹РїРѕР»РЅРёС‚СЊСЃСЏ РѕРґРёРЅ СЂР°Р· С‡РµСЂРµР· 5 СЃРµРє 
+
+        print("Look for net");
+        net_timer:start();
+
+        t:unregister()
+    end)
+
+sleep_timer:start()
+
+
+end
 
 
