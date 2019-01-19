@@ -21,6 +21,7 @@ function mqtt_udp_lib.make_listen_socket()
 
     local udpSocket, our_ip
 
+--[[
     tmr.alarm(1, 1000, 1, function()
         if wifi.sta.getip() == nil then
             print("Waiting for IP...")
@@ -30,6 +31,9 @@ function mqtt_udp_lib.make_listen_socket()
 		print(" Your IP is ".. our_ip)
 	end
     end)
+]]
+	our_ip = wifi.sta.getip() -- we store our_ip, as we need it to setup udp socket properly
+	print(" Your IP is ".. our_ip)
 
     --udp = socket.udp()
     udpSocket = net.createUDPSocket() -- NodeMCU way
