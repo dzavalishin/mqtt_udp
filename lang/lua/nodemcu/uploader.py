@@ -1,9 +1,14 @@
+#!/usr/bin/env python3
+
 #
 #
 # Taken from https://github.com/dev-lab/esp-nodemcu-lua-uploader/blob/master/uploader1.py
 #
 #
 # pip3.6 install pyserial
+#
+# TODO node.compile("file.lua")
+#
 #
 
 com_port = 'COM5'
