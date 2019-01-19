@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import ru.dz.mqtt_udp.items.TopicItem;
 import ru.dz.mqtt_udp.items.AbstractItem;
@@ -153,8 +155,11 @@ public class Main extends Application {
 			initNetwork();
 
 			// TODO kill me, test only
-			toolBarSendButton.setSelected(true);
-			generalTopicTable.setVisible(true);
+			//toolBarSendButton.setSelected(true);
+			//generalTopicTable.setVisible(true);
+			
+			ObjectProperty<EventHandler<WindowEvent>> ohp = generalTopicTable.onHiddenProperty();
+			ohp.addListener( e -> { toolBarSendButton.setSelected( generalTopicTable.isVisible() ); });
 			
 		} catch(Exception e) {
 			e.printStackTrace();
