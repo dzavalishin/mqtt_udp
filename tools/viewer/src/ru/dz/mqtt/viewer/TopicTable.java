@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -32,6 +33,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.items.TopicItem;
@@ -225,6 +227,7 @@ public class TopicTable  {
 		newWindow.getIcons().add(windowIcon);
 
 		//newWindow.show();
+		
 	}
 
 	public void setVisible(boolean is)
@@ -233,6 +236,10 @@ public class TopicTable  {
 		else newWindow.hide();
 	}
 
+	public boolean isVisible()
+	{
+		return newWindow.isShowing();
+	}
 
 	private static final ImageView lockedIcon = ImageUtils.getIcon32("locked");
 	private static final ImageView unlockedIcon = ImageUtils.getIcon32("unlocked");
@@ -425,6 +432,10 @@ public class TopicTable  {
 			e.printStackTrace();
 		}
 
+	}
+
+	public ObjectProperty<EventHandler<WindowEvent>> onHiddenProperty() {
+		return newWindow.onHiddenProperty();
 	}
 
 
