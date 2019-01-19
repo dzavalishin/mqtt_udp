@@ -3,9 +3,10 @@
 -- actual user's code - sensors, displays, etc
 --
 
+--package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without lib install
+package.path=package.path..";?"
 
-
-local mq = require "mqtt_udp_lib_NodeMCU.lua"
+local mq = require "mqtt_udp_lib_MCU"
 
 
 

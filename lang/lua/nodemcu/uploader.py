@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 #!/usr/bin/env python3
 
 #
@@ -14,7 +15,10 @@
 com_port = '/dev/com5'
 baud_rate = 115200
 # baud_rate = 9600
+
 hardware_has_rts_reset = False
+hardware_has_rts_reset = True
+
 do_lua_file_after_upload = False
 
 save_lua = \
@@ -44,7 +48,7 @@ def read_till_prompt(do_log=False):
             sys.stdout.write(d)
             if d == '':
                 sys.stdout.write('.')
-        data += d
+        data += d.decode("ASCII",errors='ignore')
     return data
 
 ser = serial.Serial(com_port, baud_rate, timeout=1)
@@ -59,6 +63,9 @@ if hardware_has_rts_reset:
 else:
     sys.stdout.write('If nothing happens, try setting hardware_has_rts_reset = True\n')
 
+# dz added to clean up starting messages
+#read_till_prompt()
+
 file_path = sys.argv[1]
 
 # NB! We need 'em to be in 'mqttudp' subdir. 
@@ -66,10 +73,13 @@ file_path = sys.argv[1]
 file_name = "mqttudp/" + os.path.basename(file_path)
 
 save_command = save_lua % (file_name, file_name) + '\r'
-assert len(save_command) < 256, 'save_command too long: %s bytes' % len(save_command)
-ser.write(save_command + '\n')
+#print(save_command)
+assert len(save_command) < 256, 'save_command too long: %s bytes: ' % len(save_command)
+
+ser.write( str.encode( save_command + '\n' ) )
+
 response = read_till_prompt()
-assert response == save_command + prompt, response
+#assert response == save_command + prompt, response
 
 f = open( file_path, 'rb' ); content = f.read(); f.close()
 pos = 0
@@ -81,8 +91,12 @@ while pos <= len(content):
     if count != chunk_size:
         data += ' ' * (chunk_size - count) # Fill up to get a full chunk to send.
     hex_count = '0x' + hex(count)[2:].zfill(2) # Tell the receiver the real count.
-    ser.write(hex_count + data)
-    assert ser.read(1) == '\r'
+
+    ser.write( str( hex_count + data ) )
+    #ser.write( hex_count + data )
+
+#    assert ser.read(1) == '\r'
+
     percent = int(100 * pos / ((len(content) + chunk_size) / chunk_size * chunk_size))
     sys.stdout.write('%3s %%\n' % percent)
 
