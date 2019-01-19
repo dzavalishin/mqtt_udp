@@ -18,23 +18,14 @@
 --local mcunet = require "net"
 
 
-wifi.setmode(wifi.STATIONAP)
-
-local cfg={}
-
--- TODO infer local settings with awk? @wifi_login@ and @wifi_password@?
-
-cfg.ssid="???"
-cfg.pwd="????"
-
-wifi.sta.config(cfg)
+dofile("wifi.lua")
 
 print("Wait for 10s");  -- let us reset if script is buggy
 
-# wait for network to be ready
+-- wait for network to be ready
 net_timer = tmr.create()
 
-# Just wait 5 sec
+-- Just wait 5 sec
 wait_timer = tmr.create() 
 wait_timer:register(10000, tmr.ALARM_SINGLE, 
 
@@ -49,7 +40,7 @@ wait_timer:register(10000, tmr.ALARM_SINGLE,
 wait_timer:start()  
 
 
-net_timer:register( tmr.ALARM_AUTO, 500, 
+net_timer:register( 500, tmr.ALARM_AUTO,  
     function(t)
         if wifi.sta.getip() == nil then
             print("Waiting for IP...")
@@ -67,10 +58,10 @@ net_timer:register( tmr.ALARM_AUTO, 500,
 function timer_sleep(sec)
 
 
-sleep_timer = tmr.create() -- Создаем таймер
+sleep_timer = tmr.create() 
 sleep_timer:register(sec*1000, tmr.ALARM_SINGLE, 
 
-    function (t) -- таймер выполниться один раз через 5 сек 
+    function (t)
 
         print("Look for net");
         net_timer:start();

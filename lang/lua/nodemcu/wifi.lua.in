@@ -1,0 +1,15 @@
+---
+--
+-- Copy to wifi.lua and put correct ssid/pwd
+--
+
+wifi.setmode(wifi.STATIONAP)
+
+local cfg={}
+
+-- TODO infer local settings with awk? @wifi_login@ and @wifi_password@?
+
+cfg.ssid="???"
+cfg.pwd="????"
+
+wifi.sta.config(cfg)

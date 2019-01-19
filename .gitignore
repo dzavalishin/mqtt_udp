@@ -105,3 +105,4 @@ lang/python3/build/*
 tools/tray/launch4j.log
 tools/viewer/launch4j.log
 *.log
+lang/lua/nodemcu/wifi.lua

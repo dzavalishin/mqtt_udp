@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 #!/usr/bin/env python3
 
-#
+# BROKEN
 #
 # Taken from https://github.com/dev-lab/esp-nodemcu-lua-uploader/blob/master/uploader1.py
 #
