@@ -1,43 +1,20 @@
 --[[
 
-  MQTT/UDP Lua library for NodeMCU. See mqtt_pub.lua and mqtt_sub.lua for usage.
+  MQTT/UDP Lua library for NodeMCU. See ../nodemcu/main.lua for usage.
 
   UNFINISHED!
 
-  See also https://design.goeszen.com/how-to-receive-udp-data-on-nodemcu-lua-esp8266.html
-  See also https://nodemcu.readthedocs.io/en/latest/en/modules/net/#netudpsocketlisten
-
 ]]
 
---local mqtt_udp_lib = {}
 local mqtt_udp_lib = require "mqttudp.mqtt_proto_lib"
 
 local defs  = require "mqttudp.mqtt_udp_defs"
 local bit = require "mqttudp.mybit"
 local mcunet = require "net"
 
-function mqtt_udp_lib.make_listen_socket()
-
-    local udpSocket, our_ip
-
-	our_ip = wifi.sta.getip() -- we store our_ip, as we need it to setup udp socket properly
-	print("Listen on IP ".. our_ip)
-
-    --udp = socket.udp()
-    udpSocket = net.createUDPSocket() -- NodeMCU way
-    --udp:setsockname("*", defs.MQTT_PORT )
-    udpSocket:listen( defs.MQTT_PORT, our_ip ) -- NodeMCU way
-    -- udp:settimeout(1)
-    --udpSocket:settimeout() -- no method
-
-    return udpSocket
-
-end
 
 
-
-function mqtt_udp_lib.on_udp_in( socket, data, port, ip)
-    print("UDP in "..data)
+function on_udp_in( socket, data, port, ip)
     mqtt_udp_lib.proto_decoder(data, ip, port)
 end
 
@@ -47,10 +24,20 @@ end
 -- @param #function user_listener Function to call when packet is parsed
 function mqtt_udp_lib.udp_listen()
 
-    local sock = mqtt_udp_lib.make_listen_socket()
+    local sock, our_ip
+
+    our_ip = wifi.sta.getip() -- we store our_ip, as we need it to setup udp socket properly
+
+    sock = net.createUDPSocket()
 
 	sock:on( "receive", on_udp_in )
 
+    sock:listen( defs.MQTT_PORT, our_ip )
+    --sock:listen( defs.MQTT_PORT )
+
+    port, ip = sock:getaddr()
+    print(string.format("UDP socket listening on %s:%d", ip, port))
+    
 end
 
 
