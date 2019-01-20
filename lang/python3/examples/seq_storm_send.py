@@ -36,6 +36,8 @@ if __name__ == "__main__":
 
     _ = input( "\nStart seq_storm_check and press ENTER to continue...")
 
+    mqttudp.engine.set_throttle(0) # turn off throttling in engine
+
     n = 0
 
     while True:

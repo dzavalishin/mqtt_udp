@@ -1,7 +1,8 @@
 #!/bin/python
 
 import socket
-#import codecs
+import time
+import datetime
 import struct
 
 import mqttudp.mqtt_udp_defs as defs
@@ -33,6 +34,22 @@ muted = False
 def set_muted(mode: bool):
     global muted
     muted = mode
+
+
+
+# up to 3 packets can be sent with no throttle
+# most devices have some buffer and we do not
+# want to calc time each send
+
+throttle = 100
+max_seq_packets = 3 
+
+# set to 0 to turn throttling off
+
+def set_throttle(msec: int):
+    global throttle
+    throttle = msec
+
 
 # ------------------------------------------------------------------------
 #
@@ -189,7 +206,6 @@ def listen(callback):
 
 
 
-
 def send_publish( topic, payload=b''):
     if isinstance(topic, str):
 	    topic = topic.encode()
@@ -198,6 +214,7 @@ def send_publish( topic, payload=b''):
 	    payload = payload.encode()
 
     pkt = make_publish_packet(topic, payload)
+    throttle_me()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
@@ -270,6 +287,7 @@ def make_subscribe_packet(topic):
 
 def send_subscribe(topic):
     pkt = make_subscribe_packet(topic)
+    throttle_me()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
@@ -286,6 +304,7 @@ def make_ping_packet():
 
 def send_ping():
     pkt = make_ping_packet()
+    throttle_me()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
@@ -299,9 +318,63 @@ def make_ping_responce_packet():
 
 def send_ping_responce():
     pkt = make_ping_responce_packet()
+    throttle_me()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
+
+
+
+
+
+# ------------------------------------------------------------------------
+#
+# Send throttle
+#
+# Will keep send pace. Up to {max_seq_packets} will be passed with no pause,
+# but more than that will be paused so that average time between packets
+# will be about {throttle} msec.
+#
+# ------------------------------------------------------------------------
+
+
+def time_msec():
+    return round(datetime.datetime.utcnow().timestamp() * 1000)
+
+last_send_time = 0
+last_send_count = 0
+
+
+def throttle_me():
+    global last_send_count, last_send_time
+
+    if throttle == 0:
+        return;
+
+    last_send_count += 1
+    if last_send_count < max_seq_packets:
+        return
+
+    last_send_count = 0;
+
+    now = time_msec()
+    #print( str(now) )
+    since_last_pkt = now - last_send_time
+
+    if last_send_time == 0:
+        last_send_time = now
+        return
+
+    last_send_time = now
+
+    towait = max_seq_packets * throttle - since_last_pkt
+
+    #print( str(towait) )
+
+    if towait <= 0:
+        return
+
+    time.sleep( 0.001 * towait )
 
 # ------------------------------------------------------------------------
 #

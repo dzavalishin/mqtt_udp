@@ -32,9 +32,9 @@ dc = openhab.Decoder()
 # back/forth loop lock
 ilock = mqttudp.interlock.Bidirectional(5)
 
-# do not repeat item in 10 seconds if value is the same
-it_to_udp = mqttudp.interlock.Timer(10)
-it_to_ohb = mqttudp.interlock.Timer(10)
+# do not repeat item in 60 seconds if value is the same
+it_to_udp = mqttudp.interlock.Timer(60)
+it_to_ohb = mqttudp.interlock.Timer(20)
 
 
 
