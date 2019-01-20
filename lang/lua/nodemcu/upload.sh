@@ -6,6 +6,7 @@ chmod a+rx $UP
 
 $UP init.lua
 $UP main.lua
+$UP wifi.lua 
 
 $UP ../mqttudp/mybit.lua 
 $UP ../mqttudp/mqtt_udp_defs.lua 

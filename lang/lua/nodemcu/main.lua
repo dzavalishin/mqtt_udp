@@ -6,7 +6,7 @@
 --package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without lib install
 package.path=package.path..";?"
 
-local mq = require "mqtt_udp_lib_MCU"
+-- local mq = require "mqtt_udp_lib_MCU"
 
 
 
@@ -16,11 +16,13 @@ local val = "Hello";
 
 print("Will send '"..topic.."'='"..val.."'");
 
-while true do
-    mq.send_publish( topic, val );
-    print("Sent..");
-    timer_sleep(2)
-end
 
 
+main_timer = tmr.create()
+main_timer:register( 1000, tmr.ALARM_AUTO,  
+    function(t)
+        --mq.send_publish( topic, val );
+        print("Sent")
+    end)
 
+main_timer:start()
