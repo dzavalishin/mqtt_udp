@@ -7,7 +7,7 @@ package.path=package.path..";?"
 
 local mq = require "mqttudp.mqtt_udp_lib_MCU"
 
-
+local led_pin = 4
 
 local topic = "NodeMCU Sender Test";
 local val = "Hello";
@@ -15,22 +15,35 @@ local val = "Hello";
 print("Will send '"..topic.."'='"..val.."'");
 
 
+gpio.mode(led_pin, gpio.OUTPUT)
+        
+
+function blink()
+    gpio.write(led_pin, gpio.LOW)
+    tmr.alarm(0, 50, 1, function()
+        gpio.write(led_pin, gpio.HIGH)
+    end)
+end
+
 main_timer = tmr.create()
 main_timer:register( 1000, tmr.ALARM_AUTO,  
     function(t)
         mq.send_publish( topic, val );
+        blink()
         print("Sent")
+        
     end)
 
 main_timer:start()
 
 
 local listener = function( ptype, topic, value, ip, port )
+    blink()
     if ptype == "publish" then
         print("'"..topic.."' = '"..value.."'".."	from: ", ip, port)
     else
         print(ptype.." '"..topic.."' 	from: ", ip, port)
-    end
+    end    
 end
 
 
