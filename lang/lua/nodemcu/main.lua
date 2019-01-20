@@ -6,7 +6,7 @@
 --package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without lib install
 package.path=package.path..";?"
 
--- local mq = require "mqtt_udp_lib_MCU"
+local mq = require "mqttudp.mqtt_udp_lib_MCU"
 
 
 
