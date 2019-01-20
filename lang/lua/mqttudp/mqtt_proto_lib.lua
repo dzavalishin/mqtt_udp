@@ -40,16 +40,23 @@ end
 -- @param #function user_listener Sser's function to pass received and decoded packet to.
 -- 
 -- TODO prepare for mqtt_proto_lib.udp_listen(proto_decoder,user_listener)
-function mqtt_proto_lib.proto_decoder(data, ip, port, user_listener)
+function mqtt_proto_lib.proto_decoder(data, ip, port)
     ptype,topic,val = mqtt_proto_lib.parse_packet(data)
 
     mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
-    user_listener( ptype, topic, val, ip, port );
+    --user_listener( ptype, topic, val, ip, port );
+	mqtt_proto_lib.user_listener( ptype, topic, val, ip, port );
 end
 
 
+--- User's entry point to listen to incoming messages
+--
+-- @param #void user_listener  function( ptype, topic, value, ip, port )
+--
+
 function mqtt_proto_lib.listen( user_listener )
-    mqtt_proto_lib.udp_listen( mqtt_proto_lib.proto_decoder, user_listener)
+	mqtt_proto_lib.user_listener = user_listener
+    mqtt_proto_lib.udp_listen()
 end
 
 

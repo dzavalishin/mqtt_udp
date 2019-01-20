@@ -13,7 +13,6 @@
 local mqtt_udp_lib = require "mqttudp.mqtt_proto_lib"
 
 local defs  = require "mqttudp.mqtt_udp_defs"
---local socket = require "socket"
 local bit = require "mqttudp.mybit"
 local mcunet = require "net"
 
@@ -21,17 +20,6 @@ function mqtt_udp_lib.make_listen_socket()
 
     local udpSocket, our_ip
 
---[[
-    tmr.alarm(1, 1000, 1, function()
-        if wifi.sta.getip() == nil then
-            print("Waiting for IP...")
-        else
-		tmr.stop(1)
-		our_ip = wifi.sta.getip() -- we store our_ip, as we need it to setup udp socket properly
-		print(" Your IP is ".. our_ip)
-	end
-    end)
-]]
 	our_ip = wifi.sta.getip() -- we store our_ip, as we need it to setup udp socket properly
 	print(" Your IP is ".. our_ip)
 
@@ -47,6 +35,27 @@ function mqtt_udp_lib.make_listen_socket()
 end
 
 
+
+function mqtt_udp_lib.on_udp_in( data, port, ip)
+    mqtt_udp_lib.proto_decoder(data, ip, port)
+end
+
+
+--- Loop forever listening to incoming network data
+-- @param #function proto_decoder Function to decode received data with
+-- @param #function user_listener Function to call when packet is parsed
+function mqtt_udp_lib.udp_listen()
+
+    local sock = mqtt_udp_lib.make_listen_socket()
+
+	sock:on( "receive", on_udp_in )
+
+end
+
+
+
+
+
 function mqtt_udp_lib.make_publish_socket()
 
     --udp = socket.udp()
@@ -56,15 +65,13 @@ function mqtt_udp_lib.make_publish_socket()
 
     --assert(udp:settimeout(1)) ?
 
-    --assert(udp:settimeout())
     --assert(udp:setoption('broadcast', true))
     --assert(udp:setoption('dontroute',true))
 
 
     --assert(udp:setsockname(s_address, defs.MQTT_PORT))
     --assert(udp:setsockname("*", defs.MQTT_PORT ))
-    
-    --udp:connect(defs.MQTT_PORT, wifi.sta.getbroadcast())
+   
     
     return udp
 
@@ -73,7 +80,6 @@ end
 
 
 function mqtt_udp_lib.send_packet( socket, data )
-    --socket:sendto( data, "255.255.255.255", defs.MQTT_PORT )
     --socket:send(defs.MQTT_PORT, 0xFFFFFFFF, data ) -- NodeMCU way
     socket:send(defs.MQTT_PORT, wifi.sta.getbroadcast(), data ) -- NodeMCU way
 

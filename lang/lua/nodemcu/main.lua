@@ -3,19 +3,16 @@
 -- actual user's code - sensors, displays, etc
 --
 
---package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without lib install
 package.path=package.path..";?"
 
 local mq = require "mqttudp.mqtt_udp_lib_MCU"
 
 
 
-
-local topic = "Lua Sender Test";
+local topic = "NodeMCU Sender Test";
 local val = "Hello";
 
 print("Will send '"..topic.."'='"..val.."'");
-
 
 
 main_timer = tmr.create()
@@ -26,3 +23,17 @@ main_timer:register( 1000, tmr.ALARM_AUTO,
     end)
 
 main_timer:start()
+
+
+local listener = function( ptype, topic, value, ip, port )
+    if ptype == "publish" then
+        print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
+    else
+        print(ptype.." '"..topic.."' 	from: ", ip, port)
+    end
+end
+
+
+mq.listen( listener )
+
+

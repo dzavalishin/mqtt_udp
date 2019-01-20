@@ -59,7 +59,7 @@ end
 --- Loop forever listening to incoming network data
 -- @param #function proto_decoder Function to decode received data with
 -- @param #function user_listener Function to call when packet is parsed
-function mqtt_udp_lib.udp_listen(proto_decoder,user_listener)
+function mqtt_udp_lib.udp_listen()
 
     local sock = mqtt_udp_lib.make_listen_socket()
 
@@ -67,7 +67,7 @@ function mqtt_udp_lib.udp_listen(proto_decoder,user_listener)
 
         data, ip, port = mqtt_udp_lib.recv_packet( sock )
         if data then
-            proto_decoder(data, ip, port, user_listener)
+            mqtt_udp_lib.proto_decoder(data, ip, port)
         end
         socket.sleep(0.01)
     end
