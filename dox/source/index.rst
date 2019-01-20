@@ -46,6 +46,8 @@ Fast track for impatient readers: MQTT/UDP native implementations exist in Java,
 * :ref:`lua-lang-api`
 * :ref:`st-lang-api`
 
+If you want to test MQTT/UDP on a real hardware, take a look at :ref:`sketches` part. Ready made software is described in :ref:`integration` part.
+
 Now some words on MQTT/UDP idea. It is quite simple. Broker is a `single point of failure <https://en.wikipedia.org/wiki/Single_point_of_failure>`_ and can be avoided. Actual
 traffic of smart home installation is not too big and comes over a separated (by firewall) network. There are many listeners that need same data, such as:
 
@@ -888,7 +890,7 @@ Here is how it is used in main program:
 
 
 
-
+.. _integration:
 
 Integration and tools
 =====================
@@ -1124,8 +1126,37 @@ Don't like Raspberry? Use Arduino or some ARM CPU unit and C version of MQTT/UDP
 
 
 
+.. _sketches:
+
+
+Sketches
+--------
+
+There are more or less complete demo implementations exist.
+
+Wemos D1 Mini Pro
+^^^^^^^^^^^^^^^^^
+
+This sketh must also run on any NodeMCU hardware.
+
+See lang/lua/nodemcu for source code and instruction.
+
+
+Arduino
+^^^^^^^
+
+This sketch must run on any Arduino device as long as it has ENC28J60 ethernet module connected.
+
+See lang/arduino for source code and instructions for this one.
+
+
 Network
 -------
+
+.. NOTE::
+
+   Basic digital signature subsystem for MQTT/UDP is in development now. Java implementation is already
+   supporting it, contact us if you want to test it or take part in development.
 
 Current implementation of MQTT/UDP has no security support. It is supposed that later some
 kind of packet digital signature will be added. At the moment I suppose that protocol can
