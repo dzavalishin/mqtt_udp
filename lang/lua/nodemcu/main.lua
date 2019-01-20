@@ -27,7 +27,7 @@ main_timer:start()
 
 local listener = function( ptype, topic, value, ip, port )
     if ptype == "publish" then
-        print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
+        print("'"..topic.."' = '"..value.."'".."	from: ", ip, port)
     else
         print(ptype.." '"..topic.."' 	from: ", ip, port)
     end
