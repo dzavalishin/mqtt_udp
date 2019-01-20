@@ -26,31 +26,9 @@ end
 
 ------------------------------------------------------------------------------
 --
--- Listen to packets - TODO - move loop to UDP code because of NodeMCU
+-- Listen to packets 
 --
 ------------------------------------------------------------------------------
-
---[[
-function mqtt_proto_lib.listen( listener )
-    local sock = mqtt_proto_lib.make_listen_socket()
-
-    while true do
-        --data, ip, port = sock:receivefrom()
-        data, ip, port = mqtt_proto_lib.recv_packet( sock )
-        if data then
-            --print("Received: ", data, ip, port, type(data))
-            --print("Received from: ", ip, port )
-            --udp:sendto(data, ip, port)--
-            ptype,topic,val = mqtt_proto_lib.parse_packet(data)
-
-            mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
-            listener( ptype, topic, val, ip, port );
-        end
-        socket.sleep(0.01)
-    end
-
-end ]]
-
 
 
 

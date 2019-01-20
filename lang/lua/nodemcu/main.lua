@@ -21,7 +21,7 @@ print("Will send '"..topic.."'='"..val.."'");
 main_timer = tmr.create()
 main_timer:register( 1000, tmr.ALARM_AUTO,  
     function(t)
-        --mq.send_publish( topic, val );
+        mq.send_publish( topic, val );
         print("Sent")
     end)
 

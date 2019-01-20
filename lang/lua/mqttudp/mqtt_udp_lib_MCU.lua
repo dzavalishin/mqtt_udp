@@ -53,13 +53,19 @@ function mqtt_udp_lib.make_publish_socket()
     local udp = net.createUDPSocket() -- NodeMCU way
 
     assert(udp)
-    --assert(udp:settimeout(1))
-    assert(udp:settimeout())
-    assert(udp:setoption('broadcast', true))
-    assert(udp:setoption('dontroute',true))
+
+    --assert(udp:settimeout(1)) ?
+
+    --assert(udp:settimeout())
+    --assert(udp:setoption('broadcast', true))
+    --assert(udp:setoption('dontroute',true))
+
+
     --assert(udp:setsockname(s_address, defs.MQTT_PORT))
     --assert(udp:setsockname("*", defs.MQTT_PORT ))
-
+    
+    --udp:connect(defs.MQTT_PORT, wifi.sta.getbroadcast())
+    
     return udp
 
 end
@@ -68,7 +74,9 @@ end
 
 function mqtt_udp_lib.send_packet( socket, data )
     --socket:sendto( data, "255.255.255.255", defs.MQTT_PORT )
-    socket:send(defs.MQTT_PORT, 0xFFFFFFFF, data ) -- NodeMCU way
+    --socket:send(defs.MQTT_PORT, 0xFFFFFFFF, data ) -- NodeMCU way
+    socket:send(defs.MQTT_PORT, wifi.sta.getbroadcast(), data ) -- NodeMCU way
+
 end
 
 function mqtt_udp_lib.recv_packet( socket )
