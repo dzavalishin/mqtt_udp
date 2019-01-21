@@ -313,6 +313,41 @@ public interface IPacket {
 		return presig;
 	}
 
+	
+	/**
+	 * Return true if packet must have 2 byte ID field according to classic MQTT
+	 * protocol spec.
+	 * 
+	 * @param type Packet type as in packet ( &amp; 0xF0 )
+	 * @param flags Packet flags
+	 * @return True if variable header with 2 byte packet id is to be.
+	 * /
+	public static boolean hasBasicMQTTPacketId( int type, int flags )
+	{
+		type  &= 0xF0;
+		flags &= 0x0F;
+		
+		switch(type)
+		{
+		case mqtt_udp_defs.PTYPE_PUBLISH:
+			return (flags & 0x6) != 0; // Has QoS flags
+		
+		case mqtt_udp_defs.PTYPE_PUBACK:
+		case mqtt_udp_defs.PTYPE_PUBREC:
+		case mqtt_udp_defs.PTYPE_PUBREL:
+		case mqtt_udp_defs.PTYPE_PUBCOMP:
+		case mqtt_udp_defs.PTYPE_SUBSCRIBE:
+		case mqtt_udp_defs.PTYPE_SUBACK:
+		case mqtt_udp_defs.PTYPE_UNSUBSCRIBE:
+		case mqtt_udp_defs.PTYPE_UNSUBACK:
+			return true;
+		
+		default:
+			return false;
+		}
+		
+	}*/
+	
 
 	static final String[] pTYpeNames = {
 			"? NULL",
