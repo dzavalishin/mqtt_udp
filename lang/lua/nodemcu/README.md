@@ -16,10 +16,13 @@ From ../mqttudp:
  *     mqttudp/mqtt_proto_lib.lua 
  *     mqttudp/mqtt_udp_lib_MCU.lua - NodeMCU specific UDP IO
 
-Copy gitwifi.lua.in to gitwifi.lua and edit in correct WiFi network
-SSDI and password. Upload all the files above to device and reboot.
-It should sleep for 10 sec and start sending to test topic and listening
-to other devices/programs.
+Copy wifi.lua.in to wifi.lua and edit in correct WiFi network
+SSDI and password. 
+
+Copy main.lua.empty.in to main.lua.
+
+Upload all the files above to device and reboot. It should sleep for 10 sec 
+and start sending to test topic and listening to other devices/programs.
 
 To test reception run some sending program on computer. For example, you
 can run ../examples/mqtt_pub.lua or ../../python3/examples/random_to_udp.py 

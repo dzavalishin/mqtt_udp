@@ -16,11 +16,12 @@ local mq = require "mqttudp.mqtt_udp_lib_MCU"
 local led_pin = 4
 
 
-
 --local sda, scl = 6, 5
 local sda, scl = 2, 1
 i2c.setup(0, sda, scl, i2c.SLOW) 
 si7021.setup()
+
+
 
 gpio.mode(led_pin, gpio.OUTPUT)
         
@@ -41,10 +42,11 @@ main_timer:register( 1000, tmr.ALARM_AUTO,
         print(string.format("Humidity:\t\t%d.%03d\nTemperature:\t%d.%03d\n", hum, hum_dec, temp, temp_dec))
         mq.send_publish( "Wemos/humid", string.format("%d.%03d", hum, hum_dec ));
         mq.send_publish( "Wemos/temp", string.format("%d.%03d", temp, temp_dec ));
-        --print("Humidity: "..hum.."\n".."Temperature: "..temp)
-        --mq.send_publish( "Wemos/humid", tostring(hum) );
-        --mq.send_publish( "Wemos/temp", tostring(temp) );
 
+		-- for firmware with float point use these
+        --print("Humidity: "..hum.."\n".."Temperature: "..temp)
+        --mq.send_publish( "Wemos/humid", tostring(hum) ); 
+        --mq.send_publish( "Wemos/temp", tostring(temp) );
         blink()
         --print("Sent")
         
