@@ -5,7 +5,6 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,7 +14,6 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PacketSourceServer;
@@ -166,7 +164,7 @@ public class Main {
 		} catch (IOException e) {
 			// TODO Logger? 
 			GlobalErrorHandler.handleError(ErrorType.IO, e);
-		};
+		}
 	}
 
 	private void stopMe() {

@@ -6,6 +6,9 @@ import java.util.Date
 
 val TOPIC = "\$SYS/clock";
 
+/**
+ * Main.
+ */
 fun main(args : Array<String>)
 {
 	println("MQTT/UDP Clock");

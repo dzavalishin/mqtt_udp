@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
+/*
 // TODO use ru.dz.mqtt_udp.util.image ImageUtils instead
 @Deprecated
 public class ImageUtils {
@@ -59,3 +59,5 @@ public class ImageUtils {
 		}
 	}
 }
+
+*/

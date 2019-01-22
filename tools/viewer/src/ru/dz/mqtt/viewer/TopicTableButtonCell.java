@@ -8,6 +8,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import ru.dz.mqtt_udp.util.image.ImageUtils;
 
 public class TopicTableButtonCell extends TableCell<TopicTableItem, TableButtonsState> {
 
