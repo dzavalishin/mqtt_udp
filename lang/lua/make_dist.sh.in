@@ -1,2 +1,3 @@
 #!/bin/sh
-tar -czf lua_mqttudp-@release@.tar.gz mqttudp/*
+tar --mode 666 -czf lua_mqttudp-@release@.tar.gz mqttudp/*
+

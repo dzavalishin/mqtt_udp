@@ -6,15 +6,15 @@ all: # mqtt_udp.jar
 clean:
 	-rm -r bin/*
 
-build:: all mqtt_udp.jar 
-	cp mqtt_udp.jar $(DEST)
-#	mvn package
-#	cp target/*.jar $(DEST) 
+build:: all #mqtt_udp.jar 
+#	cp mqtt_udp.jar $(DEST)
+	mvn package
+	cp target/*.jar $(DEST) 
 
 test::
 	mvn test
 
 
-mqtt_udp.jar::
-	ant -f build.xml 
+#mqtt_udp.jar::
+#	ant -f build.xml 
 
