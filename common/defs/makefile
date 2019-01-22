@@ -12,10 +12,10 @@ SUB_MINOR=1
 
 
 default::
-	echo make version
+	@echo make version
 
 all::
-	echo nothing to do
+	@echo nothing to do
 
 version:: preprocessors $(OUT) 
 
@@ -28,10 +28,10 @@ clean::
 	rm $(OUT)
 
 test::
-	echo no test here
+	@echo no test here
 
 build::
-	echo nothing to build here
+	@echo nothing to build here
 
 conv_version::
 	echo "" > conv_version 
@@ -69,5 +69,6 @@ preprocessors::
 	cd ../../dox/source   ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
 	cd ../../lang/lua     ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
 	cd ../../lang/python3 ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
+	cd ../../lang/java    ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
 
 

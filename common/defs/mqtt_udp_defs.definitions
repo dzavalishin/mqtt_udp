@@ -21,5 +21,7 @@ id(MQTT_PORT,1883)
 
 id(PKT_BUF_SIZE,2048)
 
+id(PKT_PACE_MSEC,50)
+
 
 #include "conv_footer"

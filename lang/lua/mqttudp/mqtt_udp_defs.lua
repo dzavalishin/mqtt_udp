@@ -18,4 +18,5 @@ mqtt_udp_defs.PTYPE_PINGRESP = 0xD0
 mqtt_udp_defs.PTYPE_DISCONNECT = 0xE0
 mqtt_udp_defs.MQTT_PORT = 1883
 mqtt_udp_defs.PKT_BUF_SIZE = 2048
+mqtt_udp_defs.PKT_PACE_MSEC = 50
 return mqtt_udp_defs

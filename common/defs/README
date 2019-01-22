@@ -1,1 +1,3 @@
 PACKAGE_VERSION_{MINOR,MAJOR} is version of this repository, not protocol
+
+PKT_PACE_MSEC is min time between packets when we sending
