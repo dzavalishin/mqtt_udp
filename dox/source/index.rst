@@ -935,6 +935,13 @@ Minimal configuration required is to set OpenHAB host name in section ``[openhab
 Gateway uses OpenHAB sitemap to get list of items to read. By default it uses sitemap named ``default``. If your
 OpenHAB setup most populated sitemap is not default one, please set sitemap name in .ini file too.
 
+.. index:: single: CCU825
+
+CCU825 GSM Controller
+^^^^^^^^^^^^^^^^^^^^^
+
+There is a connector for a CCU825 controller in a `separate repository <https://github.com/dzavalishin/ccu825modbus>`_.
+
 
 Scripts
 -------
@@ -1210,8 +1217,8 @@ FAQ
 .. rem Threre are two tested environments for complete build: Windows Cygwin and Linux.
 
 .. rem Requirements:
-.. rem * binutils, make, gcc, python 3.6+, lua 5.2+
-.. rem * java jdk 1.8 or later, ant, JUnit 4, launch4j
+.. rem * binutils, make, gcc, python 3.6+, lua 5.1+
+.. rem * java jdk 1.8 or later, maven, JUnit 4, launch4j
 
 Links
 -----

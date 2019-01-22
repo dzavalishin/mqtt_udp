@@ -53,6 +53,7 @@ public class PublishPacket extends TopicPacket {
 
 	/**
 	 * Create packet to be sent.
+	 * 
 	 * @param topic Topic string.
 	 * @param flags Protocol flags.
 	 * @param value Value as byte array.
@@ -64,6 +65,7 @@ public class PublishPacket extends TopicPacket {
 
 	/**
 	 * Create packet to be sent.
+	 * 
 	 * @param topic Topic string.
 	 * @param value Value string.
 	 */
