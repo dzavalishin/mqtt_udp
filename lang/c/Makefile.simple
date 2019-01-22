@@ -11,7 +11,7 @@ run::
 clean::
 	-rm *.o *.exe
 
-OBJS=udp_send_pkt.o udp_recv_pkt.o mqtt_udp.o mqtt_udp_parse.o mqtt_udp_build.o mqtt_udp_send.o mqtt_udp_recv.o  mqtt_udp_util.o
+OBJS=udp_send_pkt.o udp_recv_pkt.o mqtt_udp.o mqtt_udp_parse.o mqtt_udp_build.o mqtt_udp_send.o mqtt_udp_recv.o  mqtt_udp_util.o mqtt_udp_match.o mqtt_udp_throttle.o
 OBJS += mqtt_udp_match.o
 
 
