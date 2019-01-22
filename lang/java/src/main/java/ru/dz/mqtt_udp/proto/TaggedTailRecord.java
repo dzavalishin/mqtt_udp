@@ -115,6 +115,7 @@ public abstract class TaggedTailRecord {
 		{
 		case 'n':	return new TTR_PacketNumber( tag, rec, rawLength );
 		case 's':	return new TTR_Signature( tag, rec, rawLength );
+		default: break;
 		}
 
 		return new TTR_Invalid( tag, rawLength );

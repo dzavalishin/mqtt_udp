@@ -189,22 +189,17 @@ public class Main {
 				}
 			}
 
+			/** Unused. */
+			public void mouseEntered(MouseEvent e) { }
 
-			public void mouseEntered(MouseEvent e) {
-                 
-			}
+			/** Unused. */
+			public void mouseExited(MouseEvent e) { }
 
-			public void mouseExited(MouseEvent e) {
-                 
-			}
+			/** Unused. */
+			public void mousePressed(MouseEvent e) { }
 
-			public void mousePressed(MouseEvent e) {
-                 
-			}
-
-			public void mouseReleased(MouseEvent e) {
-                
-			}
+			/** Unused. */
+			public void mouseReleased(MouseEvent e) { }
 		};		
 
 		return mouseListener;

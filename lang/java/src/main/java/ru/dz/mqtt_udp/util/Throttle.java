@@ -20,7 +20,7 @@ public class Throttle
 	private AtomicLong last_send_count = new AtomicLong(0);
 	
 	
-	static long time_msec()
+	static private long time_msec()
 	{
 		return System.currentTimeMillis();
 	}

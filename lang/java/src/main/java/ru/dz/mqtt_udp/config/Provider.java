@@ -25,7 +25,7 @@ public class Provider implements Consumer<IPacket> {
 
 	//private SubServer ss; // no, need one that can serve multiple listeners with thread pool
 	//private ArrayList topics = new ArrayList<>();
-	Map<String,TopicItem> items = new HashMap<>();
+	private Map<String,TopicItem> items = new HashMap<>();
 	
 	public Provider(IPacketMultiSource ms) 
 	{

@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import ru.dz.mqtt_udp.util.ByteArray;
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;

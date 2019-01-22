@@ -9,8 +9,8 @@ import ru.dz.mqtt_udp.proto.TTR_PacketNumber;
 public class TestTTR_Number {
 
 	private static final int TEST_VALUE = 0x33;
-	static final byte[] test = { (byte)'n', 4, 0, 0, 0, 0x33 };
-	static final byte[] netin = { 0, 0, 0, 0x33 };
+	private static final byte[] test = { (byte)'n', 4, 0, 0, 0, 0x33 };
+	private static final byte[] netin = { 0, 0, 0, 0x33 };
 
 	@Test
 	public void testToBytes() {

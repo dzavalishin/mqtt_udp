@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import ru.dz.mqtt_udp.items.AbstractItem;
-import ru.dz.mqtt_udp.items.TopicItem;
 
 public class FileLogger {
 	private BufferedWriter writer = null;
