@@ -210,6 +210,7 @@ public interface IPacket {
 	 * @param pkt packet payload bytes
 	 * @param packetType type ( &amp; 0xF0 )
 	 * @param flags flags
+	 * @param ttr TTRs to encode to packet
 	 * @return encoded packet to send to UDP
 	 */
 	public static byte[] encodeTotalLength(byte[] pkt, int packetType, byte flags, AbstractCollection<TaggedTailRecord> ttr ) {
@@ -313,7 +314,7 @@ public interface IPacket {
 	}
 
 	
-	/**
+	/* *
 	 * Return true if packet must have 2 byte ID field according to classic MQTT
 	 * protocol spec.
 	 * 

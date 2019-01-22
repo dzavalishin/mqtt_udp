@@ -101,6 +101,7 @@ public abstract class GenericPacket implements IPacket {
 	
 	/**
 	 * Send me using default send socket.
+	 * @param addr Where to send to.
 	 * @throws IOException If unable.
 	 */
 	public void send(InetAddress addr) throws IOException {
@@ -192,6 +193,8 @@ public abstract class GenericPacket implements IPacket {
 	
 	/**
 	 * Get packet flags. QoS, etc.
+	 * 
+	 * @return Flags bit field.
 	 */
 	public byte getFlags() {		return flags;	}
 	

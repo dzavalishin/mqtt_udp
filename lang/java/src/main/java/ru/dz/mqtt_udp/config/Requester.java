@@ -192,9 +192,12 @@ public class Requester implements Consumer<IPacket> {
 	}
 	
 	/**
-	 * Wait for all topics to get content.
+	 * Wait for all topics to get content. Returns when we
+	 * have data for all topics we know about.
 	 * 
-	 * @return true if success
+	 * @param timeoutMsec Max time to wait.
+	 * 
+	 * @return true if success, false if timed out.
 	 */
 	public boolean waitForAll(long timeoutMsec)
 	{

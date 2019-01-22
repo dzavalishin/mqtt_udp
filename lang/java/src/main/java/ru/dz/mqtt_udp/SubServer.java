@@ -27,6 +27,8 @@ public abstract class SubServer
 	/** 
 	 * Set muted mode. In muted mode server loop won't respond to any incoming packets
 	 * (such as PINGREQ) automatically.
+	 * 
+	 * @param muted If true - mute replies.
 	 */
 	public void setMuted(boolean muted) {		this.muted = muted;	}
 
@@ -107,7 +109,7 @@ public abstract class SubServer
 	/**
 	 * Must be overridden in children to process packet 
 	 * @param p packet to process
-	 * @throws IOException
+	 * @throws IOException if IO error
 	 */
 	protected abstract void processPacket(IPacket p) throws IOException;
 

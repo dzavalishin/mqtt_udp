@@ -89,7 +89,11 @@ public abstract class AbstractItem {
 
 
 	// TODO assign value and time only? check for host/topic be same?
-	/** Assign all data from src */
+	/** 
+	 * Assign all data from src
+	 * 
+	 * @param src object to copy. 
+	 **/
 	public void assignFrom(AbstractItem src) {
 		this.packetType = src.packetType;
 		this.from       = src.from;
