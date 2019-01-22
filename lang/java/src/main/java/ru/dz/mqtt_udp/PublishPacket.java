@@ -2,10 +2,8 @@ package ru.dz.mqtt_udp;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.Collection;
 
 import ru.dz.mqtt_udp.io.IPacketAddress;
-import ru.dz.mqtt_udp.proto.TaggedTailRecord;
 import ru.dz.mqtt_udp.util.NoEncodingRuntimeException;
 import ru.dz.mqtt_udp.util.TopicPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;

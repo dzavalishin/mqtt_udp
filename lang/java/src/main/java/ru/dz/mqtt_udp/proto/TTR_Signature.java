@@ -1,11 +1,9 @@
 package ru.dz.mqtt_udp.proto;
 
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import ru.dz.mqtt_udp.hmac.HMAC;
-import ru.dz.mqtt_udp.util.ByteArray;
 
 public class TTR_Signature extends TaggedTailRecord {
 	private final static byte myTag = (byte)'s'; 

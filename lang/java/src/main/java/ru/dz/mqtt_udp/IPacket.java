@@ -10,7 +10,6 @@ import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.proto.TTR_PacketNumber;
 import ru.dz.mqtt_udp.proto.TTR_Signature;
 import ru.dz.mqtt_udp.proto.TaggedTailRecord;
-import ru.dz.mqtt_udp.util.ByteArray;
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
