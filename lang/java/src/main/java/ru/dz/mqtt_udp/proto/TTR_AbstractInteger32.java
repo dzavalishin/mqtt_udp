@@ -9,12 +9,12 @@ package ru.dz.mqtt_udp.proto;
  * @author dz
  *
  */
-public class TTR_AbstractInteger extends TaggedTailRecord {
+public class TTR_AbstractInteger32 extends TaggedTailRecord {
 
 	
 	private int value;
 
-	public TTR_AbstractInteger(byte tag, byte[] rec, int rawLength) 
+	public TTR_AbstractInteger32(byte tag, byte[] rec, int rawLength) 
 	{
 		super(tag,rawLength);
 
@@ -28,7 +28,7 @@ public class TTR_AbstractInteger extends TaggedTailRecord {
 		value = n;
 	}
 	
-	public TTR_AbstractInteger( byte tag, int number )
+	public TTR_AbstractInteger32( byte tag, int number )
 	{
 		super( tag, -1);
 		value = number;		

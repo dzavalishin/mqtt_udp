@@ -2,7 +2,7 @@ package ru.dz.mqtt_udp.proto;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TTR_PacketNumber extends TTR_AbstractInteger {
+public class TTR_PacketNumber extends TTR_AbstractInteger32 {
 
 	private final static byte myTag = (byte)'n'; 
 	

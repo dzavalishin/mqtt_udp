@@ -116,7 +116,7 @@ device settings.
 
 Please see Java ``config.Provider`` and ``config.Requester`` classes for further info.
 
-Topis request
+Topic request
 ^^^^^^^^^^^^^
 
 There is backwards scenario possible. Remote configuration program can send SUBSCRIBE message for

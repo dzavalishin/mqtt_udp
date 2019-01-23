@@ -8,7 +8,7 @@ package ru.dz.mqtt_udp.proto;
  * @author dz
  *
  */
-public class TTR_ReplyTo extends TTR_AbstractInteger {
+public class TTR_ReplyTo extends TTR_AbstractInteger32 {
 
 	private final static byte myTag = (byte)'r'; 
 		
