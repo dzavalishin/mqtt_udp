@@ -188,6 +188,30 @@ Anyway, I'm going to add completely reliable mode to MQTT/UDP in near future.
 .. [#f1] Corresponding tools are in repository and you can run such test yourself.
 
 
+.. index:: single: throttle
+
+Speed limit
+^^^^^^^^^^^
+
+There is one more reliability issue exist when we use UDP. Low power microcontrollers
+are quite slow and their ability to receive lots of UDP packets per second are limited.
+There is possible packet loss due to low processing power of some slow nodes, not because
+of network delivery is not reliable.
+
+That's why protocol implementations include throttling subsystem, which limits amount of
+packets sent per time interval.
+
+By default it is tuned for maximum of 10 packets per second. Java and Python implementations
+use millisecond timing and send max of 3 packets with no speed limit, and then add 300 msec
+pause. C implementation currently uses 1 second time granularity and lets application send
+up to 10 packets with no limit and then waits for a second.
+
+Actual tests of reception speed capability were done with Wemos D1 Mini unit programmed
+with MQTT/UDP Lua implementation.
+
+There is ``set_throttle``/``setThrottle`` function in all languages but Lua, which lets you set 
+speed limit according to your hardware capabilities, or disable it at all by setting to 0.
+
 
 Packets and general logic
 =========================
@@ -399,6 +423,12 @@ Dump packet structure. Handy to debug things::
     int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 
+.. index:: single: throttle
+
+Set time between packets (msec), control maximum send speed::
+
+    void mqtt_udp_set_throttle(int msec);
+
 .. index:: single: UDP
 
 UDP IO interface
@@ -604,13 +634,31 @@ Control
    PacketSourceServer and PacketSourceMultiServer can be swiched to not to 
    reply to any incoming packet (such as PING) automatically.
 
+.. index:: single: throttle
+
 **Engine.setThrottle(int msec)**
    Set average time in milliseconds between packets sent. Set to 0 to turn throttling off.
 
 
+Digital Signature
+^^^^^^^^^^^^^^^^^
 
+.. NOTE::
 
+   Development is in progress, not a final implementation.
 
+Java ``ru.dz.mqtt_udp.Engine`` class has preliminary controls for message digital
+signature. It is implemented with HMAC MD5 technology.
+
+Set signature secret key to sign and check signature::
+
+   void setSignatureKey(String key)
+
+Set requirement for all incoming packets to be signed::
+
+   void setSignatureRequired(boolean req)
+
+At this moment other language implementations ignore and do not generate signature at all.
 
 .. _python-lang-api:
 
@@ -668,6 +716,16 @@ Match topic name against a pattern, processing `+` and `#` wildcards, returns Tr
 
    import mqttudp.engine as me
    me.match("aaa/+/bbb", "aaa/ccc/bbb")
+
+Turn of automatic protocol replies::
+
+   set_muted(mode: bool)
+
+.. index:: single: throttle
+
+Set minimum time between packets sent, msec::
+
+   set_throttle(msec: int)
 
 
 
@@ -850,6 +908,13 @@ Match topic name against a pattern, processing `+` and `#` wildcards, returns ``
 
    local mu = require "mqttudp"
    local ok = mu.match( wildcard, topic_name )
+
+
+NodeMCU
+^^^^^^^
+
+There is a version of Lua library for NodeMCU microcontroller firmware.
+See ``lang/lua/nodemcu`` for examples.
 
 
 .. _st-lang-api:
@@ -1244,7 +1309,8 @@ Network
 .. NOTE::
 
    Basic digital signature subsystem for MQTT/UDP is in development now. Java implementation is already
-   supporting it, contact us if you want to test it or take part in development.
+   supporting it, contact us if you want to test it or take part in development. 
+   See ``ru.dz.mqtt_udp.Engine`` class.
 
 Current implementation of MQTT/UDP has no security support. It is supposed that later some
 kind of packet digital signature will be added. At the moment I suppose that protocol can

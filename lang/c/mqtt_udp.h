@@ -29,12 +29,12 @@ extern "C" {
 
 struct mqtt_udp_pkt
 {
-    int         from_ip;
+    int         from_ip;        // Sender IP address
 
-    int         ptype;          // upper 4 bits, not shifted
-    int         pflags;         // lower 4 bits
+    int         ptype;          // Upper 4 bits, not shifted
+    int         pflags;         // Lower 4 bits
 
-    size_t      total;   	// length of the rest of pkt down from here
+    size_t      total;   	// Length of the rest of pkt down from here
 
     int         pkt_id;
 
@@ -53,7 +53,9 @@ typedef int (*process_pkt)( struct mqtt_udp_pkt *pkt );
 
 
 // --------------------------------------------------------------------------
+//
 // Send
+//
 // --------------------------------------------------------------------------
 
 
@@ -64,7 +66,7 @@ int mqtt_udp_send_subscribe( char *topic );
 
 
 int mqtt_udp_send_ping_request( void );
-//int mqtt_udp_send_ping_responce( int fd, int ip_addr );
+
 int mqtt_udp_send_ping_responce( void );
 
 
@@ -84,7 +86,20 @@ int mqtt_udp_recv_loop( process_pkt callback );
 
 
 // --------------------------------------------------------------------------
-// util
+//
+// Control
+//
+// --------------------------------------------------------------------------
+
+// Set min time between packets sent, msec
+void mqtt_udp_set_throttle(int msec);
+
+
+
+// --------------------------------------------------------------------------
+//
+// Util
+//
 // --------------------------------------------------------------------------
 
 // does check topic name against wildcarded string, return 1 on match
@@ -93,6 +108,7 @@ int mqtt_udp_match( char *filter, char *topicName );
 void mqtt_udp_dump( const char *buf, size_t len );
 
 int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
+
 
 
 
@@ -119,10 +135,14 @@ int mqtt_udp_get_send_fd( void ); // TODO hack, get fd to send datagrams
 
 int mqtt_udp_close_fd( int fd );
 
+// Introduce pause if we send too frequently
+void mqtt_udp_throttle( void );
+
+
 // --------------------------------------------------------------------------
 //
 // Defauli packet processor, called before user callback and replies according
-// to protocol requirements. You can replace it if you know what you do.
+// to protocol requirements. 
 //
 // NOT TO BE USED outside of lib code
 //

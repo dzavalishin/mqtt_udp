@@ -41,6 +41,8 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
 
     addr_size = sizeof serverAddr;
 
+    mqtt_udp_throttle(); // Speed limit
+
     ssize_t rc = sendto( fd, data, len, 0, (struct sockaddr *)&serverAddr, addr_size);
 
     return (rc != len) ? EIO : 0;
