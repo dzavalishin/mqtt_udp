@@ -74,6 +74,62 @@ Every listener selects packets it wants to listen to and processes them as it wi
 As a result, minmal MQTT/UDP implementation is extremely simple. Though, there are more
 options exist which are described later.
 
+Main use cases for MQTT/UDP are covered below.
+
+
+Data exchange
+^^^^^^^^^^^^^
+
+Main and, for most applicartions, the only use case. It is really simple. Sender transmits one
+PUBLISH packet per message. Packet contains topic name (such as "rooms/dinner/temperature") and
+value. Value can be text string or binary data, but most programs will wait for text as packet value.
+
+As there is no broker, parties do not need such things as CONNNECT, SUBSCRIBE or anything else but
+PUBLISH message.
+
+All the MQTT/UDP programs on the network will receive message and decide if they need it.
+
+
+Reliable exchange
+^^^^^^^^^^^^^^^^^
+
+Sender transmits PUBLISH message with non-zero QoS field. Receiver replies with
+PUBACK packet. If no acknowledge received, sender re-sends message.
+
+Current libraries do not support this scenario out of the box, but it can be implemented by user
+code. Later versions of libraries will have this case implemented.
+
+
+Data request
+^^^^^^^^^^^^
+
+There is request-reply scenario possible. Requesting party sends SUBSCRIBE message, one that is
+responcible for requested topic replies with PUBLISH message.
+
+This scenario can be used for remote configuration use case: configuration daemon keeps set of topics 
+and configuration settings per topic, but does not send them to not to spam network with rarely
+needed data. Some IoT device turns on and requests topics that contain needed configuration parameters,
+gets needed settings and continues working.
+
+If configuration settings are changed, config server re-publishes corresponding topics to update
+device settings.
+
+Please see Java ``config.Provider`` and ``config.Requester`` classes for further info.
+
+Topis request
+^^^^^^^^^^^^^
+
+There is backwards scenario possible. Remote configuration program can send SUBSCRIBE message for
+topic, that is a wildcard for all possible configuration topics for device or all devices.
+Devices should respond back with PUBLISH messages for all the configurable items.
+
+There is no ready made support for this scenario yet.
+
+Discovery
+^^^^^^^^^
+
+Party that needs to find who is on the network sends PINGREQ request. All the others reply with
+PINGRESP messages, and requester builds a map of all active MQTT/UDP hosts on the network.
 
 
 Possible topologies
@@ -114,7 +170,7 @@ for example, Modbus you will have to:
 One sensor, many listeners
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-IoT network is a lot of parties, operating together. It is usual that
+IoT network is a lot of parties operating together. It is usual that
 many of them need one data source to make a decision. Just as an example,
 my house control system consists of about 10 processing units of different
 size. Many of them need to know if it is dark outside, to understand how
@@ -1088,6 +1144,8 @@ Scripts
 There are Python scripts I made to help myself testing MQTT/UDP library. Some of them are written in C and Lua too
 but most exist just in Python version.
 
+Python programs
+^^^^^^^^^^^^^^^
 
 * **random_to_udp.py** - send random numbers with 2 sec interval, to test reception.
 * **dump.py** - just show all traffic.
@@ -1095,6 +1153,14 @@ but most exist just in Python version.
 * **subscribe.py** - send subscribe request.
 * **seq_storm_send.py** - send sequential data with no speed limit (use -s to set limit, though).
 * **seq_storm_check.py** - check traffic sent by *seq_storm_send.py* and calculate speed and error rate.
+
+
+C programs
+^^^^^^^^^^
+
+* **mqtt_udp_clock** - sends date and time value to network once a minute. Can be used to synchrinyze 
+   clock in IoT/smarthome peripheral devices. NB! Use SNTP if you need high accuracy. 
+
 
 
 
