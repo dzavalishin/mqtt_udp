@@ -2,13 +2,12 @@ package ru.dz.mqtt_udp.proto;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 /**
  * <p>
  * 
  * This TTR represents time and date of this packet's <b>payload</b> creation.
+ * In other words, moment when payload was measured, not sent.
  * 
  * <p>
  * 
@@ -23,12 +22,12 @@ import java.time.ZoneOffset;
  * 
  * <p>
  * 
- * <b>NB!</b> This is <b>LOCAL</b> time.
+ * <b>NB!</b> This is <b>LOCAL</b> time, not UTC/GMT.
  * 
  * @author dz
  *
  */
-public class TTR_TimeDate extends TTR_AbstractInteger64 {
+public class TTR_TimeDate extends TTR_AbstractTimeDate {
 
 	private final static byte myTag = (byte)'t'; 
 	
@@ -37,34 +36,14 @@ public class TTR_TimeDate extends TTR_AbstractInteger64 {
 		super(tag, rec, rawLength);
 	}
 
-	/*
-	public TTR_TimeDate( long number )
-	{
-		super( myTag, number);
-	}*/
-
 	public TTR_TimeDate( Instant dt )
 	{
-		super( myTag, dt.toEpochMilli() );
+		super( myTag, dt );
 	}
 
 	public TTR_TimeDate( LocalDateTime ldt )
 	{
-		//Instant dt = ldt.toInstant(ZoneOffset.UTC) 
-		//super( myTag, dt.toEpochMilli() );
-		super( myTag, ldt.toInstant(ZoneOffset.UTC).toEpochMilli() );
+		super( myTag, ldt );
 	}
 	
-	/**
-	 * Convert to Instant time/date representation.
-	 * @return Time/date
-	 */
-	public Instant getInstant() 
-	{
-		return Instant.ofEpochMilli(getValue());
-	}
-	
-	public LocalDateTime getLocalDateTime() {
-		return LocalDateTime.ofInstant(getInstant(), ZoneId.ofOffset("", ZoneOffset.UTC));
-	}
 }
