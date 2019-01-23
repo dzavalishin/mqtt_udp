@@ -143,16 +143,38 @@ Turn switch again, of course, until it works!
 In this example I wanted to illustrate that even in this situation UDP
 transport is not really that bad.
 
-All the data is visible
-^^^^^^^^^^^^^^^^^^^^^^^
 
-That is a topology issue too. Broadcast/multicast nature of MQTT/UDP
+
+Roadside processor
+^^^^^^^^^^^^^^^^^^
+
+Data processors such as triggers, unit converters, calculators of
+different kinds can be easily implemented with MQTT/UDP as standalone
+script or a small program that just listens for required incoming data,
+performs calculations and sends results back to MQTT/UDP.
+
+Other script or IoT/SmartHome component can then use resulting data.
+
+There is an example of such combination in MQTT/UDP repository. Java
+program in ``tools/tray`` is setting up desktop tray informer which 
+displays some MQTT/UDP parameters if user clicks on tray icon.
+
+Companion script ``lang/python3/examples/trigger.py`` is listening to
+some topic and if topic value is out of range sends information on
+``tray/message`` topic with a worning. Tray program listens for that
+topic and displays a warning to user on reception of such a message.
+
+.. rem TODO draw an image
+
+
+
+System debugging
+^^^^^^^^^^^^^^^^
+
+Broadcast/multicast nature of MQTT/UDP
 lets you see what is going on on the "bus" exactly the same way as
 all the parties see. There is a simple tool exist for that in this
 repository, but you can use, for example well known WireShark as well.
-
-
-
 
 
 
