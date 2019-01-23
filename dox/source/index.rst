@@ -405,7 +405,8 @@ UDP IO interface
 ^^^^^^^^^^^^^^^^
 
 Default implementation uses POSIX API to communicate with network, but for 
-embedded use you can redefine corresponding functions.
+embedded use you can redefine corresponding functions. Here are things to 
+reimplement.
 
 Receive UDP packet. Must return sender's address in ``src_ip_addr``::
 
@@ -558,6 +559,16 @@ Used here ``PacketSourceServer``, first of all, starts automatically, and uses `
 to pass packets received to you. The rest of the story is the same.
 
 
+There is another, more complex listen server class, ```PacketSourceMultiServer```. 
+Instance of it can provide incoming packets to more than one listener::
+
+	PacketSourceMultiServer ms = new PacketSourceMultiServer();
+        ms.addPacketSink( first_listener );
+        ms.addPacketSink( next_listener );
+        ms.start(); // Does not start automatically
+
+
+
 .. index:: single: send
 
 Packet classes
@@ -586,10 +597,15 @@ TopicFlter is a Predicate (functional interface implementation).
 
 
 
+Control
+^^^^^^^
 
+**setMuted( boolean mute )**
+   PacketSourceServer and PacketSourceMultiServer can be swiched to not to 
+   reply to any incoming packet (such as PING) automatically.
 
-
-
+**Engine.setThrottle(int msec)**
+   Set average time in milliseconds between packets sent. Set to 0 to turn throttling off.
 
 
 

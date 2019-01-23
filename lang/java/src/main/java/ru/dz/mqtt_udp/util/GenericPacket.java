@@ -9,6 +9,7 @@ import java.net.SocketException;
 import java.util.Collection;
 import java.util.Optional;
 
+import ru.dz.mqtt_udp.Engine;
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
 import ru.dz.mqtt_udp.io.IPacketAddress;
@@ -119,6 +120,7 @@ public abstract class GenericPacket implements IPacket {
 		
 		InetAddress address = InetAddress.getByAddress(broadcast);
 		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
+		Engine.throttle();
 		sock.send(p);
 	}
 

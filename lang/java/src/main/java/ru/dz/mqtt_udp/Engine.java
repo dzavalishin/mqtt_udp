@@ -23,12 +23,12 @@ public class Engine {
 	 * Set packet send rate.
 	 * @param msec average time in milliseconds between packets. Set to 0 to turn throttling off.
 	 */
-	public void setThrottle(int msec) {		t.setThrottle(msec);	}
+	public static void setThrottle(int msec) {		t.setThrottle(msec);	}
 	
 	/**
 	 * Must be called in packet send code.
 	 * Will put caller asleep to make sure packets are sent in a right pace. 
 	 */
-	public void throttle() {				t.throttle();			}
+	public static void throttle() {				t.throttle();			}
 
 }
