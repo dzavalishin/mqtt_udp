@@ -27,21 +27,21 @@ import java.time.LocalDateTime;
  * @author dz
  *
  */
-public class TTR_TimeDate extends TTR_AbstractTimeDate {
+public class TTR_MeasureTimeDate extends TTR_AbstractTimeDate {
 
 	private final static byte myTag = (byte)'t'; 
 	
-	public TTR_TimeDate(byte tag, byte[] rec, int rawLength) 
+	public TTR_MeasureTimeDate(byte tag, byte[] rec, int rawLength) 
 	{
 		super(tag, rec, rawLength);
 	}
 
-	public TTR_TimeDate( Instant dt )
+	public TTR_MeasureTimeDate( Instant dt )
 	{
 		super( myTag, dt );
 	}
 
-	public TTR_TimeDate( LocalDateTime ldt )
+	public TTR_MeasureTimeDate( LocalDateTime ldt )
 	{
 		super( myTag, ldt );
 	}
