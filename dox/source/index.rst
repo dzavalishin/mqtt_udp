@@ -38,7 +38,8 @@ simple too), but based on UDP and needs no broker.
 
    Your network does most of the broker's work.
 
-Fast track for impatient readers: MQTT/UDP native implementations exist in Java, Python, C, Lua and PLC specific ST language. See corresponding references:
+Fast track for impatient readers: MQTT/UDP native implementations exist in Java, 
+Python, C, Lua and PLC specific ST language. See corresponding references:
 
 * :ref:`c-lang-api`
 * :ref:`java-lang-api`
@@ -46,10 +47,13 @@ Fast track for impatient readers: MQTT/UDP native implementations exist in Java,
 * :ref:`lua-lang-api`
 * :ref:`st-lang-api`
 
-If you want to test MQTT/UDP on a real hardware, take a look at :ref:`sketches` part. Ready made software is described in :ref:`integration` part.
+If you want to test MQTT/UDP on a real hardware, take a look at :ref:`sketches` 
+part. Ready made software is described in :ref:`integration` part.
 
-Now some words on MQTT/UDP idea. It is quite simple. Broker is a `single point of failure <https://en.wikipedia.org/wiki/Single_point_of_failure>`_ and can be avoided. Actual
-traffic of smart home installation is not too big and comes over a separated (by firewall) network. There are many listeners that need same data, such as:
+Now some words on MQTT/UDP idea. It is quite simple. Broker is a `single point 
+of failure <https://en.wikipedia.org/wiki/Single_point_of_failure>`_ and can be avoided. Actual
+traffic of smart home installation is not too big and comes over a separated (by firewall) 
+network. There are many listeners that need same data, such as:
 
 .. index:: single: OpenHAB
 
@@ -58,11 +62,17 @@ traffic of smart home installation is not too big and comes over a separated (by
 * per-room or per-function controllers (kitchen ventilation, bath room sensors, room CO2 sensors, etc)
 * in-room displays (room and outdoor temperature)
 
-All these points generate some information (local sensors, state) and need some other information. By the way, CAN bus/protocol is made for quite the same requirements,
+All these points generate some information (local sensors, state) and need 
+some other information. By the way, CAN bus/protocol is made for quite the same requirements,
 but is not good for TCP/IP and Ethernet. Actually, to some extent, MQTT/UDP is CAN for Ethernet.
 
+So, MQTT/UDP is sending data with UDP broadcast. It means that every message 
+is simuloneusly sent to all possible recipients with just one network packet.
 
+Every listener selects packets it wants to listen to and processes them as it wishes.
 
+As a result, minmal MQTT/UDP implementation is extremely simple. Though, there are more
+options exist which are described later.
 
 
 
@@ -208,7 +218,7 @@ Topic names
 -----------
 
 One important thing about topics is **$SYS** topic. MQTT/UDP is a broadcast environment, so each node which wants to use **$SYS**
-,ust distinguish itself by adding IP address or host name as first subtopic under **$SYS**: **$SYS/192.168.1.33**. Topic name 
+must distinguish itself by adding IP address or host name as first subtopic under **$SYS**: **$SYS/192.168.1.33**. Topic name 
 **$SYS/hostname/config** is to be used for configurable from network parameters.
 
 .. rem TODO list of parameters
@@ -271,7 +281,7 @@ Listen for data::
     }
 
 
-Now lets get through the packet structure definition::
+Now lets look at the packet structure definition::
 
     struct mqtt_udp_pkt
     {
@@ -291,6 +301,32 @@ Now lets get through the packet structure definition::
         char *      value;
     };
 
+
+
+**from_ip**
+   Ip address of message sender. Usually ignored.
+   
+**ptype**
+   Packet type. You will be interested in ```PTYPE_PUBLISH``` most of time. 
+   See ```mqtt_udp_defs.h``` for more.
+
+**pflags**
+   Flags specific for each type. Ignore. Current version of MQTT/UDP 
+   does not use them at all, ad later everything critical will be
+   processed by library.
+   
+**total**
+   This field is internal for library.
+
+**pkt_id**
+   Later version will support it, currently not used at all.
+   
+**topic** and **topic_len**
+   Message topic, NULL terminated. Length of topic in bytes.
+   
+**value** and **value_len**
+   Message value, also NULL terminated. Length of value in bytes.
+   
 
 .. index:: single: listen
 
@@ -987,6 +1023,35 @@ Actual user guide is at project Wiki: https://github.com/dzavalishin/mqtt_udp/wi
 To run viewer you will need MqttUdpViewer.jar - on any OS ``java -jar MqttUdpViewer.jar`` will start
 program. For Windows there is MqttUdpViewer.exe which is a starter for MqttUdpViewer.jar,
 so in widows you can start it with ``MqttUdpViewer`` command.
+
+For details please read `wiki <https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-Viewer-Help>`_, but in short,
+viewer has following parts:
+
+Value view
+^^^^^^^^^^
+
+Top list displays current value of all topics that was transmitted since 
+program start. There is also time of last update.
+
+
+Log view
+^^^^^^^^
+
+Shows each message passing. You can choose if you will see ping/reply packets or no.
+
+
+Host list
+^^^^^^^^^
+
+Displays list of network hosts sending MQTT/UDP traffic.
+
+
+Message Editor
+^^^^^^^^^^^^^^
+
+Can be used to send messages to network. It is possible to send message just to one host
+or broadcast them. It is also possible to send **SUBSCRIBE** messages to request 
+topic data to be sent, but it is currently not supported by any other MQTT/UDP program.
 
 
 
