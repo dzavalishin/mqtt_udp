@@ -60,7 +60,7 @@ void mqtt_udp_set_throttle(int msec)
 {
     throttle = msec;
 
-    if( throttle < 0 )
+    if( throttle <= 0 )
     {
         throttle = 0;
         max_seq_packets = 100;
