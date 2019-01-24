@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Does not work
+
 UP=./uploader.py
 
 chmod a+rx $UP
