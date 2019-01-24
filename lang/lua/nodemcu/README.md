@@ -5,16 +5,16 @@ and listen use cases.
 
 Files to be stored on NodeMCU unit from this directory:
 
-*       init.lua - runs first, calls wifi.lua, sleeps 10 sec, runs main.lua
-*       wifi.lua - sets up wifi client (ssid/passwd)
-*       main.lua - main program loop
+*        init.lua - runs first, calls wifi.lua, sleeps 10 sec, runs main.lua
+*        wifi.lua - sets up wifi client (ssid/passwd)
+*        main.lua - main program loop
 
 From ../mqttudp:
 
-*       mqttudp/mybit.lua
-*       mqttudp/mqtt_udp_defs.lua 
-*       mqttudp/mqtt_proto_lib.lua 
-*       mqttudp/mqtt_udp_lib_MCU.lua - NodeMCU specific UDP IO
+*        mqttudp/mybit.lua
+*        mqttudp/mqtt_udp_defs.lua 
+*        mqttudp/mqtt_proto_lib.lua 
+*        mqttudp/mqtt_udp_lib_MCU.lua - NodeMCU specific UDP IO
 
 Copy wifi.lua.in to wifi.lua and edit in correct WiFi network
 SSDI and password. 
