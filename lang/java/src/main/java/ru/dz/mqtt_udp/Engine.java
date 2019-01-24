@@ -16,7 +16,7 @@ public class Engine {
 	public static void setSignatureKey(String key) {		signatureKey = key;	}
 
 	
-	static Throttle t = new Throttle();
+	private static Throttle t = new Throttle();
 
 
 	/**

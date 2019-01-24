@@ -42,6 +42,8 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import ru.dz.mqtt_udp.items.AbstractItem;
 import ru.dz.mqtt_udp.items.TopicItem;
+import ru.dz.mqtt_udp.util.ErrorType;
+import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.MqttUdpRuntimeException;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 import ru.dz.mqtt_udp.util.image.ImageUtils;
@@ -156,10 +158,10 @@ public class Main extends Application {
 
 			initNetwork();
 
-			// TODO kill me, test only
+
 			//toolBarSendButton.setSelected(true);
 			//generalTopicTable.setVisible(true);
-			
+			// TODO button is not unselected on manual window close
 			ObjectProperty<EventHandler<WindowEvent>> ohp = generalTopicTable.onHiddenProperty();
 			ohp.addListener( e -> { toolBarSendButton.setSelected( generalTopicTable.isVisible() ); });
 			
@@ -229,7 +231,7 @@ public class Main extends Application {
 	}
 
 	private HBox makeContent() {
-		ListView<ru.dz.mqtt_udp.items.TopicItem> listv = makeListView();
+		ListView<TopicItem> listv = makeListView();
 
 		HBox hbox = new HBox(listv);
 		hbox.setFillHeight(true);
@@ -348,8 +350,8 @@ public class Main extends Application {
 					try {
 						flog.startLog(fname);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
+						GlobalErrorHandler.handleError(ErrorType.IO, e);
 					}				
 				}
 			}
