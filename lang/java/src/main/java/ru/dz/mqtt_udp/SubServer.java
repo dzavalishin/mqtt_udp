@@ -37,7 +37,7 @@ public abstract class SubServer
 	// Incoming data process thread
 	// ------------------------------------------------------------
 	
-	volatile private boolean run;
+	volatile private boolean run = false;
 
 	public boolean isRunning() { return run; }
 
@@ -73,6 +73,7 @@ public abstract class SubServer
 
 		while(run)
 		{
+			//System.out.print("Listen loop run");
 			IPacket p = GenericPacket.recv(s);
 			if(!muted) preprocessPacket(p);			
 			processPacket(p);			

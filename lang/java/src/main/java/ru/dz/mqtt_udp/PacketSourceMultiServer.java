@@ -83,6 +83,8 @@ public class PacketSourceMultiServer extends SubServer implements IPacketMultiSo
 	@Override
 	protected void processPacket(IPacket p) throws IOException {
 
+		//System.out.println("MultiServer got packet "+p);
+
 		synchronized (ilist) {
 			if( ilist.size() > 0 )
 			{

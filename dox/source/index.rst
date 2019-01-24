@@ -1176,7 +1176,7 @@ Python programs
 C programs
 ^^^^^^^^^^
 
-* **mqtt_udp_clock** - sends date and time value to network once a minute. Can be used to synchrinyze 
+* **mqtt_udp_clock** - sends date and time value to network once a minute. Can be used to set
    clock in IoT/smarthome peripheral devices. NB! Use SNTP if you need high accuracy. 
 
 
