@@ -20,7 +20,7 @@ public class Throttle
 	private AtomicLong last_send_count = new AtomicLong(0);
 	
 	
-	static private long time_msec()
+	static private long timeMsec()
 	{
 		return System.currentTimeMillis();
 	}
@@ -65,7 +65,7 @@ public class Throttle
 	    //last_send_count.addAndGet(-last_send_count_delta); // eat out
 	    last_send_count.addAndGet(max_seq_packets);
 
-	    long now = time_msec();
+	    long now = timeMsec();
 	    //print( str(now) )
 	    long since_last_pkt = now - last_send_time;
 

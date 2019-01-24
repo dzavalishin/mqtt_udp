@@ -27,8 +27,8 @@ int mqtt_udp_match( char *filter, char *topicName )
     int tc = 0;
     int fc = 0;
 
-    int tlen = strlen( topicName );
-    int flen = strlen( filter );
+    int tlen = strnlen( topicName, PKT_BUF_SIZE );
+    int flen = strnlen( filter, PKT_BUF_SIZE );
 
     while(1)
     {

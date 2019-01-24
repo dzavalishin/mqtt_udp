@@ -230,7 +230,7 @@ public abstract class GenericPacket implements IPacket {
 	private void applyTTR(TaggedTailRecord ttr) 
 	{
 		if (ttr instanceof TTR_Signature) {
-			// just ignore, checked outside
+			; // just ignore, checked outside
 		}
 		
 		else if (ttr instanceof TTR_PacketNumber) {

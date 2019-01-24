@@ -37,7 +37,8 @@ def unpack_remaining_length(pkt):
 def parse_packet(pkt):
     if ord(pkt[0]) == defs.PTYPE_PUBLISH:
         
-        total_len, pkt = unpack_remaining_length(pkt[1:])
+        #total_len, pkt = unpack_remaining_length(pkt[1:])
+        _, pkt = unpack_remaining_length(pkt[1:])
 
         topic_len = (ord(pkt[1]) & 0xFF) | ((ord(pkt[0]) << 8) & 0xFF)   
         topic = pkt[2:topic_len+2].encode('UTF-8')    

@@ -10,5 +10,5 @@ build::
 
 test::
 	chmod a+rx test/*.py
-	cd test ; ./regress_test.py 
+	cd test ; ./utest_match.py 
 
