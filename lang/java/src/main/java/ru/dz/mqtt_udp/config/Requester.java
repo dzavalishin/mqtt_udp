@@ -43,7 +43,10 @@ import ru.dz.mqtt_udp.items.TopicItem;
 public class Requester implements Consumer<IPacket> {
 	private static final int CHECK_LOOP_TIME = 1000*60;
 	private static final int REQUEST_STEP_TIME = 1000;
+
+	private long checkLoopTime = CHECK_LOOP_TIME;
 	
+
 	private Map<String,TopicItem> items = new HashMap<>();
 
 	/**
@@ -105,7 +108,7 @@ public class Requester implements Consumer<IPacket> {
 				return;
 
 			TopicItem ai = (TopicItem) AbstractItem.fromPacket(pp);
-			System.out.println("Got request for "+ai.getTopic());
+			//System.out.println("REQUESTER: Got reply for "+ai.getTopic());
 			items.put(ai.getTopic(), ai);
 		}
 	}
@@ -120,16 +123,25 @@ public class Requester implements Consumer<IPacket> {
 		t.start();
 	}
 
+	/**
+	 * Set time between repeated requests for items.
+	 * @param checkLoopTime Time in milliseconds.
+	 */
+	public void setCheckLoopTime(long checkLoopTime) {		this.checkLoopTime = checkLoopTime;	}
+	public long getCheckLoopTime() {		return checkLoopTime;	}
+
+	
 
 	private Runnable makeLoopRunnable() {
 		return new Runnable() {
+
 			@Override
 			public void run() {
 				while(true)
 				{
 					try {
 						// Re-request once a minute
-						Thread.sleep(CHECK_LOOP_TIME);
+						Thread.sleep( checkLoopTime );
 						loop();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -208,6 +220,7 @@ public class Requester implements Consumer<IPacket> {
 
 		while(true)
 		{
+			//System.out.print("Wait 4 all loop");
 			/*
 			Set<String> e = getAllEmpty();
 			if( e.size() == 0 )
@@ -222,7 +235,8 @@ public class Requester implements Consumer<IPacket> {
 				return false;
 
 			try {
-				Thread.sleep(CHECK_LOOP_TIME/2); // TODO sleep on cond signalled in recv for shorter time
+				//Thread.sleep(CHECK_LOOP_TIME/2); // TODO sleep on cond signalled in recv for shorter time
+				Thread.sleep(timeoutMsec/5);
 			} catch (InterruptedException e1) {
 				// Ignore
 			}

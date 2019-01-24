@@ -41,6 +41,8 @@ public class Provider implements Consumer<IPacket> {
 
 	@Override
 	public void accept(IPacket t) {
+		//System.out.println("Got packet "+t);
+
 		if( !(t instanceof SubscribePacket) ) 
 			return;
 
@@ -49,7 +51,7 @@ public class Provider implements Consumer<IPacket> {
 		if( !items.containsKey(sp.getTopic()) )
 			return;
 
-		System.out.println("Got request for "+sp.getTopic());
+		//System.out.println("PROVIDER: Got request for "+sp.getTopic());
 		
 		TopicItem it = items.get(sp.getTopic());
 		
