@@ -116,6 +116,8 @@ device settings.
 
 Please see Java ``config.Provider`` and ``config.Requester`` classes for further info.
 
+There is also a ready simple remote configuration server in ``tools/config_server``.
+
 Topic request
 ^^^^^^^^^^^^^
 
@@ -1161,11 +1163,25 @@ CCU825 GSM Controller
 There is a connector for a CCU825 controller in a `separate repository <https://github.com/dzavalishin/ccu825modbus>`_.
 
 
-Scripts
--------
+Programs
+--------
 
-There are Python scripts I made to help myself testing MQTT/UDP library. Some of them are written in C and Lua too
+There are some programs and scripts made to help testing MQTT/UDP library. Some of them are written in C and Java
 but most exist just in Python version.
+
+
+C programs
+^^^^^^^^^^
+
+* **mqtt_udp_clock** - sends date and time value to network once a minute. Can be used to set
+  clock in IoT/smarthome peripheral devices. NB! Use SNTP if you need high accuracy. 
+
+
+Java programs
+^^^^^^^^^^^^^
+
+* **tools/config_server** - simple remote configuration server. See corresponding README for details.
+
 
 Python programs
 ^^^^^^^^^^^^^^^
@@ -1176,15 +1192,6 @@ Python programs
 * **subscribe.py** - send subscribe request.
 * **seq_storm_send.py** - send sequential data with no speed limit (use -s to set limit, though).
 * **seq_storm_check.py** - check traffic sent by *seq_storm_send.py* and calculate speed and error rate.
-
-
-C programs
-^^^^^^^^^^
-
-* **mqtt_udp_clock** - sends date and time value to network once a minute. Can be used to set
-   clock in IoT/smarthome peripheral devices. NB! Use SNTP if you need high accuracy. 
-
-
 
 
 
