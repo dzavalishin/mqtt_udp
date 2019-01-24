@@ -347,9 +347,14 @@ One more special thing I'm going to use is **$META** topic name suffix. It will 
 For example, if we have **kitchen/temperature** topic, then **kitchen/temperature/$META/name** can be used to pass printable
 topic name, and **kitchen/temperature/$META/unit** - to send measuring unit name.
 
+
+
 API Reference
 =============
 
+MQTT/UDP is implemented in five languages, but implementations differ. Most 
+complete and fast developing are Java and Python versions. Others
+follow a bit later. Please see `map of languages and features <https://github.com/dzavalishin/mqtt_udp/wiki/Features-and-languages-map>`_ on a project Wiki.
 
 .. _c-lang-api:
 
