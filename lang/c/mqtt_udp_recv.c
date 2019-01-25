@@ -15,8 +15,8 @@
 #include "config.h"
 
 #include <string.h>
-// TODO Just for perror(), remove it and use user error callback!
-#include <stdio.h>
+// Just for perror(), remove it and use user error callback!
+//#include <stdio.h>
 
 #include "mqtt_udp.h"
 

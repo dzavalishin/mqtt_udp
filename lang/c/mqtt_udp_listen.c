@@ -32,7 +32,8 @@ int main(int argc, char *argv[])
     int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
     if( rc ) {
         printf("mqtt_udp_recv_loop() = %d", rc);
-        perror("error");
+        //perror("error");
+        mqtt_udp_global_error_handler( rc, "recv_loop error", 0 );
         exit(1);
     }
 
