@@ -49,7 +49,9 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     const char *pstart = pkt;
 
 
-    if( plen <= 2 )        return -1;
+    //if( plen <= 2 )
+    if( plen < 2 )
+        return mqtt_udp_global_error_handler( MQ_Err_Proto, -1, "packet len < 2", "" );
 
     mqtt_udp_clear_pkt( &o );
 
@@ -62,7 +64,8 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
     o.total = mqtt_udp_decode_size( &pkt );
 
-    if( o.total+2 > plen )        return -2;
+    if( o.total+2 > plen )        
+        return mqtt_udp_global_error_handler( MQ_Err_Proto, -2, "packet too short", "" );
 
     //const char *end_hdr = pkt; // end of header, start of payload
     const char *ttrs_start = pkt+o.total; // end of payload, start of TTRs
@@ -98,10 +101,10 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     pkt += 2;
 
     if( tlen > MAX_SZ )
-        return -3;
+        return mqtt_udp_global_error_handler( MQ_Err_Proto, -3, "packet too long", "" );
 
     if( CHEWED + tlen > o.total + 2 )
-        return -4;
+        return mqtt_udp_global_error_handler( MQ_Err_Proto, -4, "packet topic len > pkt len", "" );
 
     o.topic = malloc( tlen+2 );
     if( o.topic == 0 ) return ENOMEM;
@@ -113,7 +116,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
     size_t vlen = o.total - CHEWED + 2;
     if( vlen > MAX_SZ )
-        return -5;
+        return mqtt_udp_global_error_handler( MQ_Err_Proto, -5, "packet value len > pkt len", "" );
 
     // Packet with value?
     if( o.ptype != PTYPE_PUBLISH )
@@ -124,7 +127,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     if( o.value == 0 )
     {
         free( o.topic );
-        return ENOMEM;
+        return mqtt_udp_global_error_handler( MQ_Err_Other, ENOMEM, "out of memory", "" );;
     }
     strlcpy( o.value, pkt, vlen );
     o.value_len = strnlen( o.value, MAX_SZ );
@@ -145,7 +148,7 @@ parse_ttrs:
 
         if( ttr_len <= 0 )
         {
-            err = -6;
+            err = mqtt_udp_global_error_handler( MQ_Err_Proto, -6, "TTR len < 0", "" );
             goto cleanup;
         }
 
@@ -158,7 +161,7 @@ parse_ttrs:
 
         if( ttrs_len < 0 )
         {
-            err = -6;
+            err = mqtt_udp_global_error_handler( MQ_Err_Proto, -6, "TTRs len < 0", "" );
             goto cleanup;
         }
     }
