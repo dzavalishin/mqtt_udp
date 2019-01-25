@@ -111,13 +111,31 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 
 
-
-
 // --------------------------------------------------------------------------
 //
-// Was in local.h, NOT TO BE USED outside of lib code
+// Error handling
 //
 // --------------------------------------------------------------------------
+
+typedef void err_func_t( int , char * , char * );
+
+void mqtt_udp_set_error_handler( err_func_t *handler );
+
+
+
+
+
+
+// ==========================================================================
+// --------------------------------------------------------------------------
+//
+//       NB! All the stuff below NOT TO BE USED outside of lib code
+//
+// --------------------------------------------------------------------------
+// ==========================================================================
+
+
+
 
 int mqtt_udp_socket(void);
 int mqtt_udp_bind( int fd ); // prepare to receive data
@@ -162,6 +180,16 @@ void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p );
 int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size_t *out_len );
 int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_pkt callback );
 
+// --------------------------------------------------------------------------
+//
+// Error handling
+//
+// --------------------------------------------------------------------------
+
+
+
+void mqtt_udp_global_error_handler( int errno, char *msg, char *arg );
+
 
 // --------------------------------------------------------------------------
 //
@@ -175,8 +203,10 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 #define MQTT_UDP_FLAGS_HAS_QOS2(pflags)  ((pflags) & 0x4)
 #define MQTT_UDP_FLAGS_HAS_DUP(pflags)  ((pflags) & 0x8)
 
+// NB! MQTT/UDP does not use variable header == ID field
+//
 // Flags field has bits which tell us to use packet id field
-#define MQTT_UDP_FLAGS_HAS_ID(pflags)  ((pflags) & 0x6)
+//#define MQTT_UDP_FLAGS_HAS_ID(pflags)  ((pflags) & 0x6)
 
 
 #define MQTT_UDP_FLAGS_SET_RETAIN(pflags)  ((pflags) |= 0x1)

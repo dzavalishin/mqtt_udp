@@ -37,3 +37,39 @@ void mqtt_udp_dump( const char *buf, size_t len )
     printf("\n");
 }
 
+
+
+
+typedef void err_func_t( int , char * , char * );
+
+static err_func_t *user_error_handler = 0;
+
+
+void mqtt_udp_set_error_handler( err_func_t *handler )
+{
+    user_error_handler = handler;
+}
+
+void mqtt_udp_global_error_handler( int errno, char *msg, char *arg )
+{
+    if( user_error_handler )
+    {
+        user_error_handler( errno, msg, arg );
+        return;
+    }
+
+    if( arg == 0 ) arg = "";
+
+    if( errno )
+        printf("%s%s, errno = %d\n", msg, arg, errno );
+    else
+        printf("%s%s\n", msg, arg );
+
+}
+
+
+
+
+
+
+

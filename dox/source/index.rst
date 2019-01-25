@@ -541,7 +541,8 @@ Default implementation uses POSIX API to communicate with network, but for
 embedded use you can redefine corresponding functions. Here are things to 
 reimplement.
 
-Receive UDP packet. Must return sender's address in ``src_ip_addr``::
+Receive UDP packet. Returning value is number of bytes in packet received or
+negative error code. Must return sender's address in ``src_ip_addr``::
 
     int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr );
 

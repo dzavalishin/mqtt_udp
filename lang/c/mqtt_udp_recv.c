@@ -39,13 +39,15 @@ int mqtt_udp_recv( int fd, process_pkt callback )
 
     memset(buf, 0, sizeof(buf));
     rc = mqtt_udp_recv_pkt( fd, buf, PKT_BUF_SIZE, &src_ip );
-    if(rc)
+    if(rc < 0)
     {
-        perror("pkt recv");
+        //perror("pkt recv");
+        mqtt_udp_global_error_handler( rc, "packet recv error", "" );
         return rc;
     }
 
-    rc = mqtt_udp_parse_any_pkt( buf, PKT_BUF_SIZE, src_ip, callback );
+    //rc = mqtt_udp_parse_any_pkt( buf, PKT_BUF_SIZE, src_ip, callback );
+    rc = mqtt_udp_parse_any_pkt( buf, rc, src_ip, callback );
     //if(rc) printf("err %d mqtt_udp_parse_any_pkt\n", rc );
     return rc;
 }

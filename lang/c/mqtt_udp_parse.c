@@ -22,7 +22,7 @@
 #include "mqtt_udp.h"
 
 
-static size_t mqtt_udp_decode_size( char **pkt );
+static size_t mqtt_udp_decode_size( const char **pkt );
 static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
 
@@ -43,6 +43,8 @@ static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
 int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_pkt callback )
 {
+    int err = 0;
+
     struct mqtt_udp_pkt o;
     const char *pstart = pkt;
 
@@ -58,11 +60,15 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     o.ptype &= 0xF0;
 
 
-    o.total = mqtt_udp_decode_size( (char **)&pkt );
+    o.total = mqtt_udp_decode_size( &pkt );
 
     if( o.total+2 > plen )        return -2;
 
-    //if( MQTT_UDP_PKT_HAS_ID(o) )
+    //const char *end_hdr = pkt; // end of header, start of payload
+    const char *ttrs_start = pkt+o.total; // end of payload, start of TTRs
+
+    // NB! MQTT/UDP does not use variable header == ID field
+    /*
     if(MQTT_UDP_FLAGS_HAS_ID(o.pflags))
     {
         o.pkt_id = (pkt[0] << 8) | pkt[1];
@@ -71,12 +77,13 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     }
     else
         o.pkt_id = 0;
-
+    */
 
     o.topic = o.value = 0;
     o.topic_len = o.value_len = 0;
 
 
+    // Packets with topic?
     switch( o.ptype )
     {
     case PTYPE_SUBSCRIBE:
@@ -84,7 +91,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
         break;
 
     default:
-        goto done;
+        goto parse_ttrs;
     }
 
     size_t tlen = mqtt_udp_decode_topic_len( pkt );
@@ -108,8 +115,9 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     if( vlen > MAX_SZ )
         return -5;
 
+    // Packet with value?
     if( o.ptype != PTYPE_PUBLISH )
-        goto done;
+        goto parse_ttrs;
 
     vlen++; // strlcpy needs place for zero
     o.value = malloc( tlen+2 );
@@ -121,15 +129,49 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     strlcpy( o.value, pkt, vlen );
     o.value_len = strnlen( o.value, MAX_SZ );
 
-done:
+parse_ttrs:
+    ;
+    const char *ttrs = ttrs_start;
+    int ttrs_len = plen - (ttrs-pstart);
+
+    //printf("TTRs  len=%d, plen=%d\n", ttrs_len, plen );
+
+    while( ttrs_len > 0 )
+    {
+        const char *ttr_start = ttrs;
+
+        char ttr_type = *ttrs++;
+        int  ttr_len = mqtt_udp_decode_size( &ttrs );
+
+        if( ttr_len <= 0 )
+        {
+            err = -6;
+            goto cleanup;
+        }
+
+        //printf("TTR type = %c 0x%X len=%d\n", ttr_type, ttr_type, ttr_len );
+
+        ttrs_len -= ttrs - ttr_start; // type & len fields
+        ttrs_len -= ttr_len;          // TTR data
+
+        ttrs += ttr_len;
+
+        if( ttrs_len < 0 )
+        {
+            err = -6;
+            goto cleanup;
+        }
+    }
+
 
     mqtt_udp_recv_reply( &o );
     callback( &o );
 
+cleanup:
     if( o.topic ) free( o.topic );
     if( o.value ) free( o.value );
 
-    return 0;
+    return err;
 }
 
 
@@ -137,7 +179,7 @@ done:
 
 
 
-static size_t mqtt_udp_decode_size( char **pkt )
+static size_t mqtt_udp_decode_size( const char **pkt )
 {
     size_t ret = 0;
 

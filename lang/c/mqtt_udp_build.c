@@ -69,8 +69,11 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
 
     // TODO incorrect
     int total = tlen + dlen + 2 + 2; // packet size
+
+    /* Not supported in MQTT/UDP
     //if( MQTT_UDP_PKT_HAS_ID(p) ) total += 2;
     if(MQTT_UDP_FLAGS_HAS_ID(p->pflags)) total += 2;
+    */
 
     if( total > blen )
         return ENOMEM;
@@ -83,6 +86,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
 
     bp += used;
 
+    /* Not supported in MQTT/UDP
     //if( MQTT_UDP_PKT_HAS_ID(p) )
     if(MQTT_UDP_FLAGS_HAS_ID(p->pflags))
     {
@@ -90,6 +94,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
         *bp++ = p->pkt_id & 0xFF;
         blen -= 2;
     }
+    */
 
     if( tlen )
     {

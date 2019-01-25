@@ -41,10 +41,10 @@ int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr )
     //memset(buf, 0, sizeof(buf));
     memset( buf, 0, buflen );
 
-    recvfrom(fd, buf, buflen, 0, (struct sockaddr *) &addr, &slen);
+    int rc = recvfrom(fd, buf, buflen, 0, (struct sockaddr *) &addr, &slen);
 
     if( src_ip_addr ) *src_ip_addr = ntohl( addr.sin_addr.s_addr );
 
-    return 0;
+    return rc;
 }
 
