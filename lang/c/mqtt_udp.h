@@ -117,7 +117,15 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 //
 // --------------------------------------------------------------------------
 
-typedef void err_func_t( int , char * , char * );
+typedef enum {
+    MQ_Err_Other,
+    MQ_Err_Establish,   // open socket
+    MQ_Err_IO,          // net io
+    MQ_Err_Proto,       // broken pkt
+    MQ_Err_Timeout,
+} mqtt_udp_err_t;
+
+typedef int err_func_t( mqtt_udp_err_t type, int err_no , char * msg, char * arg );
 
 void mqtt_udp_set_error_handler( err_func_t *handler );
 
@@ -187,8 +195,12 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 // --------------------------------------------------------------------------
 
 
+// Returns:
+//	rc - caller must return and report error if possible
+//      0  - caller must ignore and continue
+//      does not return at all if user decided that error is fatal
 
-void mqtt_udp_global_error_handler( int errno, char *msg, char *arg );
+int mqtt_udp_global_error_handler( mqtt_udp_err_t type, int err_no, char *msg, char *arg );
 
 
 // --------------------------------------------------------------------------

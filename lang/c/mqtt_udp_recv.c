@@ -42,7 +42,7 @@ int mqtt_udp_recv( int fd, process_pkt callback )
     if(rc < 0)
     {
         //perror("pkt recv");
-        mqtt_udp_global_error_handler( rc, "packet recv error", "" );
+        rc = mqtt_udp_global_error_handler( MQ_Err_IO, rc, "packet recv error", "" );
         return rc;
     }
 

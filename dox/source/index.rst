@@ -532,6 +532,30 @@ Set time between packets (msec), control maximum send speed::
 
     void mqtt_udp_set_throttle(int msec);
 
+
+Set callback to handle internal errors such as net IO error, can
+be used for logging::
+
+   typedef enum {
+       MQ_Err_Other,
+       MQ_Err_Establish,   // open socket
+       MQ_Err_IO,          // net io
+       MQ_Err_Proto,       // broken pkt
+       MQ_Err_Timeout,
+   } mqtt_udp_err_t;
+   
+   typedef int err_func_t( mqtt_udp_err_t type, int err_no , char * msg, char * arg );
+   
+   void mqtt_udp_set_error_handler( err_func_t *handler );
+
+User error handler can:
+
+* Return zero: caller must attempt to ignore error, if possible.
+* Return err_no: caller must return with error in turn, if possible.
+* Exit (or restart application completely) if error is supposed to be fatal.
+
+
+
 .. index:: single: UDP
 
 UDP IO interface

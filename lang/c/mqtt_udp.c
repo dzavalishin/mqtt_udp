@@ -42,7 +42,7 @@ int mqtt_udp_socket(void)
     if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
         //perror("socket");
-        mqtt_udp_global_error_handler( fd, "socket creation error", "" );
+        mqtt_udp_global_error_handler( MQ_Err_Establish, fd, "socket creation error", "" );
         //exit(1);
         return -1;
     }

@@ -40,7 +40,7 @@ void mqtt_udp_dump( const char *buf, size_t len )
 
 
 
-typedef void err_func_t( int , char * , char * );
+//typedef void err_func_t( int , char * , char * );
 
 static err_func_t *user_error_handler = 0;
 
@@ -50,21 +50,21 @@ void mqtt_udp_set_error_handler( err_func_t *handler )
     user_error_handler = handler;
 }
 
-void mqtt_udp_global_error_handler( int errno, char *msg, char *arg )
+int mqtt_udp_global_error_handler( mqtt_udp_err_t type, int err_no, char *msg, char *arg )
 {
     if( user_error_handler )
     {
-        user_error_handler( errno, msg, arg );
-        return;
+        return user_error_handler( type, err_no, msg, arg );
     }
 
     if( arg == 0 ) arg = "";
 
-    if( errno )
-        printf("%s%s, errno = %d\n", msg, arg, errno );
+    if( err_no )
+        printf("%s%s, err_no = %d\n", msg, arg, err_no );
     else
         printf("%s%s\n", msg, arg );
 
+    return err_no;
 }
 
 
