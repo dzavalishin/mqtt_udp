@@ -37,7 +37,7 @@
 #include "udp_io.h"
 
 
-static int last_socket = -1;
+//static int last_socket = -1;
 
 int mqtt_udp_socket(void)
 {

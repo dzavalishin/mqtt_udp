@@ -211,7 +211,7 @@ int mqtt_udp_global_error_handler( mqtt_udp_err_t type, int err_no, char *msg, c
 // --------------------------------------------------------------------------
 
 
-uint64_t mqtt_udp_arch_get_time_msec();
+uint64_t mqtt_udp_arch_get_time_msec( void );
 void  mqtt_udp_arch_sleep_msec( uint32_t msec );
 
 

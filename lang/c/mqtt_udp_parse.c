@@ -228,10 +228,10 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 
     printf( "pkt %s flags %x, id %d from %d.%d.%d.%d",
             tn, o->pflags, o->pkt_id,
-            0xFF & (o->from_ip >> 24),
-            0xFF & (o->from_ip >> 16),
-            0xFF & (o->from_ip >> 8),
-            0xFF & (o->from_ip)
+            (int)(0xFF & (o->from_ip >> 24)),
+            (int)(0xFF & (o->from_ip >> 16)),
+            (int)(0xFF & (o->from_ip >> 8)),
+            (int)(0xFF & (o->from_ip))
           );
 
     if( o->topic_len > 0 )
