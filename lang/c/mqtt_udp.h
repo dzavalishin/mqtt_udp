@@ -204,6 +204,16 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
 
 int mqtt_udp_global_error_handler( mqtt_udp_err_t type, int err_no, char *msg, char *arg );
 
+// --------------------------------------------------------------------------
+//
+// Machdep
+//
+// --------------------------------------------------------------------------
+
+
+uint64_t mqtt_udp_arch_get_time_msec();
+void  mqtt_udp_arch_sleep_msec( uint32_t msec );
+
 
 // --------------------------------------------------------------------------
 //

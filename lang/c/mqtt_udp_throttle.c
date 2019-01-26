@@ -14,8 +14,8 @@
 
 #include "config.h"
 
-#include <time.h>
-#include <unistd.h> // sleep()
+//#include <time.h>
+//#include <unistd.h> // sleep()
 
 #include "mqtt_udp.h"
 
@@ -30,14 +30,10 @@
 
 
 
-static long           last_send_time = 0;
-static volatile long  last_send_count = 0;
+static uint64_t           last_send_time = 0;
+static volatile uint64_t  last_send_count = 0;
 
 
-static long time_msec()
-{
-    return 1000L * time(0);
-}
 
 /**
  * up to 3 packets can be sent with no throttle
@@ -85,15 +81,15 @@ void mqtt_udp_throttle()
 
     // Let max_seq_packets come through with no pause.
 
-    long last_send_count_delta = ++last_send_count;
+    uint64_t last_send_count_delta = ++last_send_count;
     if( last_send_count_delta < max_seq_packets )
         return;
 
     last_send_count -= max_seq_packets; // eat out
 
-    long now = time_msec();
+    uint64_t now = mqtt_udp_arch_get_time_msec();
     //print( str(now) )
-    long since_last_pkt = now - last_send_time;
+    uint64_t since_last_pkt = now - last_send_time;
 
     if( last_send_time == 0 )
     {
@@ -103,7 +99,7 @@ void mqtt_udp_throttle()
 
     last_send_time = now;
 
-    long towait = max_seq_packets * throttle - since_last_pkt;
+    uint64_t towait = max_seq_packets * throttle - since_last_pkt;
 
     // print( str(towait) )
 
@@ -112,7 +108,8 @@ void mqtt_udp_throttle()
 
     // TODO autoconf me in
     //usleep(1000L*towait);
-    sleep(1);
+    //sleep(1);
+    //mqtt_udp_arch_sleep_msec( towait );
 
 }
 

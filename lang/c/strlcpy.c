@@ -1,7 +1,8 @@
 
 #ifndef HAVE_STRLCPY
-#include <sys/types.h>
+//#include <sys/types.h>
 #include <string.h>
+#include <stddef.h>
 
 /*
  * '_cups_strlcpy()' - Safely copy two strings.
