@@ -12,11 +12,11 @@
 
 #include "config.h"
 
-#include <sys/types.h>
+//#include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h>
+//#include <locale.h>
 #include <errno.h>
 
 #include "mqtt_udp.h"
@@ -76,7 +76,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
     */
 
     if( total > blen )
-        return ENOMEM;
+        return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
 
     //int size = total+1;
 
@@ -106,7 +106,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
         //NB! Must be UTF-8
         while( tlen-- > 0 )
         {
-            if( blen <= 0 ) return ENOMEM;
+            if( blen <= 0 ) return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
             *bp++ = *topic++;
             blen--;
         }
@@ -114,7 +114,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
         const char *data = p->value;
         while( dlen-- > 0 )
         {
-            if( blen <= 0 ) return ENOMEM;
+            if( blen <= 0 ) return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
             *bp++ = *data++;
             blen--;
         }
@@ -146,7 +146,7 @@ static int pack_len( char *buf, size_t *blen, int *used, int data_len )
     *used = 0;
     while( 1 )
     {
-        if( *blen <= 0 ) return ENOMEM;
+        if( *blen <= 0 ) return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
 
         int byte = data_len % 128;
         data_len /= 128;

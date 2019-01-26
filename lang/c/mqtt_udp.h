@@ -14,6 +14,7 @@
 #define MQTT_UDP_H
 
 #include <stdlib.h>
+#include <stdint.h>
 #include "mqtt_udp_defs.h"
 
 #ifdef __cplusplus
@@ -29,14 +30,14 @@ extern "C" {
 
 struct mqtt_udp_pkt
 {
-    int         from_ip;        // Sender IP address
+    uint32_t    from_ip;        // Sender IP address
 
     int         ptype;          // Upper 4 bits, not shifted
     int         pflags;         // Lower 4 bits
 
     size_t      total;   	// Length of the rest of pkt down from here
 
-    int         pkt_id;
+    uint32_t    pkt_id;
 
     size_t      topic_len;
     char *      topic;
@@ -119,6 +120,7 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 
 typedef enum {
     MQ_Err_Other,
+    MQ_Err_Memory,      // ENOMEM
     MQ_Err_Establish,   // open socket
     MQ_Err_IO,          // net io
     MQ_Err_Proto,       // broken pkt

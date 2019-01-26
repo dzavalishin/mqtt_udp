@@ -12,7 +12,7 @@
 
 #include "config.h"
 
-#include <sys/types.h>
+//#include <sys/types.h>
 #include <stdio.h>
 
 #include "mqtt_udp.h"

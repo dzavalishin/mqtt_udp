@@ -12,11 +12,11 @@
 
 #include "config.h"
 
-#include <sys/types.h>
+//#include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h>
+//#include <locale.h>
 #include <errno.h>
 
 #include "mqtt_udp.h"
@@ -107,7 +107,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
         return mqtt_udp_global_error_handler( MQ_Err_Proto, -4, "packet topic len > pkt len", "" );
 
     o.topic = malloc( tlen+2 );
-    if( o.topic == 0 ) return ENOMEM;
+    if( o.topic == 0 ) return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
     strlcpy( o.topic, pkt, tlen+1 );
     o.topic_len = strnlen( o.topic, MAX_SZ );
 
@@ -127,7 +127,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_p
     if( o.value == 0 )
     {
         free( o.topic );
-        return mqtt_udp_global_error_handler( MQ_Err_Other, ENOMEM, "out of memory", "" );;
+        return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
     }
     strlcpy( o.value, pkt, vlen );
     o.value_len = strnlen( o.value, MAX_SZ );

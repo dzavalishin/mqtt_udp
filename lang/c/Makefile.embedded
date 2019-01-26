@@ -1,37 +1,36 @@
-# @configure_input@
+# Makefile.  Generated from Makefile.in by configure.
 
-CFLAGS += @CFLAGS@
+CFLAGS += -g -O2
 # make dependencies files
 CFLAGS += -MD -MP 
-CC=@CC@
+CC=gcc
 #AR=@AR@
 AR=ar
-RANLIB=@RANLIB@
+RANLIB=ranlib
 
 # autoconf: 
-# @EXEEXT@ - executable file extension
+# .exe - executable file extension
 
 
 # Package-related substitution variables
 
-package        = @PACKAGE_NAME@
-version        = @PACKAGE_VERSION@
-tarname        = @PACKAGE_TARNAME@
+package        = MQTT-UDP-Library
+version        = 0.1
+tarname        = mqtt-udp-library
 distdir        = $(tarname)-$(version)
-prefix         = @prefix@
+prefix         = /usr/local
 
 LIB=libmqttudp.a
-LIBV=libmqttudp.@PACKAGE_VERSION@.a
+LIBV=libmqttudp.0.1.a
 
 goal:: all
 
-all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe
+all:: library
 
 build:: all
 	cp $(LIB) $(LIBV) ../../build
 
-run::
-	./mqtt_udp_sub
+
 
 clean::
 	-rm *.o *.d *.exe 
@@ -45,7 +44,7 @@ test:: all
 
 
 
-OBJS  = udp_open.o udp_send_pkt.o udp_recv_pkt.o 
+OBJS  = 
 OBJS += mqtt_udp.o mqtt_udp_util.o
 OBJS += mqtt_udp_parse.o mqtt_udp_build.o
 OBJS += mqtt_udp_send.o mqtt_udp_recv.o
@@ -71,6 +70,10 @@ mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
 
 mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
+
+mqtt_udp_clock: mqtt_udp_clock.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^
+
 
 -include $(exclude README.md, $(wildcard *.md))
 -include $(wildcard *.d)
