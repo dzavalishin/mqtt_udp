@@ -24,7 +24,7 @@ def recv_packet(ptype,topic,value,pflags,addr):
     if last.__contains__(topic) and last[topic] == value:
         return
     last[topic] = value
-    print( topic+"="+value )
+    print( topic+"="+value+ "\t\t" + str(addr) )
 
 
 
