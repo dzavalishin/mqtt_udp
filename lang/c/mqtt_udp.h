@@ -154,10 +154,10 @@ int mqtt_udp_bind( int fd ); // prepare to receive data
 int mqtt_udp_send_pkt( int fd, char *data, size_t len );
 
 // send packet to address
-int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
+int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, uint32_t ip_addr );
 
 // Low level packet recv
-int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr );
+int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, uint32_t *src_ip_addr );
 
 int mqtt_udp_get_send_fd( void ); // TODO hack, get fd to send datagrams
 
@@ -188,7 +188,7 @@ void mqtt_udp_recv_reply( struct mqtt_udp_pkt *pkt );
 
 void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p );
 int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size_t *out_len );
-int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_pkt callback );
+int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, process_pkt callback );
 
 // --------------------------------------------------------------------------
 //

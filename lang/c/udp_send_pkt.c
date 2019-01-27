@@ -49,7 +49,7 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
 }
 
 
-int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr )
+int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, uint32_t ip_addr )
 {
     struct sockaddr_in addr;
 

@@ -41,7 +41,7 @@ static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
 
 
-int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, int from_ip, process_pkt callback )
+int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, process_pkt callback )
 {
     int err = 0;
 

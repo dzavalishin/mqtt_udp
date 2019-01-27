@@ -27,7 +27,7 @@
 
 // TODO other OS bindings
 
-int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr )
+int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, uint32_t *src_ip_addr )
 {
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
