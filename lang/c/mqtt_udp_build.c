@@ -29,14 +29,6 @@ static int pack_len( char *buf, size_t *blen, int *used, int data_len );
 //static size_t mqtt_udp_decode_topic_len( const unsigned char *pkt );
 
 
-// -----------------------------------------------------------------------
-// Clear
-// -----------------------------------------------------------------------
-
-void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p )
-{
-    memset( p, 0, sizeof(struct mqtt_udp_pkt) );
-}
 
 // -----------------------------------------------------------------------
 // Build

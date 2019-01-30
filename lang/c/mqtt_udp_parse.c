@@ -173,8 +173,9 @@ parse_ttrs:
     callback( &o );
 
 cleanup:
-    if( o.topic ) free( o.topic );
-    if( o.value ) free( o.value );
+    //if( o.topic ) free( o.topic );
+    //if( o.value ) free( o.value );
+    mqtt_udp_free_pkt( &o );
 
     return err;
 }

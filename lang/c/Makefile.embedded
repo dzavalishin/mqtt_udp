@@ -25,6 +25,8 @@ prefix         = /usr/local
 LIB=libmqttudp.a
 LIBV=libmqttudp.0.1.a
 
+include makedefs
+
 goal:: all
 
 all:: library

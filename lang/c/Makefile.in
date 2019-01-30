@@ -25,6 +25,8 @@ prefix         = @prefix@
 LIB=libmqttudp.a
 LIBV=libmqttudp.@PACKAGE_VERSION@.a
 
+include makedefs
+
 goal:: all
 
 all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe
@@ -44,16 +46,6 @@ cleanall:: clean
 
 test:: all
 	$(MAKE) -C test test
-
-
-
-OBJS  = udp_open.o udp_send_pkt.o udp_recv_pkt.o arch_time.o
-OBJS += mqtt_udp.o mqtt_udp_util.o
-OBJS += mqtt_udp_parse.o mqtt_udp_build.o
-OBJS += mqtt_udp_send.o mqtt_udp_recv.o
-OBJS += mqtt_udp_match.o mqtt_udp_throttle.o
-OBJS += strlcat.o strlcpy.o
-
 
 library:: libmqttudp.a
 
