@@ -3,6 +3,7 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
+
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
  *
@@ -70,7 +71,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
     //const char *end_hdr = pkt; // end of header, start of payload
     const char *ttrs_start = pkt+o.total; // end of payload, start of TTRs
 
-    // NB! MQTT/UDP does not use variable header == ID field
+    // NB! MQTT/UDP does not use variable header (ID) field
     /*
     if(MQTT_UDP_FLAGS_HAS_ID(o.pflags))
     {
@@ -123,7 +124,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
         goto parse_ttrs;
 
     vlen++; // strlcpy needs place for zero
-    o.value = malloc( tlen+2 );
+    o.value = malloc( vlen+2 );
     if( o.value == 0 )
     {
         free( o.topic );
@@ -134,6 +135,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
 
 parse_ttrs:
     ;
+#if 1
     const char *ttrs = ttrs_start;
     int ttrs_len = plen - (ttrs-pstart);
 
@@ -165,7 +167,7 @@ parse_ttrs:
             goto cleanup;
         }
     }
-
+#endif
 
     mqtt_udp_recv_reply( &o );
     callback( &o );
@@ -226,8 +228,8 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 {
     const char *tn = ptname[ o->ptype >> 4 ];
 
-    printf( "pkt %s flags %x, id %d from %d.%d.%d.%d",
-            tn, o->pflags, o->pkt_id,
+    printf( "pkt %s flags %x, id %ld from %d.%d.%d.%d",
+            tn, o->pflags, (long)o->pkt_id,
             (int)(0xFF & (o->from_ip >> 24)),
             (int)(0xFF & (o->from_ip >> 16)),
             (int)(0xFF & (o->from_ip >> 8)),
