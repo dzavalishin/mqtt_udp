@@ -1,5 +1,7 @@
 # Makefile.  Generated from Makefile.in by configure.
 
+.SILENT:
+
 CFLAGS += -g -O2
 # make dependencies files
 CFLAGS += -MD -MP 
@@ -33,7 +35,7 @@ build:: all
 
 
 clean::
-	-rm *.o *.d *.exe 
+	-rm *.o *.d *.exe *~
 
 cleanall:: clean
 	-rm autom4te.cache/* config.h config.status config.log $(LIB)
@@ -42,6 +44,9 @@ cleanall:: clean
 test:: all
 	$(MAKE) -C test test
 
+
+install:: library
+	cp $(LIB) mqtt_udp.h mqtt_udp_defs.h  P:/smart-home-devices/mmnet_mqt_udp_server/mqtt_udp 
 
 
 OBJS  = 

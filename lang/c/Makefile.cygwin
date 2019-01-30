@@ -32,7 +32,7 @@ run::
 	./mqtt_udp_sub
 
 clean::
-	-rm *.o *.exe
+	-rm *.o *.d *.exe *~
 
 OBJS  = udp_open.o udp_send_pkt.o udp_recv_pkt.o arch_time.o
 OBJS += mqtt_udp.o mqtt_udp_util.o
