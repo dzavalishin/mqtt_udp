@@ -1,0 +1,4 @@
+# fill in local settings and rename to Makefile.glue.local
+
+#CFLAGS += -IP:/ethernut-5.1-mmnet01/nut/include 
+#CFLAGS += -IP:/ethernut-5.1-mmnet01/nutbld/include 

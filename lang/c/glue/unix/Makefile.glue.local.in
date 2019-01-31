@@ -1,0 +1,4 @@
+# fill in local settings and rename to Makefile.glue.local
+
+
+# for unix you don't have to do it, cd ../.. and run ./configure instead

@@ -1,0 +1,7 @@
+CFLAGS += -g -O2
+# make dependencies files
+CFLAGS += -MD -MP 
+CC=gcc
+#AR=@AR@
+AR=ar
+RANLIB=ranlib

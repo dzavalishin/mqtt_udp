@@ -1,0 +1,7 @@
+CFLAGS += -g -O2 -mmcu=atmega128 -Os -ffunction-sections -fno-delete-null-pointer-checks -Wall -Wstrict-prototypes
+# make dependencies files
+CFLAGS += -MD -MP 
+CC=avr-gcc
+#AR=@AR@
+AR=ar
+RANLIB=ranlib
