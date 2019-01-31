@@ -37,6 +37,7 @@ conv_version::
 	echo "" > conv_version 
 	echo "id(PACKAGE_VERSION_MAJOR,$(VER_MAJOR))" >> conv_version 
 	echo "id(PACKAGE_VERSION_MINOR,$(VER_MINOR))" >> conv_version 
+	echo "$(VER_MAJOR).$(VER_MINOR).$(SUB_MINOR)" > version 
 
 
 $(FN).java: $(IN)  inc_txt2java/* makefile

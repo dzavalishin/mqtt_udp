@@ -28,12 +28,23 @@
 
   mqtt_udp_pub.c		- publish MQTT/UDP message to all the listeners
 
+  mqtt_udp_subscribe.c  - send subscribe message
+
 
 ## Build instructions
 
 
 On most systems do './configure && make'
 If you have no autoconf tools try 'make -f Makefile.cygwin' or tailor it to your needs
+
+
+There are target architecture/os dependent subdirs (arch and glue), if you want to 
+support any other CPU or OS binding, please create arch/{name-of-your-architecture}
+and glue/{name-of-your-os} subdirs and add corresponding makefile and glue code
+sources.
+
+To build for non-default arch and not for Unix, type ```make ARCH=your-arch GLUE=your-os```
+command. For example, ```make ARCH=atmega GLUE=nutos```.
 
 ## Usage
 

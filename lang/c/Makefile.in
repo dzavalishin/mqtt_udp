@@ -28,13 +28,15 @@ vpath %.c glue/$(GLUE)
 # Package-related substitution variables
 
 package        = @PACKAGE_NAME@
-version        = @PACKAGE_VERSION@
+#version        = @PACKAGE_VERSION@
 tarname        = @PACKAGE_TARNAME@
 distdir        = $(tarname)-$(version)
 prefix         = @prefix@
 
+version        = $(file < ../../common/defs/version)
+
 LIB=libmqttudp.a
-LIBV=libmqttudp.@PACKAGE_VERSION@.a
+LIBV=libmqttudp.$(ARCH).$(GLUE).$(version).a
 
 include makedefs
 

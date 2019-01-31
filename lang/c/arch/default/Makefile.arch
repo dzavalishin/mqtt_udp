@@ -1,3 +1,5 @@
+# arch/default/Makefile.arch.  Generated from Makefile.arch.in by configure.
+
 CFLAGS += -g -O2
 # make dependencies files
 CFLAGS += -MD -MP 
