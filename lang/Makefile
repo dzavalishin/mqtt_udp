@@ -28,9 +28,10 @@ $(SUBDIRS):
 
 .PHONY: $(TOPTARGETS) $(SUBDIRS)
 	
-c/.:: c/Makefile
+c/.:: c/arch/default/Makefile.arch
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 	
 
-c/Makefile: c/Makefile.in
+c/arch/default/Makefile.arch: c/arch/default/Makefile.arch.in
 	cd c ; sh configure
+ 
