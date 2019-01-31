@@ -90,10 +90,9 @@ lang/c/autom4te.cache/output.0
 dox/build/
 
 lang/c/*.d
-lang/c/config.h
+lang/c/arch/default/config.h
 lang/c/config.log
 lang/c/config.status
-lang/c/Makefile
 lang/c/mqtt_udp_pub
 lang/c/mqtt_udp_sub
 
