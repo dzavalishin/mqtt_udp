@@ -12,12 +12,12 @@
 **/
 
 
-#include "config.h"
+#include "../../config.h"
 
 #include <time.h>
 #include <unistd.h> // sleep()
 
-#include "mqtt_udp.h"
+#include "../../mqtt_udp.h"
 
 
 uint64_t mqtt_udp_arch_get_time_msec()

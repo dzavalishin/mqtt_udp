@@ -25,5 +25,5 @@ AC_TYPE_SSIZE_T
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([memset socket strlcpy])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile arch/default/Makefile.arch])
 AC_OUTPUT

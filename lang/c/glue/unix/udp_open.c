@@ -21,7 +21,7 @@
 */
 
 
-#include "config.h"
+#include "../../config.h"
 
 #include <sys/types.h>
 #include <string.h>
@@ -33,7 +33,7 @@
 #include <errno.h>
 
 
-#include "mqtt_udp.h"
+#include "../../mqtt_udp.h"
 #include "udp_io.h"
 
 

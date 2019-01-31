@@ -1,14 +1,25 @@
 # @configure_input@
 
-.SILENT:
+#.SILENT:
 
-CFLAGS += @CFLAGS@
-# make dependencies files
-CFLAGS += -MD -MP 
-CC=@CC@
-#AR=@AR@
-AR=ar
-RANLIB=@RANLIB@
+#
+# ARCH defines target architecture (actually programs to compile)
+# GLUE defines integration code to connect to tagret OS/monitor
+#
+# For example: make ARCH=atmega GLUE=nutos
+#
+# See `arch` and `glue` subdirs for variants
+#
+# Modify glue/$(GLUE)/Makefile.glue.local for your local paths to includes or whatever
+#
+ARCH=default
+GLUE=unix
+
+include arch/$(ARCH)/Makefile.arch
+include glue/$(GLUE)/Makefile.glue
+-include glue/$(GLUE)/Makefile.glue.local
+
+vpath %.c glue/$(GLUE)
 
 # autoconf: 
 # @EXEEXT@ - executable file extension
@@ -29,13 +40,21 @@ include makedefs
 
 goal:: all
 
-all:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe
+all:: library 
 
-build:: all
-	cp $(LIB) $(LIBV) ../../build
+ifeq ($(GLUE),unix)
+
+all:: programs
+
+programs:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe
 
 run::
 	./mqtt_udp_sub
+
+endif
+
+build:: all
+	cp $(LIB) $(LIBV) ../../build
 
 clean::
 	-rm *.o *.d *.exe *~
@@ -47,12 +66,14 @@ cleanall:: clean
 test:: all
 	$(MAKE) -C test test
 
-library:: libmqttudp.a
+library:: $(LIB) $(LIBV)
 
-$(LIB): $(OBJS)
+$(LIB) $(LIBV): $(OBJS)
 	$(AR) rc $@ $(OBJS)
 	$(RANLIB) $@
 	cp $@ $(LIBV)
+
+ifeq ($(GLUE),unix)
 
 mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
@@ -65,6 +86,8 @@ mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
 
 mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^
+
+endif
 
 -include $(exclude README.md, $(wildcard *.md))
 -include $(wildcard *.d)
