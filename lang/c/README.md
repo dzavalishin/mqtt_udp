@@ -46,6 +46,12 @@ sources.
 To build for non-default arch and not for Unix, type ```make ARCH=your-arch GLUE=your-os```
 command. For example, ```make ARCH=atmega GLUE=nutos```.
 
+### Known arch & glue
+
+ *      Unix/Cygwin: ```make```
+ *      Mingw: ```make GLUE=mignw```
+ *      Atmega, Nut/OS: ```make arch=atmega glue=nutos```
+
 ## Usage
 
 **Send data:**
