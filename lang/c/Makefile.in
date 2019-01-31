@@ -45,6 +45,15 @@ goal:: all
 all:: library 
 
 ifeq ($(GLUE),unix)
+BUILD_PROGRAMS := true
+endif
+
+ifeq ($(GLUE),mingw)
+BUILD_PROGRAMS := true
+endif
+
+
+ifeq ($(BUILD_PROGRAMS),true)
 
 all:: programs
 
@@ -70,24 +79,28 @@ test:: all
 
 library:: $(LIB) $(LIBV)
 
-$(LIB) $(LIBV): $(OBJS)
+$(LIBV): $(LIB)
+	cp $(LIB) $(LIBV)
+
+$(LIB): $(OBJS)
 	$(AR) rc $@ $(OBJS)
 	$(RANLIB) $@
-	cp $@ $(LIBV)
 
-ifeq ($(GLUE),unix)
+ifeq ($(BUILD_PROGRAMS),true)
+
+# GLUE_LIBS can be defined in glue
 
 mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
 mqtt_udp_sub: mqtt_udp_sub.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
 mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
 mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
 endif
 
