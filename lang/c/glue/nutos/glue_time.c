@@ -12,7 +12,8 @@
 **/
 
 
-#include "../../config.h"
+//#include "../../config.h"
+#include "config.h"
 #include "../../mqtt_udp.h"
 
 #include <sys/timer.h>

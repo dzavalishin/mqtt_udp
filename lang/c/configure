@@ -2142,8 +2142,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-ac_config_headers="$ac_config_headers config.h"
-
 
 # Checks for programs.
 ac_ext=c
@@ -3549,7 +3547,13 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile arch/default/Makefile.arch"
+
+ac_config_headers="$ac_config_headers arch/default/config.h"
+
+
+#AC_CONFIG_FILES([Makefile arch/default/Makefile.arch])
+ac_config_files="$ac_config_files arch/default/Makefile.arch"
+
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4241,8 +4245,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
-    "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
-    "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "arch/default/config.h") CONFIG_HEADERS="$CONFIG_HEADERS arch/default/config.h" ;;
     "arch/default/Makefile.arch") CONFIG_FILES="$CONFIG_FILES arch/default/Makefile.arch" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

@@ -12,7 +12,8 @@
 **/
 
 
-#include "../../config.h"
+//#include "../../config.h"
+#include "config.h"
 
 #include <time.h>
 #include <unistd.h> // sleep()

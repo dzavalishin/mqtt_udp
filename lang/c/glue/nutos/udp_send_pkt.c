@@ -3,14 +3,16 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
- * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
  *
  * Network connection - send UDP packet. To be rewritten per target OS.
  *
 **/
 
-#include "../../config.h"
+//#include "../../config.h"
+#include "config.h"
 #include "../../mqtt_udp.h"
 #include "udp_io.h"
 

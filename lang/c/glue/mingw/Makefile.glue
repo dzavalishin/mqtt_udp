@@ -2,3 +2,4 @@
 #CFLAGS += -lws2_32
 GLUE_LIBS := -lws2_32
 CC:=mingw32-gcc
+EXESUFFIX=.exe
