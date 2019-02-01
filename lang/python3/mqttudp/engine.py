@@ -156,9 +156,21 @@ def parse_packet(pkt):
         topic = str( pkt[2:topic_len+2], 'UTF-8' )
         value = str( pkt[topic_len+2:total_len], 'UTF-8' )
     
+        return "publish",topic,value,pflags
+
+    if ptype == defs.PTYPE_SUBSCRIBE:
+
+        # move up - all packets need it?
+
+        topic_len = (pkt[1] & 0xFF) | ((pkt[0] << 8) & 0xFF)   
+        topic = str( pkt[2:topic_len+2], 'UTF-8' )
+        # value = str( pkt[topic_len+2:total_len], 'UTF-8' )
+        value = ""
+    
         #TODO use total_len
     
-        return "publish",topic,value,pflags
+        return "subscribe",topic,value,pflags
+
 
     if ptype == defs.PTYPE_PINGREQ:
         return "pingreq","","",pflags
