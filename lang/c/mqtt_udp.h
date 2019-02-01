@@ -167,6 +167,10 @@ int mqtt_udp_close_fd( int fd );
 void mqtt_udp_throttle( void );
 
 
+// Additional subsystems use to snoop for incoming packets
+// Listener returns 0 if it is ok to pass packet to next listeners, non-zero to consume.
+void mqtt_udp_add_packet_listener( process_pkt listener );
+
 // --------------------------------------------------------------------------
 //
 // Defauli packet processor, called before user callback and replies according

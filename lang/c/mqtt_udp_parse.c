@@ -26,6 +26,8 @@
 static size_t mqtt_udp_decode_size( const char **pkt );
 static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
+static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt );
+
 
 // -----------------------------------------------------------------------
 // parse
@@ -179,6 +181,50 @@ cleanup:
 
     return err;
 }
+
+
+
+
+
+
+
+
+
+
+struct listeners_list {
+    struct listeners_list *next;
+    process_pkt listener;
+};
+
+static struct listeners_list * listeners = 0;
+
+void mqtt_udp_add_packet_listener( process_pkt listener )
+{
+    struct listeners_list * lp = malloc( sizeof( struct listeners_list ) );
+
+    lp->next = listeners;
+    lp->listener = listener;
+
+    listeners = lp;
+}
+
+static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt )
+{
+    struct listeners_list * lp;
+    for( lp = listeners ; lp ; lp = lp->next )
+    {
+        //process_pkt listener = lp->listener;
+        //int rc = listener( pkt );
+
+        int rc = lp->listener( pkt );
+
+        //if( rc ) break;
+    }
+}
+
+
+
+
 
 
 
