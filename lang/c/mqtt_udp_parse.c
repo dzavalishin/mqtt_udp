@@ -172,6 +172,7 @@ parse_ttrs:
 #endif
 
     mqtt_udp_recv_reply( &o );
+    mqtt_udp_call_packet_listeners( &o );
     callback( &o );
 
 cleanup:
@@ -198,6 +199,8 @@ struct listeners_list {
 
 static struct listeners_list * listeners = 0;
 
+// Register one more listener to get incoming packets.
+// Used by mqtt_udp lib itself to connect subsystems
 void mqtt_udp_add_packet_listener( process_pkt listener )
 {
     struct listeners_list * lp = malloc( sizeof( struct listeners_list ) );
@@ -208,16 +211,13 @@ void mqtt_udp_add_packet_listener( process_pkt listener )
     listeners = lp;
 }
 
+// Pass packet to all listeners
 static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt )
 {
     struct listeners_list * lp;
     for( lp = listeners ; lp ; lp = lp->next )
     {
-        //process_pkt listener = lp->listener;
-        //int rc = listener( pkt );
-
         int rc = lp->listener( pkt );
-
         //if( rc ) break;
     }
 }

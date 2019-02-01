@@ -133,6 +133,51 @@ void mqtt_udp_set_error_handler( err_func_t *handler );
 
 
 
+// --------------------------------------------------------------------------
+//
+// Remote config
+//
+// Passive remote config - device keeps configuration
+// in local storage, external utility asks for a list
+// of parameters to set up and sends new parameter values.
+// Device writes them down and uses as settings.
+//
+// --------------------------------------------------------------------------
+
+
+/// Types of configuration items
+typedef enum
+{
+    MQ_CFG_TYPE_BOOL,
+    MQ_CFG_TYPE_STRING,
+    MQ_CFG_TYPE_INT32,
+} mqtt_udp_rconfig_item_type_t;
+
+/// Value of configuration parameter
+typedef union
+{
+    int32_t     b;
+    char *      s; // will reallocate, must be malloc'ed
+    int32_t     i;
+    void *      o; // other
+} mqtt_udp_rconfig_item_value_t;
+
+/// Definition of configuration parameter
+typedef struct
+{
+    mqtt_udp_rconfig_item_type_t        type;
+    const char *                        name;  ///< Human readable name for this config parameter
+    const char *                        topic; ///< MQTT/UDP topic name for this config parameter
+    mqtt_udp_rconfig_item_value_t       value; ///< Current or default value
+
+} mqtt_udp_rconfig_item_t;
+
+
+/// User function called by rconfig to load and save configuration items from/to local storage
+typedef int (*mqtt_udp_rconfig_rw_callback)( int pos, int write );
+
+
+void mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_callback cb );
 
 
 
