@@ -25,6 +25,9 @@
 #include <string.h>
 
 
+#define SYS_CONF_PREFIX "$SYS/conf"
+
+
 static int rconfig_listener( struct mqtt_udp_pkt *pkt );
 
 static void rconfig_send_topic_list( void );
@@ -76,7 +79,7 @@ int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_c
         return mqtt_udp_global_error_handler( MQ_Err_Memory, -1, "out of mem for topic", rconfig_mac_address_string );
 
     //sprintf( topic_prefix, "$SYS/%s/conf/", rconfig_mac_address_string );
-    sprintf( topic_prefix, "$SYS/conf/%s/", rconfig_mac_address_string );
+    sprintf( topic_prefix, SYS_CONF_PREFIX "/%s/", rconfig_mac_address_string );
     
     //printf("topic_prefix_len %d len %d\n", topic_prefix_len, strlen(topic_prefix));
 
@@ -220,9 +223,8 @@ static void rconfig_send_topic_by_pos( int pos )
     const char *subtopic = rconfig_list[pos].topic;
 
     char topic[80];
-
     //snprintf( topic, sizeof(topic)-1, "$SYS/%s/conf/%s", rconfig_mac_address_string, subtopic );
-    sprintf( topic, "$SYS/conf/%s/%s", rconfig_mac_address_string, subtopic );
+    sprintf( topic, SYS_CONF_PREFIX "/%s/%s", rconfig_mac_address_string, subtopic );
 
     char *val = rconfig_list[pos].value.s;
 
