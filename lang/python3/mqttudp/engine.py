@@ -298,6 +298,8 @@ def make_subscribe_packet(topic):
     return packet
 
 def send_subscribe(topic):
+    if isinstance(topic, str):
+        topic = topic.encode()
     pkt = make_subscribe_packet(topic)
     throttle_me()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
