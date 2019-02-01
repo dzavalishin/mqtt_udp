@@ -75,7 +75,8 @@ int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_c
     if(topic_prefix == 0)
         return mqtt_udp_global_error_handler( MQ_Err_Memory, -1, "out of mem for topic", rconfig_mac_address_string );
 
-    sprintf( topic_prefix, "$SYS/%s/conf/", rconfig_mac_address_string );
+    //sprintf( topic_prefix, "$SYS/%s/conf/", rconfig_mac_address_string );
+    sprintf( topic_prefix, "$SYS/conf/%s/", rconfig_mac_address_string );
     
     //printf("topic_prefix_len %d len %d\n", topic_prefix_len, strlen(topic_prefix));
 
@@ -124,7 +125,7 @@ int mqtt_udp_rconfig_set_string( int pos, char *string )
 
 
 
-#define SYS_WILD "$SYS/#"
+//#define SYS_WILD "$SYS/#"
 /**
  * 
  * @brief Process incoming packets.
@@ -143,7 +144,13 @@ static int rconfig_listener( struct mqtt_udp_pkt *pkt )
     // Got request
     if( pkt->ptype == PTYPE_SUBSCRIBE )
     {
-        if( 0 == strcmp( pkt->topic, SYS_WILD ) ) { rconfig_send_topic_list(); return 0; }
+        // is `$SYS/#` or `$SYS/conf/#` or `$SYS/conf/{our MAC}/`
+        //if( 0 == strcmp( pkt->topic, SYS_WILD ) ) { rconfig_send_topic_list(); return 0; }
+        if( mqtt_udp_match( pkt->topic, topic_prefix ) ) 
+        { 
+            rconfig_send_topic_list(); 
+            return 0; 
+        }
 
         int pos = find_by_full_topic( pkt->topic );
         if( pos < 0 ) return 0;
@@ -215,7 +222,7 @@ static void rconfig_send_topic_by_pos( int pos )
     char topic[80];
 
     //snprintf( topic, sizeof(topic)-1, "$SYS/%s/conf/%s", rconfig_mac_address_string, subtopic );
-    sprintf( topic, "$SYS/%s/conf/%s", rconfig_mac_address_string, subtopic );
+    sprintf( topic, "$SYS/conf/%s/%s", rconfig_mac_address_string, subtopic );
 
     char *val = rconfig_list[pos].value.s;
 

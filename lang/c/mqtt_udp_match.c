@@ -21,6 +21,17 @@
 #define true 1
 #define false 0
 
+/**
+ * 
+ * @brief Compare topic name against wildcard or topic name.
+ * 
+ * @param in filter Topic name or wildcard to compare with.
+ * 
+ * @param in topicName Topic name to compare.
+ * 
+ * @return Non-zero if topicName matches filter.
+ * 
+**/
 int mqtt_udp_match( char *filter, char *topicName )
 {
 
