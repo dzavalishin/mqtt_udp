@@ -118,13 +118,15 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o );
 //
 // --------------------------------------------------------------------------
 
+/// Type of error
 typedef enum {
     MQ_Err_Other,
-    MQ_Err_Memory,      // ENOMEM
-    MQ_Err_Establish,   // open socket
-    MQ_Err_IO,          // net io
-    MQ_Err_Proto,       // broken pkt
+    MQ_Err_Memory,      ///< ENOMEM
+    MQ_Err_Establish,   ///< Unable to open socket or bind
+    MQ_Err_IO,          ///< Net io
+    MQ_Err_Proto,       ///< Broken packet
     MQ_Err_Timeout,
+    MQ_Err_Invalid,     ///< Invalid parameter value.
 } mqtt_udp_err_t;
 
 typedef int err_func_t( mqtt_udp_err_t type, int err_no , char * msg, char * arg );
@@ -153,6 +155,20 @@ typedef enum
     MQ_CFG_TYPE_INT32,
 } mqtt_udp_rconfig_item_type_t;
 
+/**
+ * Kinds of configuration items.
+ * 
+ * Used by host-faced code for internal processing.
+ * Does not affect network communications.
+**/
+typedef enum
+{
+    MQ_CFG_KIND_OTHER,
+    MQ_CFG_KIND_TOPIC,
+    //MQ_CFG_,
+} mqtt_udp_rconfig_inetm_kind_t;
+
+
 /// Value of configuration parameter
 typedef union
 {
@@ -166,6 +182,7 @@ typedef union
 typedef struct
 {
     mqtt_udp_rconfig_item_type_t        type;
+    mqtt_udp_rconfig_inetm_kind_t       kind;
     const char *                        name;  ///< Human readable name for this config parameter
     const char *                        topic; ///< MQTT/UDP topic name for this config parameter
     mqtt_udp_rconfig_item_value_t       value; ///< Current or default value
