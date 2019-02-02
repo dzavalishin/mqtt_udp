@@ -75,84 +75,26 @@ public interface IPacket {
 	        total_len <<= 7;
 	    }
 
-	    // total_len is length of classic MQTT packet's 
-	    // payload, not including type byte & length field 
+	    // total_len is length of classic MQTT packet's payload, 
+	    // not including type byte & length field 
 	    
 	    int recvLen = raw.length - headerEnd;
 	    
 	    // recvLen is all the packet size minus header
 	    
 	    Collection<TaggedTailRecord> ttrs = null;
+
+	    if( recvLen < total_len)
+	    	throw new MqttProtocolException("packet decoded size ("+total_len+") > packet length ("+recvLen+")");	    
 	    
 	    // We have bytes after classic MQTT packet, must be TTRs, decode 'em
 	    if(recvLen > total_len) 
 	    {
-	    	int tail_len = recvLen - total_len; // TTRs size 
-	    	byte [] ttrs_bytes = new byte[tail_len];
-	    	recvLen = total_len; // TODO why not just use total_len below? 
-
-	    	// Get a copy of all TTRs
-	    	System.arraycopy(raw, total_len+headerEnd, ttrs_bytes, 0, tail_len);
-	    	
-	    	// Decode them all, noting where signature TTR starts
-	    	AtomicReference<Integer> signaturePos = new AtomicReference<Integer>(-1);
-			ttrs = TaggedTailRecord.fromBytesAll(ttrs_bytes, signaturePos);
-			
-			/*{
-				for( TaggedTailRecord ttr : ttrs )
-					System.out.println(ttr);
-			}*/
-			
-			// If we have signature TTR in packet, check it
-			int sigPos = signaturePos.get();
-			
-			// We are in strict sig cjeck mode?
-			if( (sigPos < 0) && Engine.isSignatureRequired() )
-				throw new MqttProtocolException("Unsigned packet");
-
-			// Have signature - check it
-			if(sigPos >= 0)
-			{
-				// fromBytesAll() calcs signature position in ttrs_bytes, add preceding parts lengths
-				sigPos += total_len;
-				sigPos += headerEnd;
-				
-				// ------------------------------------------------------------
-				// We have signature in packet we got, and we know its position 
-				// in incoming packet. Calculate ours and check.
-				// ------------------------------------------------------------
-
-				// Copy out part of packet that is signed and must be checked
-				byte [] sig_check_bytes = new byte[sigPos];
-				System.arraycopy(raw, 0, sig_check_bytes, 0, sigPos);
-				
-				/*if(true)
-				{
-					byte[] our_signature = HMAC.hmacDigestMD5(sig_check_bytes, Engine.getSignatureKey());
-					ByteArray.dumpBytes("our", our_signature);
-				}*/
-				
-				// Look for the signature TTR
-				for( TaggedTailRecord ttr : ttrs )
-				{
-					if (ttr instanceof TTR_Signature) {
-						TTR_Signature ts = (TTR_Signature) ttr;
-
-						//ByteArray.dumpBytes("his", ts.getSignature());
-						boolean sigCorrect = ts.check(sig_check_bytes, Engine.getSignatureKey());
-						if(!sigCorrect)
-							throw new MqttProtocolException("Incorrect packet signature");
-						break;
-					}
-				}
-			}
+	    	ttrs = decodeTTRs(raw, total_len, headerEnd, recvLen);
 	    }
 	    
-	    if( recvLen < total_len)
-	    	throw new MqttProtocolException("packet decoded size ("+total_len+") > packet length ("+recvLen+")");
-	    
-	    byte[] sub = new byte[recvLen];	    
-	    System.arraycopy(raw, headerEnd, sub, 0, recvLen);
+	    byte[] sub = new byte[total_len];	    
+	    System.arraycopy(raw, headerEnd, sub, 0, total_len);
 	    
 	    int ptype = 0xF0 & (int)(raw[0]);
 	    int flags = 0x0F & (int)(raw[0]);
@@ -181,6 +123,71 @@ public interface IPacket {
 		}
 		
 		return p.applyTTRs(ttrs);
+	}
+
+	public static Collection<TaggedTailRecord> decodeTTRs(byte[] raw, int total_len, int headerEnd, int recvLen)
+			throws MqttProtocolException {
+		Collection<TaggedTailRecord> ttrs;
+		int tail_len = recvLen - total_len; // TTRs size 
+		byte [] ttrs_bytes = new byte[tail_len];
+		//recvLen = total_len; // TODO why not just use total_len below? 
+
+		// Get a copy of all TTRs
+		System.arraycopy(raw, total_len+headerEnd, ttrs_bytes, 0, tail_len);
+		
+		// Decode them all, noting where signature TTR starts
+		AtomicReference<Integer> signaturePos = new AtomicReference<Integer>(-1);
+		ttrs = TaggedTailRecord.fromBytesAll(ttrs_bytes, signaturePos);
+		
+		/*{
+			for( TaggedTailRecord ttr : ttrs )
+				System.out.println(ttr);
+		}*/
+		
+		// If we have signature TTR in packet, check it
+		int sigPos = signaturePos.get();
+		
+		// We are in strict sig cjeck mode?
+		if( (sigPos < 0) && Engine.isSignatureRequired() )
+			throw new MqttProtocolException("Unsigned packet");
+
+		// Have signature - check it
+		if(sigPos >= 0)
+		{
+			// fromBytesAll() calcs signature position in ttrs_bytes, add preceding parts lengths
+			sigPos += total_len;
+			sigPos += headerEnd;
+			
+			// ------------------------------------------------------------
+			// We have signature in packet we got, and we know its position 
+			// in incoming packet. Calculate ours and check.
+			// ------------------------------------------------------------
+
+			// Copy out part of packet that is signed and must be checked
+			byte [] sig_check_bytes = new byte[sigPos];
+			System.arraycopy(raw, 0, sig_check_bytes, 0, sigPos);
+			
+			/*if(true)
+			{
+				byte[] our_signature = HMAC.hmacDigestMD5(sig_check_bytes, Engine.getSignatureKey());
+				ByteArray.dumpBytes("our", our_signature);
+			}*/
+			
+			// Look for the signature TTR
+			for( TaggedTailRecord ttr : ttrs )
+			{
+				if (ttr instanceof TTR_Signature) {
+					TTR_Signature ts = (TTR_Signature) ttr;
+
+					//ByteArray.dumpBytes("his", ts.getSignature());
+					boolean sigCorrect = ts.check(sig_check_bytes, Engine.getSignatureKey());
+					if(!sigCorrect)
+						throw new MqttProtocolException("Incorrect packet signature");
+					break;
+				}
+			}
+		}
+		return ttrs;
 	}
 
 	

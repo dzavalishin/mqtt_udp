@@ -1,9 +1,7 @@
 package ru.dz.mqtt_udp.util;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 
-import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
 
 /**

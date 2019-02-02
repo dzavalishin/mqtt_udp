@@ -145,7 +145,7 @@ public class Main extends Application {
 			// setting the stage
 			primaryStage.setScene( scene );
 			primaryStage.setTitle( "MQTT/UDP Traffic Viewer" );			
-			primaryStage.setOnCloseRequest(e -> { Platform.exit(); System.exit(0);} );
+			primaryStage.setOnCloseRequest(e -> { Platform.exit(); System.exit(0);} ); // TODO daemonize worker threads & remove exit
 			//primaryStage.sizeToScene();
 			primaryStage.setHeight( screenSize.getHeight() - 100 ); // TODO hack, redo
 			primaryStage.show();

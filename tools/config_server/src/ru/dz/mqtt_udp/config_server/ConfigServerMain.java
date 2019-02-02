@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import ru.dz.mqtt_udp.IPacketMultiSource;
 import ru.dz.mqtt_udp.PacketSourceMultiServer;
 import ru.dz.mqtt_udp.config.Provider;
 
