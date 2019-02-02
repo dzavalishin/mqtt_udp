@@ -6,7 +6,8 @@
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
  *
- * Data reception example code
+ * @file
+ * @brief Example program: Message reception example code
  *
 **/
 

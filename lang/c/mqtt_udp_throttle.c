@@ -6,24 +6,22 @@
  *
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
- * Speed limit
+ * @file
+ * @brief Speed limit
  *
+ * Limits number of outgoing packets per time interval.
  *
 **/
 
 
 #include "config.h"
-
-//#include <time.h>
-//#include <unistd.h> // sleep()
-
 #include "mqtt_udp.h"
 
 /**
  *
  * NB!
  *
- * No sub-second timers are used. Therefore we calculate max_seq_packets dynamically
+ * In Unix no sub-second timers are used. Therefore we calculate max_seq_packets dynamically
  * to match one second interval.
  *
 **/
@@ -36,9 +34,9 @@ static volatile uint64_t  last_send_count = 0;
 
 
 /**
- * up to 3 packets can be sent with no throttle
+ * Up to 3 packets can be sent with no throttle
  * most devices have some buffer and we do not
- * want to calc time each send
+ * want to calc time each send.
  **/
 static int max_seq_packets = 10;
 
@@ -49,8 +47,11 @@ static int throttle = 100;
 
 
 /**
+ * 
  * Set packet send rate.
+ * 
  * @param msec average time in milliseconds between packets. Set to 0 to turn throttling off.
+ * 
  */
 void mqtt_udp_set_throttle(int msec)
 {
@@ -70,8 +71,11 @@ void mqtt_udp_set_throttle(int msec)
 
 
 /**
- * Must be called in packet send code.
+ * 
+ * @brief Must be called in packet send code.
+ * 
  * Will put caller asleep to make sure packets are sent in a right pace.
+ * 
  */
 void mqtt_udp_throttle()
 {
@@ -109,7 +113,7 @@ void mqtt_udp_throttle()
     // TODO autoconf me in
     //usleep(1000L*towait);
     //sleep(1);
-    //mqtt_udp_arch_sleep_msec( towait );
+    mqtt_udp_arch_sleep_msec( towait );
 
 }
 

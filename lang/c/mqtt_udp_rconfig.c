@@ -6,8 +6,8 @@
  *
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
- *
- * Passive remote configuration.
+ * @file
+ * @brief Passive remote configuration.
  * 
  * Device keeps configuration items locally in file/flash/nvram.
  * Configuration software (for example, /tools/viewer) requests
@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 
-
+/// Topic prefix for remote configuration topics
 #define SYS_CONF_PREFIX "$SYS/conf"
 
 
@@ -53,10 +53,12 @@ static int rconfig_list_size;
  * 
  * @brief Called from user code to setup remote configuration.
  * 
- * @param in        mac_address_string MAC address of current device (packed: "020698010000") or other unique id for current node.
- * @param in        cb Callback function to call when remote config engine needs parameter to be loaded or saved.
- * @param in,out    rconfig_items Pointer to array of configurable items.
- * @param in        n_items Number of elements in rconfig_items.
+ * @param mac_address_string   MAC address of current device (packed: "020698010000") or other unique id for current node.
+ * @param cb                   Callback function to call when remote config engine needs parameter to be loaded or saved.
+ * @param rconfig_items        Pointer to array of configurable items.
+ * @param n_items              Number of elements in rconfig_items.
+ * 
+ * @return 0 on success, error code on error.
  * 
 **/
 int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_callback cb, mqtt_udp_rconfig_item_t *rconfig_items, int n_items )
@@ -99,8 +101,10 @@ int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_c
  * 
  * @todo Convert for numeric/boolean parameters.
  * 
- * @param in pos Position in items array to set value for.
- * @param in string New parameter value.
+ * @param pos     Position in items array to set value for.
+ * @param string  New parameter value.
+ * 
+ * @return 0 on success, or error code.
  * 
 **/ 
 int mqtt_udp_rconfig_set_string( int pos, char *string )
@@ -135,7 +139,7 @@ int mqtt_udp_rconfig_set_string( int pos, char *string )
  * 
  * Process PUBLISH and SUBSCRIBE requests for config items.
  * 
- * @param in pkt Packet to process.
+ * @param pkt Packet to process.
  * 
  * @return 0 on success, or error code.
  * 
@@ -185,7 +189,9 @@ static int rconfig_listener( struct mqtt_udp_pkt *pkt )
  * 
  * Topic name must include "$SYS/{MAC address}/conf/" prefix.
  * 
- * @param in topic Full topic name to parse and find.
+ * @param topic   Full topic name to parse and find.
+ * 
+ * @return Position in array or negative error code.
  * 
 **/
 static int find_by_full_topic( const char *topic )
@@ -208,7 +214,7 @@ static int find_by_full_topic( const char *topic )
  * 
  * @brief Send out current value for configuration item.
  * 
- * @param in pos Configuration item position in array.
+ * @param pos Configuration item position in array.
  * 
 **/
 static void rconfig_send_topic_by_pos( int pos )
@@ -260,7 +266,7 @@ static void rconfig_send_topic_list( void )
  * 
  * Topic name must NOT include "$SYS/{MAC address}/conf/" prefix. Just final part.
  * 
- * @param in topic Topic name suffix to find.
+ * @param topic  Topic name suffix to find.
  * 
  * @return Item position in array or -1 if not found.
  * 
@@ -322,9 +328,9 @@ static void rconfig_read_all( void )
  * Usually it means that topic related items are at the beginning
  * of item array and their position in array is important.
  *
- * @param in topic Topic name to find in item _value_.
+ * @param search  String (topic name?) to find in item _value_.
  *
- * @param in kind Expected kind og the item, sanity check.
+ * @param kind    Expected kind og the item, sanity check.
  *
  * @return Item position in array or -1 if not found.
  *
@@ -360,9 +366,9 @@ int rconfig_find_by_string_value( const char *search, mqtt_udp_rconfig_inetm_kin
  *
  * @todo Convert other types to string?
  *
- * @param in pos Position in array.
+ * @param pos Position in array.
  *
- * @param in kind Expected kind og the item, sanity check.
+ * @param kind Expected kind og the item, sanity check.
  *
  * @return Item _value_ (string) or 0 if intem type is not string.
  *

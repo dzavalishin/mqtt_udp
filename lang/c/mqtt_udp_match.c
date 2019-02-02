@@ -5,7 +5,8 @@
  * https://github.com/dzavalishin/mqtt_udp
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
- * Topic name match
+ * @file
+ * @brief Topic name match
  *
  *
 **/
@@ -25,9 +26,9 @@
  * 
  * @brief Compare topic name against wildcard or topic name.
  * 
- * @param in filter Topic name or wildcard to compare with.
+ * @param filter     Topic name or wildcard to compare with.
  * 
- * @param in topicName Topic name to compare.
+ * @param topicName  Topic name to compare.
  * 
  * @return Non-zero if topicName matches filter.
  * 

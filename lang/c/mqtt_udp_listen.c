@@ -5,8 +5,8 @@
  * https://github.com/dzavalishin/mqtt_udp
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
- *
- * Dump all incoming packets
+ * @file
+ * @brief Example program: Dump all incoming packets
  *
 **/
 
