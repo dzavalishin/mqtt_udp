@@ -197,6 +197,10 @@ typedef int (*mqtt_udp_rconfig_rw_callback)( int pos, int write );
 int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_callback cb, mqtt_udp_rconfig_item_t *rconfig_items, int n_items );
 int mqtt_udp_rconfig_set_string( int pos, char *string );
 
+// Helpers for user to work with rconfig_items array
+
+const char * rconfig_get_string_by_item_index( int pos, mqtt_udp_rconfig_inetm_kind_t kind );
+int rconfig_find_by_string_value( const char *search, mqtt_udp_rconfig_inetm_kind_t kind );
 
 
 // ==========================================================================
