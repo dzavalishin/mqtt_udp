@@ -52,9 +52,9 @@ Last effort: try 'make -f Makefile.cygwin' or tailor it to your needs.
 
 ### Known arch & glue
 
-*      Unix/Cygwin: make
-*      Mingw: make GLUE=mignw
-*      Atmega, Nut/OS: make arch=atmega glue=nutos
+*      Unix/Cygwin - make
+*      Mingw - make GLUE=mignw
+*      Atmega, Nut/OS - make arch=atmega glue=nutos
 
 ## Usage
 
