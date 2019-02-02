@@ -42,10 +42,7 @@ and glue/{name-of-your-os} subdirs and add corresponding makefile and glue code
 sources.
 
 To build for non-default arch and not for Unix, type ```make ARCH=your-arch GLUE=your-os```
-command. For example:
-
-*      ```make GLUE=mingw```
-*      ```make ARCH=atmega GLUE=nutos```
+command. See below 'Known arch & glue' for examples.
 
 If you have no autoconf tools and see no ready setting go to arch/default and
 copy config.h.example to config.h, and try to make
