@@ -178,6 +178,7 @@ typedef int (*mqtt_udp_rconfig_rw_callback)( int pos, int write );
 
 
 int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_callback cb, mqtt_udp_rconfig_item_t *rconfig_items, int n_items );
+int mqtt_udp_rconfig_set_string( int pos, char *string );
 
 
 
