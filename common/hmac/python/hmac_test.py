@@ -1,11 +1,11 @@
 import hashlib
 import hmac
 
-secret="key"
+test_key="key"
 data="text"
 
 sig_sha256 =  hmac.new(
-    key=secret.encode('utf-8'),
+    key=test_key.encode('utf-8'),
     msg=data.encode('utf-8'),
     digestmod=hashlib.sha256
 ).hexdigest()
@@ -18,7 +18,7 @@ else:
     print("OK")
 
 sig_md5 =  hmac.new(
-    key=secret.encode('utf-8'),
+    key=test_key.encode('utf-8'),
     msg=data.encode('utf-8'),
     digestmod=hashlib.md5
 ).hexdigest()
