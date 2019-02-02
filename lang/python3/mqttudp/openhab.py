@@ -2,7 +2,7 @@
 
 import requests
 import json
-#import base64
+import base64
 import time
 
 #import logging as log
@@ -22,6 +22,9 @@ class RestIO:
         self.openhab_host = "smart."
         self.openhab_port = "8080"
         self.connected = True
+
+        self.username = ""
+        self.password = ""
 
 
 
@@ -69,21 +72,26 @@ class RestIO:
         except Exception as e:
             print(e)
 
+    def make_auth(self):
+        userpass = '%s:%s'%(self.username, self.password)
+        userpass = userpass.encode()
+        self.auth = base64.encodestring(userpass).decode('utf-8').replace('\n', '')
+        #print(self.auth)
 
 
     def streaming_header(self):
+        self.make_auth()
         # Header for OpenHAB REST request - streaming
-#        self.auth = base64.encodestring('%s:%s'%(self.username, self.password)).replace('\n', '')
         return {
 #            "Authorization" : "Basic %s" % self.cmd.auth,
             "X-Atmosphere-Transport" : "streaming",
 #            "X-Atmosphere-tracking-id" : self.atmos_id,
-#            "X-Atmosphere-Framework" : "1.0",
+            "X-Atmosphere-Framework" : "1.0",
             "Accept" : "application/json"}
 
     def polling_header(self):
+        self.make_auth()
         # Header for OpenHAB REST request - polling
-#        self.auth = base64.encodestring('%s:%s'%(self.username, self.password)).replace('\n', '')
         return {
 #            "Authorization" : "Basic %s" % self.cmd.auth,
             "X-Atmosphere-Transport" : "long-polling",
@@ -92,8 +100,8 @@ class RestIO:
             "Accept" : "application/json"}
     
     def basic_header(self):
+        self.make_auth()
         # Header for OpenHAB REST request - standard
-#        self.auth = base64.encodestring('%s:%s'%(self.username, self.password)).replace('\n', '')
         return {
 #                "Authorization" : "Basic %s" %self.auth,
                 "Content-type": "text/plain"}

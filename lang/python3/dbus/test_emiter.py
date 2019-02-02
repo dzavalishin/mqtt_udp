@@ -11,16 +11,19 @@ class Emitter(dbus.service.Object):
     def __init__(self, bus_name, object_path):
 #   Initialize the emitter DBUS service object
         dbus.service.Object.__init__(self, bus_name, object_path)
+        self.dummy = ""
 
     @dbus.service.signal('tld.domain.sub.event')
     def test(self):
 #   Emit a test signal.
         print( 'Emitted a test signal' )
+        self.dummy = ""
 
     @dbus.service.signal('tld.domain.sub.event')
     def quit_signal(self):
 #   Emit a quit signal
         print( 'Emitted a quit signal' )
+        self.dummy = ""
 
 
 # Emit a test signal on the dbus.
