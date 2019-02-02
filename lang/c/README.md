@@ -50,7 +50,7 @@ copy config.h.example to config.h, and try to make
 Last effort: try 'make -f Makefile.cygwin' or tailor it to your needs.
 
 
-### Known arch & glue
+### Known arch and glue
 
 *      Unix/Cygwin - make
 *      Mingw - make GLUE=mignw
