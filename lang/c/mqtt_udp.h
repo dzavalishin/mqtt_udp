@@ -181,12 +181,12 @@ typedef union
 /// Definition of configuration parameter
 typedef struct
 {
-    mqtt_udp_rconfig_item_type_t        type;
-    mqtt_udp_rconfig_inetm_kind_t       kind;
-    const char *                        name;  ///< Human readable name for this config parameter
-    const char *                        topic; ///< MQTT/UDP topic name for this config parameter
-    mqtt_udp_rconfig_item_value_t       value; ///< Current or default value
-
+    mqtt_udp_rconfig_item_type_t        type;   ///< Item (.value field) data type (string, bool, number, other)
+    mqtt_udp_rconfig_inetm_kind_t       kind;   ///< Item kind, not processed by network code
+    const char *                        name;   ///< Human readable name for this config parameter
+    const char *                        topic;  ///< MQTT/UDP topic name for this config parameter
+    mqtt_udp_rconfig_item_value_t       value;  ///< Current value
+    mqtt_udp_rconfig_item_value_t       opaque; ///< user data item, not processed by MQTT/UDP code at all
 } mqtt_udp_rconfig_item_t;
 
 
