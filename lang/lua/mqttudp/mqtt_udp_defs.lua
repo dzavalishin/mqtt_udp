@@ -19,4 +19,5 @@ mqtt_udp_defs.PTYPE_DISCONNECT = 0xE0
 mqtt_udp_defs.MQTT_PORT = 1883
 mqtt_udp_defs.PKT_BUF_SIZE = 2048
 mqtt_udp_defs.PKT_PACE_MSEC = 50
+mqtt_udp_defs.SYS_CONF_PREFIX = "$SYS/conf"
 return mqtt_udp_defs

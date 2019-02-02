@@ -15,17 +15,20 @@
  * responds with PUBLISH for all configuration topics. Config
  * software then can set config parameters values with PUBLISH.
  *
+ * @see ru.dz.mqtt_udp.config.Controller Java class
+ *
 **/
 
 #include "config.h"
 #include "mqtt_udp.h"
+#include "mqtt_udp_defs.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
 /// Topic prefix for remote configuration topics
-#define SYS_CONF_PREFIX "$SYS/conf"
+//#define SYS_CONF_PREFIX "$SYS/conf"
 
 
 static int rconfig_listener( struct mqtt_udp_pkt *pkt );
