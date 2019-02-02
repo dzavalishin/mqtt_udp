@@ -22,15 +22,16 @@
 
 
 
-
-// --------------------------------------------------------------
-//
-// Wait for one incoming packet, parse and call corresponding
-// callback
-//
-// --------------------------------------------------------------
-
-/// Receive one packet. Do not use.
+/**
+ * 
+ * @brief Wait for one incoming packet, parse and call corresponding callback
+ * 
+ * @deprecated
+ * 
+ * @param fd Socket
+ * @param callback Incoming packets handler function.
+ * 
+**/
 int mqtt_udp_recv( int fd, process_pkt callback )
 {
     char buf[PKT_BUF_SIZE];

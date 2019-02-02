@@ -361,13 +361,15 @@ void MD5Calc(const unsigned char *input, unsigned int inlen, unsigned char *outp
 {
     MD5_CTX context;
     MD5Init(&context);
+#if 0
     // Md5 Key
     static char initStr[32+1] =
         {0x21, 0x45, 0x34, 0x12, 0x20, 0x85, 0x21, 0x89,
          0x10, 0x20, 0x34, 0x23, 0x34, 0xa1, 0x1f, 0x13,
          0x1d, 0x2d, 0x4c, 0x33, 0x39, 0xb2, 0x2c, 0x34,
          0xd4, 0xb4, 0x4f, 0xff, 0x9b, 0x45, 0x3a, 0xf5, 0x00};
-    //MD5Update(&context, (unsigned char *)initStr, 32);
+    MD5Update(&context, (unsigned char *)initStr, 32);
+#endif
     MD5Update(&context, (unsigned char *)input, inlen);
     MD5Final(output, &context);
 }

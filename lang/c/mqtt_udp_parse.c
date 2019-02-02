@@ -236,7 +236,8 @@ static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt )
     struct listeners_list * lp;
     for( lp = listeners ; lp ; lp = lp->next )
     {
-        int rc = lp->listener( pkt );
+        //int rc = 
+        lp->listener( pkt );
         //if( rc ) break;
     }
 }

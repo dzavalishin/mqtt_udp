@@ -1,0 +1,17 @@
+/**
+ * @mainpage Introduction
+ * 
+ * MQTT/UDP is a simple MQTT-based protocol. 
+ * 
+ * For a detailed information please:
+ * 
+ * * Read [online documentation](https://mqtt-udp.readthedocs.io/en/latest/)
+ * * Visit [project GitHub](https://github.com/dzavalishin/mqtt_udp)
+ * 
+ * Starting points:
+ * 
+ * * For sending messages see mqtt_udp_send_publish()
+ * * For processing incoming messages see mqtt_udp_recv_loop()
+ * 
+**/
+

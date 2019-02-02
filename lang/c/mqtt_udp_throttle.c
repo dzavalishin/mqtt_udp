@@ -107,7 +107,7 @@ void mqtt_udp_throttle()
 
     // print( str(towait) )
 
-    if( towait <= 0 )
+    if( towait == 0 )
         return;
 
     // TODO autoconf me in

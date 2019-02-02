@@ -74,7 +74,13 @@ int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_c
     if( rconfig_mac_address_string == 0 )
         return mqtt_udp_global_error_handler( MQ_Err_Memory, -1, "out of mem for mac str", rconfig_mac_address_string );
 
-    topic_prefix_len = strlen( rconfig_mac_address_string ) + 11;
+    int mac_len = strnlen( rconfig_mac_address_string, PKT_BUF_SIZE );
+    if( rconfig_mac_address_string[mac_len] )
+        return mqtt_udp_global_error_handler( MQ_Err_Memory, -1, "mac str too long", rconfig_mac_address_string );
+
+    topic_prefix_len = mac_len + 11;
+
+
     topic_prefix = malloc( topic_prefix_len + 1 );
 
     if(topic_prefix == 0)
@@ -120,7 +126,7 @@ int mqtt_udp_rconfig_set_string( int pos, char *string )
     //if( 0 == item->value.s ) return -3;
 
     if( item->value.s ) free( item->value.s );
-    item->value.s = 0;
+    //item->value.s = 0;
 
     item->value.s = malloc( slen );
 
@@ -174,8 +180,10 @@ static int rconfig_listener( struct mqtt_udp_pkt *pkt )
         //printf("rconf set '%s'='%s' pos = %d\n", pkt->topic, pkt->value, pos );
 
         int rc = mqtt_udp_rconfig_set_string( pos, pkt->value );
+        if( rc ) mqtt_udp_global_error_handler( MQ_Err_Other, rc, "rconfig_set_string failed", pkt->value );
 
-        rc = user_rw_callback( pos, 1 ); // Ask user to write item to local storage and use it
+        //rc =
+        user_rw_callback( pos, 1 ); // Ask user to write item to local storage and use it
 
     }
 

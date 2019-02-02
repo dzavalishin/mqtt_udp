@@ -28,7 +28,7 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
     //int rc = NutUdpSendTo( (UDPSOCKET *) fd, 0xFFFFFFFF, htons( MQTT_PORT ), data, len );
 
 #if DEBUG
-    printf("MQTT/UDP broadcast rc = %d  len = %d\n", rc, len );
+    printf("MQTT/UDP broadcast rc = %d  len = %ld\n", rc, (long)len );
 #endif
 
     return rc ? -5 : 0; // -5 = EIO

@@ -107,9 +107,7 @@ void SHA256_Init(SHA256_State *s) {
 
 void SHA256_Bytes(SHA256_State *s, const void *p, int len) {
     unsigned char *q = (unsigned char *)p;
-    uint32 wordblock[16];
     uint32 lenw = len;
-    int i;
 
     /*
      * Update the length field.
@@ -128,10 +126,12 @@ void SHA256_Bytes(SHA256_State *s, const void *p, int len) {
          * We must complete and process at least one block.
          */
         while (s->blkused + len >= BLKSIZE) {
+            uint32 wordblock[16];
             memcpy(s->block + s->blkused, q, BLKSIZE - s->blkused);
             q += BLKSIZE - s->blkused;
             len -= BLKSIZE - s->blkused;
             /* Now process the block. Gather bytes big-endian into words */
+            int i;
             for (i = 0; i < 16; i++) {
                 wordblock[i] =
                     ( ((uint32)s->block[i*4+0]) << 24 ) |
@@ -198,6 +198,8 @@ void SHA256_Simple(const void *p, int len, unsigned char *output) {
 #include <stdlib.h>
 #include <assert.h>
 
+#define MAXLEN 256 // Arbitrary, to kill warning
+
 int main(void) {
     unsigned char digest[32];
     int i, j, errors;
@@ -224,7 +226,7 @@ int main(void) {
 
     for (i = 0; i < sizeof(tests) / sizeof(*tests); i++) {
         SHA256_Simple(tests[i].teststring,
-                      strlen(tests[i].teststring), digest);
+                      strnlen(tests[i].teststring), digest, MAXLEN);
         for (j = 0; j < 32; j++) {
             if (digest[j] != tests[i].digest[j]) {
                 fprintf(stderr,

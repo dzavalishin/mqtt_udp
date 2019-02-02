@@ -19,8 +19,8 @@
 #include "mqtt_udp.h"
 
 
-#define true 1
-#define false 0
+#define true 1   ///< true
+#define false 0  ///< false
 
 /**
  * 
