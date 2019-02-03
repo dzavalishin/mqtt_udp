@@ -19,6 +19,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -79,9 +80,7 @@ public class RemoteConfigWindow {
 
 		VBox.setVgrow(tabPane, Priority.ALWAYS);
 
-
 		Scene rcScene = new Scene(vbox, 800, 500);
-
 
 		// New window (Stage)
 		rcWindow.setTitle("Remote Config");
@@ -176,7 +175,14 @@ public class RemoteConfigWindow {
 		tab.setText(ch.getMacAddressString());
 		
 		//VBox vbox = new VBox(new Rectangle(200,200, Color.LIGHTSALMON));
-		VBox vbox = new VBox(10);
+		VBox vbox = new VBox(8);
+
+		vbox.setStyle("-fx-padding: 10;" + 
+                "-fx-border-style: solid inside;" + 
+                "-fx-border-width: 2;" +
+                "-fx-border-insets: 5;" + 
+                //"-fx-border-radius: 5;" + 
+                "-fx-border-color: lightgrey;");
 		
 		tab.setContent( vbox );
 						
@@ -208,7 +214,10 @@ public class RemoteConfigWindow {
 			hbox = new HBox(20);
 		
 		Label kindLabel = new Label(cp.getKind() );
+		kindLabel.setPrefWidth(50);
+		
 		Label nameLabel = new Label(cp.getName() );
+		nameLabel.setPrefWidth(50);
 		
 		TextField valueField = new TextField(cp.getValue());
 		

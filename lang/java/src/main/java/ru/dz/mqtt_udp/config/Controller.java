@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 import ru.dz.mqtt_udp.IPacket;
@@ -49,7 +50,8 @@ public class Controller implements Consumer<IPacket> {
 		@Override
 		protected void step() throws IOException, MqttProtocolException {
 			new SubscribePacket(SYS_CONF_WILD).send();
-			sleep(10L*1000L);
+			//sleep(10L*1000L);
+			sleep(2L*1000L);
 		}
 		
 		@Override
@@ -149,7 +151,7 @@ public class Controller implements Consumer<IPacket> {
 		if(newone)
 		{
 			System.out.println("new host "+ch);
-			newHostListener.accept(ch);
+			if(newHostListener != null) newHostListener.accept(ch);
 		}
 		else
 			System.out.println("update host "+old+" to "+ch); // TODO update
@@ -161,15 +163,18 @@ public class Controller implements Consumer<IPacket> {
 	
 	private Consumer<ConfigurableParameter> newParameterListener;
 	
-	private Set<ConfigurableParameter> parameters = new HashSet<ConfigurableParameter>();
-
+	//private Set<ConfigurableParameter> parameters = new HashSet<ConfigurableParameter>();
 
 	private void addParameter(ConfigurableParameter cp) {
+
+		/*
 		boolean isNew = parameters.add(cp);
 		if( isNew ) System.out.println("new param "+cp);
+		else System.out.println("again "+cp);
 		
-		if( isNew ) // TODO call for all
-			newParameterListener.accept( cp );
+		if( isNew ) // TODO call for all */
+			if( newParameterListener != null )
+				newParameterListener.accept( cp );
 	}
 	
 	

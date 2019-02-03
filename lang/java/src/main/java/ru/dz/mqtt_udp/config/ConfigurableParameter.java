@@ -30,7 +30,10 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 	
 	@Override
 	public boolean equals(Object obj) {
+		//System.out.println("equals "+toString());
 		if( obj == null ) return false;
+		
+		//System.out.println("equals "+toString()+" == "+obj.toString());
 		
 		if(!(obj instanceof ConfigurableParameter))
 			return false;
@@ -38,13 +41,17 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 		ConfigurableParameter cp = (ConfigurableParameter) obj;
 			
 		return 
-				cp.host.equals(host) &&
-				cp.kind.equals(kind) &&
-				cp.name.equals(name) &&
-				cp.value.equals(value)
+				cp.host.equals(host) 
+				&& cp.kind.equals(kind) 
+				&& cp.name.equals(name) 
+				//&& cp.value.equals(value)
 				;
 	}
 
+	@Override
+	public int hashCode() {
+		return host.hashCode() + kind.hashCode() + name.hashCode();
+	}
 
 	@Override
 	public int compareTo(ConfigurableParameter cp) {
@@ -59,9 +66,9 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 		if( cmp != 0 ) return cmp;
 
 		cmp = name.compareTo(cp.name);
-		if( cmp != 0 ) return cmp;
+		//if( cmp != 0 ) return cmp;
 
-		cmp = value.compareTo(cp.value);
+		//cmp = value.compareTo(cp.value);
 		
 		return cmp;
 	}
