@@ -65,4 +65,10 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 		
 		return cmp;
 	}
+
+
+	public ConfigurableHost getConfigurableHost() { return host; }
+	public String getKind() { return kind; }
+	public String getName() { return name; }
+	public String getValue() { return value; }
 }

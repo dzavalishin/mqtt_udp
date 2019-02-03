@@ -65,5 +65,8 @@ public class ConfigurableHost implements Comparable<ConfigurableHost> {
 		return String.format("%s@%s", ident, src.getInetAddress().getHostAddress() );
 	}
 
+	public String getMacAddressString() { return ident; }
+
+
 	
 }

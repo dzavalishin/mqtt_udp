@@ -64,6 +64,8 @@ public class Controller implements Consumer<IPacket> {
 	}; 
 	
 	private TopicFilter rf = new TopicFilter(SYS_CONF_WILD);
+
+	//private IPacketMultiSource ms;
 	
 	/**
 	 * Construct.
@@ -71,10 +73,16 @@ public class Controller implements Consumer<IPacket> {
 	 */
 	public Controller(IPacketMultiSource ms) 
 	{
+		//this.ms = ms;
 		ms.addPacketSink(this);	
 		lr.requestStart();
 	}
 
+	public void requestStart()
+	{
+		lr.requestStart();
+	}
+	
 	@Override
 	public void accept(IPacket t) {
 		
@@ -122,6 +130,7 @@ public class Controller implements Consumer<IPacket> {
 
 	
 	
+	private Consumer<ConfigurableHost> newHostListener;
 	
 	private Map<String,ConfigurableHost> hosts = new HashMap<String,ConfigurableHost>();
 	
@@ -138,29 +147,46 @@ public class Controller implements Consumer<IPacket> {
 		
 		boolean newone = old == null;
 		if(newone)
+		{
 			System.out.println("new host "+ch);
+			newHostListener.accept(ch);
+		}
 		else
-			System.out.println("update host "+old+" to "+ch);
+			System.out.println("update host "+old+" to "+ch); // TODO update
 
 		return ch;
 	}
 
 	
 	
+	private Consumer<ConfigurableParameter> newParameterListener;
 	
-	private Set<ConfigurableParameter> parameters = new HashSet();
+	private Set<ConfigurableParameter> parameters = new HashSet<ConfigurableParameter>();
+
+
 	private void addParameter(ConfigurableParameter cp) {
 		boolean isNew = parameters.add(cp);
 		if( isNew ) System.out.println("new param "+cp);
+		
+		if( isNew ) // TODO call for all
+			newParameterListener.accept( cp );
 	}
 	
 	
+	public void setNewHostListener( Consumer<ConfigurableHost> sink ) {
+		this.newHostListener = sink;		
+	}
 	
+	public void setNewParameterListener(Consumer<ConfigurableParameter> sink) {
+		this.newParameterListener = sink;		
+	}
 	
 	public static void main(String[] args) {
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
-		Controller c = new Controller(ms);
+		Controller rc = new Controller(ms);
 		
 		ms.requestStart();
+		rc.requestStart();
 	}
+
 }
