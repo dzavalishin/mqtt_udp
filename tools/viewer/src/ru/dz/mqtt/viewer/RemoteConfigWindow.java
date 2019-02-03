@@ -2,7 +2,6 @@ package ru.dz.mqtt.viewer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -10,7 +9,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -19,15 +17,11 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import ru.dz.mqtt_udp.IPacketMultiSource;
 import ru.dz.mqtt_udp.PacketSourceMultiServer;
 import ru.dz.mqtt_udp.config.ConfigurableHost;
 import ru.dz.mqtt_udp.config.ConfigurableParameter;
@@ -54,10 +48,22 @@ public class RemoteConfigWindow {
 		rc.requestStart();
 	}
 
+	public void setVisible(boolean is)
+	{
+		if( is ) rcWindow.show();
+		else rcWindow.hide();
+	}
+
+	public boolean isVisible()
+	{
+		return rcWindow.isShowing();
+	}
+	
 
 	private TabPane tabPane = new TabPane();
 
-	private static final Image windowIcon = ImageUtils.getImage("content256.png");
+	//private static final Image windowIcon = ImageUtils.getImage("content256.png");
+	private static final Image windowIcon = ImageUtils.getImage("surveys256.png");
 
 	private void openWindow() {
 
@@ -92,7 +98,7 @@ public class RemoteConfigWindow {
 		rcWindow.getIcons().add(windowIcon);
 
 		// TODO remove
-		rcWindow.show();
+		//rcWindow.show();
 
 	}
 
@@ -220,6 +226,7 @@ public class RemoteConfigWindow {
 		nameLabel.setPrefWidth(50);
 		
 		TextField valueField = new TextField(cp.getValue());
+		valueField.setOnAction( e -> cp.sendNewValue( valueField.getText()) );
 		
 		
 		hbox.getChildren().add(kindLabel);

@@ -163,16 +163,15 @@ public class Controller implements Consumer<IPacket> {
 	
 	private Consumer<ConfigurableParameter> newParameterListener;
 	
-	//private Set<ConfigurableParameter> parameters = new HashSet<ConfigurableParameter>();
+	private Set<ConfigurableParameter> parameters = new HashSet<ConfigurableParameter>();
 
 	private void addParameter(ConfigurableParameter cp) {
 
-		/*
 		boolean isNew = parameters.add(cp);
-		if( isNew ) System.out.println("new param "+cp);
-		else System.out.println("again "+cp);
+		//if( isNew ) System.out.println("new param "+cp);
+		//else System.out.println("again "+cp);
 		
-		if( isNew ) // TODO call for all */
+		if( isNew ) // TODO call for all 
 			if( newParameterListener != null )
 				newParameterListener.accept( cp );
 	}

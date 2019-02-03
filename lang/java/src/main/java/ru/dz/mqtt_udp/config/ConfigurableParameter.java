@@ -1,5 +1,12 @@
 package ru.dz.mqtt_udp.config;
 
+import java.io.IOException;
+
+import ru.dz.mqtt_udp.PublishPacket;
+import ru.dz.mqtt_udp.util.ErrorType;
+import ru.dz.mqtt_udp.util.GlobalErrorHandler;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
+
 /**
  * 
  * Parameter of some device that can be configured remotely.
@@ -78,4 +85,25 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 	public String getKind() { return kind; }
 	public String getName() { return name; }
 	public String getValue() { return value; }
+
+	// Update value here and send to host
+	public void sendNewValue(String v) 
+	{
+		value = v;
+		
+		String topic = String.format(
+				"%s/%s/%s/%s", 
+				mqtt_udp_defs.SYS_CONF_PREFIX,
+				host.getMacAddressString(),
+				kind, name
+				);
+		
+		System.out.println("send "+topic+"="+v);
+		
+		try {
+			new PublishPacket(topic,value).send();
+		} catch (IOException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+		}
+	}
 }

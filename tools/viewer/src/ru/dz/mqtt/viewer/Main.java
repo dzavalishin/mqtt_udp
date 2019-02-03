@@ -59,6 +59,7 @@ public class Main extends Application {
 
 	private ObservableList<TopicItem> listItems = FXCollections.observableArrayList();
 	private TopicTable generalTopicTable = new TopicTable(listItems);
+	private RemoteConfigWindow rcw;
 
 	
 	//private Stage stage;
@@ -158,6 +159,7 @@ public class Main extends Application {
 
 			initNetwork();
 
+			rcw = new RemoteConfigWindow();
 
 			//toolBarSendButton.setSelected(true);
 			//generalTopicTable.setVisible(true);
@@ -243,6 +245,7 @@ public class Main extends Application {
 	private CheckMenuItem updateMenuItem = new CheckMenuItem("Update");	
 	//private CheckMenuItem updateTopMenuItem = new CheckMenuItem();
 	private ToggleButton toolBarUpdateButton = new ToggleButton();
+	private ToggleButton toolBarConfigButton = new ToggleButton();
 	private ToggleButton toolBarSendButton = new ToggleButton();
 
 
@@ -419,6 +422,13 @@ public class Main extends Application {
 		//toolBarUpdateButton.setMaxHeight(12);
 		//toolBarUpdateButton.setMaxWidth(12);
 		
+		toolBarConfigButton.setTooltip(new Tooltip("Open remote device configuration interface"));
+		toolBarConfigButton.setGraphic(ImageUtils.getIcon("surveys"));
+		toolBarConfigButton.setOnAction(new EventHandler<ActionEvent>() {			
+			@Override
+			public void handle(ActionEvent event) { rcw.setVisible(toolBarConfigButton.isSelected()); }
+		});
+		
 		toolBarSendButton.setTooltip(new Tooltip("Open data send interface"));
 		toolBarSendButton.setGraphic(ImageUtils.getIcon("content"));
 		toolBarSendButton.setOnAction(new EventHandler<ActionEvent>() {			
@@ -428,7 +438,7 @@ public class Main extends Application {
 		
 		ToolBar tb = new ToolBar();
 		//tb.setMaxHeight(16);
-		tb.getItems().addAll(toolBarSendButton,toolBarUpdateButton);
+		tb.getItems().addAll(toolBarSendButton,toolBarConfigButton,toolBarUpdateButton);
 
 		return tb;
 	}
