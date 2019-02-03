@@ -3,6 +3,7 @@ package ru.dz.mqtt_udp.config;
 import java.io.IOException;
 
 import ru.dz.mqtt_udp.PublishPacket;
+import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
@@ -91,12 +92,7 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 	{
 		value = v;
 		
-		String topic = String.format(
-				"%s/%s/%s/%s", 
-				mqtt_udp_defs.SYS_CONF_PREFIX,
-				host.getMacAddressString(),
-				kind, name
-				);
+		String topic = makeTopicName();
 		
 		System.out.println("send "+topic+"="+v);
 		
@@ -105,5 +101,29 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 		} catch (IOException e) {
 			GlobalErrorHandler.handleError(ErrorType.IO, e);
 		}
+	}
+
+
+
+	public void requestAgain() {
+		String topic = makeTopicName();
+		
+		System.out.println("request "+topic);
+		
+		try {
+			new SubscribePacket(topic).send();
+		} catch (IOException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+		}
+	}
+
+	public String makeTopicName() {
+		String topic = String.format(
+				"%s/%s/%s/%s", 
+				mqtt_udp_defs.SYS_CONF_PREFIX,
+				host.getMacAddressString(),
+				kind, name
+				);
+		return topic;
 	}
 }

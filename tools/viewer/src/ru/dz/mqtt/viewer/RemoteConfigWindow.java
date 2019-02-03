@@ -6,6 +6,7 @@ import java.util.Map;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,6 +35,10 @@ public class RemoteConfigWindow {
 	
 	private Stage rcWindow = new Stage();
 
+	/** Automatically send on enter in edit field */
+	private boolean autoSend = false;
+
+	
 	public RemoteConfigWindow() 
 	{
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
@@ -98,60 +103,45 @@ public class RemoteConfigWindow {
 		rcWindow.getIcons().add(windowIcon);
 
 		// TODO remove
-		//rcWindow.show();
+		rcWindow.show();
 
 	}
 
 	private static final ImageView lockedIcon = ImageUtils.getIcon32("locked");
 	private static final ImageView unlockedIcon = ImageUtils.getIcon32("unlocked");
-	private static final ImageView newTopicIcon = ImageUtils.getIcon32("tests");
+	private static final ImageView sendAllIcon = ImageUtils.getIcon32("options");
 
 	private HBox makeToolBar()
 	{
 
-		Button newTopicButton = new Button();
-		newTopicButton.setTooltip(new Tooltip("Add new topic to the list"));
-		newTopicButton.setGraphic(newTopicIcon);
-		newTopicButton.setOnAction(new EventHandler<ActionEvent>() {			
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO
-			} 
-		});
+		Button sendAllButton = new Button();
+		sendAllButton.setTooltip(new Tooltip("Send all settings"));
+		sendAllButton.setGraphic(sendAllIcon);
+		sendAllButton.setOnAction( e -> {} );
+		sendAllButton.setDisable(true);
 
 
-		Button searchButton = new Button();
-		searchButton.setTooltip(new Tooltip("Search for topic"));
-		searchButton.setGraphic(ImageUtils.getIcon32("analysis"));
-		searchButton.setOnAction(new EventHandler<ActionEvent>() {			
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO
-			} 
-		});
+		Button requestAllButton = new Button();
+		requestAllButton.setTooltip(new Tooltip("Request all settings"));
+		requestAllButton.setGraphic(ImageUtils.getIcon32("order"));
+		requestAllButton.setOnAction( e -> {} );
+		requestAllButton.setDisable(true);
 
 		ToggleButton refreshListButton = new ToggleButton();
-		refreshListButton.setTooltip(new Tooltip("Enable automatic topic list refresh"));
+		refreshListButton.setTooltip(new Tooltip("Enable automatic value refresh"));
 		refreshListButton.setGraphic(unlockedIcon);
 		refreshListButton.setSelected(true);
-		refreshListButton.setOnAction(new EventHandler<ActionEvent>() {			
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO
-			} 
-		});
+		refreshListButton.setOnAction( e -> {} );
+		refreshListButton.setDisable(true);
 
 		ToggleButton refreshValueButton = new ToggleButton();
 		refreshValueButton.setTooltip(new Tooltip("Enable automatic value send"));
 		refreshValueButton.setGraphic(ImageUtils.getIcon32("refresh"));
-		refreshValueButton.setOnAction(new EventHandler<ActionEvent>() {			
-			@Override
-			public void handle(ActionEvent event) { /* TODO */ }
-		});
+		refreshValueButton.setOnAction( e -> autoSend = refreshValueButton.isSelected() );
 
 
 		ToolBar leftTb = new ToolBar();
-		leftTb.getItems().addAll(newTopicButton,searchButton);
+		leftTb.getItems().addAll(sendAllButton,requestAllButton);
 
 
 		ToolBar rightTb = new ToolBar();
@@ -179,6 +169,7 @@ public class RemoteConfigWindow {
 		
 		Tab tab = new Tab();
 		tab.setText(ch.getMacAddressString());
+		tab.setClosable(false);
 		
 		//VBox vbox = new VBox(new Rectangle(200,200, Color.LIGHTSALMON));
 		VBox vbox = new VBox(8);
@@ -189,6 +180,10 @@ public class RemoteConfigWindow {
                 "-fx-border-insets: 5;" + 
                 //"-fx-border-radius: 5;" + 
                 "-fx-border-color: lightgrey;");
+		
+		vbox.getChildren().add( new Label(
+				"  MAC: "+ ch.getMacAddressString() + "   IP: "+ch.getIpAddressString()
+				) );
 		
 		tab.setContent( vbox );
 						
@@ -201,6 +196,7 @@ public class RemoteConfigWindow {
 	}
 
 	private Map<ConfigurableParameter,HBox> controls = new HashMap<ConfigurableParameter, HBox>();
+
 	private void addParameter(ConfigurableParameter cp) 
 	{
 		ConfigurableHost ch = cp.getConfigurableHost();
@@ -219,20 +215,24 @@ public class RemoteConfigWindow {
 		if( hbox == null )
 			hbox = new HBox(20);
 		
-		Label kindLabel = new Label(cp.getKind() );
-		kindLabel.setPrefWidth(50);
+		Label kindLabel = new Label(cp.getKind()+":");
+		kindLabel.setPrefWidth(30);
 		
 		Label nameLabel = new Label(cp.getName() );
 		nameLabel.setPrefWidth(50);
+		nameLabel.setStyle("-fx-font-weight: bold;");
 		
 		TextField valueField = new TextField(cp.getValue());
-		valueField.setOnAction( e -> cp.sendNewValue( valueField.getText()) );
+		valueField.setOnAction( e -> { if(autoSend ) cp.sendNewValue( valueField.getText()); } );
 		
 		
 		hbox.getChildren().add(kindLabel);
 		hbox.getChildren().add(nameLabel);
 		hbox.getChildren().add(valueField);
 
+		makeButton( hbox, ImageUtils.getIcon("options"), "Send to network", e -> cp.sendNewValue( valueField.getText()) );
+		makeButton( hbox, ImageUtils.getIcon("order"), "Request from network", e -> cp.requestAgain() );
+		
 		final HBox addHbox = hbox;
 		//ScrollPane scroll = new ScrollPane();
 		//scroll.setContent(hbox);
@@ -246,6 +246,19 @@ public class RemoteConfigWindow {
 			} );
 
 		
+	}
+
+	
+	private void makeButton( HBox hb, ImageView icon, String toolTip, EventHandler<ActionEvent> handler )
+	{
+		final Button cellButton = new Button();
+		
+		cellButton.setGraphic(icon);
+		cellButton.setTooltip(new Tooltip(toolTip));
+		
+		cellButton.setOnAction(handler);
+		
+		hb.getChildren().add(cellButton);
 	}
 
 	
