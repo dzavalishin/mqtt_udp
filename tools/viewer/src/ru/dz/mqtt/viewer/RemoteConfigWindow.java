@@ -2,17 +2,13 @@ package ru.dz.mqtt.viewer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
@@ -32,23 +28,24 @@ import ru.dz.mqtt_udp.util.image.ImageUtils;
 public class RemoteConfigWindow {
 
 	private Controller rc;
-	
+
 	private Stage rcWindow = new Stage();
 
 	/** Automatically send on enter in edit field */
 	private boolean autoSend = false;
 
-	
+	private final Map<ConfigurableHost,RemoteConfigTab> tabs = new HashMap<ConfigurableHost, RemoteConfigTab>();
+
 	public RemoteConfigWindow() 
 	{
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
-		
+
 		rc = new Controller(ms);
 		rc.setNewHostListener( ch -> createTab(ch) ); 
 		rc.setNewParameterListener( cp -> addParameter( cp ) );
-		
+
 		openWindow();
-		
+
 		ms.requestStart();
 		rc.requestStart();
 	}
@@ -63,7 +60,7 @@ public class RemoteConfigWindow {
 	{
 		return rcWindow.isShowing();
 	}
-	
+
 
 	private TabPane tabPane = new TabPane();
 
@@ -85,7 +82,7 @@ public class RemoteConfigWindow {
 		tab.setContent(new Rectangle(200,200, Color.LIGHTGOLDENRODYELLOW));
 		tabPane.getTabs().add(tab);		
 		}*/
-		
+
 		VBox vbox = new VBox(makeToolBar(),tabPane);
 		vbox.setFillWidth(true);
 
@@ -117,14 +114,14 @@ public class RemoteConfigWindow {
 		Button sendAllButton = new Button();
 		sendAllButton.setTooltip(new Tooltip("Send all settings"));
 		sendAllButton.setGraphic(sendAllIcon);
-		sendAllButton.setOnAction( e -> {} );
+		sendAllButton.setOnAction( e -> currentTab().ifPresent( t->t.sendAll() )  );
 		sendAllButton.setDisable(true);
 
 
 		Button requestAllButton = new Button();
 		requestAllButton.setTooltip(new Tooltip("Request all settings"));
 		requestAllButton.setGraphic(ImageUtils.getIcon32("order"));
-		requestAllButton.setOnAction( e -> {} );
+		requestAllButton.setOnAction( e -> currentTab().ifPresent( t->t.requestAll() ) );
 		requestAllButton.setDisable(true);
 
 		ToggleButton refreshListButton = new ToggleButton();
@@ -158,108 +155,53 @@ public class RemoteConfigWindow {
 	}
 
 
-	private Map<ConfigurableHost,Tab> tabs = new HashMap<ConfigurableHost, Tab>();
+
+	public Optional<RemoteConfigTab> currentTab() {
+		Tab tab = tabPane.getSelectionModel().getSelectedItem();
+		if (tab instanceof RemoteConfigTab) 
+			return Optional.ofNullable( (RemoteConfigTab)tab );					
+		return Optional.empty();
+	}
+
+
 	private void createTab(ConfigurableHost ch) 
 	{
-		Tab oldTab = tabs.get(ch);
+		RemoteConfigTab oldTab = tabs.get(ch);
 		if( oldTab != null )
 		{
-			// TODO update tab
+			oldTab.updateFromHost(ch);
+			return;
 		}
-		
-		Tab tab = new Tab();
-		tab.setText(ch.getMacAddressString());
-		tab.setClosable(false);
-		
-		//VBox vbox = new VBox(new Rectangle(200,200, Color.LIGHTSALMON));
-		VBox vbox = new VBox(8);
 
-		vbox.setStyle("-fx-padding: 10;" + 
-                "-fx-border-style: solid inside;" + 
-                "-fx-border-width: 2;" +
-                "-fx-border-insets: 5;" + 
-                //"-fx-border-radius: 5;" + 
-                "-fx-border-color: lightgrey;");
-		
-		vbox.getChildren().add( new Label(
-				"  MAC: "+ ch.getMacAddressString() + "   IP: "+ch.getIpAddressString()
-				) );
-		
-		tab.setContent( vbox );
-						
+		RemoteConfigTab tab = new RemoteConfigTab(ch,this);
+
 		Platform.runLater( new Runnable() {
 			@Override
 			public void run() { tabPane.getTabs().add(tab); }
-			} );
-		
+		} );
+
 		tabs.put(ch, tab);
 	}
 
-	private Map<ConfigurableParameter,HBox> controls = new HashMap<ConfigurableParameter, HBox>();
 
 	private void addParameter(ConfigurableParameter cp) 
 	{
 		ConfigurableHost ch = cp.getConfigurableHost();
 
-		Tab tab = tabs.get(ch);
-		
+		RemoteConfigTab tab = tabs.get(ch);
+
 		if( tab == null )
 		{
 			System.err.println("no tab");
 			return;
 		}
-		
-		VBox vbox = (VBox) tab.getContent();
-		
-		HBox hbox = controls.get(cp);
-		if( hbox == null )
-			hbox = new HBox(20);
-		
-		Label kindLabel = new Label(cp.getKind()+":");
-		kindLabel.setPrefWidth(30);
-		
-		Label nameLabel = new Label(cp.getName() );
-		nameLabel.setPrefWidth(50);
-		nameLabel.setStyle("-fx-font-weight: bold;");
-		
-		TextField valueField = new TextField(cp.getValue());
-		valueField.setOnAction( e -> { if(autoSend ) cp.sendNewValue( valueField.getText()); } );
-		
-		
-		hbox.getChildren().add(kindLabel);
-		hbox.getChildren().add(nameLabel);
-		hbox.getChildren().add(valueField);
 
-		makeButton( hbox, ImageUtils.getIcon("options"), "Send to network", e -> cp.sendNewValue( valueField.getText()) );
-		makeButton( hbox, ImageUtils.getIcon("order"), "Request from network", e -> cp.requestAgain() );
-		
-		final HBox addHbox = hbox;
-		//ScrollPane scroll = new ScrollPane();
-		//scroll.setContent(hbox);
-		
-		Platform.runLater( new Runnable() {
-			@Override
-			public void run() { 
-				//vbox.getChildren().add(scroll); 
-				vbox.getChildren().add(addHbox); 
-				}
-			} );
+		tab.addParameter( cp );
 
-		
 	}
 
-	
-	private void makeButton( HBox hb, ImageView icon, String toolTip, EventHandler<ActionEvent> handler )
-	{
-		final Button cellButton = new Button();
-		
-		cellButton.setGraphic(icon);
-		cellButton.setTooltip(new Tooltip(toolTip));
-		
-		cellButton.setOnAction(handler);
-		
-		hb.getChildren().add(cellButton);
-	}
 
-	
+	public boolean isAutoSend() { return autoSend;	}
+
+
 }
