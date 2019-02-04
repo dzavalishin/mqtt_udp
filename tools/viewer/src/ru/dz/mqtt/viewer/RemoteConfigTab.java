@@ -3,25 +3,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.application.Platform;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 import ru.dz.mqtt_udp.config.ConfigurableHost;
 import ru.dz.mqtt_udp.config.ConfigurableParameter;
-import ru.dz.mqtt_udp.util.image.ImageUtils;
 
 public class RemoteConfigTab extends Tab 
 {
 	private RemoteConfigWindow rcw;
 	private ConfigurableHost ch;
-	private Map<ConfigurableParameter,HBox> controls = new HashMap<ConfigurableParameter, HBox>();
+	
+	private Map<ConfigurableParameter,RemoteConfigControl> controls = new HashMap<ConfigurableParameter, RemoteConfigControl>();
 
 	public RemoteConfigTab(ConfigurableHost ch, RemoteConfigWindow rcw) {
 		this.ch = ch;
@@ -56,38 +49,25 @@ public class RemoteConfigTab extends Tab
 
 	public void addParameter(ConfigurableParameter cp) {
 		VBox vbox = (VBox) getContent();
-		
-		HBox hbox = controls.get(cp);
-		if( hbox == null )
-			hbox = new HBox(20);
-		
-		Label kindLabel = new Label(cp.getKind()+":");
-		kindLabel.setPrefWidth(30);
-		
-		Label nameLabel = new Label(cp.getName() );
-		nameLabel.setPrefWidth(50);
-		nameLabel.setStyle("-fx-font-weight: bold;");
-		
-		TextField valueField = new TextField(cp.getValue());
-		valueField.setOnAction( e -> { if(rcw.isAutoSend() ) cp.sendNewValue( valueField.getText()); } );
-		
-		
-		hbox.getChildren().add(kindLabel);
-		hbox.getChildren().add(nameLabel);
-		hbox.getChildren().add(valueField);
 
-		makeButton( hbox, ImageUtils.getIcon("options"), "Send to network", e -> cp.sendNewValue( valueField.getText()) );
-		makeButton( hbox, ImageUtils.getIcon("order"), "Request from network", e -> cp.requestAgain() );
-		
-		final HBox addHbox = hbox;
 		//ScrollPane scroll = new ScrollPane();
 		//scroll.setContent(hbox);
 		
 		Platform.runLater( new Runnable() {
 			@Override
 			public void run() { 
+				
+				RemoteConfigControl rcc = controls.get(cp);
+				if( rcc != null )
+				{
+					rcc.updateParameter( cp );
+					return;
+				}
+
 				//vbox.getChildren().add(scroll); 
-				vbox.getChildren().add(addHbox); 
+				RemoteConfigControl newCc = new RemoteConfigControl(cp,rcw);
+				vbox.getChildren().add( newCc );
+				controls.put(cp, newCc);
 				}
 			} );
 
@@ -95,22 +75,12 @@ public class RemoteConfigTab extends Tab
 	}
 	
 	
-	private void makeButton( HBox hb, ImageView icon, String toolTip, EventHandler<ActionEvent> handler )
-	{
-		final Button cellButton = new Button();
-		
-		cellButton.setGraphic(icon);
-		cellButton.setTooltip(new Tooltip(toolTip));
-		
-		cellButton.setOnAction(handler);
-		
-		hb.getChildren().add(cellButton);
-	}
 
-	public void sendAll() {
-	}
+	public void sendAll() { 
+		//System.out.println("sendAll "+controls.values().size());
+		controls.values().forEach( c -> c.sendMe() ); 
+		}
 
-	public void requestAll() {
-	}
+	public void requestAll() { controls.values().forEach( c -> c.requestMe() ); }
 	
 }

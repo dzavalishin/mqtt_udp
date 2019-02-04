@@ -115,19 +115,19 @@ public class RemoteConfigWindow {
 		sendAllButton.setTooltip(new Tooltip("Send all settings"));
 		sendAllButton.setGraphic(sendAllIcon);
 		sendAllButton.setOnAction( e -> currentTab().ifPresent( t->t.sendAll() )  );
-		sendAllButton.setDisable(true);
+		//sendAllButton.setDisable(true);
 
 
 		Button requestAllButton = new Button();
 		requestAllButton.setTooltip(new Tooltip("Request all settings"));
 		requestAllButton.setGraphic(ImageUtils.getIcon32("order"));
 		requestAllButton.setOnAction( e -> currentTab().ifPresent( t->t.requestAll() ) );
-		requestAllButton.setDisable(true);
+		//requestAllButton.setDisable(true);
 
 		ToggleButton refreshListButton = new ToggleButton();
 		refreshListButton.setTooltip(new Tooltip("Enable automatic value refresh"));
 		refreshListButton.setGraphic(unlockedIcon);
-		refreshListButton.setSelected(true);
+		//refreshListButton.setSelected(true);
 		refreshListButton.setOnAction( e -> {} );
 		refreshListButton.setDisable(true);
 
