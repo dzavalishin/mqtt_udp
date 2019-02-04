@@ -6,6 +6,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.event.EventHandler;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import ru.dz.mqtt_udp.config.ConfigurableParameter;
 import ru.dz.mqtt_udp.util.image.ImageUtils;
@@ -44,6 +45,16 @@ public class RemoteConfigControl extends HBox
 				
 		valueField.setText(cp.getValue());
 		valueField.setOnAction( e -> { if(rcw.isAutoSend() ) cp.sendNewValue( valueField.getText()); } );
+
+		// runLater to run AFTER event is processed inside field
+		valueField.setOnKeyTyped( e-> Platform.runLater( new Runnable() {			
+			@Override
+			public void run() {
+				checkRemoteSame();				
+			}
+		} ) );
+		//valueField.setOnKeyPressed( e->checkRemoteSame() );
+
 		
 		
 		getChildren().add(kindLabel);
@@ -53,7 +64,7 @@ public class RemoteConfigControl extends HBox
 		makeButton( ImageUtils.getIcon("options"), "Send to network", e -> cp.sendNewValue( valueField.getText()) );
 		makeButton( ImageUtils.getIcon("order"), "Request from network", e -> cp.requestAgain() );
 
-		diffButton = makeButton( remoteEquals, REMOTE_VALUE_IS_THE_SAME, e -> updateFromRemote() );
+		diffButton = makeButton( remoteEquals, REMOTE_VALUE_IS_THE_SAME, e -> updateLocalFromRemote() );
 		diffButton.setDisable(true);
 		
 		//messageLabel.setPrefWidth(100);
@@ -97,9 +108,13 @@ public class RemoteConfigControl extends HBox
 	public void requestMe() { cp.requestAgain(); }
 
 	
-	// Possibly new value
+	// Possibly new value - called by incoming network traffic
 	public void updateParameter(ConfigurableParameter newCp) {
 		remoteValue = newCp.getValue();
+		checkRemoteSame();
+	}
+
+	public void checkRemoteSame() {
 		remoteValueSame = remoteValue.equals( valueField.getText() );
 		
 		if( remoteValueSame ) setRemoteValueEquals();
@@ -108,16 +123,22 @@ public class RemoteConfigControl extends HBox
 		updateMessage();
 	}
 	
-	private void updateFromRemote() {
+	private void updateLocalFromRemote() {
 		valueField.setText(remoteValue);
-		setRemoteValueEquals();
+		//setRemoteValueEquals();
+		checkRemoteSame();
 	}
 
 
 	private void updateMessage()
 	{
+		//System.out.println("upd "+remoteValue);
+		
 		if(!remoteValueSame)
-			messageLabel.setText("Remote: "+remoteValue);
+		{
+			messageLabel.setText("Remote: '"+remoteValue+"'");
+			return;
+		}
 
 		messageLabel.setText("");
 	}
