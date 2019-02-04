@@ -2,9 +2,7 @@ package ru.dz.mqtt_udp.config;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import ru.dz.mqtt_udp.IPacket;
@@ -36,16 +34,18 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
  * 
  * @author dz
  * 
+ * @see RemoteConfig
  * @see lang/c/mqtt_udp_rconfig.c - C implementation of client side for this class.
- *
+ * @see <a href="https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-message-content-specification">Wiki</a>
+ * 
  */
 
 public class Controller implements Consumer<IPacket> {
 
 	private final static String SYS_CONF_WILD = mqtt_udp_defs.SYS_CONF_PREFIX+"/#";
 	
-	private LoopRunner lr = new LoopRunner("") {
-		
+	private LoopRunner lr = new LoopRunner("Remote Config Controller") 
+	{
 		@Override
 		protected void step() throws IOException, MqttProtocolException {
 			new SubscribePacket(SYS_CONF_WILD).send();
@@ -54,14 +54,9 @@ public class Controller implements Consumer<IPacket> {
 		}
 		
 		@Override
-		protected void onStop() throws IOException, MqttProtocolException {
-			// Empty			
-		}
-		
+		protected void onStop() throws IOException, MqttProtocolException { /** empty */ }		
 		@Override
-		protected void onStart() throws IOException, MqttProtocolException {
-			// Empty			
-		}
+		protected void onStart() throws IOException, MqttProtocolException { /** empty */ }
 	}; 
 	
 	private TopicFilter rf = new TopicFilter(SYS_CONF_WILD);
@@ -76,7 +71,7 @@ public class Controller implements Consumer<IPacket> {
 	{
 		//this.ms = ms;
 		ms.addPacketSink(this);	
-		lr.requestStart();
+		//lr.requestStart();
 	}
 
 	public void requestStart()

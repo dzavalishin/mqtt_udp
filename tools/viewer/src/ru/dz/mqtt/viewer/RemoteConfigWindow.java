@@ -98,7 +98,7 @@ public class RemoteConfigWindow {
 
 	}
 
-	private static final ImageView lockedIcon = ImageUtils.getIcon32("locked");
+	//private static final ImageView lockedIcon = ImageUtils.getIcon32("locked");
 	private static final ImageView unlockedIcon = ImageUtils.getIcon32("unlocked");
 	private static final ImageView sendAllIcon = ImageUtils.getIcon32("options");
 

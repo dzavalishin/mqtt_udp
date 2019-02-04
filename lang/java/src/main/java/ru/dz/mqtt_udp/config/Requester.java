@@ -25,6 +25,8 @@ import ru.dz.mqtt_udp.items.TopicItem;
  * </p>
  * 
  * <p>Remote configuration requester.</p>
+ *
+ * <p>See also Provider class.</p>
  * 
  * <p>Keeps set of topics, requests them from network, keeps replies. Usage:</p>
  * 

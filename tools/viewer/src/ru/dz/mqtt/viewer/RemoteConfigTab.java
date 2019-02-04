@@ -13,12 +13,12 @@ import ru.dz.mqtt_udp.config.ConfigurableParameter;
 public class RemoteConfigTab extends Tab 
 {
 	private RemoteConfigWindow rcw;
-	private ConfigurableHost ch;
+	//private ConfigurableHost ch;
 	
 	private Map<ConfigurableParameter,RemoteConfigControl> controls = new HashMap<ConfigurableParameter, RemoteConfigControl>();
 
 	public RemoteConfigTab(ConfigurableHost ch, RemoteConfigWindow rcw) {
-		this.ch = ch;
+		//this.ch = ch;
 		this.rcw = rcw;
 		
 		setText(ch.getMacAddressString());
