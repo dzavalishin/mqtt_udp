@@ -2,6 +2,7 @@ package ru.dz.mqtt_udp.items;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PublishPacket;
+import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
@@ -115,7 +116,7 @@ public class TopicItem extends AbstractItem {
 		switch(packetType)
 		{
 		case mqtt_udp_defs.PTYPE_PUBLISH: return new PublishPacket(topic, value);
-		//case mqtt_udp_defs.PTYPE_SUBSCRIBE: return new SubscribePacket(topic, value);
+		//case mqtt_udp_defs.PTYPE_SUBSCRIBE: return new SubscribePacket(topic);
 		
 		default: return super.toPacket(); 
 		}		

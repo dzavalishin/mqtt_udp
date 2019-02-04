@@ -62,18 +62,6 @@ public class RemoteConfig implements Consumer<IPacket> {
 	}
 	
 	
-	public static void main(String[] args) {
-		Set<ConfigurableParameter> itemList = new HashSet<ConfigurableParameter>(); 
-		
-		//itemList.add(new ConfigurableParameter(host, "topic", "test1", "Trigger"));
-		
-		PacketSourceMultiServer ms = new PacketSourceMultiServer();
-		RemoteConfig rc = new RemoteConfig(ms, "0200AAAAAAAA", itemList);
-		
-		ms.requestStart();
-		rc.requestStart();
-	}
-
 
 	private final static String SYS_CONF_WILD = mqtt_udp_defs.SYS_CONF_PREFIX+"/#";
 	private TopicFilter rf = new TopicFilter(SYS_CONF_WILD);
@@ -124,4 +112,30 @@ public class RemoteConfig implements Consumer<IPacket> {
 	{
 		items.forEach( item -> item.sendCurrectValue() );		
 	}
+
+
+
+
+
+
+
+
+	public static void main(String[] args) {
+		Set<ConfigurableParameter> itemList = new HashSet<ConfigurableParameter>(); 
+
+		String mac = ConfigurableHost.getMachineMacAddressString();
+		ConfigurableHost ch = new ConfigurableHost(mac, null ); 
+		
+		itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
+		
+		PacketSourceMultiServer ms = new PacketSourceMultiServer();
+		RemoteConfig rc = new RemoteConfig(ms, mac, itemList);
+		
+		ms.requestStart();
+		rc.requestStart();
+	}
+
+
+
+
 }

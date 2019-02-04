@@ -11,13 +11,23 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import ru.dz.mqtt_udp.IPacket;
+import ru.dz.mqtt_udp.PacketSourceMultiServer;
 import ru.dz.mqtt_udp.PacketSourceServer;
 import ru.dz.mqtt_udp.PublishPacket;
+import ru.dz.mqtt_udp.config.ConfigurableHost;
+import ru.dz.mqtt_udp.config.ConfigurableParameter;
+import ru.dz.mqtt_udp.config.RemoteConfig;
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.image.ImageUtils;
@@ -58,10 +68,24 @@ public class Main {
 		
 		Main m = new Main();
 		m.run();
-		PacketSourceServer ss = new PacketSourceServer();
-		ss.setSink( pkt -> m.processPkt( pkt ));	
-
+		//PacketSourceServer ss = new PacketSourceServer();
+		PacketSourceMultiServer ms = new PacketSourceMultiServer();
+		ms.addPacketSink( pkt -> m.processPkt( pkt ) );	
+		
+		String mac = ConfigurableHost.getMachineMacAddressString();
+		ConfigurableHost ch = new ConfigurableHost(mac, null ); 
+		
+		Set<ConfigurableParameter> itemList = new HashSet<ConfigurableParameter>(); 
+		
+		itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
+		
+		RemoteConfig rc = new RemoteConfig(ms, mac, itemList);
+		
+		ms.requestStart();
+		rc.requestStart();
+		
 	}
+
 
 	private void processPkt(IPacket pkt) {
 		if(!(pkt instanceof PublishPacket))
