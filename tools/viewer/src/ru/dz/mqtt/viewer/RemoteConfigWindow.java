@@ -3,6 +3,7 @@ package ru.dz.mqtt.viewer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -44,10 +45,17 @@ public class RemoteConfigWindow {
 		rc.setNewHostListener( ch -> createTab(ch) ); 
 		rc.setNewParameterListener( cp -> addParameter( cp ) );
 
+		// Let them monitor current topic values
+		// TODO filter publish only?
+		ms.addPacketSink(pkt -> forAllTabs( tab -> tab.processPacket(pkt)) );
+		
 		openWindow();
 
 		ms.requestStart();
 		rc.requestStart();
+		
+		// Let all do something when we started listening to network
+		forAllTabs( tab -> tab.afterNetStart() );
 	}
 
 	public void setVisible(boolean is)
@@ -68,20 +76,6 @@ public class RemoteConfigWindow {
 	private static final Image windowIcon = ImageUtils.getImage("surveys256.png");
 
 	private void openWindow() {
-
-		/*
-		{
-		Tab tab = new Tab();
-		tab.setText("new tab 1");
-		tab.setContent(new Rectangle(200,200, Color.LIGHTSTEELBLUE));
-		tabPane.getTabs().add(tab);		
-		}
-		{
-		Tab tab = new Tab();
-		tab.setText("new tab 2");
-		tab.setContent(new Rectangle(200,200, Color.LIGHTGOLDENRODYELLOW));
-		tabPane.getTabs().add(tab);		
-		}*/
 
 		VBox vbox = new VBox(makeToolBar(),tabPane);
 		vbox.setFillWidth(true);
@@ -163,6 +157,10 @@ public class RemoteConfigWindow {
 		return Optional.empty();
 	}
 
+	private void forAllTabs(Consumer<RemoteConfigTab> action)
+	{
+		tabPane.getTabs().forEach(t -> action.accept((RemoteConfigTab) t) );
+	}
 
 	private void createTab(ConfigurableHost ch) 
 	{

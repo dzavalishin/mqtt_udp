@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
+import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.config.ConfigurableHost;
 import ru.dz.mqtt_udp.config.ConfigurableParameter;
 
@@ -82,5 +83,14 @@ public class RemoteConfigTab extends Tab
 		}
 
 	public void requestAll() { controls.values().forEach( c -> c.requestMe() ); }
+
+	// Let topic controls to monitor their topic values 
+	public void processPacket(IPacket pkt) {	
+		controls.values().forEach( c -> c.processPacket( pkt ) );
+	}
+
+	public void afterNetStart() {
+		controls.values().forEach( c -> c.afterNetStart() );
+	}
 	
 }
