@@ -3,14 +3,16 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
- * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
  *
  * UDP packet reception for POSIX, must be rewritten per OS
  *
 **/
 
-#include "../../config.h"
+//#include "../../config.h"
+#include "config.h"
 
 #include <sys/types.h>
 #include <string.h>

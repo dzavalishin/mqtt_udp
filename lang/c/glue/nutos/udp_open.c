@@ -13,7 +13,8 @@
 
 
 
-#include "../../config.h"
+//#include "../../config.h"
+#include "config.h"
 #include "../../mqtt_udp.h"
 #include "udp_io.h"
 

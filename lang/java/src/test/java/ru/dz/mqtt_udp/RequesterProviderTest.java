@@ -1,12 +1,10 @@
 package ru.dz.mqtt_udp;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.After;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ru.dz.mqtt_udp.config.Provider;

@@ -5,7 +5,8 @@
  * https://github.com/dzavalishin/mqtt_udp
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
- * Topic name match
+ * @file
+ * @brief Topic name match
  *
  *
 **/
@@ -18,9 +19,20 @@
 #include "mqtt_udp.h"
 
 
-#define true 1
-#define false 0
+#define true 1   ///< true
+#define false 0  ///< false
 
+/**
+ * 
+ * @brief Compare topic name against wildcard or topic name.
+ * 
+ * @param filter     Topic name or wildcard to compare with.
+ * 
+ * @param topicName  Topic name to compare.
+ * 
+ * @return Non-zero if topicName matches filter.
+ * 
+**/
 int mqtt_udp_match( char *filter, char *topicName )
 {
 

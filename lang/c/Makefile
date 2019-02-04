@@ -1,4 +1,6 @@
-# @configure_input@
+# 
+# Don't forget to run ./configure or see README.md for ARCH/GLUE parameters
+#
 
 #.SILENT:
 
@@ -15,6 +17,10 @@
 ARCH=default
 GLUE=unix
 
+#ifeq ($(findstring Makefile.arch,$(wildcard arch/$(ARCH)/*)), )
+#($error no arch/$(ARCH)/Makefile.arch exist, need to run ./configure?)
+#endif
+
 include arch/$(ARCH)/Makefile.arch
 include glue/$(GLUE)/Makefile.glue
 -include glue/$(GLUE)/Makefile.glue.local
@@ -22,21 +28,25 @@ include glue/$(GLUE)/Makefile.glue
 vpath %.c glue/$(GLUE)
 
 # autoconf: 
-# @EXEEXT@ - executable file extension
+# .exe - executable file extension
 
 
 # Package-related substitution variables
 
-package        = @PACKAGE_NAME@
-#version        = @PACKAGE_VERSION@
-tarname        = @PACKAGE_TARNAME@
-distdir        = $(tarname)-$(version)
-prefix         = @prefix@
+#package        = MQTT-UDP-Library
+#version        = 0.1
+#tarname        = mqtt-udp-library
+#distdir        = $(tarname)-$(version)
+#prefix         = /usr/local
 
 version        = $(file < ../../common/defs/version)
 
 LIB=libmqttudp.a
 LIBV=libmqttudp.$(ARCH).$(GLUE).$(version).a
+
+
+CFLAGS += -Iarch/$(ARCH)
+
 
 include makedefs
 

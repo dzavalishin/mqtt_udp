@@ -7,6 +7,20 @@ must be configured, each suite is set of programs to be run in given order and a
 test suite 1 is pub/sub for all leanguages we can run
 test suite 2 is conf_test.py 
 
+
+OFF:
+proc = subprocess.Popen(args, stdout=subprocess.PIPE, cwd=python_path )
+
+try:
+    (out, _) = proc.communicate(timeout=10)
+#    out = out.strip()
+except subprocess.TimeoutExpired as e:
+    print( "Died, err = " + str( e ) );
+finally:
+    proc.terminate()
+    print( "Done, out = "+str(out) );
+
+
 '''
 
 import subprocess
@@ -23,16 +37,3 @@ done = subprocess.run( args, capture_output=True, cwd=python_path, timeout=100, 
 
 print( "Done, out = "+str(done.stdout) );
 
-
-'''
-proc = subprocess.Popen(args, stdout=subprocess.PIPE, cwd=python_path )
-
-try:
-    (out, _) = proc.communicate(timeout=10)
-#    out = out.strip()
-except subprocess.TimeoutExpired as e:
-    print( "Died, err = " + str( e ) );
-finally:
-    proc.terminate()
-    print( "Done, out = "+str(out) );
-'''

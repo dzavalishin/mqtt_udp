@@ -20,4 +20,5 @@ public static final int PTYPE_DISCONNECT = 0xE0;
 public static final int MQTT_PORT = 1883;
 public static final int PKT_BUF_SIZE = 2048;
 public static final int PKT_PACE_MSEC = 50;
+public static final String SYS_CONF_PREFIX = "$SYS/conf";
 }

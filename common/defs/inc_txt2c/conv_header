@@ -1,4 +1,5 @@
-#define id(parm_name,parm_val)  const unsigned char parm_name = parm_val;
+#define id(parm_name,parm_val)   const unsigned char parm_name = parm_val;
+#define str(parm_name,parm_val)  const unsigned char parm_name = parm_val;
 
 /* This code is generated, do not change */
 

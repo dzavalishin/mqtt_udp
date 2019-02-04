@@ -5,33 +5,33 @@
  * https://github.com/dzavalishin/mqtt_udp
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
- * General reception code
+ * @file
+ * @brief General reception code
  *
- * - listen loop
- * - protocol replies
+ * * Main listen loop
+ * * Automatic protocol replies
  *
 **/
 
 #include "config.h"
 
 #include <string.h>
-// Just for perror(), remove it and use user error callback!
-//#include <stdio.h>
 
 #include "mqtt_udp.h"
 
 
 
 
-
-// --------------------------------------------------------------
-//
-// Wait for one incoming packet, parse and call corresponding
-// callback
-//
-// --------------------------------------------------------------
-
-
+/**
+ * 
+ * @brief Wait for one incoming packet, parse and call corresponding callback
+ * 
+ * @deprecated
+ * 
+ * @param fd Socket
+ * @param callback Incoming packets handler function.
+ * 
+**/
 int mqtt_udp_recv( int fd, process_pkt callback )
 {
     char buf[PKT_BUF_SIZE];
@@ -42,7 +42,6 @@ int mqtt_udp_recv( int fd, process_pkt callback )
     rc = mqtt_udp_recv_pkt( fd, buf, PKT_BUF_SIZE, &src_ip );
     if(rc < 0)
     {
-        //perror("pkt recv");
         rc = mqtt_udp_global_error_handler( MQ_Err_IO, rc, "packet recv error", "" );
         return rc;
     }
@@ -60,7 +59,25 @@ int mqtt_udp_recv( int fd, process_pkt callback )
 //
 // --------------------------------------------------------------
 
-
+/**
+ * 
+ * @brief Main receive loop.
+ * 
+ * Must be called by user thread, will receive packets 
+ * and call user handler to process them. Other protocol
+ * handlers such as automatic PING reply and remote
+ * config client (if initialized) will be fed with packets
+ * too.
+ * 
+ * If you need packets reception at all, this function must be ran.
+ * 
+ * @param h Incoming packets handler (callback) function.
+ * 
+ * @return Error code. It does not return until error.
+ * 
+ * @todo Break down into ```int mqtt_udp_init( void )``` and ``int mqtt_udp_recv_loop( process_pkt h )``?
+ * 
+**/
 int mqtt_udp_recv_loop( process_pkt h )
 {
     int fd, rc;
@@ -91,17 +108,18 @@ int mqtt_udp_recv_loop( process_pkt h )
 
 
 
-// --------------------------------------------------------------
-//
-// Default packet processing, called from mqtt_udp_parse_any_pkt()
-//
-// - Reply to ping
-// - TODO Reply to SUBSCRIBE
-// - TODO Reply with PUBACK for PUBLISH with QoS
-//
-// TODO error handling
-//
-// --------------------------------------------------------------
+
+/** 
+ * 
+ * @brief Default packet processing, called from mqtt_udp_parse_any_pkt()
+ * 
+ * * Reply to ping
+ * 
+ * @todo Reply to SUBSCRIBE? Not sure.
+ * @todo Reply with PUBACK for PUBLISH with QoS
+ * @todo Error handling
+ * 
+**/ 
 
 
 

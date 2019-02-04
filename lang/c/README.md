@@ -35,8 +35,6 @@
 
 
 On most systems do './configure && make'
-If you have no autoconf tools try 'make -f Makefile.cygwin' or tailor it to your needs
-
 
 There are target architecture/os dependent subdirs (arch and glue), if you want to 
 support any other CPU or OS binding, please create arch/{name-of-your-architecture}
@@ -44,13 +42,19 @@ and glue/{name-of-your-os} subdirs and add corresponding makefile and glue code
 sources.
 
 To build for non-default arch and not for Unix, type ```make ARCH=your-arch GLUE=your-os```
-command. For example, ```make ARCH=atmega GLUE=nutos```.
+command. See below 'Known arch & glue' for examples.
 
-### Known arch & glue
+If you have no autoconf tools and see no ready setting go to arch/default and
+copy config.h.example to config.h, and try to make
 
- *      Unix/Cygwin: ```make```
- *      Mingw: ```make GLUE=mignw```
- *      Atmega, Nut/OS: ```make arch=atmega glue=nutos```
+Last effort: try 'make -f Makefile.cygwin' or tailor it to your needs.
+
+
+### Known arch and glue
+
+*      Unix/Cygwin - make
+*      Mingw - make GLUE=mignw
+*      Atmega, Nut/OS - make arch=atmega glue=nutos
 
 ## Usage
 

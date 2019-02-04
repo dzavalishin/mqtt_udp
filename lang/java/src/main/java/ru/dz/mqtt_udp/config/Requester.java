@@ -16,9 +16,20 @@ import ru.dz.mqtt_udp.items.AbstractItem;
 import ru.dz.mqtt_udp.items.TopicItem;
 
 /**
+ * 
+ * <p>
+ * Active mode remote configuration. Application has no local config 
+ * storage and requests config items on each start. Alternatively it
+ * has local config storage but updates it from time to time from
+ * central node.
+ * </p>
+ * 
  * <p>Remote configuration requester.</p>
+ *
+ * <p>See also Provider class.</p>
  * 
  * <p>Keeps set of topics, requests them from network, keeps replies. Usage:</p>
+ * 
  * <pre>
  * 
  * IPacketMultiSource ms = new PacketSourceMultiServer();

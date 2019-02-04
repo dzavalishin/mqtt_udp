@@ -6,18 +6,16 @@
 
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
- *
- * Generalized MQTT/UDP packet parser
+ * @file
+ * @brief Generalized MQTT/UDP packet parser
  *
 **/
 
 #include "config.h"
 
-//#include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <locale.h>
 #include <errno.h>
 
 #include "mqtt_udp.h"
@@ -26,6 +24,8 @@
 static size_t mqtt_udp_decode_size( const char **pkt );
 static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
+static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt );
+
 
 // -----------------------------------------------------------------------
 // parse
@@ -33,15 +33,29 @@ static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
 
 
-#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt.pflags) & 0x6)
+//#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt.pflags) & 0x6)
 
 
-// sanity check
+/// Sanity check size
 #define MAX_SZ (4*1024)
+/// How many bytes are processed already
 #define CHEWED (pkt - pstart)
 
 
-
+/**
+ * 
+ * @brief Parse incoming packet.
+ * 
+ * Call callback function with resulting packet. Note that packet
+ * and it's contents will be deallocated after return from callback.
+ * 
+ * @param pkt       Incoming binary packet data from UDP packet.
+ * @param plen      Incoming packet data length.
+ * @param from_ip   Source IP address of packet.
+ * @param callback  User function to call on packet parsed.
+ * 
+ * @return 0 on success or error code.
+**/
 int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, process_pkt callback )
 {
     int err = 0;
@@ -170,6 +184,7 @@ parse_ttrs:
 #endif
 
     mqtt_udp_recv_reply( &o );
+    mqtt_udp_call_packet_listeners( &o );
     callback( &o );
 
 cleanup:
@@ -185,6 +200,57 @@ cleanup:
 
 
 
+
+
+
+/// List of callbacks to call for incoming packets.
+struct listeners_list {
+    struct listeners_list *next;    ///< Next list element or 0.
+    process_pkt listener;           ///< Callback to call for incoming packet.
+};
+
+static struct listeners_list * listeners = 0;
+
+/**
+ * 
+ * @brief Register one more listener to get incoming packets.
+ * 
+ * Used by mqtt_udp lib itself to connect subsystems.
+ * 
+ * @param listener Callback to call when packet arrives.
+ * 
+**/
+void mqtt_udp_add_packet_listener( process_pkt listener )
+{
+    struct listeners_list * lp = malloc( sizeof( struct listeners_list ) );
+
+    lp->next = listeners;
+    lp->listener = listener;
+
+    listeners = lp;
+}
+
+/// Pass packet to all listeners
+static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt )
+{
+    struct listeners_list * lp;
+    for( lp = listeners ; lp ; lp = lp->next )
+    {
+        //int rc = 
+        lp->listener( pkt );
+        //if( rc ) break;
+    }
+}
+
+
+
+
+
+
+
+
+
+/// Decode payload size dynamic length int
 static size_t mqtt_udp_decode_size( const char **pkt )
 {
     size_t ret = 0;
@@ -201,6 +267,7 @@ static size_t mqtt_udp_decode_size( const char **pkt )
     }
 }
 
+/// Decode fixed 2-byte integer.
 static size_t mqtt_udp_decode_topic_len( const char *pkt )
 {
     return (pkt[0] << 8) | pkt[1];
@@ -224,7 +291,13 @@ static char *ptname[] =
     "?0xF0"
 };
 
-
+/**
+ * @brief Dump packet.
+ * 
+ * @param o Packet pointer.
+ * 
+ * @return Allways 0.
+**/
 int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 {
     const char *tn = ptname[ o->ptype >> 4 ];

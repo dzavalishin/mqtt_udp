@@ -1,2 +1,2 @@
-cywin (also it is supported by Unix settings now)
-mingw!
+*      millisecond timing for cygwin
+*      millisecond timing for mingw

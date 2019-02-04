@@ -5,51 +5,40 @@
  * https://github.com/dzavalishin/mqtt_udp
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
- *
- * Packet send
+ * @file
+ * @brief Packet send
+ * 
+ * Build packet structure, pass to encode and send out.
+ * 
+ * Can be used even if reception is not started.
  *
 **/
 
 #include "config.h"
 
-//#include <sys/types.h>
 #include <string.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 
 #include "mqtt_udp.h"
 
 
 
-/*
-static int pack_len( char *buf, int *blen, int *used, int data_len )
-{
-    *used = 0;
-    while( 1 )
-    {
-        if( *blen <= 0 ) return ENOMEM;
 
-        int byte = data_len % 128;
-        data_len /= 128;
-
-        if( data_len > 0 )
-            byte |= 0x80;
-
-        *buf++ = byte;
-        (*blen)--;
-        (*used)++;
-
-        if( data_len == 0 ) return 0;
-    }
-}
-*/
 
 // ----------------------------------------------------
 // Make and send PUBLISH packet
 // ----------------------------------------------------
 
-
+/**
+ * 
+ * @brief Compose and send PUBLISH packet.
+ * 
+ * @param topic  Message topic
+ * @param data   Message value, usually text string
+ * 
+ * @returns 0 if ok, or error code
+**/
 int mqtt_udp_send_publish( char *topic, char *data )
 {
     struct mqtt_udp_pkt p;
@@ -81,10 +70,17 @@ int mqtt_udp_send_publish( char *topic, char *data )
 // ----------------------------------------------------
 
 
+/**
+ * 
+ * @brief Compose and send SUBSCRIBE packet.
+ * 
+ * @param topic  Message topic
+ * 
+ * @returns 0 if ok, or error code
+**/
 int mqtt_udp_send_subscribe( char *topic )
 {
     struct mqtt_udp_pkt p;
-    //unsigned char buf[PKT_BUF_SIZE];
     char buf[PKT_BUF_SIZE];
     int rc;
     size_t out_size;
@@ -114,6 +110,8 @@ int mqtt_udp_send_subscribe( char *topic )
 // Packet with no payload, just type and zero length
 // ----------------------------------------------------
 
+/// Send empty packet of given type
+/// @param ptype Packet type
 static int mqtt_udp_send_empty_pkt( char ptype )
 {
     char buf[2];
@@ -127,14 +125,14 @@ static int mqtt_udp_send_empty_pkt( char ptype )
 // Ping
 // ----------------------------------------------------
 
-
+/// Send PINGREQ message
 int mqtt_udp_send_ping_request( void )
 {
     return mqtt_udp_send_empty_pkt( PTYPE_PINGREQ );
 }
 
 
-//int mqtt_udp_send_ping_responce( int fd, int ip_addr )
+/// Send PINGRESP message
 int mqtt_udp_send_ping_responce( void )
 {
     return mqtt_udp_send_empty_pkt( PTYPE_PINGRESP );

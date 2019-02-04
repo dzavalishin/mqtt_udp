@@ -6,17 +6,15 @@
  * 
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
- *
- * MQTT/UDP packet structure handling
+ * @file
+ * @brief MQTT/UDP packet structure handling.
  *
 **/
 
 #include "config.h"
 
 #include <string.h>
-//#include <stdio.h>
 #include <stdlib.h>
-//#include <errno.h>
 
 #include "mqtt_udp.h"
 
@@ -26,6 +24,7 @@
 // Clear
 // -----------------------------------------------------------------------
 
+/// Clear packet
 void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p )
 {
     memset( p, 0, sizeof(struct mqtt_udp_pkt) );
@@ -36,6 +35,7 @@ void mqtt_udp_clear_pkt( struct mqtt_udp_pkt *p )
 // Release memory
 // -----------------------------------------------------------------------
 
+/// Release memory used by this packet, but not packet structure itself.
 void mqtt_udp_free_pkt( struct mqtt_udp_pkt *p )
 {
     if( p->topic ) free( p->topic );

@@ -5,3 +5,5 @@ CC=avr-gcc
 #AR=@AR@
 AR=ar
 RANLIB=ranlib
+
+EXESUFFIX=.elf

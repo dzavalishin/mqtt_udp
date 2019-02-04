@@ -15,7 +15,12 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 /**
  * <p>Remote configuration data provider</p>
  * 
- * <p>Will reply to</p>
+ * <p>See also Requester class<p>
+ * 
+ * <p>
+ * Will reply to requests (subscribe packets) for given topics
+ * sending back publish packets with data.
+ * </p>
  *  
  * @author dz
  *

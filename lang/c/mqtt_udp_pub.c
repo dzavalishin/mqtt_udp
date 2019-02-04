@@ -6,7 +6,8 @@
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
  *
- * Publish MQTT/UDP message
+ * @file
+ * @brief Example program: Send MQTT/UDP publish message
  *
 **/
 

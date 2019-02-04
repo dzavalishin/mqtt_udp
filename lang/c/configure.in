@@ -5,7 +5,6 @@ AC_PREREQ([2.69])
 AC_INIT([MQTT-UDP-Library], [0.1], [https://github.com/dzavalishin/mqtt_udp/issues],[mqtt-udp-library],[https://github.com/dzavalishin/mqtt_udp])
 
 AC_CONFIG_SRCDIR([mqtt_udp.c])
-AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
@@ -25,5 +24,10 @@ AC_TYPE_SSIZE_T
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([memset socket strlcpy])
 
-AC_CONFIG_FILES([Makefile arch/default/Makefile.arch])
+
+AC_CONFIG_HEADERS([arch/default/config.h])
+
+#AC_CONFIG_FILES([Makefile arch/default/Makefile.arch])
+AC_CONFIG_FILES([arch/default/Makefile.arch])
+
 AC_OUTPUT

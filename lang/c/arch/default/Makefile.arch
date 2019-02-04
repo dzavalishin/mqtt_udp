@@ -7,3 +7,5 @@ CC=gcc
 #AR=@AR@
 AR=ar
 RANLIB=ranlib
+
+EXESUFFIX=.exe

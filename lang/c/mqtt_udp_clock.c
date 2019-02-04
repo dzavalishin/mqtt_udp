@@ -6,8 +6,8 @@
  *
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
- *
- * Translate current time and date to listeners.
+ * @file
+ * @brief Example program: Translate current time and date to listeners
  *
 **/
 
@@ -25,6 +25,7 @@
 
 
 //#define TOPIC "$SYS/GMT"
+/// Topic name to publish to
 #define TOPIC "$SYS/localtime"
 
 

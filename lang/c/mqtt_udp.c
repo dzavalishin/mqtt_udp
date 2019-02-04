@@ -6,37 +6,25 @@
  *
  * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
- *
- * Network glue code 
+ * @file
+ * @brief Network glue code 
  *
 **/
 
 
 #include "config.h"
-/*
-#include <sys/types.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <locale.h>
-#include <fcntl.h>
-#include <errno.h>
-*/
 #include "mqtt_udp.h"
-//#include "udp_io.h"
 
-
+/// Last used socket for reuse
 static int last_socket = -1;
 
-
+/// Singleton: return one socket to all callers.
 int mqtt_udp_get_send_fd( void ) // TODO hack, get fd to send datagrams
 {
     if( last_socket < 0 )
         last_socket = mqtt_udp_socket(); // TODO not thread safe
     return last_socket;
 }
-
 
 
 
