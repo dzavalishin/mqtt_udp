@@ -97,7 +97,7 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 
 
 	public void requestAgain() {
-		String topic = makeTopicName();
+		String topic = getTopicName();
 		
 		System.out.println("request "+topic);
 		
@@ -108,19 +108,30 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 		}
 	}
 
-	public String makeTopicName() {
-		String topic = String.format(
+	private String makeTopicName() {
+		return String.format(
 				"%s/%s/%s/%s", 
 				mqtt_udp_defs.SYS_CONF_PREFIX,
 				host.getMacAddressString(),
 				kind, name
 				);
-		return topic;
+	}
+	
+	private String fullTopcNameCache = null;
+	public String getTopicName() {
+		if(null == fullTopcNameCache)
+		{
+			synchronized (this) {
+				if(null == fullTopcNameCache)
+					fullTopcNameCache = makeTopicName();
+			}
+		}
+		return fullTopcNameCache;
 	}
 
 
 	public void sendCurrectValue() {
-		String topic = makeTopicName();
+		String topic = getTopicName();
 		
 		System.out.println("send "+topic+"="+value);
 		
@@ -133,6 +144,13 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 
 
 	public boolean topicIs(String topic) {
-		return makeTopicName().equals(topic);
+		return getTopicName().equals(topic);
+	}
+
+
+	public void setValue(String v) {
+		value = v;
+		// TODO value change listener
+		System.out.println("got "+getTopicName()+"="+value);
 	}
 }

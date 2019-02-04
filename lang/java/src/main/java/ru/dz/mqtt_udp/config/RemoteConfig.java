@@ -101,7 +101,16 @@ public class RemoteConfig implements Consumer<IPacket> {
 		
 		if (p instanceof PublishPacket) {
 			PublishPacket pp = (PublishPacket) p;
+			
+			setLocalValue( pp );
 		}		
+	}
+
+	private void setLocalValue(PublishPacket pp) {
+		items.forEach( item -> {
+			if( item.topicIs(pp.getTopic()) )
+				item.setValue(pp.getValueString());
+		} );
 	}
 
 	private void sendConfigurableTopic(String topic) {
