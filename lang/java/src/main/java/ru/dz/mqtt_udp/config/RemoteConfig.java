@@ -106,13 +106,13 @@ public class RemoteConfig implements Consumer<IPacket> {
 	private void sendConfigurableTopic(String topic) {
 		items.forEach( item -> {
 			if( item.topicIs(topic))
-				item.sendCurrectValue();
+				item.sendCurrentValue();
 		} );
 	}
 
 	private void sendAllConfigurableTopics() 
 	{
-		items.forEach( item -> item.sendCurrectValue() );		
+		items.forEach( item -> item.sendCurrentValue() );		
 	}
 
 
@@ -128,12 +128,14 @@ public class RemoteConfig implements Consumer<IPacket> {
 		//ConfigurableHost ch = new ConfigurableHost(mac, null ); 		
 		//itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
 		
-		itemList.add(new LocalConfigurableParameter( "topic", "test1", "Trigger") );
-		itemList.add(new LocalConfigurableParameter( "node", "soft", "Tray Informer") );
+		itemList.add(new LocalReadOnlyParameter( "node", "soft", "Tray Informer") );
+		itemList.add(new LocalReadOnlyParameter( "node", "ver", Engine.getVersionString()) );
+		itemList.add(new LocalReadOnlyParameter( "node", "uptime", "?") );
+
 		itemList.add(new LocalConfigurableParameter( "node", "name", "Tray Informer") );
 		itemList.add(new LocalConfigurableParameter( "node", "location", "Desk PC") );
-		itemList.add(new LocalConfigurableParameter( "node", "ver", Engine.getVersionString()) );
-		itemList.add(new LocalConfigurableParameter( "node", "uptime", "?") );
+
+		itemList.add(new LocalConfigurableParameter( "topic", "test1", "Trigger") );
 		
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
 		RemoteConfig rc = new RemoteConfig(ms, itemList);

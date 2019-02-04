@@ -91,7 +91,7 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 	public void sendNewValue(String v) 
 	{
 		value = v;
-		sendCurrectValue();
+		sendCurrentValue();
 	}
 
 
@@ -130,10 +130,10 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 	}
 
 
-	public void sendCurrectValue() {
+	public void sendCurrentValue() {
 		String topic = getTopicName();
 		
-		System.out.println("send "+topic+"="+value);
+		//System.out.println("send "+topic+"="+value);
 		
 		try {
 			new PublishPacket(topic,value).send();
@@ -151,6 +151,6 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 	public void setValue(String v) {
 		value = v;
 		// TODO value change listener
-		System.out.println("got "+getTopicName()+"="+value);
+		//System.out.println("got "+getTopicName()+"="+value);
 	}
 }
