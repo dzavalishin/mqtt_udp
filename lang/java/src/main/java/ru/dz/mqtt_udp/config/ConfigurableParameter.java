@@ -91,16 +91,7 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 	public void sendNewValue(String v) 
 	{
 		value = v;
-		
-		String topic = makeTopicName();
-		
-		System.out.println("send "+topic+"="+v);
-		
-		try {
-			new PublishPacket(topic,value).send();
-		} catch (IOException e) {
-			GlobalErrorHandler.handleError(ErrorType.IO, e);
-		}
+		sendCurrectValue();
 	}
 
 
@@ -125,5 +116,23 @@ public class ConfigurableParameter implements Comparable<ConfigurableParameter> 
 				kind, name
 				);
 		return topic;
+	}
+
+
+	public void sendCurrectValue() {
+		String topic = makeTopicName();
+		
+		System.out.println("send "+topic+"="+value);
+		
+		try {
+			new PublishPacket(topic,value).send();
+		} catch (IOException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+		}
+	}
+
+
+	public boolean topicIs(String topic) {
+		return makeTopicName().equals(topic);
 	}
 }

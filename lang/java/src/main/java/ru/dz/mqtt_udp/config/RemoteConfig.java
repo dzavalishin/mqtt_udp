@@ -10,8 +10,11 @@ import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.IPacketMultiSource;
 import ru.dz.mqtt_udp.MqttProtocolException;
 import ru.dz.mqtt_udp.PacketSourceMultiServer;
+import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubscribePacket;
+import ru.dz.mqtt_udp.TopicFilter;
 import ru.dz.mqtt_udp.util.LoopRunner;
+import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 /**
  * 
@@ -72,9 +75,44 @@ public class RemoteConfig implements Consumer<IPacket> {
 	}
 
 
+	private final static String SYS_CONF_WILD = mqtt_udp_defs.SYS_CONF_PREFIX+"/#";
+	private TopicFilter rf = new TopicFilter(SYS_CONF_WILD);
+
+	/**
+	 *  Incoming packet
+	 * 
+	 */
 	@Override
-	public void accept(IPacket t) {
-		// TODO Auto-generated method stub
+	public void accept(IPacket p) 
+	{
+		if (p instanceof SubscribePacket) {
+			SubscribePacket sp = (SubscribePacket) p;
+			
+			if( rf.test(sp.getTopic()) )
+			{
+				sendAllConfigurableTopics();
+				return;
+			}
+			
+			// possible request for some specific one
+			sendConfigurableTopic(sp.getTopic());
+			
+		}
 		
+		if (p instanceof PublishPacket) {
+			PublishPacket pp = (PublishPacket) p;
+		}		
+	}
+
+	private void sendConfigurableTopic(String topic) {
+		items.forEach( item -> {
+			if( item.topicIs(topic))
+				item.sendCurrectValue();
+		} );
+	}
+
+	private void sendAllConfigurableTopics() 
+	{
+		items.forEach( item -> item.sendCurrectValue() );		
 	}
 }

@@ -23,6 +23,7 @@
 *          Turn off protocol replies to don't disturb others
 *          Turn off protocol replies display
 *          Edit/send messages
+*          Remote configuration UI
 
 ### Tools
 
