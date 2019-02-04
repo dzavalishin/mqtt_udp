@@ -27,6 +27,7 @@ import ru.dz.mqtt_udp.PacketSourceServer;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.config.ConfigurableHost;
 import ru.dz.mqtt_udp.config.ConfigurableParameter;
+import ru.dz.mqtt_udp.config.LocalConfigurableParameter;
 import ru.dz.mqtt_udp.config.RemoteConfig;
 import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GlobalErrorHandler;
@@ -72,14 +73,15 @@ public class Main {
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
 		ms.addPacketSink( pkt -> m.processPkt( pkt ) );	
 		
-		String mac = ConfigurableHost.getMachineMacAddressString();
-		ConfigurableHost ch = new ConfigurableHost(mac, null ); 
+		//String mac = ConfigurableHost.getMachineMacAddressString();
+		//ConfigurableHost ch = new ConfigurableHost(mac, null ); 
 		
 		Set<ConfigurableParameter> itemList = new HashSet<ConfigurableParameter>(); 
 		
-		itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
+		//itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
+		itemList.add(new LocalConfigurableParameter( "topic", "test1", "Trigger"));
 		
-		RemoteConfig rc = new RemoteConfig(ms, mac, itemList);
+		RemoteConfig rc = new RemoteConfig(ms, itemList);
 		
 		ms.requestStart();
 		rc.requestStart();

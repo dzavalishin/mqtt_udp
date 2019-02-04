@@ -13,12 +13,17 @@ import ru.dz.mqtt_udp.config.ConfigurableParameter;
 public class RemoteConfigTab extends Tab 
 {
 	private RemoteConfigWindow rcw;
-	//private ConfigurableHost ch;
+	private ConfigurableHost ch;
+	Label infoLabel = new Label();
 	
 	private Map<ConfigurableParameter,RemoteConfigControl> controls = new HashMap<ConfigurableParameter, RemoteConfigControl>();
+	private String infoSoft;
+	private String infoSoftVer;
+	private String infoLocation;
+	private String infoUptime;
 
 	public RemoteConfigTab(ConfigurableHost ch, RemoteConfigWindow rcw) {
-		//this.ch = ch;
+		this.ch = ch;
 		this.rcw = rcw;
 		
 		setText(ch.getMacAddressString());
@@ -33,22 +38,37 @@ public class RemoteConfigTab extends Tab
                 //"-fx-border-radius: 5;" + 
                 "-fx-border-color: lightgrey;");
 		
-		vbox.getChildren().add( new Label(
-				getTabDescription(ch)
-				) );
+		//Label infoLabel = new Label( getTabDescription(ch) );
+		vbox.getChildren().add( infoLabel );
+		updateInfoLabel();
 		
 		setContent( vbox );
 	}
 
-	public String getTabDescription(ConfigurableHost ch) {
-		return "  MAC: "+ ch.getMacAddressString() + "   IP: "+ch.getIpAddressString();
+	public String getTabDescription() {
+		StringBuilder sb = new StringBuilder( "  Id: "+ ch.getMacAddressString() + "   IP: "+ch.getIpAddressString() );
+		
+		if( infoSoft != null ) sb.append("   "+infoSoft);
+		if( infoSoftVer != null ) sb.append(" v. "+infoSoftVer);
+		if( infoLocation != null ) sb.append(" @ "+infoLocation);
+		if( infoUptime != null ) sb.append("   up "+infoUptime);		
+		//System.out.println(sb);
+		
+		return sb.toString();
 	}
 
+	private void updateInfoLabel()
+	{
+		infoLabel.setText(getTabDescription());
+	}
+	
+	
 	public void updateFromHost(ConfigurableHost newCh) {
 		// TODO update tab		
 	}
 
 	public void addParameter(ConfigurableParameter cp) {
+		
 		VBox vbox = (VBox) getContent();
 
 		//ScrollPane scroll = new ScrollPane();
@@ -57,6 +77,9 @@ public class RemoteConfigTab extends Tab
 		Platform.runLater( new Runnable() {
 			@Override
 			public void run() { 
+				// Display specially
+				if(processSpecialParameter(cp))
+					return;				
 				
 				RemoteConfigControl rcc = controls.get(cp);
 				if( rcc != null )
@@ -67,7 +90,9 @@ public class RemoteConfigTab extends Tab
 
 				//vbox.getChildren().add(scroll); 
 				RemoteConfigControl newCc = new RemoteConfigControl(cp,rcw);
+								
 				vbox.getChildren().add( newCc );
+				
 				controls.put(cp, newCc);
 				}
 			} );
@@ -76,6 +101,31 @@ public class RemoteConfigTab extends Tab
 	}
 	
 	
+
+	private boolean processSpecialParameter(ConfigurableParameter cp) {
+		
+		if( cp.getKind().equals("node") )
+		{
+			String name = cp.getName();
+			String value = cp.getValue();
+			
+			switch( name )
+			{
+			case "name": setText(value); break;
+			case "soft": infoSoft = value; break;
+			case "ver": infoSoftVer = value; break;
+			case "location": infoLocation = value; break;
+			case "uptime": infoUptime = value; break;
+			
+			default: return false;
+			}
+			
+			updateInfoLabel();
+			return true;
+		}
+		
+		return false;
+	}
 
 	public void sendAll() { 
 		//System.out.println("sendAll "+controls.values().size());

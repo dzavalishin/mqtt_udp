@@ -86,13 +86,13 @@ public class ConfigurableHost implements Comparable<ConfigurableHost> {
 		try {
 				
 			ip = InetAddress.getLocalHost();
-			System.out.println("Current IP address : " + ip.getHostAddress());
+			//System.out.println("Current IP address : " + ip.getHostAddress());
 			
 			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 				
 			byte[] mac = network.getHardwareAddress();
 				
-			System.out.print("Current MAC address : ");
+			//System.out.print("Current MAC address : ");
 				
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < mac.length; i++) {

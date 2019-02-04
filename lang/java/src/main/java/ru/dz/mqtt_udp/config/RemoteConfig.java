@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import ru.dz.mqtt_udp.Engine;
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.IPacketMultiSource;
 import ru.dz.mqtt_udp.MqttProtocolException;
@@ -46,12 +47,13 @@ public class RemoteConfig implements Consumer<IPacket> {
 		@Override
 		protected void onStart() throws IOException, MqttProtocolException { /** empty */ }
 	};
-	private String macAddress;
+	//private String macAddress;
 	private Collection<ConfigurableParameter> items; 
 
 	
-	public RemoteConfig( IPacketMultiSource ms, String macAddress, Collection<ConfigurableParameter> items ) {
-		this.macAddress = macAddress;
+	//public RemoteConfig( IPacketMultiSource ms, String macAddress, Collection<ConfigurableParameter> items ) {
+	public RemoteConfig( IPacketMultiSource ms, Collection<ConfigurableParameter> items ) {
+		//this.macAddress = macAddress;
 		this.items = items;
 		ms.addPacketSink(this);	
 	}
@@ -123,13 +125,18 @@ public class RemoteConfig implements Consumer<IPacket> {
 	public static void main(String[] args) {
 		Set<ConfigurableParameter> itemList = new HashSet<ConfigurableParameter>(); 
 
-		String mac = ConfigurableHost.getMachineMacAddressString();
-		ConfigurableHost ch = new ConfigurableHost(mac, null ); 
+		//ConfigurableHost ch = new ConfigurableHost(mac, null ); 		
+		//itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
 		
-		itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
+		itemList.add(new LocalConfigurableParameter( "topic", "test1", "Trigger") );
+		itemList.add(new LocalConfigurableParameter( "node", "soft", "Tray Informer") );
+		itemList.add(new LocalConfigurableParameter( "node", "name", "Tray Informer") );
+		itemList.add(new LocalConfigurableParameter( "node", "location", "Desk PC") );
+		itemList.add(new LocalConfigurableParameter( "node", "ver", Engine.getVersionString()) );
+		itemList.add(new LocalConfigurableParameter( "node", "uptime", "?") );
 		
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
-		RemoteConfig rc = new RemoteConfig(ms, mac, itemList);
+		RemoteConfig rc = new RemoteConfig(ms, itemList);
 		
 		ms.requestStart();
 		rc.requestStart();
