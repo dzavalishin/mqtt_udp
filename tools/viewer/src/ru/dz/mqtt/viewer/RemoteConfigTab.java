@@ -102,19 +102,17 @@ public class RemoteConfigTab extends Tab
 	
 	
 
-	private boolean processSpecialParameter(ConfigurableParameter cp) {
+	private boolean processSpecialParameter(ConfigurableParameter cp) 
+	{
+		String name = cp.getName();
+		String value = cp.getValue();	
 		
-		if( cp.getKind().equals("node") )
+		if( cp.getKind().equals("info") )
 		{
-			String name = cp.getName();
-			String value = cp.getValue();
-			
 			switch( name )
 			{
-			case "name": setText(value); break;
 			case "soft": infoSoft = value; break;
 			case "ver": infoSoftVer = value; break;
-			case "location": infoLocation = value; break;
 			case "uptime": infoUptime = value; break;
 			
 			default: return false;
@@ -122,6 +120,20 @@ public class RemoteConfigTab extends Tab
 			
 			updateInfoLabel();
 			return true;
+		}
+
+		if( cp.getKind().equals("node") )
+		{
+			switch( name )
+			{
+			case "name": setText(value); break;
+			case "location": infoLocation = value; break;
+			
+			default: return false;
+			}
+			
+			updateInfoLabel();
+			return false; // R/W, let create edit field
 		}
 		
 		return false;

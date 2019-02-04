@@ -128,9 +128,9 @@ public class RemoteConfig implements Consumer<IPacket> {
 		//ConfigurableHost ch = new ConfigurableHost(mac, null ); 		
 		//itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
 		
-		itemList.add(new LocalReadOnlyParameter( "node", "soft", "Tray Informer") );
-		itemList.add(new LocalReadOnlyParameter( "node", "ver", Engine.getVersionString()) );
-		itemList.add(new LocalReadOnlyParameter( "node", "uptime", "?") );
+		itemList.add(new LocalReadOnlyParameter( "info", "soft", "Tray Informer") );
+		itemList.add(new LocalReadOnlyParameter( "info", "ver", Engine.getVersionString()) );
+		itemList.add(new LocalReadOnlyParameter( "info", "uptime", "?") );
 
 		itemList.add(new LocalConfigurableParameter( "node", "name", "Tray Informer") );
 		itemList.add(new LocalConfigurableParameter( "node", "location", "Desk PC") );
