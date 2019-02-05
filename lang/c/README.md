@@ -69,30 +69,30 @@ Last effort: try 'make -f Makefile.cygwin' or tailor it to your needs.
 
 ```c
 
-int main(int argc, char *argv[])
-{
-    ...
-
-    int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
-
-    ...
-}
-
-int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
-{
-
-    printf( "pkt %x flags %x, id %d",
-            o->ptype, o->pflags, o->pkt_id
-          );
-
-    if( o->topic_len > 0 )
-        printf(" topic '%s'", o->topic );
-
-    if( o->value_len > 0 )
-        printf(" = '%s'", o->value );
-
-    printf( "\n");
-}
+    int main(int argc, char *argv[])
+    {
+        ...
+    
+        int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
+    
+        ...
+    }
+    
+    int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
+    {
+    
+        printf( "pkt %x flags %x, id %d",
+                o->ptype, o->pflags, o->pkt_id
+              );
+    
+        if( o->topic_len > 0 )
+            printf(" topic '%s'", o->topic );
+    
+        if( o->value_len > 0 )
+            printf(" = '%s'", o->value );
+    
+        printf( "\n");
+    }
 
 
 ```

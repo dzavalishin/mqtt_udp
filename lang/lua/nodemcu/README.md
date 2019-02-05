@@ -35,16 +35,16 @@ But it also does not complain about '/' in a file name.
 Upload all the needed files as is and run this snippet from ESPlorer:
 
 ```lua
-    function mvf( fn )
-      nfn = "mqttudp/"..fn
-      file.remove( nfn );
-      file.rename( fn, nfn )
-    end
-    
-    mvf("mybit.lua")
-    mvf("mqtt_udp_lib_MCU.lua")
-    mvf("mqtt_udp_defs.lua")
-    mvf("mqtt_proto_lib.lua")
+        function mvf( fn )
+          nfn = "mqttudp/"..fn
+          file.remove( nfn );
+          file.rename( fn, nfn )
+        end
+        
+        mvf("mybit.lua")
+        mvf("mqtt_udp_lib_MCU.lua")
+        mvf("mqtt_udp_defs.lua")
+        mvf("mqtt_proto_lib.lua")
 ```
 
 It will do. Don't forget to upload all for files before running it.
