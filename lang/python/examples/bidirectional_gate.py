@@ -52,15 +52,15 @@ def broker_listen_thread(bclient):
 
 def udp_listen_thread(bclient):
     s = mqttudp.sub.make_recv_socket()
-    last = {}
+    last_message = {}
     while True:
-        pkt = mqttudp.sub.recv_udp_packet(s)    
-        ptype,topic,value = mqttudp.sub.parse_packet(pkt)
+        packet = mqttudp.sub.recv_udp_packet(s)    
+        ptype,topic,value = mqttudp.sub.parse_packet(packet)
         if ptype != "publish":
             continue
-        if last.has_key(topic) and last[topic] == value:
+        if last_message.has_key(topic) and last_message[topic] == value:
             continue
-        last[topic] = value
+        last_message[topic] = value
         if ilock.udp_to_broker(topic, value):
             bclient.publish(topic, value, qos=0)
             print "From UDP: "+topic+"="+value
@@ -77,11 +77,11 @@ if __name__ == "__main__":
     bclient.connect(MQTT_BROKER_HOST, 1883, 60)
     print("connected", bclient)
 
-    blt = threading.Thread(target=broker_listen_thread, args=(bclient,))
-    ult = threading.Thread(target=udp_listen_thread, args=(bclient,))
+    bl_thread = threading.Thread(target=broker_listen_thread, args=(bclient,))
+    ul_thread = threading.Thread(target=udp_listen_thread, args=(bclient,))
 
-    blt.start()
-    ult.start()
+    bl_thread.start()
+    ul_thread.start()
 
-    blt.join()
-    ult.join()
+    bl_thread.join()
+    ul_thread.join()
