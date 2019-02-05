@@ -46,14 +46,6 @@ public class Main {
 	private String userMessage = "No data received";
 
 	private static Config cfg;
-	/*
-	private String topic1 = "PLK0_activePa";
-	private String topic2 = "PLK0_Va";
-	private String topic1Header = "Power consumption";
-	private String topic2Header = "Mains Voltage";
-
-	private String controlTopic = "GroupGuestMain";
-	*/
 	
 	public static void main(String[] args) 
 	{

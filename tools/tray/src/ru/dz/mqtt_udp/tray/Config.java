@@ -30,15 +30,6 @@ public class Config {
 
 		controlTopic = props.getProperty("controltopic", null);
 		
-		/*
-		// Предположим, что в настройках находится список целых через точку с запятой
-		String[] parts = props.getProperty("SOME_INT_ARRAY").split(";");
-		SOME_INT_ARRAY = new int[parts.length];
-		for (int i = 0; i < parts.length; ++i)
-		{
-			SOME_INT_ARRAY[i] = Integer.valueOf(parts[i]);
-		}
-		*/
 	}
 
 }

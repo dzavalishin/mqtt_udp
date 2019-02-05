@@ -1,8 +1,13 @@
 package ru.dz.mqtt_udp.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -14,6 +19,8 @@ import ru.dz.mqtt_udp.PacketSourceMultiServer;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.TopicFilter;
+import ru.dz.mqtt_udp.util.ErrorType;
+import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.LoopRunner;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
@@ -41,7 +48,7 @@ public class RemoteConfig implements Consumer<IPacket> {
 			sleep(30L*1000L);
 			//sleep(2L*1000L);
 		}
-		
+
 		@Override
 		protected void onStop() throws IOException, MqttProtocolException { /** empty */ }		
 		@Override
@@ -50,7 +57,7 @@ public class RemoteConfig implements Consumer<IPacket> {
 	//private String macAddress;
 	private Collection<ConfigurableParameter> items; 
 
-	
+
 	//public RemoteConfig( IPacketMultiSource ms, String macAddress, Collection<ConfigurableParameter> items ) {
 	public RemoteConfig( IPacketMultiSource ms, Collection<ConfigurableParameter> items ) {
 		//this.macAddress = macAddress;
@@ -62,11 +69,12 @@ public class RemoteConfig implements Consumer<IPacket> {
 	{
 		lr.requestStart();
 	}
-	
-	
+
+
 
 	private final static String SYS_CONF_WILD = mqtt_udp_defs.SYS_CONF_PREFIX+"/#";
 	private TopicFilter rf = new TopicFilter(SYS_CONF_WILD);
+	private String fName;
 
 	/**
 	 *  Incoming packet
@@ -77,21 +85,21 @@ public class RemoteConfig implements Consumer<IPacket> {
 	{
 		if (p instanceof SubscribePacket) {
 			SubscribePacket sp = (SubscribePacket) p;
-			
+
 			if( rf.test(sp.getTopic()) )
 			{
 				sendAllConfigurableTopics();
 				return;
 			}
-			
+
 			// possible request for some specific one
 			sendConfigurableTopic(sp.getTopic());
-			
+
 		}
-		
+
 		if (p instanceof PublishPacket) {
 			PublishPacket pp = (PublishPacket) p;
-			
+
 			setLocalValue( pp );
 		}		
 	}
@@ -117,7 +125,51 @@ public class RemoteConfig implements Consumer<IPacket> {
 
 
 
+	private Properties props = new Properties();
+	public void setPropertiesFileName( String fName )
+	{
+		this.fName = fName;		
+	}
 
+
+	public void loadFromProperties()
+	{
+		try {
+			props.load(new FileInputStream(new File(fName)));
+			props.forEach( (name,val) ->{
+				String[] names = name.toString().split("/");
+
+				items.forEach( item -> {
+					if( 
+							item.getKind().equals(names[0]) &&
+							item.getName().equals(names[1])
+							)
+						item.setValue(val.toString());
+				});
+			});
+		} catch (FileNotFoundException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+		} catch (IOException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+		}		
+	}
+
+
+	public void saveToProperties()
+	{
+		items.forEach( item -> {
+			if(!(item instanceof LocalReadOnlyParameter)) 
+			{				
+				String key = item.getKind()+"/"+item.getName();
+				props.setProperty(key, item.getValue());
+			}
+		} );
+		try {
+			props.save(new FileOutputStream(new File(fName)), "MQTT/UDP remote config storage");
+		} catch (FileNotFoundException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+		}
+	}
 
 
 
@@ -127,7 +179,7 @@ public class RemoteConfig implements Consumer<IPacket> {
 
 		//ConfigurableHost ch = new ConfigurableHost(mac, null ); 		
 		//itemList.add(new ConfigurableParameter(ch, "topic", "test1", "Trigger"));
-		
+
 		itemList.add(new LocalReadOnlyParameter( "info", "soft", "Tray Informer") );
 		itemList.add(new LocalReadOnlyParameter( "info", "ver", Engine.getVersionString()) );
 		itemList.add(new LocalReadOnlyParameter( "info", "uptime", "?") );
@@ -136,12 +188,15 @@ public class RemoteConfig implements Consumer<IPacket> {
 		itemList.add(new LocalConfigurableParameter( "node", "location", "Desk PC") );
 
 		itemList.add(new LocalConfigurableParameter( "topic", "test1", "Trigger") );
-		
+
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
 		RemoteConfig rc = new RemoteConfig(ms, itemList);
-		
+
 		ms.requestStart();
 		rc.requestStart();
+
+		rc.setPropertiesFileName("remoteconf.prop");
+		rc.saveToProperties();
 	}
 
 
