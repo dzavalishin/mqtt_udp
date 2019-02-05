@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 
 import ru.dz.mqtt_udp.io.SingleSendSocket;
 import ru.dz.mqtt_udp.util.GenericPacket;
+import ru.dz.mqtt_udp.util.LoopRunner;
 
 
 /** 
@@ -12,16 +13,38 @@ import ru.dz.mqtt_udp.util.GenericPacket;
  * @author dz
  *
  */
-public abstract class SubServer 
+public abstract class SubServer extends LoopRunner 
 {
 
 	private DatagramSocket ss = SingleSendSocket.get();
+	private DatagramSocket s;
 
-	
+	public SubServer() {
+		super("MQTT UDP Recv");
+	}	
+
+	@Override
+	protected void onStart() throws IOException, MqttProtocolException {
+		s = GenericPacket.recvSocket();
+	}
+
+	@Override
+	protected void step() throws IOException, MqttProtocolException 
+	{
+		IPacket p = GenericPacket.recv(s);
+		if(!muted) preprocessPacket(p);			
+		processPacket(p);			
+	}
+
+	@Override
+	protected void onStop() throws IOException, MqttProtocolException {
+		s.close();
+	}
+
 	// ------------------------------------------------------------
 	// Replies on/off
 	// ------------------------------------------------------------
-	
+
 	private boolean muted = false;
 	public boolean isMuted() {		return muted;	}
 	/** 
@@ -36,15 +59,17 @@ public abstract class SubServer
 	// ------------------------------------------------------------
 	// Incoming data process thread
 	// ------------------------------------------------------------
-	
-	volatile private boolean run = false;
 
-	public boolean isRunning() { return run; }
+	//volatile private boolean run = false;
 
+	//public boolean isRunning() { return run; }
+	//public boolean isRunning() { return lr.isRunning(); }
+	//public void requestStart() { lr.requestStart(); }
+	//public void requestStop() { lr.requestStop(); }
 
 	/**
 	 * Request to start reception loop thread.
-	 */
+	 * /
 	public void requestStart()
 	{
 		if(isRunning()) return;
@@ -53,19 +78,19 @@ public abstract class SubServer
 
 	/**
 	 * Request to stop reception loop thread.
-	 */
+	 * /
 	public void requestStop() { run = false; }
-	
+
 	/**
 	 * Worker: start reception loop thread.
-	 */
+	 * /
 	protected void start() {
 		Runnable target = makeLoopRunnable();
 		Thread t = new Thread(target, "MQTT UDP Recv");
 		t.start();
-	}
+	}* /
 
-	
+
 	private void loop() throws IOException, MqttProtocolException {
 		DatagramSocket s = GenericPacket.recvSocket();
 
@@ -80,7 +105,7 @@ public abstract class SubServer
 		}
 
 		s.close();
-	}
+	} * /
 
 
 	private Runnable makeLoopRunnable() {
@@ -98,7 +123,7 @@ public abstract class SubServer
 				}				
 			}
 		};
-	}
+	} */
 
 
 

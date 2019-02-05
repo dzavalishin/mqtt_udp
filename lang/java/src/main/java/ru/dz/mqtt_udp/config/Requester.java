@@ -10,10 +10,12 @@ import java.util.function.Consumer;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.IPacketMultiSource;
+import ru.dz.mqtt_udp.MqttProtocolException;
 import ru.dz.mqtt_udp.PublishPacket;
 import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.items.AbstractItem;
 import ru.dz.mqtt_udp.items.TopicItem;
+import ru.dz.mqtt_udp.util.LoopRunner;
 
 /**
  * 
@@ -60,6 +62,22 @@ public class Requester implements Consumer<IPacket> {
 
 	private Map<String,TopicItem> items = new HashMap<>();
 
+	LoopRunner lr = new  LoopRunner("MQTT UDP config.Requester") {
+
+		@Override
+		protected void onStart() throws IOException, MqttProtocolException { /** empty */ }
+
+		@Override
+		protected void step() throws IOException, MqttProtocolException {
+			sleep( checkLoopTime );
+			loop();
+		}
+
+		@Override
+		protected void onStop() throws IOException, MqttProtocolException { /** empty */ }
+		
+	};
+	
 	/**
 	 * Construct.
 	 * @param ms MQTT/UDP network listener which is able to serve multiple consumers.
@@ -129,9 +147,10 @@ public class Requester implements Consumer<IPacket> {
 	 * Start background process to poll net for topics we need.
 	 */
 	public void startBackgroundRequests() {
-		Runnable target = makeLoopRunnable();
-		Thread t = new Thread(target, "MQTT UDP config.Requester");
-		t.start();
+		//Runnable target = makeLoopRunnable();
+		//Thread t = new Thread(target, "MQTT UDP config.Requester");
+		//t.start();
+		lr.requestStart();
 	}
 
 	/**
@@ -142,7 +161,7 @@ public class Requester implements Consumer<IPacket> {
 	public long getCheckLoopTime() {		return checkLoopTime;	}
 
 	
-
+	/*
 	private Runnable makeLoopRunnable() {
 		return new Runnable() {
 
@@ -163,7 +182,7 @@ public class Requester implements Consumer<IPacket> {
 				}
 			}
 		};
-	}
+	}*/
 
 
 	protected void loop() throws IOException {
@@ -175,11 +194,13 @@ public class Requester implements Consumer<IPacket> {
 		for( String topic : empty )
 		{
 			new SubscribePacket(topic).send();
+			LoopRunner.sleep(REQUEST_STEP_TIME);
+			/*
 			try {
 				Thread.sleep(REQUEST_STEP_TIME);
 			} catch (InterruptedException e) {
 				// Ignore
-			}
+			}*/
 		}
 
 	}

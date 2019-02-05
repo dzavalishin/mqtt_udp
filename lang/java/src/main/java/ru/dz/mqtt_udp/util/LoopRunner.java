@@ -112,7 +112,7 @@ public abstract class LoopRunner {
 	}
 
 	
-	protected void sleep(long msec)
+	public static void sleep(long msec)
 	{
 		try {
 			Thread.sleep(msec);

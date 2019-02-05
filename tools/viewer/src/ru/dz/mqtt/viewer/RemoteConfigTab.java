@@ -113,7 +113,7 @@ public class RemoteConfigTab extends Tab
 		
 		if( cp.getKind().equals("info") )
 		{
-			System.out.println("info "+name+"="+value);
+			//System.out.println("info "+name+"="+value);
 			switch( name )
 			{
 			case "soft": infoSoft = value; break;
@@ -129,7 +129,7 @@ public class RemoteConfigTab extends Tab
 
 		if( cp.getKind().equals("node") )
 		{
-			System.out.println("node "+name+"="+value);
+			//System.out.println("node "+name+"="+value);
 			switch( name )
 			{
 			case "name": 

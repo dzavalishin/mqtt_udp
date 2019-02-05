@@ -84,11 +84,12 @@ public class Throttle
 	    if( towait <= 0 )
 	        return;
 
-	    try {
+	    LoopRunner.sleep(towait);
+	    /*try {
 			Thread.sleep(towait);
 		} catch (InterruptedException e) {
 			GlobalErrorHandler.handleError(ErrorType.Timeout, e);
-		}
+		}*/
 	        		
 	}
 
