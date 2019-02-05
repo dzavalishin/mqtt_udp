@@ -19,8 +19,9 @@ public class RemoteConfigTab extends Tab
 	private Map<ConfigurableParameter,RemoteConfigControl> controls = new HashMap<ConfigurableParameter, RemoteConfigControl>();
 	private String infoSoft;
 	private String infoSoftVer;
-	private String infoLocation;
+	private String nodeLocation;
 	private String infoUptime;
+	private String nodeName;
 
 	public RemoteConfigTab(ConfigurableHost ch, RemoteConfigWindow rcw) {
 		this.ch = ch;
@@ -50,7 +51,8 @@ public class RemoteConfigTab extends Tab
 		
 		if( infoSoft != null ) sb.append("   "+infoSoft);
 		if( infoSoftVer != null ) sb.append(" v. "+infoSoftVer);
-		if( infoLocation != null ) sb.append(" @ "+infoLocation);
+		if( nodeName != null ) sb.append("  "+nodeName);
+		if( nodeLocation != null ) sb.append(" @ "+nodeLocation);
 		if( infoUptime != null ) sb.append("   up "+infoUptime);		
 		//System.out.println(sb);
 		
@@ -107,8 +109,11 @@ public class RemoteConfigTab extends Tab
 		String name = cp.getName();
 		String value = cp.getValue();	
 		
+		if( value.length() == 0 ) value = null; // empty -> not set
+		
 		if( cp.getKind().equals("info") )
 		{
+			System.out.println("info "+name+"="+value);
 			switch( name )
 			{
 			case "soft": infoSoft = value; break;
@@ -124,10 +129,17 @@ public class RemoteConfigTab extends Tab
 
 		if( cp.getKind().equals("node") )
 		{
+			System.out.println("node "+name+"="+value);
 			switch( name )
 			{
-			case "name": setText(value); break;
-			case "location": infoLocation = value; break;
+			case "name": 
+				if((value != null) && (value.length() > 2)) 
+				{
+					nodeName = value;
+					setText(value);
+				}
+				break;
+			case "location": nodeLocation = value; break;
 			
 			default: return false;
 			}
