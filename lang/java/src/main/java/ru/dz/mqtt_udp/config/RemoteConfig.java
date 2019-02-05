@@ -134,8 +134,16 @@ public class RemoteConfig implements Consumer<IPacket> {
 
 	public void loadFromProperties()
 	{
+		FileInputStream inStream;
 		try {
-			props.load(new FileInputStream(new File(fName)));
+			inStream = new FileInputStream(new File(fName));
+		} catch (FileNotFoundException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+			return;
+		}
+		
+		try {
+			props.load(inStream);
 			props.forEach( (name,val) ->{
 				String[] names = name.toString().split("/");
 
@@ -147,11 +155,17 @@ public class RemoteConfig implements Consumer<IPacket> {
 						item.setValue(val.toString());
 				});
 			});
-		} catch (FileNotFoundException e) {
-			GlobalErrorHandler.handleError(ErrorType.IO, e);
 		} catch (IOException e) {
 			GlobalErrorHandler.handleError(ErrorType.IO, e);
 		}		
+		finally
+		{
+			try {
+				inStream.close();
+			} catch (IOException e) {
+				GlobalErrorHandler.handleError(ErrorType.IO, e);
+			}
+		}
 	}
 
 
@@ -164,10 +178,27 @@ public class RemoteConfig implements Consumer<IPacket> {
 				props.setProperty(key, item.getValue());
 			}
 		} );
+
+		FileOutputStream out;
 		try {
-			props.save(new FileOutputStream(new File(fName)), "MQTT/UDP remote config storage");
+			out = new FileOutputStream(new File(fName));
 		} catch (FileNotFoundException e) {
 			GlobalErrorHandler.handleError(ErrorType.IO, e);
+			return;
+		}
+
+		
+		try {
+			props.store(out, "MQTT/UDP remote config storage");
+		} catch (IOException e) {
+			GlobalErrorHandler.handleError(ErrorType.IO, e);
+		} finally 
+		{
+			try {
+				out.close();
+			} catch (IOException e) {
+				GlobalErrorHandler.handleError(ErrorType.IO, e);
+			}
 		}
 	}
 

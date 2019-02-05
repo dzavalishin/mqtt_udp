@@ -118,9 +118,11 @@ int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_c
 **/ 
 int mqtt_udp_rconfig_set_string( int pos, char *string )
 {
-    if( (pos < 0) || (pos >= rconfig_list_size) ) return -1; // TODO error
+    if( (pos < 0) || (pos >= rconfig_list_size) ) return mqtt_udp_global_error_handler( MQ_Err_Invalid, -1, "pos out of list", string );
 
-    if( rconfig_list[pos].type != MQ_CFG_TYPE_STRING ) return -2; // TODO error
+    if( rconfig_list[pos].type != MQ_CFG_TYPE_STRING ) return mqtt_udp_global_error_handler( MQ_Err_Invalid, -2, "!string", string );
+
+    if( rconfig_list[pos].kind == MQ_CFG_KIND_INFO ) return mqtt_udp_global_error_handler( MQ_Err_Invalid, -3, "R/O", string );
 
     int slen = strnlen( string, PKT_BUF_SIZE );
 

@@ -186,7 +186,9 @@ typedef enum
 typedef enum
 {
     MQ_CFG_KIND_OTHER,
-    MQ_CFG_KIND_TOPIC,
+    MQ_CFG_KIND_TOPIC,  ///< Topics device works with, R/W
+    MQ_CFG_KIND_INFO,   ///< Read-Only
+    MQ_CFG_KIND_NODE,   ///< Node info, R/W
     //MQ_CFG_,
 } mqtt_udp_rconfig_inetm_kind_t;
 
