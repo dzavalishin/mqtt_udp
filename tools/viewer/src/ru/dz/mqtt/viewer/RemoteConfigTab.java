@@ -14,7 +14,7 @@ public class RemoteConfigTab extends Tab
 {
 	private RemoteConfigWindow rcw;
 	private ConfigurableHost ch;
-	Label infoLabel = new Label();
+	private Label infoLabel = new Label();
 	
 	private Map<ConfigurableParameter,RemoteConfigControl> controls = new HashMap<ConfigurableParameter, RemoteConfigControl>();
 	private String infoSoft;

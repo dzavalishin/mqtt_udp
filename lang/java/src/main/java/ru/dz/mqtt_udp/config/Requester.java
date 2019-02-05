@@ -62,7 +62,7 @@ public class Requester implements Consumer<IPacket> {
 
 	private Map<String,TopicItem> items = new HashMap<>();
 
-	LoopRunner lr = new  LoopRunner("MQTT UDP config.Requester") {
+	private LoopRunner lr = new  LoopRunner("MQTT UDP config.Requester") {
 
 		@Override
 		protected void onStart() throws IOException, MqttProtocolException { /** empty */ }

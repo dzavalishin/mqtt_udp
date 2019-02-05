@@ -2,7 +2,6 @@ package ru.dz.mqtt_udp.items;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PublishPacket;
-import ru.dz.mqtt_udp.SubscribePacket;
 import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 

@@ -28,7 +28,6 @@ import ru.dz.mqtt_udp.util.image.ImageUtils;
 
 public class RemoteConfigWindow {
 
-	private Controller rc;
 
 	private Stage rcWindow = new Stage();
 
@@ -40,6 +39,8 @@ public class RemoteConfigWindow {
 	public RemoteConfigWindow() 
 	{
 		PacketSourceMultiServer ms = new PacketSourceMultiServer();
+
+		Controller rc;
 
 		rc = new Controller(ms);
 		rc.setNewHostListener( ch -> createTab(ch) ); 

@@ -279,19 +279,20 @@ public class Main extends Application {
 
 		CheckMenuItem replyMenuItem = new CheckMenuItem("Replies");
 		replyMenuItem.setSelected(pingSender.isEnabled());
-		replyMenuItem.setOnAction( new EventHandler<ActionEvent>() {			
+		/*replyMenuItem.setOnAction( new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) { ds.setMuted(!replyMenuItem.isSelected()); } 
-		});
+		});*/
+		replyMenuItem.setOnAction( a -> ds.setMuted(!replyMenuItem.isSelected()) );
 		
 		
 		CheckMenuItem pingMenuItem = new CheckMenuItem("Ping");
 		pingMenuItem.setSelected(pingSender.isEnabled());
-		pingMenuItem.setOnAction( new EventHandler<ActionEvent>() {			
+		/*pingMenuItem.setOnAction( new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) { pingSender.setEnabled(pingMenuItem.isSelected()); } 
-		});
-		
+		});*/
+		pingMenuItem.setOnAction( a -> pingSender.setEnabled(pingMenuItem.isSelected()) );
 		
 		sendMenu.getItems().addAll(replyMenuItem, pingMenuItem);
 		
@@ -300,17 +301,20 @@ public class Main extends Application {
 		MenuBar mb = new MenuBar(fileMenu,displayMenu,sendMenu);
 
 
-		showPingsMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
+		/*showPingsMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
 				displayPings = showPingsMenuItem.isSelected();
 			}
-		});
+		});*/
+		
+		showPingsMenuItem.setOnAction( a-> displayPings = showPingsMenuItem.isSelected() );
+		
 		showPingsMenuItem.setSelected(false);
 		displayPings = false;
 		
 		viewHostsMenuItem.setSelected(true);
-		viewHostsMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
+		/*viewHostsMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
 				boolean on = viewHostsMenuItem.isSelected();
@@ -320,57 +324,74 @@ public class Main extends Application {
 				//else		hosts.setPrefHeight(0);
 				splitPane.autosize();
 			}
-		});
+		});*/
 
+		viewHostsMenuItem.setOnAction( a-> { 
+			boolean on = viewHostsMenuItem.isSelected();
+			hosts.setVisible(on);
+			hosts.setFillHeight(on);
+			splitPane.autosize();
+		});
+		
+		
 		updateMenuItem.setAccelerator(KeyCombination.keyCombination("F5"));
 		updateMenuItem.setSelected(true);
-		updateMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
+		/*updateMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
 				//updateEnabled = updateMenuItem.isSelected();
 				switchRunStop();
 			}
-		});
+		});*/
+		updateMenuItem.setOnAction( a-> switchRunStop() );
 
 
-		exitMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
+		/*exitMenuItem.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
 				//Platform.exit(); System.exit(0);				
 			}
-		});
+		});*/
+		
+		exitMenuItem.setOnAction( a-> { Platform.exit(); System.exit(0); } );
 
 		logStart.setGraphic(ImageUtils.getIcon("Folder-Add"));
 		logStart.setAccelerator(KeyCombination.keyCombination("Ctrl+L"));
-		logStart.setOnAction(new EventHandler<ActionEvent>() {			
+		/*logStart.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
-				//File fname = fch.showOpenDialog(stage);
-				//File fname = fch.showOpenDialog(logStart.getParentPopup().getScene().getWindow());
-				File fname = fch.showSaveDialog(logStart.getParentPopup().getScene().getWindow());
-				if( fname != null )
-				{
-					try {
-						flog.startLog(fname);
-					} catch (IOException e) {
-						//e.printStackTrace();
-						GlobalErrorHandler.handleError(ErrorType.IO, e);
-					}				
-				}
+				startLogging(logStart);
 			}
-		});
+
+		});*/
+		logStart.setOnAction( a-> startLogging(logStart) );
 
 		logStop.setGraphic(ImageUtils.getIcon("Folder-Delete"));
-		logStop.setOnAction(new EventHandler<ActionEvent>() {			
+		/*logStop.setOnAction(new EventHandler<ActionEvent>() {			
 			@Override
 			public void handle(ActionEvent event) {
 				flog.stopLog();				
 			}
-		});
+		});*/
+		logStop.setOnAction( a-> flog.stopLog() );
 
 		return mb;
 	}
 
+	
+	public void startLogging(MenuItem logStart) {
+		File fname = fch.showSaveDialog(logStart.getParentPopup().getScene().getWindow());
+		if( fname != null )
+		{
+			try {
+				flog.startLog(fname);
+			} catch (IOException e) {
+				//e.printStackTrace();
+				GlobalErrorHandler.handleError(ErrorType.IO, e);
+			}				
+		}
+	}
+	
 
 	private MenuBar makeRightMenu() {
 		Menu helpMenu = new Menu("Help");

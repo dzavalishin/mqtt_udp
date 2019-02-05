@@ -11,10 +11,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,9 +19,7 @@ import javax.swing.SwingUtilities;
 
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.PacketSourceMultiServer;
-import ru.dz.mqtt_udp.PacketSourceServer;
 import ru.dz.mqtt_udp.PublishPacket;
-import ru.dz.mqtt_udp.config.ConfigurableHost;
 import ru.dz.mqtt_udp.config.ConfigurableParameter;
 import ru.dz.mqtt_udp.config.LocalConfigurableParameter;
 import ru.dz.mqtt_udp.config.RemoteConfig;
