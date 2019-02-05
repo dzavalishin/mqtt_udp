@@ -238,18 +238,18 @@ def __make_send_socket():
 
 
 
-def pack_remaining_length(packet, remaining_length):
-        remaining_bytes = []
+def pack_remaining_length(packet, remain_length):
+        remain_bytes = []
         while True:
-            byte = remaining_length % 128
-            remaining_length = remaining_length // 128
+            byte = remain_length % 128
+            remain_length = remain_length // 128
             # If there are more digits to encode, set the top bit of this digit
-            if remaining_length > 0:
+            if remain_length > 0:
                 byte |= 0x80
 
-            remaining_bytes.append(byte)
+            remain_bytes.append(byte)
             packet.append(byte)
-            if remaining_length == 0:
+            if remain_length == 0:
                 # FIXME - this doesn't deal with incorrectly large payloads
                 return packet
 
