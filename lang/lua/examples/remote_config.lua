@@ -53,7 +53,8 @@ end
 
 
 local full_topic = function( topic )
-	return "$SYS/conf/"..MY_ID.."/"..topic
+	--return "$SYS/conf/"..MY_ID.."/"..topic
+	return rconf.mq.defs.SYS_CONF_PREFIX.."/"..MY_ID.."/"..topic
 end
 
 
@@ -71,7 +72,7 @@ local recv_one_item = function( k, v, topic, value )
 	end
 end
 
-
+--[[
 local send_all_rconf_items = function()
 	--print("Will send all items")
 	for k, v in pairs( conf_items ) do
@@ -79,7 +80,7 @@ local send_all_rconf_items = function()
 		--print( k, v )
 		send_one_item( k, v )
 	end
-end
+end]]
 
 local send_asked_rconf_items = function(topic)
 
@@ -116,15 +117,16 @@ local on_publish = function( topic, value )
 end
 
 
-local rconf.listener = function( ptype, topic, value, ip, port )
+rconf.listener = function( ptype, topic, value, ip, port )
     if ptype == "publish" then
-        print("pub '"..topic.."' = '"..val.."'".."	from: ", ip, port)
+        --print("pub '"..topic.."' = '"..val.."'".."	from: ", ip, port)
         on_publish( topic, value )
     end
 
     if ptype == "subscribe" then
         print("sub '"..topic.."'")
-        on_subscribe( topic )
+        -- on_subscribe( topic )
+		send_asked_rconf_items( topic )
     end
 end
 
@@ -133,8 +135,9 @@ end
 --send_all_rconf_items()
 
 
-local rconf.init = function( init_items )
+rconf.init = function( init_items )
 
+	-- Load all, then insert absent and r/o ones from init
 	load_all();
 
 	for k, v in pairs( init_items ) do
@@ -144,9 +147,11 @@ local rconf.init = function( init_items )
 			conf_items[k] = v
 			print( "Set "..k, v[1] )
 		else
-			if conf_items[k]:sub(1,4) == "info" then
-			conf_items[k] = v
-			print( "Set info "..k, v[1] )
+			--print( "k='"..k.."'" )
+			--print( "k="..type(k) )
+			if k:sub(1, 4) == "info" then
+				conf_items[k] = v
+				print( "Set info "..k, v[1] )
 			end
 		end
 	end

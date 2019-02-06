@@ -10,7 +10,7 @@ Passive remote config example
 
 local rconf = require "remote_config"
 
--- by topic part
+-- indexed by topic part
 local conf_items = 
 {
     ["info/soft"]		= { "Lua example" },
