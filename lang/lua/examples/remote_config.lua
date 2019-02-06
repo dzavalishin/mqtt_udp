@@ -22,7 +22,6 @@ conf_items = {}
 
 
 local save_all = function()
-	-- todo remove info/* from r/w, recreate
 	local j = json.encode(conf_items)
 	--print( j )
 	
@@ -32,15 +31,10 @@ local save_all = function()
 end
 
 local load_all = function()
-	-- todo remove info/* from r/w, recreate
-	--local j = json.encode(conf_items)
-	--print( j )
-	
 	local f = io.open(filename, "r")
 	if f == nil then
 		return
 	end
-    --local t = f:read(j)
     local t = f:read()
     f:close()
 
@@ -72,18 +66,8 @@ local recv_one_item = function( k, v, topic, value )
 	end
 end
 
---[[
-local send_all_rconf_items = function()
-	--print("Will send all items")
-	for k, v in pairs( conf_items ) do
-		print( "Send "..k, v[1] )
-		--print( k, v )
-		send_one_item( k, v )
-	end
-end]]
 
 local send_asked_rconf_items = function(topic)
-
 	for k, v in pairs( conf_items ) do
 		if rconf.mq.match( topic, full_topic(k) ) then
 			print( "Send "..k, v[1] )
@@ -94,24 +78,9 @@ local send_asked_rconf_items = function(topic)
 end
 
 
--- TODO defs.SYS_CONF_PREFIX
-
-local on_subscribe = function( topic )
-	--[[ TODO vice versa?
-	if rconf.mq.match( "$SYS/conf/#", topic ) then
-		send_all_rconf_items()
-		return
-	end ]]
-
-	--- per topic TODO
-	send_asked_rconf_items( topic )
-
-end
 
 local on_publish = function( topic, value )
 	for k, v in pairs( conf_items ) do
-		--print( k, v[1] )
-		--print( k, v )
 		recv_one_item( k, v, topic, value )
 	end
 end
@@ -156,5 +125,20 @@ rconf.init = function( init_items )
 		end
 	end
 end
+
+-- Send message using configurable topic
+--
+--Get value of "$SYS/conf/{MY_ID}/topic_of_topic" and use it as topic to send data
+--
+-- @param #string topic name of parameter holding topic used to send message
+rconf.publish_for = function( topic_of_topic, data )
+	local key = "topic/"..topic_of_topic
+
+	if conf_items[key] == nil then
+		print( "no configured value (topic) for topic_of topic() "..k.."'" )
+		return
+	end
+
+	rconf.mq.send_publish( topic, value )
 
 return rconf
