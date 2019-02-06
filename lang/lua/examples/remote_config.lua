@@ -8,9 +8,11 @@ Passive remote config sketch
 
 ]]
 
+--local json = require "luajson"
+local json = require "json"
 local mq = require "mqttudp"
 
-
+local filename = "lua_rconfig.json"
 
 local MY_ID = "000000000000" -- TODO make me
 
@@ -22,8 +24,36 @@ local conf_items =
     ["info/uptime"]		= { "?" },
 
     ["node/name"]		= { "Unnamed" },
-    ["node/locarion"]	= { "Nowhere" },
+    ["node/location"]	= { "Nowhere" },
 }
+
+
+local save_all = function()
+	-- todo remove info/* from r/w, recreate
+	local j = json.encode(conf_items)
+	--print( j )
+	
+	local f = assert(io.open(filename, "w"))
+    f:write(j) -- todo err check
+    f:close()
+end
+
+local load_all = function()
+	-- todo remove info/* from r/w, recreate
+	--local j = json.encode(conf_items)
+	--print( j )
+	
+	local f = assert(io.open(filename, "r"))
+    --local t = f:read(j)
+    local t = f:read()
+    f:close()
+
+	local newi = json.decode( t )
+	conf_items = newi
+
+end
+
+
 
 
 local full_topic = function( topic )
@@ -36,9 +66,18 @@ local send_one_item = function( k, v )
 	mq.send_publish( full_topic(k), v[1] );
 end
 
+local recv_one_item = function( k, v, topic, value )
+	if full_topic(k) == topic then
+		v[1] = value
+		print( "Got "..k.." = '"..value.."'" )
+		-- TODO call user hook
+		save_all() -- TODO TEMP, kill me
+	end
+end
+
 
 local send_all_rconf_items = function()
-	print("Will send all items")
+	--print("Will send all items")
 	for k, v in pairs( conf_items ) do
 		print( k, v[1] )
 		--print( k, v )
@@ -49,12 +88,22 @@ end
 -- TODO defs.SYS_CONF_PREFIX
 
 local on_subscribe = function( topic )
+	-- TODO vice versa?
 	if mq.match( "$SYS/conf/#", topic ) then
 		send_all_rconf_items()
+		return
 	end
+
+	--- per topic TODO
+
 end
 
 local on_publish = function( topic, value )
+	for k, v in pairs( conf_items ) do
+		--print( k, v[1] )
+		--print( k, v )
+		recv_one_item( k, v, topic, value )
+	end
 end
 
 
@@ -74,6 +123,7 @@ end
 print("Will listen for remote config");
 
 --send_all_rconf_items()
+load_all();
 
 mq.listen( listener )
 
