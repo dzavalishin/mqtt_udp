@@ -130,7 +130,9 @@ end
 --
 --Get value of "$SYS/conf/{MY_ID}/topic_of_topic" and use it as topic to send data
 --
--- @param #string topic name of parameter holding topic used to send message
+-- @param #string topic_of_topic name of parameter holding topic used to send message
+-- @param #string data data to send
+--
 rconf.publish_for = function( topic_of_topic, data )
 	local key = "topic/"..topic_of_topic
 
@@ -139,6 +141,29 @@ rconf.publish_for = function( topic_of_topic, data )
 		return
 	end
 
-	rconf.mq.send_publish( topic, value )
+	item = conf_items[key]
+
+	rconf.mq.send_publish( item[1], value )
+end
+
+-- true if value for topic_of_topics == topic
+-- test incoming message topic to be for this configurable
+rconf.is_for = function( topic_of_topic, topic )
+	local key = "topic/"..topic_of_topic
+
+	if conf_items[key] == nil then
+		print( "no configured value (topic) for topic_of topic() "..k.."'" )
+		return false
+	end
+
+	item = conf_items[key]
+
+	return topic == item[1]
+end
+
+
+rconf.set_on_config = function( callback )
+	rconf.on_config = callback
+end
 
 return rconf
