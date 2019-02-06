@@ -4,9 +4,9 @@
 
 ]]
 
-local mqtt_proto_lib = {}
+local mq_lib = {}
 
-local defs  = require "mqttudp.mqtt_udp_defs"
+mq_lib.defs  = require "mqttudp.mqtt_udp_defs"
 local bit = require "mqttudp.mybit"
 
 
@@ -17,7 +17,7 @@ local _pub_fd = nil
 
 function pubfd()
     if _pub_fd == nil then
-        _pub_fd = mqtt_proto_lib.make_publish_socket()
+        _pub_fd = mq_lib.make_publish_socket()
     end
     return _pub_fd
 end
@@ -39,13 +39,13 @@ end
 -- @param #int port Packet source port
 -- @param #function user_listener Sser's function to pass received and decoded packet to.
 -- 
--- TODO prepare for mqtt_proto_lib.udp_listen(proto_decoder,user_listener)
-function mqtt_proto_lib.proto_decoder(data, ip, port)
-    ptype,topic,val = mqtt_proto_lib.parse_packet(data)
+-- TODO prepare for mq_lib.udp_listen(proto_decoder,user_listener)
+function mq_lib.proto_decoder(data, ip, port)
+    ptype,topic,val = mq_lib.parse_packet(data)
 
-    mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
+    mq_lib.process_replies( ptype, topic, val, ip, port )
     --user_listener( ptype, topic, val, ip, port );
-	mqtt_proto_lib.user_listener( ptype, topic, val, ip, port );
+	mq_lib.user_listener( ptype, topic, val, ip, port );
 end
 
 
@@ -54,16 +54,16 @@ end
 -- @param #void user_listener  function( ptype, topic, value, ip, port )
 --
 
-function mqtt_proto_lib.listen( user_listener )
-	mqtt_proto_lib.user_listener = user_listener
-    mqtt_proto_lib.udp_listen()
+function mq_lib.listen( user_listener )
+	mq_lib.user_listener = user_listener
+    mq_lib.udp_listen()
 end
 
 
-function mqtt_proto_lib.process_replies( ptype, topic, val, ip, port )
+function mq_lib.process_replies( ptype, topic, val, ip, port )
     -- respond to ping
     if ptype == "pingreq" then
-        mqtt_proto_lib.send_pingresp()
+        mq_lib.send_pingresp()
     end
     -- TODO repond to subscribe
 end
@@ -78,27 +78,27 @@ end
 
 
 
-function mqtt_proto_lib.send_publish( topic, value )
-    data = mqtt_proto_lib.make_publish_packet( topic, value )
-    mqtt_proto_lib.send_packet( pubfd(), data )
+function mq_lib.send_publish( topic, value )
+    data = mq_lib.make_publish_packet( topic, value )
+    mq_lib.send_packet( pubfd(), data )
 end
 
-function mqtt_proto_lib.send_subscribe( topic )
-    data = mqtt_proto_lib.make_subscribe_packet( topic )
-    mqtt_proto_lib.send_packet( pubfd(), data )
+function mq_lib.send_subscribe( topic )
+    data = mq_lib.make_subscribe_packet( topic )
+    mq_lib.send_packet( pubfd(), data )
 end
 
 
 
 
-function mqtt_proto_lib.send_pingresp()
-    data = mqtt_proto_lib.make_pingresp_packet()
-    mqtt_proto_lib.send_packet( pubfd(), data )
+function mq_lib.send_pingresp()
+    data = mq_lib.make_pingresp_packet()
+    mq_lib.send_packet( pubfd(), data )
 end
 
-function mqtt_proto_lib.send_pingreq()
-    data = mqtt_proto_lib.make_pingreq_packet()
-    mqtt_proto_lib.send_packet( pubfd(), data )
+function mq_lib.send_pingreq()
+    data = mq_lib.make_pingreq_packet()
+    mq_lib.send_packet( pubfd(), data )
 end
 
 
@@ -114,7 +114,7 @@ end
 
 
 
-function mqtt_proto_lib.unpack_remaining_length(pkt)
+function mq_lib.unpack_remaining_length(pkt)
     remaining_length = 0
     while( 1 )
     do
@@ -132,7 +132,7 @@ function mqtt_proto_lib.unpack_remaining_length(pkt)
 end
 
 
-function mqtt_proto_lib.parse_packet(pkt)
+function mq_lib.parse_packet(pkt)
 
     --print("pkt[0]: ", pkt:byte( 1 ) )
 
@@ -141,16 +141,16 @@ function mqtt_proto_lib.parse_packet(pkt)
 
     --print( "ptype", ptype )
 
-    if( ptype == defs.PTYPE_PINGREQ ) then
+    if( ptype == mq_lib.defs.PTYPE_PINGREQ ) then
         return "pingreq","","";
     end
 
-    if( ptype == defs.PTYPE_PINGRESP ) then
+    if( ptype == mq_lib.defs.PTYPE_PINGRESP ) then
         return "pingresp","","";
     end
 
-    if( ptype == defs.PTYPE_SUBSCRIBE ) then
-        local total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
+    if( ptype == mq_lib.defs.PTYPE_SUBSCRIBE ) then
+        local total_len, pkt = mq_lib.unpack_remaining_length(pkt:sub(2));
 
         topic_len = bit.bor( bit.band(pkt:byte(2), 0xFF), bit.band(bit.lshift(pkt:byte(1), 8), 0xFF) );
         topic = pkt:sub( 3, topic_len+2 );
@@ -160,8 +160,8 @@ function mqtt_proto_lib.parse_packet(pkt)
         return "subscribe", topic, ""
     end
 
-    if( ptype == defs.PTYPE_PUBLISH ) then
-        local total_len, pkt = mqtt_proto_lib.unpack_remaining_length(pkt:sub(2));
+    if( ptype == mq_lib.defs.PTYPE_PUBLISH ) then
+        local total_len, pkt = mq_lib.unpack_remaining_length(pkt:sub(2));
 
         topic_len = bit.bor( bit.band(pkt:byte(2), 0xFF), bit.band(bit.lshift(pkt:byte(1), 8), 0xFF) );
         topic = pkt:sub( 3, topic_len+2 );
@@ -186,12 +186,12 @@ end
 ------------------------------------------------------------------------------
 
 
-function mqtt_proto_lib.make_publish_packet( topic, value )
+function mq_lib.make_publish_packet( topic, value )
 
     -- print("Topic: '"..topic.."' val '"..value.."'")
 
     pkt = "";
-    pkt = pkt..string.char(defs.PTYPE_PUBLISH);
+    pkt = pkt..string.char(mq_lib.defs.PTYPE_PUBLISH);
 
     tlen = topic:len()
     remaining_length = 2 + value:len() + tlen
@@ -210,10 +210,10 @@ function mqtt_proto_lib.make_publish_packet( topic, value )
 end
 
 
-function mqtt_proto_lib.make_subscribe_packet( topic )
+function mq_lib.make_subscribe_packet( topic )
 
     pkt = "";
-    pkt = pkt..string.char(defs.PTYPE_SUBSCRIBE);
+    pkt = pkt..string.char(mq_lib.defs.PTYPE_SUBSCRIBE);
 
     tlen = topic:len()
     remaining_length = 2 + tlen + 1
@@ -233,20 +233,20 @@ function mqtt_proto_lib.make_subscribe_packet( topic )
 end
 
 
-function mqtt_proto_lib.make_pingresp_packet()
+function mq_lib.make_pingresp_packet()
 
     pkt = "";
-    pkt = pkt..string.char(defs.PTYPE_PINGRESP);
+    pkt = pkt..string.char(mq_lib.defs.PTYPE_PINGRESP);
     pkt = pkt..string.char(0); -- payload length
 
     return pkt;
 end
 
 
-function mqtt_proto_lib.make_pingreq_packet()
+function mq_lib.make_pingreq_packet()
 
     pkt = "";
-    pkt = pkt..string.char(defs.PTYPE_PINGREQ);
+    pkt = pkt..string.char(mq_lib.defs.PTYPE_PINGREQ);
     pkt = pkt..string.char(0); -- payload length
 
     return pkt;
@@ -261,7 +261,7 @@ end
 
 
 
-function mqtt_proto_lib.match( tfilter, topicName )
+function mq_lib.match( tfilter, topicName )
 		
     tc = 1;
     fc = 1;
@@ -361,7 +361,7 @@ end
 ------------------------------------------------------------------------------
 
 
-return mqtt_proto_lib
+return mq_lib
 
 
 
