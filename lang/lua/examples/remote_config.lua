@@ -79,22 +79,35 @@ end
 local send_all_rconf_items = function()
 	--print("Will send all items")
 	for k, v in pairs( conf_items ) do
-		print( k, v[1] )
+		print( "Send "..k, v[1] )
 		--print( k, v )
 		send_one_item( k, v )
 	end
 end
 
+local send_asked_rconf_items = function(topic)
+
+	for k, v in pairs( conf_items ) do
+		if mq.match( topic, full_topic(k) ) then
+			print( "Send "..k, v[1] )
+			--print( k, v )
+			send_one_item( k, v )
+		end
+	end
+end
+
+
 -- TODO defs.SYS_CONF_PREFIX
 
 local on_subscribe = function( topic )
-	-- TODO vice versa?
+	--[[ TODO vice versa?
 	if mq.match( "$SYS/conf/#", topic ) then
 		send_all_rconf_items()
 		return
-	end
+	end ]]
 
 	--- per topic TODO
+	send_asked_rconf_items( topic )
 
 end
 
