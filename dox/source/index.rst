@@ -934,21 +934,21 @@ Now lets look at example code (see examples/mqtt_udp_rconfig.py)::
     import mqttudp.rconfig as rcfg
 
     init_items = {
-	    ## read only
-        "info/soft" 		: "Pyton example",
-        "info/ver"		    : "0.0",
-        "info/uptime"		: "?",
+        ## read only
+        "info/soft"         : "Pyton example",
+        "info/ver"          : "0.0",
+        "info/uptime"       : "?",
 
     	## common instance info
-        "node/name"		    : "Unnamed",
+        "node/name"         : "Unnamed",
         "node/location"	    : "Nowhere",
 
-    	# items we want to send out.
+    	# items we want to send out
         "topic/test"  	    : "test",
-        "topic/ai0"  		: "unnamed_ai0",
-        "topic/di0"	  	    : "unnamed_di0",
+        "topic/ai0"         : "unnamed_ai0",
+        "topic/di0"         : "unnamed_di0",
 
-        "topic/pwm0"  	    : "unnamed_pwm0",    
+        "topic/pwm0"        : "unnamed_pwm0",    
     }
 
     def send_thread():
@@ -960,7 +960,7 @@ Now lets look at example code (see examples/mqtt_udp_rconfig.py)::
     
 
     if __name__ == "__main__":
-        print( "Will demonstrate remote config, now run tools/viewer and open remote config UI" )
+        print( "Will demonstrate remote config" )
         rcfg.init( init_items )
 
         st = threading.Thread(target=send_thread, args=())
