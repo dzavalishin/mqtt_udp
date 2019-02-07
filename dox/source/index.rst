@@ -909,6 +909,10 @@ Usage::
     
     blackList=cfg.get('blacklist')      # read setting
 
+
+.. index:: single: Remote config
+.. _python-rconfig-api:
+
 Module mqttudp.rconfig
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1424,7 +1428,21 @@ Message Editor
 
 Can be used to send messages to network. It is possible to send message just to one host
 or broadcast them. It is also possible to send **SUBSCRIBE** messages to request 
-topic data to be sent, but it is currently not supported by any other MQTT/UDP program.
+topic data to be sent.
+
+.. index:: single: Remote config
+
+Remote configurator
+^^^^^^^^^^^^^^^^^^^
+
+.. figure:: ../TrafficViewerScreen_Feb2019.png 
+
+   Screenshot of MQTT/UDP viewer tool remote configuration window
+
+Programs or devices that use MQTT/UDP passive remote configuration feature can be
+configured by network with this tool. Instances provide list of configurable items
+and each tab of config window lets you set instance parameters. There is a complete
+example made for Python, see :ref:`python-rconfig-api` for description.
 
 
 
