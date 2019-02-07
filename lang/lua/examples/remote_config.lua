@@ -4,7 +4,7 @@ package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without 
 
 --[[
 
-Passive remote config sketch
+Passive remote config sketch - experimental
 
 ]]
 
