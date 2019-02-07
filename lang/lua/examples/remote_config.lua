@@ -143,7 +143,7 @@ rconf.publish_for = function( topic_of_topic, data )
 
 	item = conf_items[key]
 
-	rconf.mq.send_publish( item[1], value )
+	rconf.mq.send_publish( item[1], data )
 end
 
 -- true if value for topic_of_topics == topic
