@@ -3,11 +3,12 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
- * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ * 
+ * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
  *
  * @file
- * @brief Example program: Message reception example code
+ * @brief Example program: Binary dump of all messages
  *
 **/
 
@@ -19,14 +20,14 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "mqtt_udp.h"
+#include "../mqtt_udp.h"
 
 
 
 
 int main(int argc, char *argv[])
 {
-    printf("Will listen to MQTT/UDP traffic and dump one next message\n");
+    printf("Will listen to MQTT/UDP traffic and hex dump one next message\n");
     printf("Usage: -f to print all traffic (^C to stop)\n\n");
 
     int loop = 0;
@@ -51,11 +52,12 @@ int main(int argc, char *argv[])
     }
 
     do {
-        int rc = mqtt_udp_recv( fd, mqtt_udp_dump_any_pkt );
-        if( rc )
-        {
+        int rc = mqtt_udp_recv_pkt( fd, buf, sizeof buf, 0 );
+
+        if( rc < 0 )
             printf("mqtt_udp_recv err = %d\n", rc );
-        }
+        else
+            mqtt_udp_dump( buf, rc );        
 
     } while(loop);
 
