@@ -34,7 +34,7 @@ end
 
 --- Main internal callback to be called on raw data coming from socket
 -- 
--- @param #bytse data Packet contents
+-- @param #bytes data Packet contents
 -- @param #ip address ip Packet source address
 -- @param #int port Packet source port
 -- @param #function user_listener Sser's function to pass received and decoded packet to.
@@ -165,10 +165,8 @@ function mq_lib.parse_packet(pkt)
 
         topic_len = bit.bor( bit.band(pkt:byte(2), 0xFF), bit.band(bit.lshift(pkt:byte(1), 8), 0xFF) );
         topic = pkt:sub( 3, topic_len+2 );
-        value = pkt:sub( topic_len+2+1, total_len+2 );
-    
-        --[[TODO use total_len--]]
-    
+        --value = pkt:sub( topic_len+2+1, total_len+2 );
+        value = pkt:sub( topic_len+2+1, total_len );
         return "publish", topic, value
     end
 
