@@ -926,10 +926,10 @@ the configurable items (from ``init_items`` dictionary) as text
 fields. Meanwhile ``mqtt_udp_rconfig.py`` will be sending a random
 number with "test" topic. Enter new topic name in a field near 
 "topic: test" description and press nearest button to send new 
-setting to program. Notice that now it sends random dato with a topic
+setting to program. Notice that now it sends random data with a topic
 you just set up.
 
-Now lets look at example code (see examples/mqtt_udp_rconfig.py):
+Now lets look at example code (see examples/mqtt_udp_rconfig.py)::
 
     import mqttudp.rconfig as rcfg
 
@@ -993,7 +993,7 @@ is processed. Here is a list of known kinds.
    as is.
 
 ``node``
-   This kind describes configurable thing in general and is editable
+   This kind describes setting for program/device in general and is editable
    by user. Name and location are obvious items to be in this kind.
    Any other global (not related to specific function or input/output)
    setting can be added to this kind.
@@ -1029,7 +1029,7 @@ Just read parameter
    reconfigured in run time, on next call there will be new value.
 
 Send data for configurable topic
-   By calling ``publish_for( topic_of_topic, data )`` you will send data
+   By calling ``publish_for( item_of_topic, data )`` you will send data
    to a topic which is configured by item with, guess what, ``topic`` kind.
    See above ``rcfg.publish_for( "test", n )`` - this line looks up config
    item named ``topic/test``, and uses its value as a topic to publisn 
