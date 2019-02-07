@@ -317,23 +317,27 @@ Please read `description at project Wiki <https://github.com/dzavalishin/mqtt_ud
 Packet types and use
 --------------------
 
-It is extremely simple to use MQTT/UDP. Basic use case is: one party sends **PUBLISH** packets,
-other receives, selecting for itself ones with topics it needs. That is all. No connect,
-no subscribe, no broker address to configure - we're broadcasting.
+**PUBLISH**
+   It is extremely simple to use MQTT/UDP. Basic use case is: one party sends **PUBLISH** packets,
+   other receives, selecting for itself ones with topics it needs. That is all. No connect,
+   no subscribe, no broker address to configure - we're broadcasting.
 
-For most applications it is all that you need. But there are 3 other packet types that possibly can 
-be used.
+   For most applications it is all that you need. But there are 3 other packet types that possibly can 
+   be used.
 
-**SUBSCRIBE** - MQTT/UDP uses this as a request to resend some topic value. It is not automated in any way by library code (but will be),
-so you have to respond to such a packet manually, if you want. It is intended for remote configuration use to let configuration
-program to request settings values from nodes. This is to be implemented later.
+**SUBSCRIBE**
+   MQTT/UDP uses this as a request to resend some topic value. It is not automated in any way by library code (but will be),
+   so you have to respond to such a packet manually, if you want. It is intended for remote configuration use to let configuration
+   program to request settings values from nodes. This is to be implemented later.
 
-**PINGREQ** - Ping request, ask all nodes to reply. This is for remote configuration also, it helps config program to detect all nodes on the network.
-Library code automatically replies to ``PINGREQ`` with ``PINGRESP``.
+**PINGREQ**
+   Ping request, ask all nodes to reply. This is for remote configuration also, it helps config program to detect all nodes on the network.
+   Library code automatically replies to ``PINGREQ`` with ``PINGRESP``.
 
-**PINGRESP** - reply to ping. You don't need to send it manually. It is done automatically.
+**PINGRESP**
+   Reply to ping. You don't need to send it manually. It is done automatically.
 
-I'm going to use **PUBACK** packet later to support reliable delivery.
+It is supposed to use **PUBACK** packet later to support reliable delivery.
 
 
 Topic names
@@ -789,6 +793,12 @@ Set requirement for all incoming packets to be signed::
 
 At this moment other language implementations ignore and do not generate signature at all.
 
+
+
+
+
+
+
 .. _python-lang-api:
 
 Python Language API Reference
@@ -898,6 +908,144 @@ Usage::
     cfg.setGroup('mqtt-gate')           # set ours .ini file [section]
     
     blackList=cfg.get('blacklist')      # read setting
+
+Module mqttudp.config
+^^^^^^^^^^^^^^^^^^^^^
+
+Additional module implemening passive remote configuration client
+(party that is being configured) implementation.
+
+There is a complete demonstration example exist.
+
+To see example working please run ``mqtt_udp_rconfig.py`` first
+and mqtt_udp_view after it. In viewer please press middle toolbar button
+to open remote configuration window. This window will show all 
+running MQTT/UDP instances that can be configured. There must be 
+``Python test node`` among them. Select its tab. You will see all
+the configurable items (from ``init_items`` dictionary) as text
+fields. Meanwhile ``mqtt_udp_rconfig.py`` will be sending a random
+number with "test" topic. Enter new topic name in a field near 
+"topic: test" description and press nearest button to send new 
+setting to program. Notice that now it sends random dato with a topic
+you just set up.
+
+Now lets look at example code (see examples/mqtt_udp_rconfig.py):
+
+    import mqttudp.rconfig as rcfg
+
+    init_items = {
+	    ## read only
+        "info/soft" 		: "Pyton example",
+        "info/ver"		    : "0.0",
+        "info/uptime"		: "?",
+
+    	## common instance info
+        "node/name"		    : "Unnamed",
+        "node/location"	    : "Nowhere",
+
+    	# items we want to send out.
+        "topic/test"  	    : "test",
+        "topic/ai0"  		: "unnamed_ai0",
+        "topic/di0"	  	    : "unnamed_di0",
+
+        "topic/pwm0"  	    : "unnamed_pwm0",    
+    }
+
+    def send_thread():
+        while True:
+            n = str(random.randint(0, 9))
+            print( "Send "+n )
+            rcfg.publish_for( "test", n )
+            time.sleep(2)
+    
+
+    if __name__ == "__main__":
+        print( "Will demonstrate remote config, now run tools/viewer and open remote config UI" )
+        rcfg.init( init_items )
+
+        st = threading.Thread(target=send_thread, args=())
+        st.start()
+
+        mq.listen( rcfg.recv_packet )
+
+This example shows how to use remote configuration subsystem. Dictionary
+``init_items`` contains list of items which can possiblly be configured
+remotely. Different elements are used in a different ways.
+
+In general each item in a list is a configurable thing. For example,
+``"node/location" : "Nowhere"`` is item which name is ``node/location``
+and initial value is ``Nowhere``. (It is supposed as a memo for user
+to know where an appliance or computer running this code is installed.)
+Another example is ``"topic/ai0" : "unnamed_ai0"`` - it is supposed
+to be a configurable topic name that device uses to send data from 
+some analogue input. User must configure topic name and it will be
+used by node to send data.
+
+Generally item keys consist of two parts
+separated with slash: ``"topic/pwm0"``, ``"info/uptime"`` or 
+``"node/name"``. Left part is named **kind** and defines the way item 
+is processed. Here is a list of known kinds.
+
+``info``
+   This kind is a readonly description which can not be configured
+   but tells other side about us. There are ``info/soft`` - name
+   of program, ``info/ver`` - version of program, ``info/uptime`` - 
+   as is.
+
+``node``
+   This kind describes configurable thing in general and is editable
+   by user. Name and location are obvious items to be in this kind.
+   Any other global (not related to specific function or input/output)
+   setting can be added to this kind.
+
+``topic``
+   This kind is treated as configurable value that is a topic name
+   used to send or receive data. Item name must be descriptive so
+   that user can understand what it is about.
+
+``net``
+   Reserved for network settings.
+
+You can add other kinds as you wish. They will not be interpreted in
+any way.
+
+Lets go on with code. Line ``rcfg.init( init_items )`` sets subsystem
+up. Remote config subsystem first loads previous settings from .ini file
+(you can set file name with ``set_ini_file_name(fn)`` function) and
+fills all items from given ``init_items`` dictionary that was not read
+from .ini file. Items with ``info`` kind are taken from ``init_items``
+in any way.
+
+After init your program continues working, but must call ``recv_packet``
+function of ``mqttudp.rconfig`` for each incoming MQTT/UDP packet for
+remote configuration to work.
+
+There are three ways to use configured parameters.
+
+Just read parameter
+   You can just call ``get_setting( name )`` for needed item to get current
+   configured value. For example, ``get_setting( "net/mac" )`` or, say,
+   ``lcd_print( get_setting( "node/location" ))``. If your node will be
+   reconfigured in run time, on next call there will be new value.
+
+Send data for configurable topic
+   By calling ``publish_for( topic_of_topic, data )`` you will send data
+   to a topic which is configured by item with, guess what, ``topic`` kind.
+   See above ``rcfg.publish_for( "test", n )`` - this line looks up config
+   item named ``topic/test``, and uses its value as a topic to publisn 
+   value of varible ``n`` to. 
+
+Check incoming packet topic
+    On receiving incoming PUBLISH packet, you can use ``is_for( topic_item, topic )``
+    function, which checks ``topic`` parameter to be equal to value of config
+    item named ``"topic/"+topic_item``, such as ``is_for( "pwm0", topic )`` will
+    return ``True`` if ``topic`` variable contains string equal to value of config
+    item ``"topic/pwm0"``.
+
+Only thing left to mention is that you can set callback with call to ``set_on_config( callback )``
+and it will be called if remote configuration happens. Config item name and
+new value will be passed as parameters.
+
 
 
 
