@@ -909,8 +909,8 @@ Usage::
     
     blackList=cfg.get('blacklist')      # read setting
 
-Module mqttudp.config
-^^^^^^^^^^^^^^^^^^^^^
+Module mqttudp.rconfig
+^^^^^^^^^^^^^^^^^^^^^^
 
 Additional module implemening passive remote configuration client
 (party that is being configured) implementation.
