@@ -1,85 +1,43 @@
-# Makefile.  Generated from Makefile.in by configure.
-
-.SILENT:
+# Makefile for embedded systems. Needs modification for your use.
 
 CFLAGS += -g -O2
 # make dependencies files
 CFLAGS += -MD -MP 
 CC=gcc
-#AR=@AR@
 AR=ar
 RANLIB=ranlib
 
-# autoconf: 
-# .exe - executable file extension
-
-
-# Package-related substitution variables
-
-package        = MQTT-UDP-Library
-version        = 0.1
-tarname        = mqtt-udp-library
-distdir        = $(tarname)-$(version)
-prefix         = /usr/local
+#
+#  NB!! Check if you need to modify these
+#
+CFLAGS += -Iarch/default
+vpath %.c glue/unix
+#vpath %.c glue/nutos
 
 LIB=libmqttudp.a
-LIBV=libmqttudp.0.1.a
+#LIBV=libmqttudp.0.1.a
 
-include makedefs
 
 goal:: all
 
-all:: library
-
-build:: all
-	cp $(LIB) $(LIBV) ../../build
+include makedefs
+include makerules
 
 
+#build:: all
+#	cp $(LIB) $(LIBV) ../../build
 
-clean::
-	-rm *.o *.d *.exe *~
-
-cleanall:: clean
-	-rm autom4te.cache/* config.h config.status config.log $(LIB)
-	-rmdir autom4te.cache
+INSTDIR=P:/smart-home-devices/mmnet_mqt_udp_server/mqtt_udp 
 
 test:: all
 	$(MAKE) -C test test
 
-
 install:: library
-	cp $(LIB) mqtt_udp.h mqtt_udp_defs.h  P:/smart-home-devices/mmnet_mqt_udp_server/mqtt_udp 
+	cp $(LIB) mqtt_udp.h mqtt_udp_defs.h  $(INSTDIR)
+
+library:: $(LIB)
 
 
-OBJS  = 
-OBJS += mqtt_udp.o mqtt_udp_util.o
-OBJS += mqtt_udp_parse.o mqtt_udp_build.o
-OBJS += mqtt_udp_send.o mqtt_udp_recv.o
-OBJS += mqtt_udp_match.o mqtt_udp_throttle.o
-OBJS += strlcat.o strlcpy.o
-
-
-library:: libmqttudp.a
-
-$(LIB): $(OBJS)
-	$(AR) rc $@ $(OBJS)
-	$(RANLIB) $@
-	cp $@ $(LIBV)
-
-mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
-
-mqtt_udp_sub: mqtt_udp_sub.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
-
-mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
-
-mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
-
-mqtt_udp_clock: mqtt_udp_clock.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
 
 
 -include $(exclude README.md, $(wildcard *.md))

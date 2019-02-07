@@ -26,6 +26,7 @@ include glue/$(GLUE)/Makefile.glue
 -include glue/$(GLUE)/Makefile.glue.local
 
 vpath %.c glue/$(GLUE)
+vpath %.c examples
 
 # autoconf: 
 # .exe - executable file extension
@@ -48,41 +49,30 @@ LIBV=libmqttudp.$(ARCH).$(GLUE).$(version).a
 CFLAGS += -Iarch/$(ARCH)
 
 
-include makedefs
-
 goal:: all
 
-all:: library 
-
-ifeq ($(GLUE),unix)
-BUILD_PROGRAMS := true
-endif
+#todo kill me
+#ifeq ($(GLUE),unix)
+#BUILD_PROGRAMS := true
+#endif
 
 ifeq ($(GLUE),mingw)
 BUILD_PROGRAMS := true
 endif
 
 
-ifeq ($(BUILD_PROGRAMS),true)
+include makedefs
+include makerules
 
-all:: programs
 
-programs:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe
 
-run::
-	./mqtt_udp_sub
 
-endif
+
+
 
 build:: all
 	cp $(LIB) $(LIBV) ../../build
 
-clean::
-	-rm *.o *.d *.exe *~
-
-cleanall:: clean
-	-rm autom4te.cache/* config.h config.status config.log $(LIB)
-	-rmdir autom4te.cache
 
 test:: all
 	$(MAKE) -C test test
@@ -92,27 +82,7 @@ library:: $(LIB) $(LIBV)
 $(LIBV): $(LIB)
 	cp $(LIB) $(LIBV)
 
-$(LIB): $(OBJS)
-	$(AR) rc $@ $(OBJS)
-	$(RANLIB) $@
 
-ifeq ($(BUILD_PROGRAMS),true)
-
-# GLUE_LIBS can be defined in glue
-
-mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
-
-mqtt_udp_sub: mqtt_udp_sub.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
-
-mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
-
-mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
-
-endif
 
 -include $(exclude README.md, $(wildcard *.md))
 -include $(wildcard *.d)
