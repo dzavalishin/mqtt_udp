@@ -21,7 +21,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "mqtt_udp.h"
+#include "../mqtt_udp.h"
 
 
 
@@ -33,10 +33,7 @@ int main(int argc, char *argv[])
     {
         int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
         if( rc ) {
-            //printf("mqtt_udp_recv_loop() = %d", rc);
-            //perror("error");
             mqtt_udp_global_error_handler( MQ_Err_Other, rc, "recv_loop error", 0 );
-            //exit(1);
         }
     }
 

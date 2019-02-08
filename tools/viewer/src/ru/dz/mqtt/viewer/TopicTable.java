@@ -196,7 +196,8 @@ public class TopicTable  {
 			if( !have.get() )
 			{
 				TopicTableItem nti = new TopicTableItem(ti);
-				localData.add(nti);
+				if( nti.isPublish())
+					localData.add(nti);
 			}
 		});
 

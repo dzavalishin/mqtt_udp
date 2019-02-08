@@ -26,6 +26,7 @@ static size_t mqtt_udp_decode_topic_len( const char *pkt );
 
 static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt );
 
+static int32_t TTR_decode_int32( const char *data );
 
 // -----------------------------------------------------------------------
 // parse
@@ -166,11 +167,18 @@ parse_ttrs:
         }
 
         //printf("TTR type = %c 0x%X len=%d\n", ttr_type, ttr_type, ttr_len );
+        // Have TTR, process it
+        switch(ttr_type)
+        {
+        case 'n': o.pkt_id = TTR_decode_int32( ttrs ); break;
+        default: break;
+        }
 
         ttrs_len -= ttrs - ttr_start; // type & len fields
         ttrs_len -= ttr_len;          // TTR data
 
         ttrs += ttr_len;
+
 
         if( ttrs_len < 0 )
         {
@@ -244,6 +252,11 @@ static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt )
 
 
 
+// -----------------------------------------------------------------------
+//
+// decoders
+//
+// -----------------------------------------------------------------------
 
 
 
@@ -268,6 +281,19 @@ static size_t mqtt_udp_decode_size( const char **pkt )
 static size_t mqtt_udp_decode_topic_len( const char *pkt )
 {
     return (pkt[0] << 8) | pkt[1];
+}
+
+
+static int32_t TTR_decode_int32( const char *data )
+{
+    uint32_t v;
+
+    v  = (data[0] << 24); 
+    v |= (data[1] << 16); 
+    v |= (data[2] << 8);
+    v |=  data[3];
+
+    return v;
 }
 
 
@@ -299,7 +325,7 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 {
     const char *tn = ptname[ o->ptype >> 4 ];
 
-    printf( "pkt %s flags %x, id %ld from %d.%d.%d.%d",
+    printf( "pkt %s flags %x, id %lx from %d.%d.%d.%d",
             tn, o->pflags, (long)o->pkt_id,
             (int)(0xFF & (o->from_ip >> 24)),
             (int)(0xFF & (o->from_ip >> 16)),

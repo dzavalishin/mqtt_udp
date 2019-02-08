@@ -127,6 +127,7 @@ static int rconfig_rw_callback( int pos, int write )
         }
     }
 
+    return 0;
 
 }
 

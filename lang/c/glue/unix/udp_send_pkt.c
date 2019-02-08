@@ -29,7 +29,7 @@
 
 int mqtt_udp_send_pkt( int fd, char *data, size_t len )
 {
-    struct sockaddr_in addr;
+    //struct sockaddr_in addr;
 
     struct sockaddr_in serverAddr;
     socklen_t addr_size;
@@ -52,7 +52,7 @@ int mqtt_udp_send_pkt( int fd, char *data, size_t len )
 
 int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, uint32_t ip_addr )
 {
-    struct sockaddr_in addr;
+    //struct sockaddr_in addr;
 
     struct sockaddr_in serverAddr;
     socklen_t addr_size;

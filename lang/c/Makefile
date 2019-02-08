@@ -46,7 +46,7 @@ LIB=libmqttudp.a
 LIBV=libmqttudp.$(ARCH).$(GLUE).$(version).a
 
 
-CFLAGS += -Iarch/$(ARCH)
+CFLAGS += -Wall -Iarch/$(ARCH)
 
 
 goal:: all

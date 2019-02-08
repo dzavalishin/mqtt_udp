@@ -1,6 +1,6 @@
 # Makefile for embedded systems. Needs modification for your use.
 
-CFLAGS += -g -O2
+CFLAGS += -g -O2 -Wall 
 # make dependencies files
 CFLAGS += -MD -MP 
 CC=gcc

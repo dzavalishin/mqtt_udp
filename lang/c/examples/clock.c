@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <time.h>
 
-#include "mqtt_udp.h"
+#include "../mqtt_udp.h"
 
 
 //#define TOPIC "$SYS/GMT"
@@ -40,7 +40,6 @@ void usage( void )
 
 int main(int argc, char *argv[])
 {
-    int fd;
     int fast = 0;
     int silent = 0;
 

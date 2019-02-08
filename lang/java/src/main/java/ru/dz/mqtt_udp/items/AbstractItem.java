@@ -63,6 +63,9 @@ public abstract class AbstractItem {
 				;
 	}
 
+	public boolean isPublish() {
+		return (packetType == mqtt_udp_defs.PTYPE_PUBLISH);
+	}
 
 
 

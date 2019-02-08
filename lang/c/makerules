@@ -25,19 +25,19 @@ ifeq ($(BUILD_PROGRAMS),true)
 
 # GLUE_LIBS can be defined in glue
 
-mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
+mqtt_udp_pub: pub.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
-mqtt_udp_sub: mqtt_udp_sub.o $(LIB)
+mqtt_udp_sub: sub.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
-mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
+mqtt_udp_listen: listen.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
-mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
+mqtt_udp_subscribe: subscribe.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
-mqtt_udp_clock: mqtt_udp_clock.o $(LIB)
+mqtt_udp_clock: clock.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
 mqtt_udp_rconfig: rconfig.o $(LIB)
