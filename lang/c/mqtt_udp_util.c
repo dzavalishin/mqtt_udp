@@ -34,7 +34,7 @@ void mqtt_udp_dump( const char *buf, size_t len )
 
     for(i = 0; i < len; i++)
     {
-        printf("0x%x ", buf[i]);
+        printf("0x%02x ", 0xFFu & buf[i]);
     }
     printf("\n");
 

@@ -1,0 +1,81 @@
+# ------------------------------------------------------------------------
+#
+# Rules common to all makefiles
+#
+# ------------------------------------------------------------------------
+
+all:: library
+
+
+$(LIB): $(OBJS)
+	$(AR) rc $@ $(OBJS)
+	$(RANLIB) $@
+
+
+
+# ------------------------------------------------------------------------
+#
+# Executables
+#
+# ------------------------------------------------------------------------
+
+
+
+ifeq ($(BUILD_PROGRAMS),true)
+
+# GLUE_LIBS can be defined in glue
+
+mqtt_udp_pub: mqtt_udp_pub.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
+
+mqtt_udp_sub: mqtt_udp_sub.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
+
+mqtt_udp_listen: mqtt_udp_listen.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
+
+mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
+
+mqtt_udp_clock: mqtt_udp_clock.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
+
+mqtt_udp_rconfig: rconfig.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
+
+mqtt_udp_dump: dump.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
+
+programs:: mqtt_udp_pub mqtt_udp_sub mqtt_udp_listen mqtt_udp_subscribe mqtt_udp_clock mqtt_udp_rconfig mqtt_udp_dump
+
+all:: programs
+
+run::
+	./mqtt_udp_sub
+
+
+else
+
+programs:: 
+	echo "No program can be built for thins setup"
+
+
+endif
+
+
+
+# ------------------------------------------------------------------------
+#
+# Cleanup
+#
+# ------------------------------------------------------------------------
+
+clean::
+	-rm *.o *.d *.exe *~
+
+cleanall:: clean
+	-rm autom4te.cache/* config.h config.status config.log $(LIB)
+	-rmdir autom4te.cache
+
+
+

@@ -1,14 +1,16 @@
-# Makefile for cygwin env.
+# Makefile for unix (non-autoconf)
 
 CFLAGS += -g -O2
 # make dependencies files
 CFLAGS += -MD -MP 
 CC=gcc
+#CC=clang-5.0
+#AR=@AR@
 AR=ar
 RANLIB=ranlib
 
 CFLAGS += -Iarch/default
-EXESUFFIX=.exe
+EXESUFFIX=
 
 
 goal:: all
@@ -30,7 +32,6 @@ vpath %.c glue/unix
 
 #library:: libmqttudp.a
 library:: $(LIB)
-
 
 
 -include $(exclude README.md, $(wildcard *.md))

@@ -71,13 +71,12 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
     mqtt_udp_clear_pkt( &o );
 
     o.from_ip = from_ip;
-
     o.ptype = *pkt++;
     o.pflags = o.ptype & 0xF;
     o.ptype &= 0xF0;
-
-
     o.total = mqtt_udp_decode_size( &pkt );
+    o.topic = o.value = 0;
+    o.topic_len = o.value_len = 0;
 
     if( o.total+2 > plen )        
         return mqtt_udp_global_error_handler( MQ_Err_Proto, -2, "packet too short", "" );
@@ -96,10 +95,6 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
     else
         o.pkt_id = 0;
     */
-
-    o.topic = o.value = 0;
-    o.topic_len = o.value_len = 0;
-
 
     // Packets with topic?
     switch( o.ptype )
@@ -124,7 +119,8 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
     o.topic = malloc( tlen+2 );
     if( o.topic == 0 ) return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
     strlcpy( o.topic, pkt, tlen+1 );
-    o.topic_len = strnlen( o.topic, MAX_SZ );
+    //o.topic_len = strnlen( o.topic, MAX_SZ );
+    o.topic_len = strnlen( o.topic, tlen );
 
 
     pkt += tlen;
@@ -137,15 +133,16 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
     if( o.ptype != PTYPE_PUBLISH )
         goto parse_ttrs;
 
-    vlen++; // strlcpy needs place for zero
+    //vlen++; // strlcpy needs place for zero
     o.value = malloc( vlen+2 );
     if( o.value == 0 )
     {
         free( o.topic );
         return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
     }
-    strlcpy( o.value, pkt, vlen );
-    o.value_len = strnlen( o.value, MAX_SZ );
+    strlcpy( o.value, pkt, vlen+1 );
+    //o.value_len = strnlen( o.value, MAX_SZ );
+    o.value_len = strnlen( o.value, vlen );
 
 parse_ttrs:
     ;

@@ -1,6 +1,8 @@
+# ------------------------------------------------------------------------
 #
 # Variables for all the makefiles
 #
+# ------------------------------------------------------------------------
 
 OBJS  = udp_open.o udp_send_pkt.o udp_recv_pkt.o 
 OBJS += glue_time.o mqtt_udp_pkt.o
@@ -10,3 +12,4 @@ OBJS += mqtt_udp_send.o mqtt_udp_recv.o
 OBJS += mqtt_udp_match.o mqtt_udp_throttle.o
 OBJS += mqtt_udp_rconfig.o
 OBJS += strlcat.o strlcpy.o
+

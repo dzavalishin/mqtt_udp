@@ -1,0 +1,12 @@
+# https://www.websequencediagrams.com
+
+title Remote configuration (passive)
+
+Configurator->Node: SUBSCRIBE $SYS/conf/#
+Node->Configurator: PUBLISH $SYS/conf/{id}/item-id1 value
+Node->Configurator: PUBLISH $SYS/conf/{id}/item-id2 value
+
+note over Configurator,Node: More items sent
+note left of Configurator: User modifies item-id1
+
+Configurator->Node: PUBLISH $SYS/conf/{id}/item-id1 new-value

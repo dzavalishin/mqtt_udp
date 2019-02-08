@@ -133,11 +133,11 @@ int mqtt_udp_rconfig_set_string( int pos, char *string )
     if( item->value.s ) free( item->value.s );
     //item->value.s = 0;
 
-    item->value.s = malloc( slen );
+    item->value.s = malloc( slen+1 );
 
     if( 0 == item->value.s ) return -4;
 
-    strcpy( item->value.s, string );
+    strlcpy( item->value.s, string, slen+1 );
     return 0;
 }
 
