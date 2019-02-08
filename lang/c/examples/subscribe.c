@@ -7,7 +7,7 @@
  *
  *
  * @file
- * @brief Example program: Send MQTT/UDP publish message
+ * @brief Example program: Send MQTT/UDP subscribe message
  *
 **/
 
@@ -20,27 +20,24 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "mqtt_udp.h"
+#include "../mqtt_udp.h"
 
 
 
 int main(int argc, char *argv[])
 {
-    int fd;
-
-    if( argc != 3 )
+    if( argc != 2 )
     {
-        printf("Publish message to MQTT/UDP listeners\n\n");
-        printf("Usage: %s topic value", argv[0]);
+        printf("Send SUBSCRIBE message to MQTT/UDP listeners\n\n");
+        printf("Usage: %s topic", argv[0]);
         exit(3);
     }
 
-    char *value = argv[2];
     char *topic = argv[1];
 
-    printf("Will publish '%s' to topic '%s'\n", value, topic );
+    printf("Will send subscribe for topic '%s'\n", topic );
 
-    int rc = mqtt_udp_send_publish( topic, value );
+    int rc = mqtt_udp_send_subscribe( topic );
 
     if( rc )
         printf("error %d", rc);

@@ -23,6 +23,9 @@
 
 static int pack_len( char *buf, size_t *blen, int *used, int data_len );
 
+int encode_TTR( char **bp, size_t *blen, char type, char *data, int dlen );
+int encode_int32_TTR( char **bp, size_t *blen, char type, uint32_t value );
+int encode_int64_TTR( char **bp, size_t *blen, char type, uint64_t value );
 
 
 
@@ -30,10 +33,7 @@ static int pack_len( char *buf, size_t *blen, int *used, int data_len );
 // Build
 // -----------------------------------------------------------------------
 
-
-
-//#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt.pflags) & 0x6)
-
+static int32_t packet_number_generator;
 
 
 /**
@@ -49,6 +49,7 @@ static int pack_len( char *buf, size_t *blen, int *used, int data_len );
 **/
 int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size_t *out_len )
 {
+    int rc;
     // TODO check for consistency - if pkt has to have topic & value and has it
 
     int tlen = p->topic ? p->topic_len : 0;
@@ -61,27 +62,20 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
     *bp++ = (p->ptype & 0xF0) | (p->pflags & 0x0F);
     blen--;
 
-    // TODO incorrect
-    int total = tlen + dlen + 2 + 2; // packet size
+    // MQTT payload size, not incl TTRs
+    int total = tlen + dlen + 2;
 
-    /* Not supported in MQTT/UDP
-    //if( MQTT_UDP_PKT_HAS_ID(p) ) total += 2;
-    if(MQTT_UDP_FLAGS_HAS_ID(p->pflags)) total += 2;
-    */
+    // Not supported in MQTT/UDP: if(MQTT_UDP_FLAGS_HAS_ID(p->pflags)) total += 2;
+
+    int used = 0;
+    rc = pack_len( bp, &blen, &used, total );
+    if( rc ) return rc;
+    bp += used;
 
     if( total > blen )
         return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
 
-    //int size = total+1;
-
-    int used = 0;
-    int rc = pack_len( bp, &blen, &used, total-2 );
-    if( rc ) return rc;
-
-    bp += used;
-
     /* Not supported in MQTT/UDP
-    //if( MQTT_UDP_PKT_HAS_ID(p) )
     if(MQTT_UDP_FLAGS_HAS_ID(p->pflags))
     {
         *bp++ = (p->pkt_id >> 8) & 0xFF;
@@ -92,6 +86,7 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
 
     if( tlen )
     {
+        // Encode topic len
         *bp++ = (tlen >>8) & 0xFF;
         *bp++ = tlen & 0xFF;
         blen -= 2;
@@ -115,15 +110,68 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
 
     }
 
+    if( p->pkt_id == 0 ) 
+        p->pkt_id = packet_number_generator++;
+
+    rc = encode_int32_TTR( &bp, &blen, 'n', p->pkt_id );
+    if( rc ) return rc;
+
+
     if( out_len ) *out_len = bp - buf;
 
     return 0;
 }
 
 
+// -----------------------------------------------------------------------
+// TTRs
+// -----------------------------------------------------------------------
 
+int encode_TTR( char **bp, size_t *blen, char type, char *data, int dlen )
+{
+    if( *blen < 2 ) 
+        return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
 
+    // TTR type byte
+    *(*bp)++ = type; 
 
+    // TTR content len
+    int used = 0;
+    int rc = pack_len( *bp, blen, &used, dlen ); 
+    if( rc ) return rc;
+    *bp += used;
+
+    if( *blen < dlen ) 
+        return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
+
+    //TTR content
+    memcpy( *bp, data, dlen ); 
+    *bp += dlen;
+}
+
+int encode_int32_TTR( char **bp, size_t *blen, char type, uint32_t value )
+{
+    const int bytes = 4; // 32 bits
+    char out[bytes]; 
+    int i;
+	
+    for( int i = 0; i < bytes; i++ )
+		out[i] = (char)(value >> (8*(bytes - i - 1)) );
+
+    return encode_TTR( bp, blen, type, out, sizeof out );
+}
+
+int encode_int64_TTR( char **bp, size_t *blen, char type, uint64_t value )
+{
+    const int bytes = 8; // 64 bits
+    char out[bytes]; 
+    int i;
+	
+    for( int i = 0; i < bytes; i++ )
+		out[i] = (char)(value >> (8*(bytes - i - 1)) );
+
+    return encode_TTR( bp, blen, type, out, sizeof out );
+}
 
 
 

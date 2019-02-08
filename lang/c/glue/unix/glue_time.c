@@ -23,7 +23,8 @@
 
 uint64_t mqtt_udp_arch_get_time_msec()
 {
-    return 1000LL * time(0);
+    uint64_t ret = time(0);
+    return 1000LL * ret;
 }
 
 void  mqtt_udp_arch_sleep_msec( uint32_t msec )

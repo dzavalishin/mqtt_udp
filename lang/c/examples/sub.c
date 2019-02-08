@@ -3,11 +3,12 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
+ *
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
  *
  * @file
- * @brief Example program: Message reception example code
+ * @brief Example program: Message reception example code. This code is outdated, please see listen.c instead.
  *
 **/
 
@@ -19,7 +20,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "mqtt_udp.h"
+#include "../mqtt_udp.h"
 
 
 
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
         loop++;
 
     int fd, rc;
-    unsigned char buf[PKT_BUF_SIZE];
+    //char buf[PKT_BUF_SIZE];
 
     fd = mqtt_udp_socket();
 

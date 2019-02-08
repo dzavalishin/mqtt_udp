@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         loop++;
 
     int fd, rc;
-    unsigned char buf[PKT_BUF_SIZE];
+    char buf[PKT_BUF_SIZE];
 
     fd = mqtt_udp_socket();
 

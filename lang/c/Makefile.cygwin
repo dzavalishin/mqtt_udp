@@ -1,6 +1,6 @@
 # Makefile for cygwin env.
 
-CFLAGS += -g -O2
+CFLAGS += -g -O2 -Wall 
 # make dependencies files
 CFLAGS += -MD -MP 
 CC=gcc
