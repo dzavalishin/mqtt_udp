@@ -48,23 +48,24 @@ int main(int argc, char *argv[])
 
 
 // Actual remotely configurable items
+// We use .opaque to keep initial value
 mqtt_udp_rconfig_item_t rconfig_list[] =
 {
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 1 topic",	"topic/sw1", { .s = 0 } },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 2 topic",	"topic/sw2", { .s = 0 } },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 3 topic",	"topic/sw3", { .s = 0 } },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 4 topic",	"topic/sw4", { .s = 0 } },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 0 topic",	"topic/di0", { .s = 0 } },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 1 topic",	"topic/di1", { .s = 0 } },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 1 topic",	"topic/sw1", .value.s = 0, .opaque.s = "sw1" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 2 topic",	"topic/sw2", .value.s = 0, .opaque.s = "sw2" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 3 topic",	"topic/sw3", .value.s = 0, .opaque.s = "sw3" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 4 topic",	"topic/sw4", .value.s = 0, .opaque.s = "sw4" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 0 topic",	    "topic/di0", .value.s = 0, .opaque.s = "di0" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 1 topic",	    "topic/di1", .value.s = 0, .opaque.s = "di1" },
 
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "MAC address", 	"net/mac",   { .s = 0 } },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "MAC address", 	"net/mac",   .value.s = 0, .opaque.s = "020000000000" },
 
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/soft",   { .s = "C RConfig Demo" } },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/ver",    { .s = 0 } },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/uptime", { .s = 0 } },  // DO NON MOVE OR ADD LINES ABOVE, inited by array index below
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/soft",   .value.s = 0, .opaque.s = "C RConfig Demo" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/ver",    .value.s = 0, .opaque.s = "0.0.1" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/uptime", .value.s = 0, .opaque.s = "0d 00:00:00" },  // DO NON MOVE OR ADD LINES ABOVE, inited by array index below
 
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Name", 		"node/name",     { .s = 0 }, .opaque.s = 0 }, // TODO R/W
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Location", 	"node/location", { .s = 0 }, .opaque.s = 0 }, // TODO R/W
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Name", 		"node/name",     .value.s = 0, .opaque.s = "C Test Node" }, // TODO R/W
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Location", 	"node/location", .value.s = 0, .opaque.s = "None" }, // TODO R/W
 };
 
 
@@ -86,31 +87,6 @@ void init_rconfig( void )
 }
 
 
-// not ready
-#if 1
-
-
-mqtt_udp_rconfig_item_t rconfig_defaults[] =
-{
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 1 topic",	"topic/sw1", .opaque.s = "sw1" },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 2 topic",	"topic/sw2", .opaque.s = "sw2" },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 3 topic",	"topic/sw3", .opaque.s = "sw3" },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 4 topic",	"topic/sw4", .opaque.s = "sw4" },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 0 topic",	    "topic/di0", .opaque.s = "di0" },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 1 topic",	    "topic/di1", .opaque.s = "di1" },
-
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "MAC address", 	"net/mac",   .opaque.s = "020000000000" },
-
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/soft",   .opaque.s = "C RConfig Demo" },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/ver",    .opaque.s = "0.0.1" },
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/uptime", .opaque.s = "0d 00:00:00" },  // DO NON MOVE OR ADD LINES ABOVE, inited by array index below
-
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Name", 		"node/name",     .opaque.s = "C Test Node" }, // TODO R/W
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Location", 	"node/location", .opaque.s = "None" }, // TODO R/W
-};
-
-
-
 // -----------------------------------------------------------------------
 //
 // Callback to connect to host code
@@ -122,15 +98,19 @@ mqtt_udp_rconfig_item_t rconfig_defaults[] =
 // config item at pos
 static int rconfig_rw_callback( int pos, int write )
 {
-    printf("asked to %s item %d\n", write ? "save" : "load", pos );
+    //printf("asked to %s item %d\n", write ? "save" : "load", pos );
 
     if( (pos < 0) || (pos >= rconfig_list_size) ) return -1; // TODO error
 
     if( rconfig_list[pos].type != MQ_CFG_TYPE_STRING )
         return -2;
 
+    if( rconfig_list[pos].kind == MQ_CFG_KIND_INFO )
+        return -3;
+
     if( write )
     {
+        // RConfig got new setting from outside, store and use it
         printf("Got new settings for %s = '%s'\n", 
             rconfig_list[pos].topic,
             rconfig_list[pos].value.s
@@ -138,62 +118,17 @@ static int rconfig_rw_callback( int pos, int write )
     }
     else
     {
-        if( rconfig_defaults[pos].opaque.s != 0 )
+        // RConfig asks saved or default setting for item
+        if( rconfig_list[pos].opaque.s != 0 )
         {
-            mqtt_udp_rconfig_set_string( pos, rconfig_defaults[pos].opaque.s );
-        }
-    }
-
-    /*
-    if( rconfig_list[pos].kind == MQ_CFG_KIND_TOPIC )
-    {
-        if( write )
-        {
-            printf("new val = '%s'\n", rconfig_list[pos].value.s );
-            if( pos < EEPROM_CFG_N_TOPICS )
-            {
-                strlcpy( ee_cfg.topics[pos], rconfig_list[pos].value.s, sizeof( ee_cfg.topics[pos] ) );
-                int rc = runtime_cfg_eeprom_write(); // TODO do write from thread with timeout to combine writes
-                if( rc ) printf("eeprom wr err %d\n", rc );
-            }
-            return 0;
-        }
-        else
-        {
-
-            if( pos < EEPROM_CFG_N_TOPICS )
-                mqtt_udp_rconfig_set_string( pos, ee_cfg.topics[pos] );
-            return 0;
-        }
-    }
-
-    if( rconfig_list[pos].opaque.s != 0 )
-    {
-        if( write )
-        {
-            strlcpy( rconfig_list[pos].opaque.s, rconfig_list[pos].value.s, EEPROM_CFG_MAX_TOPIC_LEN );
-
-            mqtt_udp_dump( rconfig_list[pos].opaque.s, EEPROM_CFG_MAX_TOPIC_LEN );
-
-            printf("val '%s'\n", rconfig_list[pos].value.s );
-            printf("node name '%s' loc '%s'\n", ee_cfg.node_name, ee_cfg.node_location );
-
-            int rc = runtime_cfg_eeprom_write(); // TODO do write from thread with timeout to combine writes
-            if( rc ) printf("eeprom wr err %d\n", rc );
-        }
-        else
-        {
-            printf("node name '%s' loc '%s'\n", ee_cfg.node_name, ee_cfg.node_location );
-
-            mqtt_udp_dump( rconfig_list[pos].opaque.s, EEPROM_CFG_MAX_TOPIC_LEN );
-
             mqtt_udp_rconfig_set_string( pos, rconfig_list[pos].opaque.s );
         }
-    }*/
+    }
+
 
 }
 
 
-#endif
+
 
 
