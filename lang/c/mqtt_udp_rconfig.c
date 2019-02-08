@@ -27,9 +27,7 @@
 #include <stdio.h>
 #include <string.h>
 
-/// Topic prefix for remote configuration topics
-//#define SYS_CONF_PREFIX "$SYS/conf"
-
+#define DEBUG 0
 
 static int rconfig_listener( struct mqtt_udp_pkt *pkt );
 
@@ -66,8 +64,9 @@ static int rconfig_list_size;
 **/
 int mqtt_udp_rconfig_client_init(char *mac_address_string, mqtt_udp_rconfig_rw_callback cb, mqtt_udp_rconfig_item_t *rconfig_items, int n_items )
 {
-    //printf( "RConfig client init with mac '%s'\n", mac_address_string );
-
+#if DEBUG
+    printf( "RConfig client init with mac '%s'\n", mac_address_string );
+#endif
     rconfig_list = rconfig_items;
     rconfig_list_size = n_items;
 
@@ -143,7 +142,7 @@ int mqtt_udp_rconfig_set_string( int pos, char *string )
 
 
 
-//#define SYS_WILD "$SYS/#"
+
 /**
  * 
  * @brief Process incoming packets.
@@ -157,8 +156,9 @@ int mqtt_udp_rconfig_set_string( int pos, char *string )
 **/
 static int rconfig_listener( struct mqtt_udp_pkt *pkt )
 {
-    //printf("rconf\n");
-
+#if DEBUG
+    printf("rconf\n");
+#endif
     // Got request
     if( pkt->ptype == PTYPE_SUBSCRIBE )
     {
@@ -166,14 +166,18 @@ static int rconfig_listener( struct mqtt_udp_pkt *pkt )
         //if( 0 == strcmp( pkt->topic, SYS_WILD ) ) { rconfig_send_topic_list(); return 0; }
         if( mqtt_udp_match( pkt->topic, topic_prefix ) ) 
         { 
+#if DEBUG
+            printf("send all\n");
+#endif
             rconfig_send_topic_list(); 
             return 0; 
         }
 
         int pos = find_by_full_topic( pkt->topic );
         if( pos < 0 ) return 0;
-        //printf("rconf got subscribe '%s' pos = %d\n", pkt->topic, pos );
-
+#if DEBUG
+        printf("rconf got subscribe '%s' pos = %d\n", pkt->topic, pos );
+#endif
         rconfig_send_topic_by_pos( pos );
     }
 
@@ -182,8 +186,9 @@ static int rconfig_listener( struct mqtt_udp_pkt *pkt )
     {
         int pos = find_by_full_topic( pkt->topic );
         if( pos < 0 ) return 0;
-        //printf("rconf set '%s'='%s' pos = %d\n", pkt->topic, pkt->value, pos );
-
+#if DEBUG
+        printf("rconf set '%s'='%s' pos = %d\n", pkt->topic, pkt->value, pos );
+#endif
         int rc = mqtt_udp_rconfig_set_string( pos, pkt->value );
         if( rc ) mqtt_udp_global_error_handler( MQ_Err_Other, rc, "rconfig_set_string failed", pkt->value );
 
@@ -209,7 +214,9 @@ static int rconfig_listener( struct mqtt_udp_pkt *pkt )
 **/
 static int find_by_full_topic( const char *topic )
 {
+#if DEBUG
     //printf("topic  '%s'\n", topic );
+#endif
     //printf("prefix '%s'\n", topic_prefix );
 
     if( strncmp( topic_prefix, topic, topic_prefix_len ) ) return -1;
@@ -233,8 +240,9 @@ static int find_by_full_topic( const char *topic )
 static void rconfig_send_topic_by_pos( int pos )
 {
 
-    //printf("rconfig_send_topic_by_pos %d: ", pos );
-
+#if DEBUG
+    printf("rconfig_send_topic_by_pos %d: ", pos );
+#endif
     // TODO do more
     if( rconfig_list[pos].type != MQ_CFG_TYPE_STRING )
         return;
@@ -250,7 +258,9 @@ static void rconfig_send_topic_by_pos( int pos )
     if( val == 0 ) val = "";
 
     mqtt_udp_send_publish( topic, val );
-    //printf("'%s'='%s'\n", topic, val );
+#if DEBUG
+    printf("'%s'='%s'\n", topic, val );
+#endif
 }
 
 
