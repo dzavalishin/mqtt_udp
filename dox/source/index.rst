@@ -408,6 +408,53 @@ Here is a list of know ones.
 
 Other network settings can be put to ``net`` kind.
 
+Implementations
+~~~~~~~~~~~~~~~
+
+Configurator GUI tool exists as part of big Java MQTT/UDP viewer program,
+see ``tools/viewer`` and ``build/mqtt_udp_view.*``. Clien implementations
+examples are done for most project languages.
+
+**Java**
+    ``RemoteConfig`` class in ``ru.dz.mqtt_udp.config`` package.
+    Simple example code is in ``main`` function of this class.
+
+**Python**
+    Example code is in ``lang/python3/examples/mqtt_udp_rconfig.py``.
+
+**C**
+    Simple example code is in ``lang/c/examples/rconfig.c``.
+    More advanced embedded atmega microcontroller example 
+    application is in a separate repository, see 
+    https://github.com/dzavalishin/smart-home-devices/tree/master/mmnet_mqt_udp_server/main
+
+**Lua**
+    Lua example is up and running, but as Lua has no threads,
+    adding this example to a real program will require quite
+    a clever tailoring. See ``lang/lua/examples/mqtt_rconfig.lua``
+
+Active remote configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Active remote configuration is even simpler than passive one.
+Staring node just requests in a loop all the items it needs 
+to run. Configuration server replies with settings. Node
+continues working when all critical data is received. Server
+can proactively update settings later if some of them are
+changed.
+
+.. figure:: diagrams/remote_configuration_active.*
+
+   Active remote configuration state diagram
+
+Implementations
+~~~~~~~~~~~~~~~
+
+Currently this mode is implemented in Java as classes ``Requester`` and ``Provider``
+(``ru.dz.mqtt_udp.config`` package) and server application ``tools/config_server``.
+See also ``build/config_server.sh``.
+
+
 Packets and general logic
 =========================
 

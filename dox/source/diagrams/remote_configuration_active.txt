@@ -1,5 +1,13 @@
 title Remote configuration (active)
 
+note left of Node: Node starting
+
 Node->Server: SUBSCRIBE $SYS/conf/{id}/item-id1 value
 Server->Node: PUBLISH $SYS/conf/{id}/item-id1 value
 
+note left of Node: Node working
+note left of Server: Config update
+
+Server->Node: PUBLISH $SYS/conf/{id}/item-id1 value
+
+note left of Node: New settings
