@@ -147,6 +147,8 @@ int encode_TTR( char **bp, size_t *blen, char type, char *data, int dlen )
     //TTR content
     memcpy( *bp, data, dlen ); 
     *bp += dlen;
+
+    return 0;
 }
 
 int encode_int32_TTR( char **bp, size_t *blen, char type, uint32_t value )
@@ -155,7 +157,7 @@ int encode_int32_TTR( char **bp, size_t *blen, char type, uint32_t value )
     char out[bytes]; 
     int i;
 	
-    for( int i = 0; i < bytes; i++ )
+    for( i = 0; i < bytes; i++ )
 		out[i] = (char)(value >> (8*(bytes - i - 1)) );
 
     return encode_TTR( bp, blen, type, out, sizeof out );
@@ -167,7 +169,7 @@ int encode_int64_TTR( char **bp, size_t *blen, char type, uint64_t value )
     char out[bytes]; 
     int i;
 	
-    for( int i = 0; i < bytes; i++ )
+    for( i = 0; i < bytes; i++ )
 		out[i] = (char)(value >> (8*(bytes - i - 1)) );
 
     return encode_TTR( bp, blen, type, out, sizeof out );
