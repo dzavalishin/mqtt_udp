@@ -1,0 +1,5 @@
+title Remote configuration (active)
+
+Node->Server: SUBSCRIBE $SYS/conf/{id}/item-id1 value
+Server->Node: PUBLISH $SYS/conf/{id}/item-id1 value
+

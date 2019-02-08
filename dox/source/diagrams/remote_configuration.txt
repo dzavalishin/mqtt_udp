@@ -1,6 +1,6 @@
 # https://www.websequencediagrams.com
 
-title Remote configuration
+title Remote configuration (passive)
 
 Configurator->Node: SUBSCRIBE $SYS/conf/#
 Node->Configurator: PUBLISH $SYS/conf/{id}/item-id1 value
