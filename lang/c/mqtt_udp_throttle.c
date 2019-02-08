@@ -92,8 +92,9 @@ void mqtt_udp_throttle()
     last_send_count -= max_seq_packets; // eat out
 
     uint64_t now = mqtt_udp_arch_get_time_msec();
-    //print( str(now) )
+
     uint64_t since_last_pkt = now - last_send_time;
+    //printf("\n\nsince_last_pkt %lld msec, mult=%d\n", since_last_pkt, max_seq_packets * throttle );
 
     if( last_send_time == 0 )
     {
@@ -103,16 +104,15 @@ void mqtt_udp_throttle()
 
     last_send_time = now;
 
-    uint64_t towait = max_seq_packets * throttle - since_last_pkt;
+    int64_t towait =  max_seq_packets * throttle - since_last_pkt;
 
-    // print( str(towait) )
-
-    if( towait == 0 )
+    //printf("\nthrottle sleep %lld msec\n\n", towait );
+    if( towait <= 0 )
         return;
 
     // TODO autoconf me in
     //usleep(1000L*towait);
-    //sleep(1);
+
     mqtt_udp_arch_sleep_msec( towait );
 
 }

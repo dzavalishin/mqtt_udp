@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
 {
     printf("Demo of MQTT/UDP passive remote configuration\n\n");
 
+    //setvbuf( stdout, 0, _IONBF, 0 );
+
     init_rconfig();
 
     while(1)
