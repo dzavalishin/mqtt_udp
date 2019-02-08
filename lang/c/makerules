@@ -38,7 +38,7 @@ mqtt_udp_subscribe: mqtt_udp_subscribe.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
 mqtt_udp_clock: mqtt_udp_clock.o $(LIB)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)
 
 mqtt_udp_rconfig: rconfig.o $(LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(GLUE_LIBS)

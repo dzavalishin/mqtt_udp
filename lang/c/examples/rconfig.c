@@ -3,6 +3,7 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
+ * 
  * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
  *
  * @file
@@ -23,43 +24,30 @@
 
 #include "../mqtt_udp.h"
 
+void init_rconfig( void );
 
 
 int main(int argc, char *argv[])
 {
     printf("Demo of MQTT/UDP passive remote configuration\n\n");
 
+    init_rconfig();
+
     while(1)
     {
+        // We need to start listen loop: remote config takes input from it
         int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );
         if( rc ) {
-            //printf("mqtt_udp_recv_loop() = %d", rc);
-            //perror("error");
             mqtt_udp_global_error_handler( MQ_Err_Other, rc, "recv_loop error", 0 );
-            //exit(1);
         }
     }
 
     return 0;
 }
 
-// not ready
-#if 0
 
 
-// -----------------------------------------------------------------------
-//
-// Use remote config item list (rconfig.client.c) as
-// channel number / topic name map. Item index for
-// topic is a local channel number
-//
-// DO NOT MOVE items with MQ_CFG_KIND_TOPIC, their position
-// is local channel number.
-//
-// -----------------------------------------------------------------------
-
-
-// Will be parameter of mqtt_udp_rconfig_client_init()
+// Actual remotely configurable items
 mqtt_udp_rconfig_item_t rconfig_list[] =
 {
     { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 1 topic",	"topic/sw1", { .s = 0 } },
@@ -75,8 +63,8 @@ mqtt_udp_rconfig_item_t rconfig_list[] =
     { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/ver",    { .s = 0 } },
     { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/uptime", { .s = 0 } },  // DO NON MOVE OR ADD LINES ABOVE, inited by array index below
 
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Name", 		"node/name", { .s = 0 }, .opaque.s = ee_cfg.node_name }, // TODO R/W
-    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Location", 	"node/location", { .s = 0 }, .opaque.s = ee_cfg.node_location }, // TODO R/W
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Name", 		"node/name",     { .s = 0 }, .opaque.s = 0 }, // TODO R/W
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Location", 	"node/location", { .s = 0 }, .opaque.s = 0 }, // TODO R/W
 };
 
 
@@ -98,7 +86,28 @@ void init_rconfig( void )
 }
 
 
+// not ready
+#if 1
 
+
+mqtt_udp_rconfig_item_t rconfig_defaults[] =
+{
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 1 topic",	"topic/sw1", .opaque.s = "sw1" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 2 topic",	"topic/sw2", .opaque.s = "sw2" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 3 topic",	"topic/sw3", .opaque.s = "sw3" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Switch 4 topic",	"topic/sw4", .opaque.s = "sw4" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 0 topic",	    "topic/di0", .opaque.s = "di0" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_TOPIC, "Di 1 topic",	    "topic/di1", .opaque.s = "di1" },
+
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "MAC address", 	"net/mac",   .opaque.s = "020000000000" },
+
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/soft",   .opaque.s = "C RConfig Demo" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/ver",    .opaque.s = "0.0.1" },
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_INFO, "Switch 4 topic", "info/uptime", .opaque.s = "0d 00:00:00" },  // DO NON MOVE OR ADD LINES ABOVE, inited by array index below
+
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Name", 		"node/name",     .opaque.s = "C Test Node" }, // TODO R/W
+    { MQ_CFG_TYPE_STRING, MQ_CFG_KIND_OTHER, "Location", 	"node/location", .opaque.s = "None" }, // TODO R/W
+};
 
 
 
@@ -120,6 +129,22 @@ static int rconfig_rw_callback( int pos, int write )
     if( rconfig_list[pos].type != MQ_CFG_TYPE_STRING )
         return -2;
 
+    if( write )
+    {
+        printf("Got new settings for %s = '%s'\n", 
+            rconfig_list[pos].topic,
+            rconfig_list[pos].value.s
+        );
+    }
+    else
+    {
+        if( rconfig_defaults[pos].opaque.s != 0 )
+        {
+            mqtt_udp_rconfig_set_string( pos, rconfig_defaults[pos].opaque.s );
+        }
+    }
+
+    /*
     if( rconfig_list[pos].kind == MQ_CFG_KIND_TOPIC )
     {
         if( write )
@@ -164,7 +189,7 @@ static int rconfig_rw_callback( int pos, int write )
 
             mqtt_udp_rconfig_set_string( pos, rconfig_list[pos].opaque.s );
         }
-    }
+    }*/
 
 }
 
