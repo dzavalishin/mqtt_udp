@@ -31,10 +31,10 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
  * <p>
  * This class serves configuration items to be remotely configurable.
  * </p>
+ * <p>See also lang/c/mqtt_udp_rconfig.c - C implementation of same functionality.</p>
+ * <p>See also <a href="https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-message-content-specification">Wiki</a></p>
  * 
  * @see Controller
- * @see lang/c/mqtt_udp_rconfig.c - C implementation of same functionality.
- * @see <a href="https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-message-content-specification">Wiki</a>
  * 
  * @author dz
  *

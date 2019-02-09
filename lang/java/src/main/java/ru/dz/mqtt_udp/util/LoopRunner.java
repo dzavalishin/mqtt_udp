@@ -30,16 +30,28 @@ public abstract class LoopRunner {
 
 	/**
 	 * To be overridden in subclass. On start do preparations needed.
+	 * 
+	 * @throws IOException In case of IO error
+	 * 
+	 * @throws MqttProtocolException In case of MQTT/UDP protocol error
 	 */
 	protected abstract void onStart() throws IOException, MqttProtocolException;
 
 	/**
 	 * To be overridden in subclass. Called in loop to do actual work.
+	 * 
+	 * @throws IOException In case of IO error
+	 * 
+	 * @throws MqttProtocolException In case of MQTT/UDP protocol error
 	 */
 	protected abstract void step() throws IOException, MqttProtocolException;
 
 	/**
 	 * To be overridden in subclass. On stop do cleanup needed.
+	 * 
+	 * @throws IOException In case of IO error
+	 * 
+	 * @throws MqttProtocolException In case of MQTT/UDP protocol error
 	 */
 	protected abstract void onStop() throws IOException, MqttProtocolException;
 

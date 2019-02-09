@@ -3,7 +3,15 @@ package ru.dz.mqtt_udp.util;
 import java.io.IOException;
 
 import ru.dz.mqtt_udp.PublishPacket;
-
+/**
+ * NB!
+ * 
+ * This program is used in global regress test and its output is checked.
+ * See test/runner
+ * 
+ * @author dz
+ *
+ */
 public class Pub {
 
 	public static void main(String[] args) throws IOException {

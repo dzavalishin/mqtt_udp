@@ -32,11 +32,13 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
  * On parameter change we send it updated, request and check if it is set correct.
  * </p>
  * 
+ * <p>See also lang/c/mqtt_udp_rconfig.c - C implementation of client side for this class.</p>
+ * <p>See also <a href="https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-message-content-specification">Wiki</a></p>
+
  * @author dz
  * 
  * @see RemoteConfig
- * @see lang/c/mqtt_udp_rconfig.c - C implementation of client side for this class.
- * @see <a href="https://github.com/dzavalishin/mqtt_udp/wiki/MQTT-UDP-message-content-specification">Wiki</a>
+ *
  * 
  */
 
