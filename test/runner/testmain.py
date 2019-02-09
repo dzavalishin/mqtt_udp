@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 
 '''
@@ -25,15 +25,41 @@ finally:
 
 import subprocess
 
-python_path = "../../lang/python3/test/"
+PY_PATH = "../../lang/python3/test/"
+C_PATH = "../../lang/c"
+LUA_PATH = "../../lang/lua/test"
+JAVA_PATH = "../../lang/java"
 
-#args=["sh", "-c", "python3.6", python_path+"random_to_udp.py"]
-#args=["python3.6", python_path+"random_to_udp.py"]
-#args=["python3.6", "random_to_udp.py"]
-args=[ "python3.6", "test_pub.py", "aaa", "bbb" ]
-args=[ "python", "test_pub.py", "aaa", "bbb" ]
+#args=[ "python3.6", "test_pub.py", "aaa", "bbb" ]
+##done = subprocess.run( args, capture_output=True, cwd=python_path, timeout=100, check=True )
+#done = subprocess.run( args, cwd=python_path, stdout=subprocess.PIPE, timeout=100, check=True )
+#print( "Done, out = "+str(done.stdout) );
 
-done = subprocess.run( args, capture_output=True, cwd=python_path, timeout=100, check=True )
+def run_wait( wd, args, timeout=100 ):
+    done = subprocess.run( args, cwd=wd, stdout=subprocess.PIPE, timeout=100, check=True )
+    return str(done.stdout)
 
-print( "Done, out = "+str(done.stdout) );
+def run_py( prog, a1, a2, timeout=100 ):
+    args=[ "python3.6", prog, a1, a2 ]
+    return run_wait( PY_PATH, args, timeout )
+
+def run_c( prog, a1, a2, timeout=100 ):
+    #args=[ "cmd", "/c", prog, a1, a2 ]
+    args=[ "./"+prog, a1, a2 ]
+    return run_wait( C_PATH, args, timeout )
+
+def run_lua( prog, a1, a2, timeout=100 ):
+    #args=[ "cmd", "/c", prog, a1, a2 ]
+    args=[ "lua", prog, a1, a2 ]
+    return run_wait( LUA_PATH, args, timeout )
+
+
+
+if __name__ == "__main__":
+    print( "Will do MQTT/UDP program run tests" )
+    print(run_py( "test_pub.py", "aaa", "bbb" ))
+    #print(run_c( "mqtt_udp_pub.exe", "aaa", "bbb" ))
+    print(run_c( "mqtt_udp_pub", "aaa", "bbb" ))
+    print(run_lua( "test_pub.lua", "aaa", "bbb", 2 ))
+
 
