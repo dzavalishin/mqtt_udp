@@ -62,10 +62,8 @@ def run_java( prog, a1, a2, timeout=100 ):
 
 if __name__ == "__main__":
     print( "Will do MQTT/UDP program run tests" )
-    print(run_py( "test_pub.py", "aaa", "bbb" ))
-    #print(run_c( "mqtt_udp_pub.exe", "aaa", "bbb" ))
-    print(run_c( "mqtt_udp_pub", "aaa", "bbb" ))
-    print(run_lua( "test_pub.lua", "aaa", "bbb" ))
-    print(run_java( "ru.dz.mqtt_udp.util.Pub", "aaa", "bbb" ))
+    print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
+    print(run_c( "mqtt_udp_pub", "regress/from/c", "test_message2" ))
+    print(run_lua( "test_pub.lua", "regress/from/lua", "test_message3" ))
+    print(run_java( "ru.dz.mqtt_udp.util.Pub", "regress/from/java", "test_message4" ))
 
-#java -cp target/mqtt_udp-0.4.1.jar ru.dz.mqtt_udp.util.Pub aaa bbb------------------

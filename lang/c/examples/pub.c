@@ -3,7 +3,8 @@
  * MQTT/UDP project
  *
  * https://github.com/dzavalishin/mqtt_udp
- * Copyright (C) 2017-2018 Dmitry Zavalishin, dz@dz.ru
+ *
+ * Copyright (C) 2017-2019 Dmitry Zavalishin, dz@dz.ru
  *
  *
  * @file
@@ -22,6 +23,12 @@
 
 #include "../mqtt_udp.h"
 
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//
+// NB! Used in regress tests! Do not modify!
+//
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 int main(int argc, char *argv[])
@@ -43,6 +50,7 @@ int main(int argc, char *argv[])
     if( rc )
         printf("error %d", rc);
 
+    printf("Sent ok\n" );
 
     return rc;
 }

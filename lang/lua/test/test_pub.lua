@@ -15,3 +15,5 @@ local val = arg[2];
 print("Will send '"..topic.."'='"..val.."'");
 
 mq.send_publish( topic, val );
+
+print("Sent ok");
