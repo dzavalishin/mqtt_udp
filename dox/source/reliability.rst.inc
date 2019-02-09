@@ -17,7 +17,7 @@ second packet, TCP connection will be effectively dead, attempting to resend aga
 And MQTT/UDP will just loose half of readings, which is not really a problem for 99% of installations. So, TCP helps just if packet loss rate
 is quite low.
 
-Actualy, I made simple test [#f1]_ to ckeck UDP reliability. One host in my house's local net was generating MQTT/UDP traffic as fast as 
+Actualy, simple test was made [#f1]_ to ckeck UDP reliability. One host in my house's local net was generating MQTT/UDP traffic as fast as 
 possible and other checked packets to be sequent, counting speed and error rate. Two IPTV units was started to show HD content and one 
 of the computers was copying some few GBytes to file server. Result was quite surprising: MQTT/UDP error rate grew to... 0.4% with about 50K
 packets/second, but TV sets stopped showing, being, obviusly, starved.

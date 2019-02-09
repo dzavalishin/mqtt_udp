@@ -154,6 +154,15 @@ Control
    Set average time in milliseconds between packets sent. Set to 0 to turn throttling off.
 
 
+Error handling
+^^^^^^^^^^^^^^
+
+There is a global error handler which is called from library code on
+IO, protocol and some other errors. Default handler just prints error message
+on ``stderr``. You can install your own error handler with call to
+``GlobalErrorHandler.setHandler(BiConsumer<ErrorType, String> h)``.
+
+
 Digital Signature
 ^^^^^^^^^^^^^^^^^
 
