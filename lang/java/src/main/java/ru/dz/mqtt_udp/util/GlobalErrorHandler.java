@@ -57,7 +57,8 @@ public class GlobalErrorHandler {
 		}
 		
 		// TODO logger
-		System.out.println(String.format( "MQTT/UDP %s error: %s", type.toString(), description ));
+		//System.out.println(String.format( "MQTT/UDP %s error: %s", type.toString(), description ));
+		System.err.println(String.format( "MQTT/UDP %s error: %s", type.toString(), description ));
 	}
 
 }
