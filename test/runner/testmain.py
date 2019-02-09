@@ -53,6 +53,11 @@ def run_lua( prog, a1, a2, timeout=100 ):
     args=[ "lua", prog, a1, a2 ]
     return run_wait( LUA_PATH, args, timeout )
 
+def run_java( prog, a1, a2, timeout=100 ):
+    #args=[ "cmd", "/c", "java", "-cp", "target/mqtt_udp-0.4.1.jar", prog, a1, a2 ]
+    args=[ "java", "-cp", "target/mqtt_udp-0.4.1.jar", prog, a1, a2 ]
+    return run_wait( JAVA_PATH, args, timeout )
+
 
 
 if __name__ == "__main__":
@@ -60,6 +65,7 @@ if __name__ == "__main__":
     print(run_py( "test_pub.py", "aaa", "bbb" ))
     #print(run_c( "mqtt_udp_pub.exe", "aaa", "bbb" ))
     print(run_c( "mqtt_udp_pub", "aaa", "bbb" ))
-    print(run_lua( "test_pub.lua", "aaa", "bbb", 2 ))
+    print(run_lua( "test_pub.lua", "aaa", "bbb" ))
+    print(run_java( "ru.dz.mqtt_udp.util.Pub", "aaa", "bbb" ))
 
-
+#java -cp target/mqtt_udp-0.4.1.jar ru.dz.mqtt_udp.util.Pub aaa bbb------------------

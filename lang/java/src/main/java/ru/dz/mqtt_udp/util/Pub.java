@@ -16,9 +16,12 @@ public class Pub {
 
 		String topic = args[0];
 		String msg = args[1];
+
+		System.out.println("Will send "+msg+" to "+topic);
 				
 		PublishPacket pp = new PublishPacket(topic,msg);
 		pp.send();
+		System.out.println("Sent ok");
 	}
 
 }
