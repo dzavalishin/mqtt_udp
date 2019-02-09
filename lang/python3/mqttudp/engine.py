@@ -4,6 +4,7 @@ import socket
 import time
 import datetime
 import struct
+from enum import Enum
 
 import mqttudp.mqtt_udp_defs as defs
 #from array import array
@@ -51,6 +52,30 @@ def set_throttle(msec: int):
     throttle = msec
 
 
+class ErrorType(Enum):
+    Unexpected  = 0
+    IO          = 1
+    Timeout     = 2
+    Protocol    = 3
+    Invalid     = 4    # Invalid parameter
+
+
+user_error_handler = None
+#
+# function( retcode : int, etype : ErrorType, msg : str )
+#
+def set_error_handler( error_handler ):
+    global user_error_handler
+    user_error_handler = error_handler
+
+def error_handler( retcode : int, etype : ErrorType, msg : str ):
+    if user_error_handler != None :
+        return user_error_handler( retcode, etype, msg )
+
+    print("MQTT/UDP Error "+str(etype)+" rc="+str(retcode)+" "+msg)
+    return retcode
+
+
 # ------------------------------------------------------------------------
 #
 # Receive
@@ -71,7 +96,8 @@ def make_recv_socket():
         try:
             udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         except udp_socket.error as err:
-            print( "No SO_REUSEPORT" )
+            #print( "No SO_REUSEPORT" )
+            error_handler( err[0], ErrorType.IO, "No SO_REUSEPORT" )
             if err[0] not in (errno.ENOPROTOOPT, errno.EINVAL):
                 raise
 
@@ -122,8 +148,8 @@ def parse_ttrs(pktrest):
     #print("TTR len "+str(ttr_len))
 
     if ttr_len & 0x80:
-        print("TTR len > 0x7F: "+str(ttr_len))
-        return
+        #print("TTR len > 0x7F: "+str(ttr_len))
+        return error_handler( -1, ErrorType.Protocol, "TTR len > 0x7F: "+str(ttr_len) )
     
     ttr = parse_ttr( ttr_tag, pktrest[2:ttr_len+2] )
     if len(pktrest) > ttr_len+2:
@@ -178,10 +204,11 @@ def parse_packet(pkt):
     if ptype == defs.PTYPE_PINGRESP:
         return "pingresp","","",pflags
 
-    print( "Unknown packet type" )
+    #print( "Unknown packet type" )
+    error_handler( ptype, ErrorType.Protocol, "Unknown packet type" )
     #print( pkt.type() )
-    for b in pkt:
-        print( b )
+    #for b in pkt:
+    #    print( b )
     return "?","","",0
 
 
@@ -199,7 +226,8 @@ def listen(callback):
             try:
                 send_ping_responce()
             except Exception as e:
-                print( "Can't send ping responce"+str(e) )
+                #print( "Can't send ping responce"+str(e) )
+                error_handler( -1, ErrorType.IO, "Can't send ping responce"+str(e) )
         callback(ptype,topic,value,pflags,addr)
 
 
