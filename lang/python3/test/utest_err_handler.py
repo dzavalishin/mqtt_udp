@@ -16,7 +16,8 @@ import mqttudp.engine as me
 
 
 error_trigger = False
-error_type : me.ErrorType = None
+#error_type : me.ErrorType = None # travis-ci does not inderstand it??
+error_type = None
 
 def user_error_handler( retcode : int, etype : me.ErrorType, msg : str ):
     global error_trigger, error_type
