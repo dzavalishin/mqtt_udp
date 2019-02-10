@@ -18,6 +18,7 @@ script:
   - cd ../..
   - make test
   - cd test/runner
+  - chmod a+x testmain.py 
   - ./testmain.py 
 #  - make travis_ci
 
