@@ -10,6 +10,8 @@ test suite 2 is conf_test.py
 
 import subprocess
 import threading
+import time
+import sys
 
 PY_PATH = "../../lang/python3/test/"
 C_PATH = "../../lang/c"
@@ -87,8 +89,13 @@ class Waiter(object):
 
     def test(self):
         self.start()
+        time.sleep(0.5) # give thread some time to start program. TODO: Need better way to sync!
         print(self.send())
-        print(self.wait())
+        rc = self.wait()
+        print(rc)
+        if rc == "__ERROR__":
+            print("\nFAILED\n")
+            sys.exit(1)
 
 
     def __run(self,runner,prog):
@@ -105,19 +112,18 @@ if __name__ == "__main__":
     # Runs waiter which listens for given topic/value, then
     # runs talker which PUBLISHes same topic/value, then waits
     # for waiter to complete
-    #w = Waiter("regress/from/python", "test_message1")
-    #w = Waiter(defs["py"], defs["c"])
-    w = Waiter("py", "c")
-    w.test()
-    #w.start()
-    #print(w.send())
-    ##print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
-    #print(w.wait())
+    Waiter("py",   "py").test()
+    Waiter("c",    "py").test()
+    Waiter("lua",  "py").test()
+    Waiter("java", "py").test()
 
-    Waiter("c", "c").test()
-    Waiter("lua", "c").test()
+    Waiter("py",   "c").test()
+    Waiter("c",    "c").test()
+    Waiter("lua",  "c").test()
     Waiter("java", "c").test()
 
+    # CI checks our exit code
+    sys.exit(0)
 
 
 """
@@ -136,3 +142,4 @@ if __name__ == "__main__":
     print(run_java( "ru.dz.mqtt_udp.util.Pub", "regress/from/java", "test_message4" ))
     print(w.wait())
 """
+
