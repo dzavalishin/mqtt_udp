@@ -15,6 +15,7 @@ cache:
 
 before_install:
   - sudo apt-get install -y lua5.2
+  - sudo apt-get -y install luarocks
   - sudo luarocks install luabitop
 
 
