@@ -9,7 +9,7 @@
 *          Topic name match function/predicate
 *          TTR (Tagged Tail Record) protocol extension written in Java and checked to not disturb other implementations
 *          Java code sends and checks packet numbers and signatures in test mode using TTR
-*          C code remote configuration
+*          C/Python/Lua code remote configuration client
 
 ### Examples
 
