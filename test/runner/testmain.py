@@ -23,6 +23,7 @@ JAVA_PATH = "../../lang/java"
 
 
 
+
 def run_wait( wd, args, timeout=100 ):
     done = subprocess.run( args, cwd=wd, stdout=subprocess.PIPE, timeout=100, check=True )
     return str(done.stdout)
@@ -46,41 +47,80 @@ def run_java( prog, a1, a2, timeout=100 ):
     args=[ "java", "-cp", "target/mqtt_udp-0.4.1.jar", prog, a1, a2 ]
     return run_wait( JAVA_PATH, args, timeout )
 
+# exec func, topic, msg, pub prog, wait prog
+defs = {
+    "py"    :   [ run_py,   "regress/from/python", "test_message1", "test_pub.py",             "test_wait.py" ],
+    "c"     :   [ run_c,    "regress/from/c",      "test_message2", "mqtt_udp_pub",            "mqtt_udp_waitmsg" ],
+    "lua"   :   [ run_lua,  "regress/from/lua",    "test_message3", "test_pub.lua",            "test_wait.lua" ],
+    "java"  :   [ run_java, "regress/from/java",   "test_message4", "ru.dz.mqtt_udp.util.Pub", "ru.dz.mqtt_udp.util.Wait" ],
+}
+
 
 class Waiter(object):
-    def __init__(self, topic, value):
-        self.topic = topic
-        self.value = value
+    def __init__(self, send_lang, recv_lang):
+        sender = defs[send_lang]
+        recvr = defs[recv_lang]
+        print("\n---- From "+send_lang+" to "+recv_lang+"")
+        self.send_func = sender[0]
+        self.topic = sender[1]
+        self.value = sender[2]
+        self.send_exe = sender[3]
+
+        self.recv_func = recvr[0]
+        self.recv_exe = recvr[4]
         self.result = "__ERROR__"
 
     def start(self):
-        self.th = threading.Thread(target=self.__run, args=(run_c,"mqtt_udp_waitmsg"))
+        #print("recv with "+str(self.recv_func)+" exe "+self.recv_exe)
+        #self.th = threading.Thread(target=self.__run, args=(run_c,"mqtt_udp_waitmsg"))
+        self.th = threading.Thread(target=self.__run, args=(self.recv_func,self.recv_exe))
         self.th.start()
+        #print("thread started")
+
+    def send(self):
+        #print("send with "+str(self.send_func)+" exe "+self.send_exe)
+        return self.send_func( self.send_exe, self.topic, self.value )
 
     def wait(self):
         self.th.join()
         return self.result
 
+    def test(self):
+        self.start()
+        print(self.send())
+        print(self.wait())
+
+
     def __run(self,runner,prog):
         self.result = runner( prog, self.topic, self.value, timeout=100 )
 
 
-
 if __name__ == "__main__":
     print( "Will do MQTT/UDP program run tests" )
-    print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
-    print(run_c( "mqtt_udp_pub", "regress/from/c", "test_message2" ))
-    print(run_lua( "test_pub.lua", "regress/from/lua", "test_message3" ))
-    print(run_java( "ru.dz.mqtt_udp.util.Pub", "regress/from/java", "test_message4" ))
+    #print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
+    #print(run_c( "mqtt_udp_pub", "regress/from/c", "test_message2" ))
+    #print(run_lua( "test_pub.lua", "regress/from/lua", "test_message3" ))
+    #print(run_java( "ru.dz.mqtt_udp.util.Pub", "regress/from/java", "test_message4" ))
 
     # Runs waiter which listens for given topic/value, then
     # runs talker which PUBLISHes same topic/value, then waits
     # for waiter to complete
-    w = Waiter("regress/from/python", "test_message1")
-    w.start()
-    print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
-    print(w.wait())
+    #w = Waiter("regress/from/python", "test_message1")
+    #w = Waiter(defs["py"], defs["c"])
+    w = Waiter("py", "c")
+    w.test()
+    #w.start()
+    #print(w.send())
+    ##print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
+    #print(w.wait())
 
+    Waiter("c", "c").test()
+    Waiter("lua", "c").test()
+    Waiter("java", "c").test()
+
+
+
+"""
     w = Waiter("regress/from/c", "test_message2")
     w.start()
     print(run_c( "mqtt_udp_pub", "regress/from/c", "test_message2" ))
@@ -95,4 +135,4 @@ if __name__ == "__main__":
     w.start()
     print(run_java( "ru.dz.mqtt_udp.util.Pub", "regress/from/java", "test_message4" ))
     print(w.wait())
-
+"""
