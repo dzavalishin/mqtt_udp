@@ -2,7 +2,7 @@
 
 --package.path = "../mqttudp/?.lua;" .. package.path  -- let us test without lib install
 --package.path = "../?/init.lua;" .. package.path  -- let us test without lib install
-package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without lib install
+package.path = "../?/init.lua;../?.lua;" .. package.path  -- let us test without lib install
 
 local mq = require "mqttudp"
 

@@ -3,7 +3,7 @@
 -- Publish value to MQTT/UDP listeners
 
 --package.path = "../mqttudp/?.lua;" .. package.path  -- let us test without lib install
-package.path = "../?/init.lua;../?.lua" .. package.path  -- let us test without lib install
+package.path = "../?/init.lua;../?.lua;" .. package.path  -- let us test without lib install
 
 
 --local mq = require "mqtt_udp_lib"
