@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 
 '''
-must be configured, each suite is set of programs to be run in given order and assumed output for them
 
-test suite 1 is pub/sub for all leanguages we can run
-test suite 2 is conf_test.py 
 
 '''
 
@@ -74,7 +71,6 @@ class Waiter(object):
 
     def start(self):
         #print("recv with "+str(self.recv_func)+" exe "+self.recv_exe)
-        #self.th = threading.Thread(target=self.__run, args=(run_c,"mqtt_udp_waitmsg"))
         self.th = threading.Thread(target=self.__run, args=(self.recv_func,self.recv_exe))
         self.th.start()
         #print("thread started")
@@ -105,13 +101,15 @@ class Waiter(object):
 if __name__ == "__main__":
     print( "Will do MQTT/UDP program run tests" )
     #print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
-    #print(run_c( "mqtt_udp_pub", "regress/from/c", "test_message2" ))
-    #print(run_lua( "test_pub.lua", "regress/from/lua", "test_message3" ))
-    #print(run_java( "ru.dz.mqtt_udp.util.Pub", "regress/from/java", "test_message4" ))
 
     # Runs waiter which listens for given topic/value, then
     # runs talker which PUBLISHes same topic/value, then waits
     # for waiter to complete
+    Waiter("py",   "lua").test()
+    Waiter("c",    "lua").test()
+    Waiter("lua",  "lua").test()
+    Waiter("java", "lua").test()
+
     Waiter("py",   "py").test()
     Waiter("c",    "py").test()
     Waiter("lua",  "py").test()
@@ -122,24 +120,13 @@ if __name__ == "__main__":
     Waiter("lua",  "c").test()
     Waiter("java", "c").test()
 
+    Waiter("py",   "java").test()
+    Waiter("c",    "java").test()
+    Waiter("lua",  "java").test()
+    Waiter("java", "java").test()
+
+    print("\n ------ All tests PASSED")
+
     # CI checks our exit code
     sys.exit(0)
-
-
-"""
-    w = Waiter("regress/from/c", "test_message2")
-    w.start()
-    print(run_c( "mqtt_udp_pub", "regress/from/c", "test_message2" ))
-    print(w.wait())
-
-    w = Waiter("regress/from/lua", "test_message3")
-    w.start()
-    print(run_lua( "test_pub.lua", "regress/from/lua", "test_message3" ))
-    print(w.wait())
-
-    w = Waiter("regress/from/java", "test_message4")
-    w.start()
-    print(run_java( "ru.dz.mqtt_udp.util.Pub", "regress/from/java", "test_message4" ))
-    print(w.wait())
-"""
 
