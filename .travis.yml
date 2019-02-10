@@ -25,7 +25,7 @@ script:
   - make
   - cd ../..
   - make test
-  - pyenv use system 3.6
+  - pyenv global 3.6
   - cd test/runner
   - python3.6 ./testmain.py 
 
