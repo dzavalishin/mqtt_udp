@@ -1,5 +1,6 @@
 dist: trusty
 language: c
+python: 3.6
 compiler:
   - clang
   - gcc
