@@ -23,3 +23,7 @@ or
 
 cd lang/java ; make build
 
+
+## Regress tests
+
+*     test/runner/testmain.py - runs PUBLISH sender and receiver in all 4 languages checking that all pairs send/receive ok

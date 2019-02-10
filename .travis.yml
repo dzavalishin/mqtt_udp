@@ -17,5 +17,7 @@ script:
   - make
   - cd ../..
   - make test
+  - cd test/runner
+  - ./testmain.py 
 #  - make travis_ci
 
