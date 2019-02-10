@@ -25,9 +25,10 @@ script:
   - make
   - cd ../..
   - make test
+  - pyenv use system 3.6
   - cd test/runner
-#  - chmod a+x testmain.py 
   - python3.6 ./testmain.py 
 
+#  - chmod a+x testmain.py 
 #  - make travis_ci
 
