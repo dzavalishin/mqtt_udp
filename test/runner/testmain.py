@@ -125,7 +125,7 @@ if __name__ == "__main__":
     Waiter("lua",  "java").test()
     Waiter("java", "java").test()
 
-    print("\n ------ All tests PASSED")
+    print("\n ------ All tests PASSED!")
 
     # CI checks our exit code
     sys.exit(0)
