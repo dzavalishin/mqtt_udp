@@ -1,6 +1,10 @@
 dist: trusty
 language: c
-python: 3.6
+
+#python: 3.6
+python:
+  - "3.6"
+
 compiler:
   - clang
   - gcc
