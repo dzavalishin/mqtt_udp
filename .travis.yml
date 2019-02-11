@@ -14,10 +14,10 @@ cache:
     - $HOME/.m2
 
 before_install:
-#  - sudo apt-get install -y lua5.2 # no bit
+  - sudo apt-get install -y lua5.2 # no bit
 #  - sudo apt-get install -y lua5.1 # no socket
-  - sudo apt-get update
-  - sudo apt-get install -y lua5.3
+#  - sudo apt-get update
+#  - sudo apt-get install -y lua5.3
   - sudo apt-get -y install luarocks
   - sudo luarocks install luabitop
 
@@ -30,9 +30,9 @@ script:
   - make
   - cd ../..
   - make test
-  - pyenv global 3.6
-  - cd test/runner
-  - python3.6 ./testmain.py 
+#  - pyenv global 3.6
+#  - cd test/runner
+#  - python3.6 ./testmain.py 
 
 #  - chmod a+x testmain.py 
 #  - make travis_ci
