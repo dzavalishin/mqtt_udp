@@ -107,3 +107,4 @@ tools/viewer/launch4j.log
 *.log
 lang/lua/nodemcu/wifi.lua
 lang/lua/examples/lua_rconfig.json
+lang/java/remoteconf.prop
