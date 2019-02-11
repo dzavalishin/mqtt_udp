@@ -101,6 +101,7 @@ if __name__ == "__main__":
     mqttudp.engine.listen(recv_packet)
 ```
 
+Download [pypi package](https://pypi.org/project/mqttudp/)
 
 ### Java
 
@@ -121,6 +122,7 @@ ss.setSink( pkt -> { System.out.println("Got packet: "+pkt); });
 
 ```
 
+Download [JAR](https://github.com/dzavalishin/mqtt_udp/blob/master/build/mqtt_udp-0.4.1.jar)
 
 ### C
 
@@ -188,3 +190,6 @@ end
 
 mq.listen( listener )
 ```
+
+Download [LuaRock](http://luarocks.org/modules/dzavalishin/mqttudp)
+
