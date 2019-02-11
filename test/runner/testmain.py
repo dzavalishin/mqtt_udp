@@ -97,7 +97,6 @@ class Waiter(object):
     def __run(self,runner,prog):
         self.result = runner( prog, self.topic, self.value, timeout=100 )
 
-# Lua send is broken on Travis-CI
 
 if __name__ == "__main__":
     print( "Will do MQTT/UDP program run tests" )
@@ -108,22 +107,22 @@ if __name__ == "__main__":
     # for waiter to complete
     Waiter("py",   "lua").test()
     Waiter("c",    "lua").test()
-#    Waiter("lua",  "lua").test()
+    Waiter("lua",  "lua").test()
     Waiter("java", "lua").test()
 
     Waiter("py",   "py").test()
     Waiter("c",    "py").test()
-#    Waiter("lua",  "py").test()
+    Waiter("lua",  "py").test()
     Waiter("java", "py").test()
 
     Waiter("py",   "c").test()
     Waiter("c",    "c").test()
-#    Waiter("lua",  "c").test()
+    Waiter("lua",  "c").test()
     Waiter("java", "c").test()
 
     Waiter("py",   "java").test()
     Waiter("c",    "java").test()
-#    Waiter("lua",  "java").test()
+    Waiter("lua",  "java").test()
     Waiter("java", "java").test()
 
     print("\n ------ All tests PASSED!")
