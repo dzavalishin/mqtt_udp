@@ -13,13 +13,19 @@ cache:
   directories:
     - $HOME/.m2
 
+#env:
+#  - LUA_PATH="/usr/local/lua/;;"
+
 before_install:
-  - sudo apt-get install -y lua5.2 # no bit
-#  - sudo apt-get install -y lua5.1 # no socket
+#  - sudo apt-get install -y lua5.2 # no bit
+  - sudo apt-get install -y lua5.1 # no socket
 #  - sudo apt-get update
-#  - sudo apt-get install -y lua5.3
+#  - sudo apt-get install -y lua5.3 # no pkg
+#  - bash -x .travis/setup_lua.sh # lua5.3
   - sudo apt-get -y install luarocks
   - sudo luarocks install luabitop
+  - sudo luarocks install luasocket
+  - lua .travis/echo.lua
 
 
 # NB! make test needs c lib to be built and it does not make it 
@@ -30,9 +36,13 @@ script:
   - make
   - cd ../..
   - make test
-#  - pyenv global 3.6
-#  - cd test/runner
-#  - python3.6 ./testmain.py 
+#  - make build # fails in config_server
+  - cd lang/java
+  - make build
+  - cd ../..
+  - pyenv global 3.6
+  - cd test/runner
+  - python3.6 ./testmain.py 
 
 #  - chmod a+x testmain.py 
 #  - make travis_ci
