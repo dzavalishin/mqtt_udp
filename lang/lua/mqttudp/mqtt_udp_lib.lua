@@ -34,7 +34,7 @@ function mqtt_udp_lib.make_publish_socket()
     --assert(udp:settimeout(1))
     assert(udp:settimeout())
     assert(udp:setoption('broadcast', true))
-    assert(udp:setoption('dontroute',true))
+    --assert(udp:setoption('dontroute',true)) -- prevented send on Linux at all
     --assert(udp:setsockname(s_address, defs.MQTT_PORT))
     --assert(udp:setsockname("*", defs.MQTT_PORT ))
 
