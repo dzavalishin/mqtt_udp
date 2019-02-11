@@ -62,15 +62,17 @@ def on_publish ( topic, value ):
 
 
 
-def recv_packet(ptype,topic,value,pflags,addr):
-    if ptype == "publish":
+def recv_packet(pkt):
+    if pkt.ptype == mq.PacketType.Publish:
+    #if ptype == "publish":
         #print( "pub "+topic+"="+value+ "\t\t" + str(addr) )
-        on_publish( topic, value )
+        on_publish( pkt.topic, pkt.value )
         return
 
-    if ptype == "subscribe":
+    #if ptype == "subscribe":
+    if pkt.ptype == mq.PacketType.Subscribe:
         #print( "sub "+ptype + ", " + topic + "\t\t" + str(addr) )
-        send_asked_rconf_items( topic )
+        send_asked_rconf_items( pkt.topic )
         return
 
 

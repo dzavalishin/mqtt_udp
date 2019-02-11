@@ -12,6 +12,29 @@ import mqttudp.mqtt_udp_defs as defs
 
 # ------------------------------------------------------------------------
 #
+# Packet class
+#
+# ------------------------------------------------------------------------
+
+class PacketType(Enum):
+    Unknown     = 0
+    Publish     = 0x30
+    Subscribe   = 0x80
+    PingReq     = 0xC0
+    PingResp    = 0xD0
+
+
+class Packet(object):
+    def __init__( self, ptype, topic, value, pflags, ttrs ):
+        self.ptype  = ptype
+        self.pflags = pflags
+        self.topic  = topic
+        self.value  = value
+        self.ttrs   = ttrs
+        self.addr   = None
+
+# ------------------------------------------------------------------------
+#
 # Globals
 #
 # ------------------------------------------------------------------------
@@ -166,6 +189,7 @@ def parse_packet(pkt):
     pflags = pkt[0] & 0x0F
     total_len, pkt = unpack_remaining_length(pkt[1:])
     
+    ttrs = None
     if len(pkt) > total_len:
         #print("have TTR")
         ttrs = parse_ttrs( pkt[total_len:] )
@@ -182,7 +206,7 @@ def parse_packet(pkt):
         topic = str( pkt[2:topic_len+2], 'UTF-8' )
         value = str( pkt[topic_len+2:total_len], 'UTF-8' )
     
-        return "publish",topic,value,pflags
+        return Packet(PacketType.Publish,topic,value,pflags,ttrs)
 
     if ptype == defs.PTYPE_SUBSCRIBE:
 
@@ -191,25 +215,29 @@ def parse_packet(pkt):
         topic_len = (pkt[1] & 0xFF) | ((pkt[0] << 8) & 0xFF)   
         topic = str( pkt[2:topic_len+2], 'UTF-8' )
         # value = str( pkt[topic_len+2:total_len], 'UTF-8' )
-        value = ""
+        #value = ""
     
         #TODO use total_len
     
-        return "subscribe",topic,value,pflags
+        #return "subscribe",topic,value,pflags
+        return Packet(PacketType.Subscribe,topic,"",pflags,ttrs)
 
 
     if ptype == defs.PTYPE_PINGREQ:
-        return "pingreq","","",pflags
+        #return "pingreq","","",pflags
+        return Packet(PacketType.PingReq,"","",pflags,ttrs)
 
     if ptype == defs.PTYPE_PINGRESP:
-        return "pingresp","","",pflags
+        #return "pingresp","","",pflags
+        return Packet(PacketType.PingResp,"","",pflags,ttrs)
 
     #print( "Unknown packet type" )
     error_handler( ptype, ErrorType.Protocol, "Unknown packet type" )
     #print( pkt.type() )
     #for b in pkt:
     #    print( b )
-    return "?","","",0
+    #return "?","","",0
+    return Packet(Unknown,"","",0,ttrs)
 
 
 
@@ -220,15 +248,18 @@ def listen(callback):
     s = make_recv_socket()
     while True:
         pkt,addr = recv_udp_packet(s)    
-        ptype,topic,value,pflags = parse_packet(pkt)
-        if (not muted) and (ptype == "pingreq"):
+        #ptype,topic,value,pflags = parse_packet(pkt)
+        pobj = parse_packet(pkt)
+        pobj.addr = addr
+        if (not muted) and (pobj.ptype == PacketType.PingReq):
 #            print( "Got ping, reply to "+addr )
             try:
                 send_ping_responce()
             except Exception as e:
                 #print( "Can't send ping responce"+str(e) )
                 error_handler( -1, ErrorType.IO, "Can't send ping responce"+str(e) )
-        callback(ptype,topic,value,pflags,addr)
+        #callback(ptype,topic,value,pflags,addr)
+        callback(pobj)
 
 
     

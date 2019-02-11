@@ -33,13 +33,13 @@ curr = 0
 
 
 
-def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+def recv_packet_from_udp(pkt):
     global last, errors, got, curr, start_time
 
-    if ptype != "publish":
+    if pkt.ptype != mqttudp.engine.PacketType.Publish:
         return
 
-    if topic != SEQ_STORM_TOPIC:
+    if pkt.topic != SEQ_STORM_TOPIC:
         return
 
 # report
@@ -53,7 +53,7 @@ def recv_packet_from_udp(ptype,topic,value,pflags,addr):
             errors = 0
         start_time = now
 
-    curr = int( value )
+    curr = int( pkt.value )
 
     got = got + 1
 

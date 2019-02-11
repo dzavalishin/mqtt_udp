@@ -16,7 +16,7 @@ sys.path.append('..')
 import threading
 #import re
 
-import mqttudp.engine
+import mqttudp.engine as me
 import mqttudp.interlock
 import mqttudp.config as cfg
 
@@ -53,7 +53,7 @@ def broker_on_message(client, userdata, msg):  # @UnusedVariable
         #print("To UDP BLACKLIST: "+ msg.topic+" "+str(msg.payload))
         return
     if ilock.broker_to_udp(msg.topic, msg.payload):
-        mqttudp.engine.send_publish( msg.topic, msg.payload )
+        me.send_publish( msg.topic, msg.payload )
         log.info("To UDP: "+msg.topic+"="+str(msg.payload))
         #print("To UDP: "+msg.topic+"="+str(msg.payload))
     else:
@@ -68,26 +68,26 @@ def broker_listen_thread(bclient):
     bclient.loop_forever()
 
 
-def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+def recv_packet_from_udp(pkt):
     global last
-    if ptype != "publish":
+    if pkt.ptype != me.PacketType.Publish:
         return
-    if last.__contains__(topic) and last[topic] == value:
+    if last.__contains__(pkt.topic) and last[pkt.topic] == pkt.value:
         return
-    last[topic] = value
-    if ilock.udp_to_broker(topic, value):
-        bclient.publish(topic, value, qos=0)
+    last[pkt.topic] = pkt.value
+    if ilock.udp_to_broker(pkt.topic, pkt.value):
+        bclient.publish(pkt.topic, pkt.value, qos=0)
         #print( "From UDP: "+topic+"="+value )
-        log.info( "From UDP: "+topic+"="+value )
+        log.info( "From UDP: "+pkt.topic+"="+pkt.value )
     else:
         #print( "BLOCKED from UDP: "+topic+"="+value )
-        log.info( "BLOCKED from UDP: "+topic+"="+value )
+        log.info( "BLOCKED from UDP: "+pkt.topic+"="+pkt.value )
 
 
 def udp_listen_thread(bclient):
     global last
     last = {}
-    mqttudp.engine.listen(recv_packet_from_udp)
+    me.listen(recv_packet_from_udp)
 
 
 if __name__ == "__main__":

@@ -33,16 +33,16 @@ oh.set_port( cfg.get('port' ) )
 
 
 last = {}
-def recv_packet_from_udp(ptype,topic,value,pflags,addr):
-    if ptype != "publish":
+def recv_packet_from_udp(pkt):
+    if pkt.ptype != mqttudp.engine.PacketType.Publish:
         return
-    if last.__contains__(topic) and last[topic] == value:
+    if last.__contains__(pkt.topic) and last[pkt.topic] == pkt.value:
         return
-    last[topic] = value
+    last[pkt.topic] = pkt.value
     #print( topic+"="+value )
-    log.info( "To OpenHAB "+topic+"="+value )
+    log.info( "To OpenHAB "+pkt.topic+"="+pkt.value )
     #put_status(topic, value)
-    oh.post_command(topic, value)
+    oh.post_command(pkt.topic, pkt.value)
 
 
 if __name__ == "__main__":

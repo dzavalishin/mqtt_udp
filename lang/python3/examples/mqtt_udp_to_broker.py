@@ -33,16 +33,16 @@ def broker_listen_thread(bclient):
     bclient.loop_forever()
 
 
-def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+def recv_packet_from_udp(pkt):
     global last
-    if ptype != "publish":
+    if pkt.ptype != mqttudp.engine.PacketType.Publish:
         return
-    if last.__contains__(topic) and last[topic] == value:
+    if last.__contains__(pkt.topic) and last[pkt.topic] == pkt.value:
         return
-    last[topic] = value
+    last[pkt.topic] = pkt.value
     #print( topic+"="+value )
-    log.info( "UDP to broker "+topic+"="+value )
-    bclient.publish(topic, value, qos=0)
+    log.info( "UDP to broker "+pkt.topic+"="+pkt.value )
+    bclient.publish(pkt.topic, pkt.value, qos=0)
 
 
 if __name__ == "__main__":

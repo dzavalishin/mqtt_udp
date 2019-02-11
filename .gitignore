@@ -108,3 +108,6 @@ tools/viewer/launch4j.log
 lang/lua/nodemcu/wifi.lua
 lang/lua/examples/lua_rconfig.json
 lang/java/remoteconf.prop
+lang/python3/.vscode/settings.json
+lang/python3/examples/mqtt_gate.log
+lang/python3/examples/remote_config.ini

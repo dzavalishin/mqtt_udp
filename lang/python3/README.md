@@ -41,23 +41,23 @@ You can check other languages implementations also - <https://github.com/dzavali
 **Send data:**
 
 ```python
-import mqttudp.engine
+import mqttudp.engine as me
 
 if __name__ == "__main__":
-    mqttudp.engine.send_publish( "test_topic", "Hello, world!" )
+    me.send_publish( "test_topic", "Hello, world!" )
 ```
 
 **Listen for data:**
 
 ```python
-import mqttudp.engine
+import mqttudp.engine as me
 
-def recv_packet(ptype,topic,value,pflags,addr):
-    if ptype != "publish":
-        print( ptype + ", " + topic + "\t\t" + str(addr) )
+def recv_packet(pkt):
+    if pkt.ptype != me.PacketType.Publish:
+        print( str(pkt.ptype) + ", " + pkt.topic + "\t\t" + str(addr) )
         return
-    print( topic+"="+value+ "\t\t" + str(addr) )
+    print( pkt.topic+"="+pkt.value+ "\t\t" + str(pkt.addr) )
 
 if __name__ == "__main__":
-    mqttudp.engine.listen(recv_packet)
+    me.listen(recv_packet)
 ```
