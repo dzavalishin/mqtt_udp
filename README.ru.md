@@ -97,6 +97,7 @@ if __name__ == "__main__":
     mqttudp.engine.listen(recv_packet)
 ```
 
+Скачать [пакет pypi](https://pypi.org/project/mqttudp/)
 
 
 ### Java
@@ -117,6 +118,8 @@ PacketSourceServer ss = new PacketSourceServer();
 ss.setSink( pkt -> { System.out.println("Got packet: "+pkt); });
 
 ```
+
+Скачать [JAR](https://github.com/dzavalishin/mqtt_udp/blob/master/build/mqtt_udp-0.4.1.jar)
 
 
 ### C
@@ -186,6 +189,7 @@ end
 mq.listen( listener )
 ```
 
+Скачать [LuaRock](http://luarocks.org/modules/dzavalishin/mqttudp)
 
 
 
