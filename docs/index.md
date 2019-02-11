@@ -58,8 +58,8 @@ This is not yet implemented, but seem to be really easy. And can be built on top
 There's implementations of MQTT/UDP in:
 
 * Java - additionally, GUI based protocol debug tool (viewer) is written in Java.
-* Python 2.x 
-* Python 3.x 
+* Python 2.x (outdated)
+* Python 3.x (3.6)
 * Plain C
 * Lua - though implementation is quite basic
 * CodeSys 2.3 ST language (for PLC) - send only

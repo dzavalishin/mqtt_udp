@@ -23,6 +23,11 @@ or
 
 cd lang/java ; make build
 
+## Versions
+
+Python 3.6
+Lua 5.1.5
+
 
 ## Regress tests
 
