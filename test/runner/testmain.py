@@ -85,7 +85,7 @@ class Waiter(object):
 
     def test(self):
         self.start()
-        time.sleep(0.5) # give thread some time to start program. TODO: Need better way to sync!
+        time.sleep(1.5) # give thread some time to start program. TODO: Need better way to sync!
         print(self.send())
         rc = self.wait()
         print(rc)
