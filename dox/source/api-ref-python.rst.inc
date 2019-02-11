@@ -27,11 +27,11 @@ Send data::
 Listen for data::
 
 
-    def recv_packet(ptype,topic,value,pflags,addr):
-        if ptype != "publish":
-            print( ptype + ", " + topic + "\t\t" + str(addr) )
+    def recv_packet(pkt):
+        if pkt.ptype != me.PacketType.Publish:
+            print( str(pkt.ptype) + ", " + pkt.topic + "\t\t" + str(pkt.addr) )
             return
-        print( topic+"="+value+ "\t\t" + str(addr) )
+        print( pkt.topic+"="+pkt.value+ "\t\t" + str(pkt.addr) )
        
     mqttudp.engine.listen(recv_packet)
 
@@ -40,6 +40,28 @@ Module mqttudp.engine
 ^^^^^^^^^^^^^^^^^^^^^
 
 Main package, implements MQTT/UDP protocol.
+
+Paccket class::
+
+    class PacketType(Enum):
+        Unknown     = 0
+        Publish     = 0x30
+        Subscribe   = 0x80
+        PingReq     = 0xC0
+        PingResp    = 0xD0
+
+
+    class Packet(object):
+        def __init__( self, ptype, topic, value, pflags, ttrs ):
+            self.ptype  = ptype
+            self.pflags = pflags
+            self.topic  = topic
+            self.value  = value
+            self.ttrs   = ttrs
+            self.addr   = None
+
+
+Functions:
 
 * ``send_ping()`` - send PINGREQ packet.
 * ``send_ping_responce()`` - send PINGRESP packet. It is sent automatically, you don't have to.

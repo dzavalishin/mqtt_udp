@@ -109,36 +109,36 @@ def ohb_listen_thread():
 
 #todo use mqttudp.interlock.Timer too
 #last = {}
-def recv_packet_from_udp(ptype,topic,value,pflags,addr):
+def recv_packet_from_udp(pkt):
 
-    if ptype != "publish":
+    if pkt.ptype != mqttudp.engine.PacketType.Publish:
         return
 
-    if not it_to_ohb.can_pass( topic, value ):
+    if not it_to_ohb.can_pass( pkt.topic, pkt.value ):
 #        if verbose:
 #            print("To OpenHAB REPEAT BLOCKED "+topic+" "+value)
-        log.info("To OpenHAB REPEAT BLOCKED "+topic+" "+value)
+        log.info("To OpenHAB REPEAT BLOCKED "+pkt.topic+" "+pkt.value)
 
     #if last.__contains__(topic) and last[topic] == value:
     #    return
 
     #last[topic] = value
 
-    if cfg.check_black_list(topic, blackList):
+    if cfg.check_black_list(pkt.topic, blackList):
 #        if verbose:
 #            print("To OpenHAB BLACKLIST "+ topic+" "+value)
-        log.info("To OpenHAB BLACKLIST "+ topic+" "+value)
+        log.info("To OpenHAB BLACKLIST "+ pkt.topic+" "+pkt.value)
         return
 
-    if not ilock.udp_to_broker(topic, value):
+    if not ilock.udp_to_broker(pkt.topic, pkt.value):
 #        print( "To OpenHAB BLOCKED: "+topic+"="+value )
-        log.info( "To OpenHAB BLOCKED: "+topic+"="+value )
+        log.info( "To OpenHAB BLOCKED: "+pkt.topic+"="+pkt.value )
         return
 
 #    print( "To OpenHAB "+topic+"="+value )
-    log.info( "To OpenHAB "+topic+"="+value )
+    log.info( "To OpenHAB "+pkt.topic+"="+pkt.value )
     #oh.put_status(topic, value)
-    oh.post_command(topic, value)
+    oh.post_command(pkt.topic, pkt.value)
 
 
 

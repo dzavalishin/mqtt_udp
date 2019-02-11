@@ -23,14 +23,14 @@ start_time = None
 #need_topic = None
 #need_value = None
 
-def recv_packet(ptype,topic,value,pflags,addr):
+def recv_packet(pkt):
     global need_topic, need_value
-    if ptype != "publish":
+    if pkt.ptype != mqttudp.engine.PacketType.Publish:
         #print( ptype + ", " + topic + "\t\t" + str(addr) )
         return
     #print( topic+"="+value+ "\t\t" + str(addr) )
 
-    if (need_topic == topic) and (need_value == value):
+    if (need_topic == pkt.topic) and (need_value == pkt.value):
         print("Got it!")
         sys.exit(0)
 

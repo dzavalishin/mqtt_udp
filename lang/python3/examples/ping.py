@@ -22,11 +22,11 @@ def ping_thread():
 
 
 
-def recv_packet(ptype,topic,value,pflags,addr):
-    if ptype != "publish":
-        print( ptype + ", " + topic + "\t\t" + str(addr) )
+def recv_packet(pkt):
+    if pkt.ptype != mqttudp.engine.PacketType.Publish:
+        print( str(pkt.ptype) + ", " + pkt.topic + "\t\t" + str(pkt.addr) )
         return
-    print( topic+"="+value+ "\t\t" + str(addr) )
+    print( pkt.topic+"="+pkt.value+ "\t\t" + str(pkt.addr) )
 
 
 

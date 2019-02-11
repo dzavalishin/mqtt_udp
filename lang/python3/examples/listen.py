@@ -12,24 +12,24 @@ import sys
 sys.path.append('..')
 #sys.path.append('../mqttudp')
 
-import mqttudp.engine
+import mqttudp.engine as me
 
 last = {}
 
 
-def recv_packet(ptype,topic,value,pflags,addr):
-    if ptype != "publish":
-        print( ptype + ", " + topic + "\t\t" + str(addr) )
+def recv_packet(pkt):
+    if pkt.ptype != me.PacketType.Publish:
+        print( str(pkt.ptype) + ", " + pkt.topic + "\t\t" + str(pkt.addr) )
         return
-    if last.__contains__(topic) and last[topic] == value:
+    if last.__contains__(pkt.topic) and last[pkt.topic] == pkt.value:
         return
-    last[topic] = value
-    print( topic+"="+value+ "\t\t" + str(addr) )
+    last[pkt.topic] = pkt.value
+    print( pkt.topic+"="+pkt.value+ "\t\t" + str(pkt.addr) )
 
 
 
 if __name__ == "__main__":
     print( "Will dump MQTT/UDP packets with changed value" )
 
-    mqttudp.engine.listen(recv_packet)
+    me.listen(recv_packet)
 

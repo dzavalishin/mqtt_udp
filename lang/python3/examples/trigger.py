@@ -36,20 +36,20 @@ SNOOZE = 30
 start_time = time.time() - SNOOZE - 1; # first one must trigger
 
 
-def recv_packet(ptype,topic,value,pflags,addr):
+def recv_packet(pkt):
     global start_time
 
-    if ptype != "publish":
+    if pkt.ptype != mqttudp.engine.PacketType.Publish:
         return
 
-    if topic != LISTEN_TOPIC:
+    if pkt.topic != LISTEN_TOPIC:
         return
 
     #print( "Got " + value )
 
     # can't convert - ignore
     try:
-        iv = float( value )
+        iv = float( pkt.value )
     except ValueError:
         return
 
@@ -67,7 +67,7 @@ def recv_packet(ptype,topic,value,pflags,addr):
     start_time = time.time();
     #print( "\tSend" )
 
-    mqttudp.engine.send_publish(TRIGGER_TOPIC, "Warning, voltage is too high: " + value )
+    mqttudp.engine.send_publish(TRIGGER_TOPIC, "Warning, voltage is too high: " + pkt.value )
 
     #time.sleep(2)
 
