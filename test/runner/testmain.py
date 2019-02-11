@@ -97,7 +97,6 @@ class Waiter(object):
     def __run(self,runner,prog):
         self.result = runner( prog, self.topic, self.value, timeout=100 )
 
-# Lua send is broken on Travis-CI
 
 if __name__ == "__main__":
     print( "Will do MQTT/UDP program run tests" )
