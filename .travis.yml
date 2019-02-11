@@ -21,6 +21,7 @@ before_install:
   - bash -x .travis/setup_lua.sh
   - sudo apt-get -y install luarocks
   - sudo luarocks install luabitop
+  - sudo luarocks install luasocket
 
 
 # NB! make test needs c lib to be built and it does not make it 
