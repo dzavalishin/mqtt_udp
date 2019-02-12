@@ -23,18 +23,19 @@ class SignatureTest(unittest.TestCase):
         #self.assertEqual( None, error_type );
         me.set_signature( "key" )
         sig = me.sign_data( "text" )
-        hex = sig #.encode("ascii").hex()
-        print( str(type(hex)) )
+        hex = sig.hex()
+        #print( str(type(hex)) )
         self.assertEqual( "d0ca6177c61c975fd2f8c07d8c6528c6", hex )
         print( "\ttest Sign PASSED" )
     
     
-    #def testHandle(self):
-    #    me.set_error_handler( user_error_handler )
-    #    self.assertEqual( 22, me.error_handler( 44, me.ErrorType.Protocol, "test error" ))
-    #    self.assertEqual( me.ErrorType.Protocol, error_type );
-    #    print( "\ttestHandle PASSED" )
-
+    def testTTR(self):
+        me.set_signature( "key" )
+        out = me.sign_and_ttr( "text" )
+        hex = out.hex()
+        #print( hex )
+        self.assertEqual( "746578747310d0ca6177c61c975fd2f8c07d8c6528c6", hex )
+        print( "\ttest TTR PASSED" )
     
     #def testSharp(self):
     #    self.assertTrue( me.match("aaa/#", "aaa/ccccc/bbb") );

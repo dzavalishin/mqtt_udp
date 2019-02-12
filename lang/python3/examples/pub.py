@@ -9,8 +9,8 @@ import sys
 sys.path.append('..')
 #sys.path.append('../mqttudp')
 
-import mqttudp.engine
-
+import mqttudp.engine as me
 
 if __name__ == "__main__":
-    mqttudp.engine.send_publish( sys.argv[1], sys.argv[2] )
+    #me.set_signature( "signPassword" )
+    me.send_publish( sys.argv[1], sys.argv[2] )

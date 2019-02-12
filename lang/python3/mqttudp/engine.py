@@ -120,8 +120,21 @@ def set_signature( key ):
 def sign_data( msg ):
     if type(msg) == str:
         msg=msg.encode('utf-8')
-    return hmac.new( __signature_key, msg, digestmod=hashlib.md5 ).hexdigest()
+    out = hmac.new( __signature_key, msg, digestmod=hashlib.md5 ).hexdigest()
     # hmac.digest(key, msg, digest)¶
+    return bytearray.fromhex( out )
+
+def sign_and_ttr( msg ):
+    if type(msg) == str:
+        msg=msg.encode('utf-8')
+    signature = sign_data( msg )
+    out = bytearray()
+    out += msg
+    out += b's'
+    len = 16
+    out.append(len)
+    out += signature
+    return out
 
 
 # ------------------------------------------------------------------------
@@ -298,6 +311,11 @@ def listen(callback):
 
 
 
+def __send_pkt( pkt ):
+    if __signature_key != None:
+        pkt = sign_and_ttr( pkt )
+    throttle_me()
+    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
 
 
@@ -310,8 +328,9 @@ def send_publish( topic, payload=b''):
 	    payload = payload.encode()
 
     pkt = make_publish_packet(topic, payload)
-    throttle_me()
-    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    #throttle_me()
+    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __send_pkt( pkt )
 
 
 def __make_send_socket():
@@ -385,9 +404,9 @@ def send_subscribe(topic):
     if isinstance(topic, str):
         topic = topic.encode()
     pkt = make_subscribe_packet(topic)
-    throttle_me()
-    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
-
+    #throttle_me()
+    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __send_pkt( pkt )
 
 #
 # Ping support
@@ -402,8 +421,9 @@ def make_ping_packet():
 
 def send_ping():
     pkt = make_ping_packet()
-    throttle_me()
-    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    #throttle_me()
+    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __send_pkt( pkt )
 
 
 
@@ -416,8 +436,9 @@ def make_ping_responce_packet():
 
 def send_ping_responce():
     pkt = make_ping_responce_packet()
-    throttle_me()
-    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    #throttle_me()
+    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __send_pkt( pkt )
 
 
 
