@@ -59,6 +59,8 @@ Now lets look at the packet structure definition::
     
         size_t      value_len;
         char *      value;
+
+        char        is_signed;
     };
 
 
@@ -89,6 +91,8 @@ Now lets look at the packet structure definition::
 **value** and **value_len**
    Message value, also NULL terminated. Length of value in bytes.
    
+**is_signed**
+   This packet has correct digital signature. 
 
 .. index:: single: listen
 
@@ -191,40 +195,29 @@ User error handler can:
 
 Handler can also be used for logging.
 
+.. index:: single: signature
 
-.. index:: single: UDP
+Digital signature
+^^^^^^^^^^^^^^^^^
 
-UDP IO interface
-^^^^^^^^^^^^^^^^
+There is implementation of digital signature implemented. To use it call ``mqtt_udp_enable_signature``
+passing encryption key. Same key must be used on all nodes that use signature. Nodes that have no
+signature turned on will not sign outgoing messages and will ignore incoming signatures.
 
-Default implementation uses POSIX API to communicate with network, but for 
-embedded use you can redefine corresponding functions. Here are things to 
-reimplement.
+Start using signature::
 
-Receive UDP packet. Returning value is number of bytes in packet received or
-negative error code. Must return sender's address in ``src_ip_addr``::
+   int mqtt_udp_enable_signature( const char *key, size_t key_len );
 
-    int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr );
+**key**
+   Key used to sign outgoing messages and check signature on incomnig ones.
+   Usually just an ASCII string, but can be any binary data.
 
-Broadcast UDP packet::
+**key_len**
+   Number of valid bytes in key.
 
-    int mqtt_udp_send_pkt( int fd, char *data, size_t len );
+If signature is turned on and incoming packet is correctly signed, it
+will have nonzero ``is_signed`` field.
 
-Send UDP packet (actually not used now, but can be later)::
-
-    int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
-
-Create UDP socket which can be used to send or broadcast::
-
-    int mqtt_udp_socket(void);
-
-Prepare socket for reception on MQTT_PORT::
-
-    int mqtt_udp_bind( int fd )
-
-Close UDP socket::
-
-    int mqtt_udp_close_fd( int fd ) 
 
 
 .. index:: single: match
@@ -234,7 +227,7 @@ Service
 
 Match topic name against a pattern, processing `+` and `#` wildcards, returns 1 on match::
 
-   int ok = mqtt_udp_match( wildcard, topic_name )
+   int mqtt_udp_match( const char *wildcard, const char *topic_name );
 
 
 Remote configuration
@@ -376,3 +369,37 @@ Please study this API use example in `sample remote config C application`_.
 .. _sample remote config C application: https://github.com/dzavalishin/smart-home-devices/blob/master/mmnet_mqt_udp_server/main/rconfig_client.c
 
 
+
+.. index:: single: UDP
+
+UDP IO interface
+^^^^^^^^^^^^^^^^
+
+Default implementation uses POSIX API to communicate with network, but for 
+embedded use you can redefine corresponding functions. Here are things to 
+reimplement.
+
+Receive UDP packet. Returning value is number of bytes in packet received or
+negative error code. Must return sender's address in ``src_ip_addr``::
+
+    int mqtt_udp_recv_pkt( int fd, char *buf, size_t buflen, int *src_ip_addr );
+
+Broadcast UDP packet::
+
+    int mqtt_udp_send_pkt( int fd, char *data, size_t len );
+
+Send UDP packet (actually not used now, but can be later)::
+
+    int mqtt_udp_send_pkt_addr( int fd, char *data, size_t len, int ip_addr );
+
+Create UDP socket which can be used to send or broadcast::
+
+    int mqtt_udp_socket(void);
+
+Prepare socket for reception on MQTT_PORT::
+
+    int mqtt_udp_bind( int fd )
+
+Close UDP socket::
+
+    int mqtt_udp_close_fd( int fd ) 
