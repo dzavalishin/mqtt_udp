@@ -58,6 +58,7 @@ public class HMAC {
 		try {
 
 			SecretKeySpec key = new SecretKeySpec((keyString).getBytes("UTF-8"), algo);
+			//SecretKeySpec key = new SecretKeySpec((keyString).getBytes("ASCII"), algo);
 			Mac mac = Mac.getInstance(algo);
 			mac.init(key);
 

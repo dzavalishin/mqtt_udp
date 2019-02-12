@@ -11,6 +11,7 @@ RANLIB=ranlib
 #  NB!! Check if you need to modify these
 #
 CFLAGS += -Iarch/default
+vpath %.c hmac
 vpath %.c glue/unix
 #vpath %.c glue/nutos
 

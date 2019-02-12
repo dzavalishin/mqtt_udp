@@ -27,6 +27,7 @@ include glue/$(GLUE)/Makefile.glue
 
 vpath %.c glue/$(GLUE)
 vpath %.c examples
+vpath %.c hmac
 
 # autoconf: 
 # .exe - executable file extension

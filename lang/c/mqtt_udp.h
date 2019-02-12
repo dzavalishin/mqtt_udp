@@ -427,6 +427,19 @@ void  mqtt_udp_arch_sleep_msec( uint32_t msec );
 #define MQTT_UDP_FLAGS_SET_DUP(pflags)  ((pflags) |= 0x8)     ///< Set DUP flag
 
 
+// --------------------------------------------------------------------------
+//
+// HMAC (digital signature) connector
+//
+// --------------------------------------------------------------------------
+
+#define    MD5_DIGEST_SIZE  16
+
+/// Pointer to MD5 HMAC function or zero if user did not ask for signature
+extern void (*mqtt_udp_hmac_md5)( unsigned char *text, int text_len, unsigned char *hmac );
+
+/// User request to start using digital signature.
+int mqtt_udp_enable_signature( const char *key, size_t key_len );
 
 
 #ifdef __cplusplus

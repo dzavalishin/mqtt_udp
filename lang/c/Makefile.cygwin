@@ -24,6 +24,7 @@ include makedefs
 include makerules
 
 vpath %.c examples
+vpath %.c hmac
 vpath %.c glue/unix
 
 

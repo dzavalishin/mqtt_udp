@@ -43,6 +43,11 @@ int main(int argc, char *argv[])
     char *value = argv[2];
     char *topic = argv[1];
 
+#if 0
+    const char *key = "signPassword";
+    mqtt_udp_enable_signature( key, strlen(key) );
+#endif
+
     printf("Will publish '%s' to topic '%s'\n", value, topic );
 
     int rc = mqtt_udp_send_publish( topic, value );

@@ -32,12 +32,12 @@ int main()
     char key[] = "key";
     char text[] = "text";
 
-    char out[SHA256_DIGEST_SIZE];
-    //char out[MD5_DIGEST_SIZE];
+    //char out[SHA256_DIGEST_SIZE];
+    char out[MD5_DIGEST_SIZE];
 
 
-    hmac_sha256(
-    //hmac_md5(
+    //hmac_sha256(
+    hmac_md5(
                 key, sizeof( key ) - 1,
                 text, sizeof( text ) - 1,
                 out

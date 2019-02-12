@@ -116,6 +116,26 @@ int mqtt_udp_build_any_pkt( char *buf, size_t blen, struct mqtt_udp_pkt *p, size
     rc = encode_int32_TTR( &bp, &blen, 'n', p->pkt_id );
     if( rc ) return rc;
 
+    // NB! This is a signature TTR, it must me the last one.
+
+    // Signature TTR needs this many bytes
+#define SIGNATURE_TTR_SIZE (MD5_DIGEST_SIZE+2)
+    if(mqtt_udp_hmac_md5 != 0)
+    {
+        // Will sign
+        if( blen < SIGNATURE_TTR_SIZE )
+            return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "signature" );
+
+        //unsigned char signature[MD5_DIGEST_SIZE];
+        unsigned char *signature = (unsigned char *)bp+2;        
+        mqtt_udp_hmac_md5( (unsigned char *)buf, bp-buf, signature );
+        bp[0] = 's';
+        bp[1] = ( 0x7F & MD5_DIGEST_SIZE );
+        //bp[1] = MD5_DIGEST_SIZE;
+
+        bp += SIGNATURE_TTR_SIZE;
+        blen -= SIGNATURE_TTR_SIZE;
+    }
 
     if( out_len ) *out_len = bp - buf;
 

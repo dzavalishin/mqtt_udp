@@ -11,5 +11,6 @@ OBJS += mqtt_udp_parse.o mqtt_udp_build.o
 OBJS += mqtt_udp_send.o mqtt_udp_recv.o
 OBJS += mqtt_udp_match.o mqtt_udp_throttle.o
 OBJS += mqtt_udp_rconfig.o
+OBJS += md5.o hmac.o
 OBJS += strlcat.o strlcpy.o
 

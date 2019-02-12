@@ -32,3 +32,12 @@ Lua 5.1.5
 ## Regress tests
 
 *     test/runner/testmain.py - runs PUBLISH sender and receiver in all 4 languages checking that all pairs send/receive ok
+
+
+## Work in progress 
+
+### Conan C package
+
+<https://docs.conan.io/en/latest/creating_packages.html>
+
+<https://bintray.com/dzavalishin/MQTT-UDP>
