@@ -11,4 +11,5 @@ build::
 test::
 	chmod a+rx test/*.py
 	cd test ; ./utest_match.py ; ./utest_err_handler.py ; ./utest_signature.py 
+	#cd test ; ./utest_match.py ; ./utest_err_handler.py
 
