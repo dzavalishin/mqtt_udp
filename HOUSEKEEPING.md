@@ -41,3 +41,7 @@ Lua 5.1.5
 <https://docs.conan.io/en/latest/creating_packages.html>
 
 <https://bintray.com/dzavalishin/MQTT-UDP>
+
+### cloudmqtt.com
+
+<https://api.cloudmqtt.com/console/82596046/settings>

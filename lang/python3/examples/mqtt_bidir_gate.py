@@ -97,6 +97,16 @@ if __name__ == "__main__":
     bclient.on_connect = broker_on_connect
     bclient.on_message = broker_on_message
 
+    b_login  = None
+    b_passwd = None
+
+    if( cfg.config['mqtt-gate'].__contains__('login')):
+        b_login  = cfg.config.get('mqtt-gate','login' )
+    if( cfg.config['mqtt-gate'].__contains__('password')):
+        b_passwd = cfg.config.get('mqtt-gate','password' )
+
+    bclient.username_pw_set( b_login , b_passwd )
+
     bclient.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, 60)
     #print("connected", bclient)
     log.info( "connected " + str(bclient) )

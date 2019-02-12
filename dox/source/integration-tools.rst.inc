@@ -26,6 +26,9 @@ There are also unidirectional gates ``mqtt_broker_to_udp.py`` and ``mqtt_udp_to_
 
 There is an example of service configuration file ``mqttudpgate.service`` for Unix ``systemctl`` service control tools.
 
+This bridge is also can be used to integrate with cloud MQTT servers. Just set up corresponding host/port/login/password
+in section ``[mqtt-gate]`` of ``mqtt-udp.ini`` and run ``mqtt_bidir_gate.py``.
+
 .. rem TODO ``systemctl enable mqttudpgate.service``? autostart, start/stop/status
 
 

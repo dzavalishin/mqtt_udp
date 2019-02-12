@@ -34,8 +34,10 @@ config = configparser.ConfigParser()
 
 
 config['DEFAULT'] = {
-    'logfile' : '',     # no log file by default
-    'verbose' : True    # debug mode, application will chat a lot
+    'logfile'  : '',     # no log file by default
+    'verbose'  : True,   # debug mode, application will chat a lot
+#    'login'    : None,
+#    'password' : None,
     }
 
 
