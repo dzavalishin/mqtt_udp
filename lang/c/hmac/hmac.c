@@ -20,7 +20,9 @@ int mqtt_udp_enable_signature( const char *key, size_t key_len )
         return 0;    
     }
 
-    // TODO key_len sanity check
+    // key_len sanity check, use PKT_BUF_SIZE as "too big"
+    if( key_len > PKT_BUF_SIZE)
+        return mqtt_udp_global_error_handler( MQ_Err_Invalid, -12, "signature too long", "" );
 
     signature_key = malloc( key_len );
     if( 0 == signature_key )

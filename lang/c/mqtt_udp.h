@@ -46,6 +46,8 @@ struct mqtt_udp_pkt
 
     size_t      value_len;      ///< Length of value string, bytes.
     char *      value;          ///< Value string, 0-terminated.
+
+    char        is_signed;      ///< This packet has correct digital signature
 };
 
 /**

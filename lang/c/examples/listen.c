@@ -29,6 +29,11 @@ int main(int argc, char *argv[])
 {
     printf("Will listen to MQTT/UDP traffic and dump all the messages pass through\n\n");
 
+#if 0
+    const char *key = "signPassword";
+    mqtt_udp_enable_signature( key, strlen(key) );
+#endif
+
     while(1)
     {
         int rc = mqtt_udp_recv_loop( mqtt_udp_dump_any_pkt );

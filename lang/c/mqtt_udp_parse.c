@@ -27,6 +27,7 @@ static size_t mqtt_udp_decode_topic_len( const char *pkt );
 static void mqtt_udp_call_packet_listeners( struct mqtt_udp_pkt *pkt );
 
 static int32_t TTR_decode_int32( const char *data );
+static int TTR_check_signature( const char *pkt_start, size_t pkt_len, const char *signature );
 
 // -----------------------------------------------------------------------
 // parse
@@ -148,7 +149,7 @@ int mqtt_udp_parse_any_pkt( const char *pkt, size_t plen, uint32_t from_ip, proc
 parse_ttrs:
     ;
 #if 1
-    const char *ttrs = ttrs_start;
+    const char *ttrs = ttrs_start; // Current position in TTRs
     int ttrs_len = plen - (ttrs-pstart);
 
     //printf("TTRs  len=%d, plen=%d\n", ttrs_len, plen );
@@ -171,6 +172,14 @@ parse_ttrs:
         switch(ttr_type)
         {
         case 'n': o.pkt_id = TTR_decode_int32( ttrs ); break;
+        case 's': 
+            if( ttr_len <= 0 )
+            {
+                err = mqtt_udp_global_error_handler( MQ_Err_Proto, -6, "signature TTR len != 16", "" );
+                if( err != 0 ) goto cleanup;
+            }
+            o.is_signed = TTR_check_signature( pstart, ttr_start - pstart, ttrs );
+            break;
         default: break;
         }
 
@@ -296,6 +305,22 @@ static int32_t TTR_decode_int32( const char *data )
     return v;
 }
 
+static int TTR_check_signature( const char *pkt_start, size_t pkt_len, const char *in_signature )
+{
+    // Not set up, can't check
+    if(mqtt_udp_hmac_md5 == 0)
+        return 0;
+
+    unsigned char us_signature[MD5_DIGEST_SIZE];
+    mqtt_udp_hmac_md5( (unsigned char *)pkt_start, pkt_len, us_signature );
+
+    int ok = ! memcmp( in_signature, us_signature, MD5_DIGEST_SIZE );
+    if( !ok )
+        mqtt_udp_global_error_handler( MQ_Err_Proto, -6, "Incorrect signature", "" );
+    return ok;
+}
+
+
 
 // -----------------------------------------------------------------------
 //
@@ -338,6 +363,9 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 
     if( o->value_len > 0 )
         printf(" = '%s'", o->value );
+
+    if( o->is_signed )
+        printf(" SIGNED" );
 
     printf( "\n");
     return 0;
