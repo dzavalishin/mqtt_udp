@@ -77,9 +77,9 @@ void testHMAC()
     //mqtt_udp_hmac_md5( text, strlen(text), hmac );
     mqtt_udp_hmac_md5( text, (sizeof text) - 1, hmac );
     
-    printf("\n");
-    mqtt_udp_dump( expected, sizeof(expected) );
-    mqtt_udp_dump( hmac, sizeof(hmac) );
+    //printf("\n");
+    //mqtt_udp_dump( expected, sizeof(expected) );
+    //mqtt_udp_dump( hmac, sizeof(hmac) );
     assertFalse( memcmp( hmac, expected, sizeof(expected)) );
     //assertFalse( memcmp( hmac, expected, MD5_DIGEST_SIZE) );
 

@@ -20,6 +20,15 @@ int mqtt_udp_enable_signature( const char *key, size_t key_len )
         return 0;    
     }
 
+    // TODO key_len sanity check
+
+    signature_key = malloc( key_len );
+    if( 0 == signature_key )
+        return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "signature" );
+    
+    signature_key_len = key_len;
+    memcpy( signature_key, key, key_len );
+
     mqtt_udp_hmac_md5 = do_mqtt_udp_hmac_md5;
     return 0;
 }
@@ -34,6 +43,8 @@ void hmac_md5(unsigned char *key, int key_len,
     unsigned char k_ipad[KEY_IOPAD_SIZE];    /* inner padding - key XORd with ipad  */
     unsigned char k_opad[KEY_IOPAD_SIZE];    /* outer padding - key XORd with opad */
     int i;
+
+	//printf("key = '%s' klen %d text '%s' tlen %d\n", key, key_len, text, text_len );
 
     /*
     * the HMAC_MD5 transform looks like:
