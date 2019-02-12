@@ -388,6 +388,12 @@ public interface IPacket {
 			return "?";
 		return pTYpeNames[pos];
 	}
+
+	/**
+	 * Packet with valid signature?
+	 * @return true if it has valid digital signature.
+	 */
+	public boolean isSigned();
 	
 	
 }

@@ -231,6 +231,7 @@ public abstract class GenericPacket implements IPacket {
 	{
 		if (ttr instanceof TTR_Signature) {
 			; // just ignore, checked outside
+			setSigned( true );
 		}
 		
 		else if (ttr instanceof TTR_PacketNumber) {
@@ -273,5 +274,18 @@ public abstract class GenericPacket implements IPacket {
 		this.packetNumber = Optional.ofNullable(packetNumber);
 	}
 
+	
+
+
+	private boolean signed = false;
+
+	/*
+	 * (non-Javadoc)
+	 * @see ru.dz.mqtt_udp.IPacket#isSigned()
+	 */
+	@Override
+	public boolean isSigned() {		return signed;	}
+
+	private void setSigned(boolean signed) {		this.signed = signed;	}
 	
 }

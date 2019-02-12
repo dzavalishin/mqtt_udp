@@ -64,12 +64,14 @@ public class TopicItem extends AbstractItem {
 
 	@Override
 	public String toString() {
+		String com = (isSigned() ? "Sig! " : "       ")+getTime()+":  ";
+		
 		if( packetType == mqtt_udp_defs.PTYPE_PUBLISH)
-			return getTime()+":  "+topic+"="+value;
+			return com+topic+"="+value;
 		else if(typeWithTopic())
-			return getTime()+":  "+IPacket.getPacketTypeName(packetType)+" \ttopic="+topic;
+			return com+IPacket.getPacketTypeName(packetType)+" \ttopic="+topic;
 		else
-			return getTime()+":  "+IPacket.getPacketTypeName(packetType);
+			return com+IPacket.getPacketTypeName(packetType);
 	}
 
 	public String getTopic() {		return topic;	}
@@ -120,6 +122,7 @@ public class TopicItem extends AbstractItem {
 		default: return super.toPacket(); 
 		}		
 	}
+
 	
 	
 }

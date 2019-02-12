@@ -24,6 +24,7 @@ public abstract class AbstractItem {
 
 	private String from = "?";
 	private String time = getCurrentTime();
+	private boolean signed = false; // Is it has digital signature
 
 	/*public AbstractItem() {
 		// TODO Auto-generated constructor stub
@@ -36,6 +37,7 @@ public abstract class AbstractItem {
 	protected AbstractItem(AbstractItem src) {
 		this.from  = src.from;
 		this.time = src.time;
+		this.signed = src.signed;
 	}
 
 
@@ -90,6 +92,8 @@ public abstract class AbstractItem {
 
 	public String getTime() {		return time;	}
 
+	public boolean isSigned() { return signed; } 
+	protected void setSigned(boolean signed) { this.signed = signed; }
 
 	// TODO assign value and time only? check for host/topic be same?
 	/** 
@@ -100,7 +104,8 @@ public abstract class AbstractItem {
 	public void assignFrom(AbstractItem src) {
 		this.packetType = src.packetType;
 		this.from       = src.from;
-		this.time       = src.time;		
+		this.time       = src.time;
+		this.signed     = src.signed; 
 	}
 
 
@@ -127,22 +132,26 @@ public abstract class AbstractItem {
 			PublishPacket pp = (PublishPacket) p;			
 			TopicItem ti = new TopicItem( p.getType(), pp.getTopic(), pp.getValueString() );
 			ti.setFrom(pp.getFrom().toString());
+			ti.setSigned( p.isSigned() );
 			return ti;
 		} else if( p instanceof SubscribePacket)
 		{
 			SubscribePacket sp = (SubscribePacket) p;			
 			TopicItem ti = new TopicItem( mqtt_udp_defs.PTYPE_SUBSCRIBE, sp.getTopic() );
 			ti.setFrom(p.getFrom().toString());
+			ti.setSigned( p.isSigned() );
 			return ti;
 		} else if( p instanceof PingReqPacket)
 		{
 			TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGREQ);
 			ti.setFrom(p.getFrom().toString());
+			ti.setSigned( p.isSigned() );
 			return ti;
 		} else if( p instanceof PingRespPacket)
 		{
 			TopicItem ti = new TopicItem(mqtt_udp_defs.PTYPE_PINGRESP);
 			ti.setFrom(p.getFrom().toString());
+			ti.setSigned( p.isSigned() );
 			return ti;
 		}
 		else
@@ -151,6 +160,7 @@ public abstract class AbstractItem {
 			// TODO hack
 			TopicItem ti = new TopicItem( 0, "UnknownPacket", p.toString());
 			ti.setFrom(p.getFrom().toString());
+			ti.setSigned( p.isSigned() );
 			return ti;
 		}
 
