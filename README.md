@@ -21,7 +21,7 @@ merely an MQTT Publish packets broadcast over an UDP.
 *   Lowers network traffic (each masurement is sent exactly once to all)
 *   Reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)
 *   Can be supported even on a hardware which can not support TCP - in fact, only UDP send is required
-*   Zero configuration - a sensor node needs no setup, it just broadcasts its data
+*   Zero configuration - a sensor node needs no setup, it just broadcasts its data. (And, if you still need it, MQTT/UDP supports remote configuration over network.)
 *   With some extension can be used on simplex channels and/or channels with native broadcast ability (radio,RS485)
 
 ## For further reading
@@ -55,7 +55,7 @@ It is really easy.
 
 ## Ways to extend MQTT/UDP
 
-*   It seems to be reasonable to add some kind of signature to packets to prevent data spoofing. 
+*   It seems to be reasonable to add some kind of signature to packets to prevent data spoofing. Actually, it is already done for Java implementation, C and Pythin will come soon.
 *   Broadcast is not the best way to transmit data. Multicast is much better. Though multicast is not so well supported in IoT OS's or monitors.
 
 ## Fast start instructions
@@ -101,6 +101,7 @@ if __name__ == "__main__":
     mqttudp.engine.listen(recv_packet)
 ```
 
+Download [pypi package](https://pypi.org/project/mqttudp/)
 
 ### Java
 
@@ -121,6 +122,7 @@ ss.setSink( pkt -> { System.out.println("Got packet: "+pkt); });
 
 ```
 
+Download [JAR](https://github.com/dzavalishin/mqtt_udp/blob/master/build/mqtt_udp-0.4.1.jar)
 
 ### C
 
@@ -188,3 +190,6 @@ end
 
 mq.listen( listener )
 ```
+
+Download [LuaRock](http://luarocks.org/modules/dzavalishin/mqttudp)
+
