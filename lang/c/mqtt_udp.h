@@ -228,6 +228,20 @@ const char * rconfig_get_string_by_item_index( int pos, mqtt_udp_rconfig_inetm_k
 int rconfig_find_by_string_value( const char *search, mqtt_udp_rconfig_inetm_kind_t kind );
 
 
+
+
+
+
+// --------------------------------------------------------------------------
+//
+// HMAC (digital signature) 
+//
+// --------------------------------------------------------------------------
+
+/// User request to start using digital signature.
+int mqtt_udp_enable_signature( const char *key, size_t key_len );
+
+
 // ==========================================================================
 // --------------------------------------------------------------------------
 //
@@ -438,8 +452,6 @@ void  mqtt_udp_arch_sleep_msec( uint32_t msec );
 /// Pointer to MD5 HMAC function or zero if user did not ask for signature
 extern void (*mqtt_udp_hmac_md5)( unsigned char *text, int text_len, unsigned char *hmac );
 
-/// User request to start using digital signature.
-int mqtt_udp_enable_signature( const char *key, size_t key_len );
 
 
 #ifdef __cplusplus

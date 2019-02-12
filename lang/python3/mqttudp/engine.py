@@ -6,6 +6,9 @@ import datetime
 import struct
 from enum import Enum
 
+import hashlib
+import hmac
+
 import mqttudp.mqtt_udp_defs as defs
 #from array import array
 
@@ -97,6 +100,28 @@ def error_handler( retcode : int, etype : ErrorType, msg : str ):
 
     print("MQTT/UDP Error "+str(etype)+" rc="+str(retcode)+" "+msg)
     return retcode
+
+# ------------------------------------------------------------------------
+#
+# Signature
+#
+# ------------------------------------------------------------------------
+#import importlib
+
+__signature_key = None
+
+def set_signature( key ):
+    global __signature_key
+    if type(key) == str:
+        key = key.encode('utf-8')
+    __signature_key = key
+    #print(str(type(__signature_key)))
+
+def sign_data( msg ):
+    if type(msg) == str:
+        msg=msg.encode('utf-8')
+    return hmac.new( __signature_key, msg, digestmod=hashlib.md5 ).hexdigest()
+    # hmac.digest(key, msg, digest)¶
 
 
 # ------------------------------------------------------------------------
