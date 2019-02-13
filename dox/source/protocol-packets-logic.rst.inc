@@ -7,7 +7,7 @@ packet types used and, of course, as there is no broker there is no need for CON
 CONNACK or DISCONNECT.
 
 .. figure:: illustrations/PacketStructure.*
-   :align: center
+   :align: right
 
    General MQTT/UDP packet structure
 
@@ -19,7 +19,11 @@ Current implementation also ignores packet flags completely, but it will change 
 Most implementations support Tagged Tail Records addition to the protocol, which
 extends and replaces variable header in an extencible and flexible way.
 
-Please read `description at project Wiki <https://github.com/dzavalishin/mqtt_udp/wiki/Tagged-Tail>`_.
+Tagged tail records can be used to add any kinds of addiyional information to 
+the classic MQTT packets, but the most noticeable use of TTRs in MQTT/UDP is
+digital signature.
+
+Please read detailed `description at project Wiki <https://github.com/dzavalishin/mqtt_udp/wiki/Tagged-Tail>`_.
 
 
 Packet types and use
