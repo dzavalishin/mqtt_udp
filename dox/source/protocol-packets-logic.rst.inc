@@ -7,7 +7,7 @@ packet types used and, of course, as there is no broker there is no need for CON
 CONNACK or DISCONNECT.
 
 .. figure:: illustrations/PacketStructure.*
-   :align: right
+   :align: center
 
    General MQTT/UDP packet structure
 
