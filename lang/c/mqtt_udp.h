@@ -39,7 +39,7 @@ struct mqtt_udp_pkt
 
     size_t      total;          ///< Length of the rest of pkt down from here.
 
-    uint32_t    pkt_id;         ///< PAcket ID, not currently used. Will be supported by TTRs.
+    uint32_t    pkt_id;         ///< Packet ID, supported by TTR ('n').
 
     size_t      topic_len;      ///< Length of topic string, bytes.
     char *      topic;          ///< Topic string, 0-terminated.

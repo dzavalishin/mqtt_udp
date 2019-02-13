@@ -35,6 +35,24 @@ class Packet(object):
         self.value  = value
         self.ttrs   = ttrs
         self.addr   = None
+        self.signed = False
+        self.pkt_id = 0
+        self.__signature = None
+        self.__signature_start = 0
+
+    def __init__( self ):
+        self.ptype  = None
+        self.pflags = 0
+        self.topic  = ""
+        self.value  = ""
+        self.ttrs   = None
+        self.addr   = None
+        self.signed = False
+        self.pkt_id = 0
+        self.__signature = None
+        self.__signature_start = 0
+
+
 
 # ------------------------------------------------------------------------
 #
@@ -43,10 +61,6 @@ class Packet(object):
 # ------------------------------------------------------------------------
 
 __SEND_SOCKET = None
-#__SEND_SOCKET = __make_send_socket()
-
-#def init():
-#    __SEND_SOCKET = __make_send_socket()
 
 
 
@@ -173,17 +187,19 @@ def recv_udp_packet(udp_socket):
 
 def unpack_remaining_length(pkt):
     remaining_length = 0
+    eaten = 0;
     while True:
         b = pkt[0]
+        eaten += 1
         pkt = pkt[1:]
         remaining_length = remaining_length << 7
         remaining_length = remaining_length | (b & 0x7F)
         if (b & 0x80) == 0:
             break
-    return remaining_length, pkt
+    return remaining_length, pkt, eaten
 
 
-def parse_ttr( tag, value ):
+def parse_ttr( tag, value, pobj, start_pos ):
     #print("TTR tag="+str(tag))
     #print("TTR val="+str(value))
     #print("TTR type="+str(type(value)))
@@ -192,16 +208,20 @@ def parse_ttr( tag, value ):
         
     if tag == 110:
         num,  = struct.unpack("!I", value)
-        me = ( "PacketNumber", num )
-        #me = ( "PacketNumber", struct.unpack("I", str(value,"ASCII")) )
+        me = ( "PacketNumber", num ) # kill
+        pobj.pkt_id = num
     elif tag == 115:
         #num,  = struct.unpack("I", value)
         me = ( "MD5", value.hex() )
+        pobj.__signature = value
+        pobj.__signature_start = start_pos
+        print("Sig found")
     else:
         me =(str(tag),value)
     return (me,)
 
-def parse_ttrs(pktrest):
+
+def parse_ttrs(pktrest, pobj, start_pos ):
     ttr_tag = pktrest[0]
     ttr_len = pktrest[1] # TODO decode len!
 
@@ -209,12 +229,16 @@ def parse_ttrs(pktrest):
     #print("TTR len "+str(ttr_len))
 
     if ttr_len & 0x80:
-        #print("TTR len > 0x7F: "+str(ttr_len))
         return error_handler( -1, ErrorType.Protocol, "TTR len > 0x7F: "+str(ttr_len) )
     
-    ttr = parse_ttr( ttr_tag, pktrest[2:ttr_len+2] )
+    ttr = parse_ttr( ttr_tag, pktrest[2:ttr_len+2], pobj, start_pos )
+
+    #(ttr_type, ttr_value) = ttr
+    #if ttr_type == 's':
+    #    printf("Got signature TTR")
+
     if len(pktrest) > ttr_len+2:
-        ttrs = parse_ttrs(pktrest[ttr_len+2:])
+        ttrs = parse_ttrs(pktrest[ttr_len+2:], pobj, start_pos+ttr_len+2 )
     else:
         ttrs = ()
     
@@ -223,51 +247,55 @@ def parse_ttrs(pktrest):
     return ttrs 
 
 def parse_packet(pkt):
+    full_pkt = pkt # for digital signature
+    out = Packet()
+
     ptype = pkt[0] & 0xF0
-    pflags = pkt[0] & 0x0F
-    total_len, pkt = unpack_remaining_length(pkt[1:])
+    out.pflags = pkt[0] & 0x0F
+    total_len, pkt, eaten = unpack_remaining_length(pkt[1:])
     
     ttrs = None
     if len(pkt) > total_len:
-        #print("have TTR")
-        ttrs = parse_ttrs( pkt[total_len:] )
+        #print("have TTRs @ 1 + "+str(eaten)+" + "+str(total_len))
+        out.ttrs = parse_ttrs( pkt[total_len:], out, 1+eaten+total_len )
+        # TODO kill out.ttrs
         #print(ttrs)
-        # TODO process me
+
+        if (out.__signature != None) and (__signature_key != None):
+            #print("check 0:"+str(out.__signature_start))
+            us_signature = sign_data( full_pkt[0:out.__signature_start] )
+            if us_signature == out.__signature:
+                out.is_signed = True
+                print("Signed OK!")
+            else:
+                error_handler( -1, ErrorType.Protocol, "Packet signature is wrong" )
+                #print( full_pkt.hex() )
     
     if ptype == defs.PTYPE_PUBLISH:
-
         # move up - all packets need it?
-
         topic_len = (pkt[1] & 0xFF) | ((pkt[0] << 8) & 0xFF)   
-        #topic = str( codecs.encode( str( pkt[2:topic_len+2] ), 'UTF-8' ) )
-        #value = str( codecs.encode( str( pkt[topic_len+2:] ), 'UTF-8' ) )
-        topic = str( pkt[2:topic_len+2], 'UTF-8' )
-        value = str( pkt[topic_len+2:total_len], 'UTF-8' )
-    
-        return Packet(PacketType.Publish,topic,value,pflags,ttrs)
+        out.topic = str( pkt[2:topic_len+2], 'UTF-8' )
+        out.value = str( pkt[topic_len+2:total_len], 'UTF-8' )
+        out.ptype = PacketType.Publish
+        return out
 
     if ptype == defs.PTYPE_SUBSCRIBE:
-
         # move up - all packets need it?
-
         topic_len = (pkt[1] & 0xFF) | ((pkt[0] << 8) & 0xFF)   
-        topic = str( pkt[2:topic_len+2], 'UTF-8' )
-        # value = str( pkt[topic_len+2:total_len], 'UTF-8' )
-        #value = ""
-    
+        out.topic = str( pkt[2:topic_len+2], 'UTF-8' )
         #TODO use total_len
     
-        #return "subscribe",topic,value,pflags
-        return Packet(PacketType.Subscribe,topic,"",pflags,ttrs)
+        out.ptype = PacketType.Subscribe
+        return out
 
 
     if ptype == defs.PTYPE_PINGREQ:
-        #return "pingreq","","",pflags
-        return Packet(PacketType.PingReq,"","",pflags,ttrs)
+        out.ptype = PacketType.PingReq
+        return out
 
     if ptype == defs.PTYPE_PINGRESP:
-        #return "pingresp","","",pflags
-        return Packet(PacketType.PingResp,"","",pflags,ttrs)
+        out.ptype = PacketType.PingResp
+        return out
 
     #print( "Unknown packet type" )
     error_handler( ptype, ErrorType.Protocol, "Unknown packet type" )
@@ -275,7 +303,8 @@ def parse_packet(pkt):
     #for b in pkt:
     #    print( b )
     #return "?","","",0
-    return Packet(Unknown,"","",0,ttrs)
+    put.ptype = PacketType.Unknown
+    return out
 
 
 
@@ -286,7 +315,6 @@ def listen(callback):
     s = make_recv_socket()
     while True:
         pkt,addr = recv_udp_packet(s)    
-        #ptype,topic,value,pflags = parse_packet(pkt)
         pobj = parse_packet(pkt)
         pobj.addr = addr
         if (not muted) and (pobj.ptype == PacketType.PingReq):
@@ -296,7 +324,6 @@ def listen(callback):
             except Exception as e:
                 #print( "Can't send ping responce"+str(e) )
                 error_handler( -1, ErrorType.IO, "Can't send ping responce"+str(e) )
-        #callback(ptype,topic,value,pflags,addr)
         callback(pobj)
 
 
