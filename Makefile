@@ -33,4 +33,8 @@ $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
 .PHONY: $(TOPTARGETS) $(SUBDIRS)
+
+test/.: lang/.
+
+tools/.: lang/.
 	
