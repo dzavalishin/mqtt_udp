@@ -6,12 +6,17 @@ MQTT/UDP is based on classic MQTT, but differs a bit. Frist of all, just a subse
 packet types used and, of course, as there is no broker there is no need for CONNECT,
 CONNACK or DISCONNECT.
 
+.. figure:: illustrations/PacketStructure.*
+   :align: right
+
+   General MQTT/UDP packet structure
+
 Additionally, MQTT/UDP does not send or expect variable header (packet ID field)
 present in some MQTT packets.
 
 Current implementation also ignores packet flags completely, but it will change later.
 
-Currently in the development an Tagged Tail Records addition to the protocol, which
+Most implementations support Tagged Tail Records addition to the protocol, which
 extends and replaces variable header in an extencible and flexible way.
 
 Please read `description at project Wiki <https://github.com/dzavalishin/mqtt_udp/wiki/Tagged-Tail>`_.
