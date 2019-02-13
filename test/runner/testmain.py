@@ -43,7 +43,7 @@ def run_lua( prog, a1, a2, timeout=100 ):
 
 def run_java( prog, a1, a2, timeout=100 ):
     #args=[ "cmd", "/c", "java", "-cp", "target/mqtt_udp-0.4.1.jar", prog, a1, a2 ]
-    args=[ "java", "-cp", "target/mqtt_udp-0.4.1.jar", prog, a1, a2 ]
+    args=[ "java", "-cp", "target/mqtt_udp-0.5.0.jar", prog, a1, a2 ]
     return run_wait( JAVA_PATH, args, timeout )
 
 # exec func, topic, msg, pub prog, wait prog
