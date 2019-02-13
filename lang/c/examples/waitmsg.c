@@ -36,6 +36,7 @@
 
 char *topic;
 char *msg;
+int check_sig = 0;
 
 
 int check_pkt(struct mqtt_udp_pkt *pkt)
@@ -46,11 +47,24 @@ int check_pkt(struct mqtt_udp_pkt *pkt)
        (0 == strcmp( msg, pkt->value ))
       )
     {
+        if(check_sig && (!pkt->is_signed))
+        {
+            printf("Got with NO correct signature!\n");
+            exit(3);
+        }
         printf("Got it!\n");
         exit(0);
     }
 
     return 0;
+}
+
+
+void usage( void )
+{
+    printf("Will listen to MQTT/UDP traffic and wait for message\n");
+    printf("Usage: waitmsg [-s SignaturePassword] topic data\n\n");
+    exit(33);
 }
 
 
@@ -60,12 +74,21 @@ int main(int argc, char *argv[])
 
     long timeout = 10; // sec
 
-    if( argc != 3 )
+    if( (argc > 2) && (0 == strcmp( argv[1], "-s") ) )
     {
-        printf("Will listen to MQTT/UDP traffic and wait for message\n");
-        printf("Usage: waitmsg topic data\n\n");
-        exit(33);
+        if( argc < 3)
+            usage();
+
+        const char *key = argv[2];
+        mqtt_udp_enable_signature( key, strlen(key) );
+        check_sig = 1;
+
+        argc -= 2;
+        argv += 2;
     }
+
+    if( argc != 3 )
+        usage();
 
     topic = argv[1];
     msg   = argv[2];
@@ -73,7 +96,6 @@ int main(int argc, char *argv[])
     printf("Will listen to MQTT/UDP traffic and wait for PUBLISH '%s'='%s'\n", topic, msg );
 
     int fd, rc;
-    //char buf[PKT_BUF_SIZE];
 
     fd = mqtt_udp_socket();
 
@@ -102,7 +124,7 @@ int main(int argc, char *argv[])
         if( now > start+timeout )
         {
             printf("timed ont, exit\n");
-            exit(1);
+            exit(2);
         }
 
     }

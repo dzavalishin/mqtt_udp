@@ -24,10 +24,26 @@
 #include "../mqtt_udp.h"
 
 
+void usage(void)
+{
+    printf("mqtt_udp_listen [-s SignaturePassword]\n");
+    exit(33);
+}
 
 int main(int argc, char *argv[])
 {
     printf("Will listen to MQTT/UDP traffic and dump all the messages pass through\n\n");
+    if( (argc == 2) || (argc > 3) )
+        usage();
+
+    if( argc == 3 )
+    {
+        if( strcmp( argv[1], "-s" ) )
+            usage();
+
+        const char *key = argv[2];
+        mqtt_udp_enable_signature( key, strlen(key) );
+    }
 
 #if 0
     const char *key = "signPassword";

@@ -104,7 +104,7 @@ int mqtt_udp_global_error_handler( mqtt_udp_err_t type, int err_no, char *msg, c
 //
 // --------------------------------------------------------------------------
 
-extern void (*mqtt_udp_hmac_md5)( unsigned char *text, int text_len, unsigned char *hmac ) = 0;
+void (*mqtt_udp_hmac_md5)( unsigned char *text, int text_len, unsigned char *hmac ) = 0;
 
 
 
