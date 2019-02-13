@@ -1,10 +1,9 @@
-BUILD_FILES=MqttUdpTray.jar MqttUdpTray.exe mqttudptray.ini 
+BUILD_FILES=uilib.jar
 
 
 all::
 	ant -f makeJava.xml 
 	ant -f makeJar.xml 
-#	launch4jc launch4j.xml # it uses external JAR, don't need to make
 
 clean:
 	-rm -r bin/*
