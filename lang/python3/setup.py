@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='mqttudp',
-    version='0.4-1',
+    version='0.5-0',
     description='An MQTT/UDP implementation in Python',
     long_description=f_long_description,
     long_description_content_type="text/markdown",
