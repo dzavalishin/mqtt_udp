@@ -212,10 +212,10 @@ def parse_ttr( tag, value, pobj, start_pos ):
         pobj.pkt_id = num
     elif tag == 115:
         #num,  = struct.unpack("I", value)
-        me = ( "MD5", value.hex() )
+        me = ( "MD5", value.hex() ) # kill
         pobj.__signature = value
         pobj.__signature_start = start_pos
-        print("Sig found")
+        #print("Sig found")
     else:
         me =(str(tag),value)
     return (me,)
@@ -265,8 +265,8 @@ def parse_packet(pkt):
             #print("check 0:"+str(out.__signature_start))
             us_signature = sign_data( full_pkt[0:out.__signature_start] )
             if us_signature == out.__signature:
-                out.is_signed = True
-                print("Signed OK!")
+                out.signed = True
+                #print("Signed OK!")
             else:
                 error_handler( -1, ErrorType.Protocol, "Packet signature is wrong" )
                 #print( full_pkt.hex() )
