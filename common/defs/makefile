@@ -67,9 +67,9 @@ $(FN).lua: $(IN)  inc_txt2lua/* makefile
 
 
 preprocessors:: 
-	cd ../../dox/source   ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
-	cd ../../lang/lua     ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
-	cd ../../lang/python3 ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
-	cd ../../lang/java    ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
-
+	cd ../../dox/source          ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
+	cd ../../lang/lua            ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
+	cd ../../lang/python3        ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
+	cd ../../lang/java           ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
+	cd ../../tools/config_server ; sh preprocess.sh "$(VER_MAJOR).$(VER_MINOR)" "$(SUB_MINOR)" 
 
