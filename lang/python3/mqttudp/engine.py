@@ -37,8 +37,8 @@ class Packet(object):
         self.addr   = None
         self.signed = False
         self.pkt_id = 0
-        self.__signature = None
-        self.__signature_start = 0
+        self.private_signature = None
+        self.private_signature_start = 0
 
     def __init__( self ):
         self.ptype  = None
@@ -49,8 +49,8 @@ class Packet(object):
         self.addr   = None
         self.signed = False
         self.pkt_id = 0
-        self.__signature = None
-        self.__signature_start = 0
+        self.private_signature = None
+        self.private_signature_start = 0
 
 
 
@@ -213,8 +213,8 @@ def parse_ttr( tag, value, pobj, start_pos ):
     elif tag == 115:
         #num,  = struct.unpack("I", value)
         me = ( "MD5", value.hex() ) # kill
-        pobj.__signature = value
-        pobj.__signature_start = start_pos
+        pobj.private_signature = value
+        pobj.private_signature_start = start_pos
         #print("Sig found")
     else:
         me =(str(tag),value)
@@ -249,6 +249,7 @@ def parse_ttrs(pktrest, pobj, start_pos ):
 def parse_packet(pkt):
     full_pkt = pkt # for digital signature
     out = Packet()
+    #print( out.__dict__ )
 
     ptype = pkt[0] & 0xF0
     out.pflags = pkt[0] & 0x0F
@@ -260,11 +261,13 @@ def parse_packet(pkt):
         out.ttrs = parse_ttrs( pkt[total_len:], out, 1+eaten+total_len )
         # TODO kill out.ttrs
         #print(ttrs)
-
-        if (out.__signature != None) and (__signature_key != None):
-            #print("check 0:"+str(out.__signature_start))
-            us_signature = sign_data( full_pkt[0:out.__signature_start] )
-            if us_signature == out.__signature:
+        #print( "\n-------------------\n" )
+        #print( out.__dict__ )
+        #print( "\n-------------------\n" )
+        if (out.private_signature != None) and (__signature_key != None):
+            #print("check 0:"+str(out.private_signature_start))
+            us_signature = sign_data( full_pkt[0:out.private_signature_start] )
+            if us_signature == out.private_signature:
                 out.signed = True
                 #print("Signed OK!")
             else:
