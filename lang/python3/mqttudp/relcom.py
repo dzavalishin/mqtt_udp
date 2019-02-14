@@ -13,12 +13,27 @@ __out_lock = threading.Lock()
 def send_publish_qos( topic, value, qos ):
     global __outgoing
     pkt = me.Packet()
+    pkt.ptype = me.PacketType.Publish
     pkt.topic = topic
     pkt.value = value
     pkt.set_qos( qos )
     pkt.pkt_id = random.randint( 1, sys.maxsize )
 
+    #print(pkt.__dict__)
+
     __out_lock.acquire()
+
+    old_id = None
+
+    # kill older ones with same topic
+    for old in __outgoing.values():
+        if old.topic == topic:
+            old_id = old.pkt_id
+            break
+
+    if old_id != None:
+        __outgoing.pop(old_id)
+
     __outgoing[ pkt.pkt_id ] = pkt
     __out_lock.release()
 
@@ -29,8 +44,8 @@ def send_publish_qos( topic, value, qos ):
 # Must be called from main program with each packet received
 #
 def recv_packet(pkt):
-    if pkt.ptype == PacketType.PubAck:
-        print( "ack " + pkt.reply_to + "\t\t" + str(addr) )
+    if pkt.ptype == me.PacketType.PubAck:
+        print( "ack " + str(pkt.reply_to) + "\t\t" + str(pkt.addr) )
 
         if pkt.reply_to == 0:
             print("pkt.reply_to = 0")
@@ -47,7 +62,9 @@ def recv_packet(pkt):
 
 
 def __do_send_publish(pkt):
-    me.__send_pkt( me.make_publish_packet(pkt.topic, pkt.value, pkt.pflags ) )
+    #print(pkt.__dict__)
+    #me.__send_pkt( me.make_publish_packet(pkt.topic, pkt.value, pkt.pflags ) )
+    pkt.send()
 
 
 def relcom_send_thread():
@@ -57,6 +74,7 @@ def relcom_send_thread():
         __out_lock.acquire()
         for pkt in __outgoing.values():
             __do_send_publish(pkt)
+            print("resend")
         __out_lock.release()
 
 

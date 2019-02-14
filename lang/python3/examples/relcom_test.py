@@ -13,15 +13,23 @@ sys.path.append('..')
 import mqttudp.engine as me
 import mqttudp.rconfig as rcfg
 import mqttudp.relcom as relcom
+
+import threading
 import random
 import time
 
 TOPIC="random_data"
 
 
+def recv_thread():
+    me.listen( relcom.recv_packet )
+
 if __name__ == "__main__":
     print( "Will send MQTT/UDP QoS 2 packets with random number as a payload" )
     print( "Topic is '"+TOPIC+"'" )
+
+    recv = threading.Thread(target=recv_thread, args=())
+    recv.start()
 
     while True:
         n = str(random.randint(0, 9))

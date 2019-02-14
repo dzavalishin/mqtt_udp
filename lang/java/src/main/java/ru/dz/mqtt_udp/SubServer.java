@@ -159,10 +159,12 @@ public abstract class SubServer extends LoopRunner
 			PublishPacket pp = (PublishPacket) p;
 			
 			int qos = pp.getQoS();
-			if( qos > 0 )
+			if( qos != 0 )
 			{
+				System.out.println("QoS");
 				int maxQos = Engine.getMaxReplyQoS();
 				qos = Integer.min(qos, maxQos);
+				new PubAckPacket(pp, qos).send();
 			}
 		}
 

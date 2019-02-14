@@ -106,6 +106,10 @@ public interface IPacket {
 			p = new PublishPacket(sub, (byte)flags, from);
 			break;
 
+		case mqtt_udp_defs.PTYPE_PUBACK:
+			p = new PubAckPacket(sub, (byte)flags, from);
+			break;
+
 		case mqtt_udp_defs.PTYPE_PINGREQ:
 			p = new PingReqPacket(sub, (byte)flags, from);
 			break;
