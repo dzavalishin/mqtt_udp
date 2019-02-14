@@ -22,6 +22,7 @@ import mqttudp.mqtt_udp_defs as defs
 class PacketType(Enum):
     Unknown     = 0
     Publish     = 0x30
+    PubAck      = defs.PTYPE_PUBACK
     Subscribe   = 0x80
     PingReq     = 0xC0
     PingResp    = 0xD0
@@ -37,6 +38,7 @@ class Packet(object):
         self.addr   = None
         self.signed = False
         self.pkt_id = 0
+        self.reply_to = 0
         self.private_signature = None
         self.private_signature_start = 0
 
@@ -49,8 +51,12 @@ class Packet(object):
         self.addr   = None
         self.signed = False
         self.pkt_id = 0
+        self.reply_to = 0
         self.private_signature = None
         self.private_signature_start = 0
+    
+    def get_qos():
+        return (self.pflags >> 1) & 0x3
 
 
 
@@ -115,6 +121,27 @@ def error_handler( retcode : int, etype : ErrorType, msg : str ):
     print("MQTT/UDP Error "+str(etype)+" rc="+str(retcode)+" "+msg)
     return retcode
 
+
+# ------------------------------------------------------------------------
+#
+# Add TTR
+#
+# ------------------------------------------------------------------------
+
+def __add_ttr( pkt, ttr_key, ttr_data ):
+    out = bytearray()
+    out += pkt
+    out += ttr_key
+    dlen = len(ttr_data)
+    out.append(dlen)
+    out += signature
+    return out
+
+# ttr_value : int
+def __add_integer_ttr( pkt, ttr_key, ttr_value ):
+    ttr_data = struct.pack("!I", ttr_value)
+    return __add_ttr( pkt, ttr_key, ttr_data )
+
 # ------------------------------------------------------------------------
 #
 # Signature
@@ -138,10 +165,10 @@ def sign_data( msg ):
     # hmac.digest(key, msg, digest)¶
     return bytearray.fromhex( out )
 
-def sign_and_ttr( msg ):
+def sign_and_ttr( msg, ttrs = None ):
     if type(msg) == str:
         msg=msg.encode('utf-8')
-    signature = sign_data( msg )
+    signature = sign_data( msg ) # TODO use __add_ttr( pkt, ttr_key, ttr_data )
     out = bytearray()
     out += msg
     out += b's'
@@ -320,13 +347,24 @@ def listen(callback):
         pkt,addr = recv_udp_packet(s)    
         pobj = parse_packet(pkt)
         pobj.addr = addr
-        if (not muted) and (pobj.ptype == PacketType.PingReq):
-#            print( "Got ping, reply to "+addr )
-            try:
-                send_ping_responce()
-            except Exception as e:
-                #print( "Can't send ping responce"+str(e) )
-                error_handler( -1, ErrorType.IO, "Can't send ping responce"+str(e) )
+        if not muted:
+            if pobj.ptype == PacketType.PingReq:
+#                print( "Got ping, reply to "+addr )
+                try:
+                    send_ping_responce()
+                except Exception as e:
+                    #print( "Can't send ping responce"+str(e) )
+                    error_handler( -1, ErrorType.IO, "Can't send ping responce"+str(e) )
+
+            # TODO don't reply to own packets
+            # TODO packet id is not enough, need "repy to sender host id" in PubAck too
+            if (pobj.reply_to != 0) and (pobj.ptype == PacketType.Publish):
+                qos = pobj.get_qos()
+                if qos > max_qos:
+                    qos = max_qos
+                send_puback( pobj.reply_to, qos )
+            
+
         callback(pobj)
 
 
@@ -341,9 +379,10 @@ def listen(callback):
 
 
 
-def __send_pkt( pkt ):
+def __send_pkt( pkt, ttrs = None ):
+    # TODO __add_ttr( pkt, ttr_key, ttr_data )
     if __signature_key != None:
-        pkt = sign_and_ttr( pkt )
+        pkt = sign_and_ttr( pkt, ttrs )
     throttle_me()
     __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
 
@@ -426,7 +465,7 @@ def make_subscribe_packet(topic):
     pack_remaining_length(packet, remaining_length)
     pack_str16(packet, topic)
 
-    packet.append(0) # QoS byte
+    packet.append(0) # QoS byte - not needed, we do not use it
 
     return packet
 
@@ -434,42 +473,61 @@ def send_subscribe(topic):
     if isinstance(topic, str):
         topic = topic.encode()
     pkt = make_subscribe_packet(topic)
-    #throttle_me()
-    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
     __send_pkt( pkt )
+
+
+#
+# Make packet with no content
+#
+
+def __make_simple_packet(ptype):
+    packet = bytearray()
+    packet.append(ptype)
+    pack_remaining_length(packet, 0)
+    return packet
+
 
 #
 # Ping support
 #
 
+"""
 def make_ping_packet():
     command = defs.PTYPE_PINGREQ
     packet = bytearray()
     packet.append(command)
     pack_remaining_length(packet, 0)
     return packet
-
+"""
 def send_ping():
-    pkt = make_ping_packet()
-    #throttle_me()
-    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
-    __send_pkt( pkt )
+    #pkt = make_ping_packet()
+    __send_pkt( __make_simple_packet(defs.PTYPE_PINGREQ) )
 
 
-
+"""
 def make_ping_responce_packet():
     command = defs.PTYPE_PINGRESP
     packet = bytearray()
     packet.append(command)
     pack_remaining_length(packet, 0)
     return packet
+"""
 
 def send_ping_responce():
-    pkt = make_ping_responce_packet()
-    #throttle_me()
-    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
-    __send_pkt( pkt )
+    #pkt = make_ping_responce_packet()
+    #__send_pkt( pkt )
+    __send_pkt( __make_simple_packet(defs.PTYPE_PINGRESP) )
 
+
+#
+# PubAck support
+#
+
+
+def send_puback(reply_to, qos):
+    pkt = __make_simple_packet(defs.PTYPE_PUBACK or ((qos and 0x3) << 1))
+    pkt = __add_integer_ttr( pkt, b'r', reply_to )
+    __send_pkt( pkt )
 
 
 
