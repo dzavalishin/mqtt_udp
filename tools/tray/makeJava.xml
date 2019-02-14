@@ -2,7 +2,7 @@
 <project name="Tray" default="compile">
     <target name="compile">
         <mkdir dir="bin"/>
-        <javac destdir="bin" includeantruntime="false" classpath="../../build/mqtt_udp-0.5.0.jar:../../build/uilib.jar">
+        <javac destdir="bin" includeantruntime="false" classpath="../../build/mqtt_udp.jar:../../build/uilib.jar">
             <src path="src"/>
         </javac>
     </target>

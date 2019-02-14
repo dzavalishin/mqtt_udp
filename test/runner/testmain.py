@@ -13,7 +13,8 @@ import sys
 PY_PATH = "../../lang/python3/test/"
 C_PATH = "../../lang/c"
 LUA_PATH = "../../lang/lua/test"
-JAVA_PATH = "../../lang/java"
+#JAVA_PATH = "../../lang/java"
+JAVA_PATH = "../../build"
 
 #args=[ "python3.6", "test_pub.py", "aaa", "bbb" ]
 ##done = subprocess.run( args, capture_output=True, cwd=python_path, timeout=100, check=True )
@@ -43,7 +44,8 @@ def run_lua( prog, a1, a2, timeout=100 ):
 
 def run_java( prog, a1, a2, timeout=100 ):
     #args=[ "cmd", "/c", "java", "-cp", "target/mqtt_udp-0.4.1.jar", prog, a1, a2 ]
-    args=[ "java", "-cp", "target/mqtt_udp-0.5.0.jar", prog, a1, a2 ]
+    #args=[ "java", "-cp", "target/mqtt_udp-0.5.0.jar", prog, a1, a2 ]
+    args=[ "java", "-cp", "mqtt_udp.jar", prog, a1, a2 ]
     return run_wait( JAVA_PATH, args, timeout )
 
 # exec func, topic, msg, pub prog, wait prog
@@ -56,7 +58,7 @@ defs = {
 
 
 class Waiter(object):
-    def __init__(self, send_lang, recv_lang):
+    def __init__(self, send_lang, recv_lang, cmd_parameters ):
         sender = defs[send_lang]
         recvr = defs[recv_lang]
         print("\n---- From "+send_lang+" to "+recv_lang+"")
@@ -98,32 +100,38 @@ class Waiter(object):
         self.result = runner( prog, self.topic, self.value, timeout=100 )
 
 
+
+def runAll(param):
+    # Runs waiter which listens for given topic/value, then
+    # runs talker which PUBLISHes same topic/value, then waits
+    # for waiter to complete
+    Waiter("py",   "lua", 	param).test()
+    Waiter("c",    "lua", 	param).test()
+    Waiter("lua",  "lua", 	param).test()
+    Waiter("java", "lua", 	param).test()
+
+    Waiter("py",   "py", 	param).test()
+    Waiter("c",    "py", 	param).test()
+    Waiter("lua",  "py", 	param).test()
+    Waiter("java", "py", 	param).test()
+
+    Waiter("py",   "c", 	param).test()
+    Waiter("c",    "c", 	param).test()
+    Waiter("lua",  "c", 	param).test()
+    Waiter("java", "c", 	param).test()
+
+    Waiter("py",   "java", 	param).test()
+    Waiter("c",    "java", 	param).test()
+    Waiter("lua",  "java", 	param).test()
+    Waiter("java", "java", 	param).test()
+
+
 if __name__ == "__main__":
     print( "Will do MQTT/UDP program run tests" )
     #print(run_py( "test_pub.py", "regress/from/python", "test_message1" ))
 
-    # Runs waiter which listens for given topic/value, then
-    # runs talker which PUBLISHes same topic/value, then waits
-    # for waiter to complete
-    Waiter("py",   "lua").test()
-    Waiter("c",    "lua").test()
-    Waiter("lua",  "lua").test()
-    Waiter("java", "lua").test()
-
-    Waiter("py",   "py").test()
-    Waiter("c",    "py").test()
-    Waiter("lua",  "py").test()
-    Waiter("java", "py").test()
-
-    Waiter("py",   "c").test()
-    Waiter("c",    "c").test()
-    Waiter("lua",  "c").test()
-    Waiter("java", "c").test()
-
-    Waiter("py",   "java").test()
-    Waiter("c",    "java").test()
-    Waiter("lua",  "java").test()
-    Waiter("java", "java").test()
+    runAll("")
+    #runAll("-s signPassword")
 
     print("\n ------ All tests PASSED!")
 

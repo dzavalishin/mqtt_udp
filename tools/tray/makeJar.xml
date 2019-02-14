@@ -16,7 +16,7 @@
             <fileset dir="${dir.jarfile}/icons"/>
             <fileset dir="../../lang/java/bin"/>
 			<zipfileset excludes="META-INF/*.SF" src="../../build/uilib.jar"/>
-			<zipfileset excludes="META-INF/*.SF" src="../../build/mqtt_udp-0.5.0.jar"/>
+			<zipfileset excludes="META-INF/*.SF" src="../../build/mqtt_udp.jar"/>
         </jar>
     </target>
 </project>
