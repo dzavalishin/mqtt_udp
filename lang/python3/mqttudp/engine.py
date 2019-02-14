@@ -55,8 +55,14 @@ class Packet(object):
         self.private_signature = None
         self.private_signature_start = 0
     
-    def get_qos():
+    def get_qos(self):
         return (self.pflags >> 1) & 0x3
+
+    def set_qos(self, qos):
+        self.pflags &= 0x6
+        self.pflags |= (qos & 0x3) << 1
+
+
 
 
 
@@ -390,12 +396,6 @@ def __send_pkt( pkt, ttrs = None ):
 
 
 def send_publish( topic, payload=b''):
-    if isinstance(topic, str):
-	    topic = topic.encode()
-
-    if isinstance(payload, str):
-	    payload = payload.encode()
-
     pkt = make_publish_packet(topic, payload)
     #throttle_me()
     #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
@@ -433,13 +433,17 @@ def pack_str16(packet, data):
         packet.extend(data)
 
 
-def make_publish_packet(topic, payload=b''):
-    # we assume that topic and payload are already properly encoded
-#    assert not isinstance(topic, unicode) and not isinstance(payload, unicode) and payload is not None
+def make_publish_packet(topic, payload=b'', qos = 0):
+    if isinstance(topic, str):
+	    topic = topic.encode()
+
+    if isinstance(payload, str):
+	    payload = payload.encode()
 
     command = defs.PTYPE_PUBLISH
+    flags = (qos & 0x3) << 1
     packet = bytearray()
-    packet.append(command)
+    packet.append(command|flags)
 
     payloadlen = len(payload)
     remaining_length = 2 + len(topic) + payloadlen
