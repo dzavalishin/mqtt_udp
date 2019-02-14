@@ -3,6 +3,7 @@ package ru.dz.mqtt_udp.util;
 import java.io.IOException;
 import java.net.SocketException;
 
+import ru.dz.mqtt_udp.Engine;
 import ru.dz.mqtt_udp.IPacket;
 import ru.dz.mqtt_udp.MqttProtocolException;
 import ru.dz.mqtt_udp.PublishPacket;
@@ -24,6 +25,33 @@ public class Wait extends SubServer
 
 	public static void main(String[] args) throws SocketException, IOException, MqttProtocolException 
 	{
+		String topic = null;
+		String value = null;
+		
+		if(args.length == 4)
+		{
+			if( !args[0].equals("-s") )
+			{
+				usage();
+				return;
+			}
+			Engine.setSignatureKey(args[1]);
+			topic = args[2];
+			value = args[3];
+		}
+		else
+		{
+
+			if(args.length != 2)
+			{
+				usage();
+				return;
+			}
+
+			topic = args[0];
+			value = args[1];
+		}
+		
 		Thread timer = new Thread(new Runnable() {		
 			@Override
 			public void run() {
@@ -34,18 +62,18 @@ public class Wait extends SubServer
 		});
 		timer.start();
 		
-		if(args.length < 2)
-		{
-			System.out.println("Will wait for given topic==value, part of global regress test");
-			System.exit(2);
-		}
 		
-		Wait srv = new Wait(
-				args[0], 
-				args[1]);
+		Wait srv = new Wait( topic, value );
 		srv.start();
 	}
 
+	public static void usage() {
+		System.err.println("usage: Wait [-s SignaturePassword] topic message");
+		System.err.println("Will wait for given topic==value, part of global regress test");
+		System.exit(2);
+	}
+	
+	
 	public Wait(String topic, String value) {
 		this.topic = topic;
 		this.value = value;
