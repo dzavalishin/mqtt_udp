@@ -17,7 +17,9 @@ def send_publish_qos( topic, value, qos ):
     pkt.topic = topic
     pkt.value = value
     pkt.set_qos( qos )
-    pkt.pkt_id = random.randint( 1, sys.maxsize )
+    #pkt.pkt_id = 0xFFFFFFFF & random.randint( 1, sys.maxsize )
+    pkt.pkt_id = 0x00000FFF & random.randint( 1, sys.maxsize )
+    #pkt.pkt_id = 33
 
     #print(pkt.__dict__)
 
@@ -45,11 +47,14 @@ def send_publish_qos( topic, value, qos ):
 #
 def recv_packet(pkt):
     if pkt.ptype == me.PacketType.PubAck:
-        print( "ack " + str(pkt.reply_to) + "\t\t" + str(pkt.addr) )
+        #print( "ack " + str(pkt.reply_to) + "\t\t" + str(pkt.addr) )
+        print( "ack " + str(pkt.reply_to) )
 
         if pkt.reply_to == 0:
             print("pkt.reply_to = 0")
             return 
+
+        #print(__outgoing)
 
         __out_lock.acquire()
 

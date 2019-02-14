@@ -95,6 +95,7 @@ class Packet(object):
         if self.ptype == PacketType.Publish:
             packet.extend(payload)
 
+        print("send id="+str(self.pkt_id))
         packet = add_integer_ttr( packet, b'n', self.pkt_id )
         
         if self.reply_to != 0:
@@ -278,12 +279,15 @@ def parse_ttr( tag, value, pobj, start_pos ):
     #print("TTR len="+str(len(value)))
         
         
-    if tag == 110:
+    if tag == 110: # n
         num,  = struct.unpack("!I", value)
         me = ( "PacketNumber", num ) # kill
         pobj.pkt_id = num
-    elif tag == 115:
-        #num,  = struct.unpack("I", value)
+    elif tag == 114: # r
+        num,  = struct.unpack("!I", value)
+        me = ( "ReplyTo", num ) # kill
+        pobj.reply_to = num
+    elif tag == 115: # s
         me = ( "MD5", value.hex() ) # kill
         pobj.private_signature = value
         pobj.private_signature_start = start_pos
