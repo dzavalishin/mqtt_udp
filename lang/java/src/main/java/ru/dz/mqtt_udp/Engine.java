@@ -18,6 +18,7 @@ public class Engine {
 
 	
 	private static Throttle t = new Throttle();
+	private static int maxReplyQoS = 1; // By default - TODO - add to defs!
 
 
 	/**
@@ -35,5 +36,7 @@ public class Engine {
 	public static String getVersionString() {
 		return String.format("%d.%d", mqtt_udp_defs.PACKAGE_VERSION_MAJOR, mqtt_udp_defs.PACKAGE_VERSION_MINOR);
 	}
+	public static int getMaxReplyQoS() { return maxReplyQoS; }
+	public static void setMaxReplyQoS(int newMax) { maxReplyQoS = newMax; }
 
 }

@@ -22,7 +22,7 @@ public class PingReqPacket extends GenericPacket {
 	}
 
 	/**
-	 * Create packet tto be sent.
+	 * Create packet to be sent.
 	 */
 	public PingReqPacket() {
 	}

@@ -155,7 +155,16 @@ public abstract class SubServer extends LoopRunner
 			// decided to broadcast ping replies
 			presp.send(ss);
 		}
-		//else if( p instanceof PingRespPacket) {		}
+		else if( p instanceof PublishPacket) {
+			PublishPacket pp = (PublishPacket) p;
+			
+			int qos = pp.getQoS();
+			if( qos > 0 )
+			{
+				int maxQos = Engine.getMaxReplyQoS();
+				qos = Integer.min(qos, maxQos);
+			}
+		}
 
 	}
 

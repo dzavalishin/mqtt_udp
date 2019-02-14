@@ -200,6 +200,17 @@ public abstract class GenericPacket implements IPacket {
 	 */
 	public byte getFlags() {		return flags;	}
 	
+
+	public int getQoS() {
+		return (flags >> 1) & 0x3;
+	}
+
+	public void setQoS(int qos) {
+		flags &= ~0x6;
+		flags |= (qos & 0x3) << 1;		
+	}
+	
+	
 	@Override
 	public String toString() {		
 		return String.format("MQTT/UDP packet of unknown type from '%s', please redefine toString in %s", from, getClass().getName());
