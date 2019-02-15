@@ -48,6 +48,12 @@ struct mqtt_udp_pkt
     char *      value;          ///< Value string, 0-terminated.
 
     char        is_signed;      ///< This packet has correct digital signature
+
+    uint32_t    reply_to;       ///< ID of packet we reply to
+
+    // Internal working place, do not touch from outside of lib
+
+    int         resend_count;
 };
 
 /**
@@ -425,7 +431,7 @@ void  mqtt_udp_arch_sleep_msec( uint32_t msec );
 //
 // --------------------------------------------------------------------------
 
-
+#if 0
 #define MQTT_UDP_FLAGS_HAS_RETAIN(pflags)  ((pflags) & 0x1)   ///< Check RETAIN flag
 #define MQTT_UDP_FLAGS_HAS_QOS1(pflags)  ((pflags) & 0x2)     ///< Check QoS 1 flag
 #define MQTT_UDP_FLAGS_HAS_QOS2(pflags)  ((pflags) & 0x4)     ///< Check QoS 2 flag
@@ -441,6 +447,10 @@ void  mqtt_udp_arch_sleep_msec( uint32_t msec );
 #define MQTT_UDP_FLAGS_SET_QOS1(pflags)  ((pflags) |= 0x2)    ///< Set QoS 1 flag
 #define MQTT_UDP_FLAGS_SET_QOS2(pflags)  ((pflags) |= 0x4)    ///< Set QoS 2 flag
 #define MQTT_UDP_FLAGS_SET_DUP(pflags)  ((pflags) |= 0x8)     ///< Set DUP flag
+#endif
+
+#define MQTT_UDP_FLAGS_GET_QOS(pflags)  (((pflags) >> 1) & 0x3) ///< Get QoS field from flags
+#define MQTT_UDP_FLAGS_SET_QOS(pflags, qos) ( (pflags) &= 0x6, (pflags) |= (((qos) & 0x3) << 1) ) ///< Set QoS field of flags
 
 
 // --------------------------------------------------------------------------

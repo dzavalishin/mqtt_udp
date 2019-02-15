@@ -22,7 +22,10 @@
 
 
 static int build_and_send( struct mqtt_udp_pkt *pp );
+
 static int insert_pkt( struct mqtt_udp_pkt *pp );
+static int delete_pkt( int pkt_id );
+static void resend_pkts( void );
 
 // -----------------------------------------------------------------------
 //
@@ -55,6 +58,8 @@ int mqtt_udp_send_publish_qos( char *topic, char *data, int qos )
     pp->topic_len = strnlen( topic, PKT_BUF_SIZE );
     pp->value_len = strnlen( data, PKT_BUF_SIZE );
 
+    MQTT_UDP_FLAGS_SET_QOS(pp->pflags, qos);
+
     rc = insert_pkt( pp );
     if( rc )
     {
@@ -78,6 +83,17 @@ int mqtt_udp_send_publish_qos( char *topic, char *data, int qos )
 
 static int relcom_listener( struct mqtt_udp_pkt *pkt )
 {
+    if( pkt->ptype == PTYPE_PUBACK )
+    {
+        printf("got ack to %d\n", pkt->reply_to );
+        if( pkt->reply_to == 0 )
+        {
+            mqtt_udp_global_error_handler( MQ_Err_Proto, -1, "puback reply_to 0", "relcom_listener" );
+            return 0;
+        }
+        delete_pkt( pkt->reply_to );
+    }
+
     return 0;
 }
 
@@ -105,6 +121,7 @@ void mqtt_udp_relcom_init(void)
 **/
 void mqtt_udp_relcom_housekeeping( void )
 {
+    resend_pkts();
 }
 
 
@@ -138,6 +155,8 @@ static int build_and_send( struct mqtt_udp_pkt *pp )
 
 
 static int insert_pkt( struct mqtt_udp_pkt *pp );
+static int delete_pkt( int pkt_id );
+static void resend_pkts( void );
 
 
 
