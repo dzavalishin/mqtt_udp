@@ -41,6 +41,8 @@ class Packet(object):
         self.reply_to = 0
         self.private_signature = None
         self.private_signature_start = 0
+        self.ack_count = 0 # Used in ack processing, see PubAck, etc - count of ack packets we got for this sent one
+        self.send_count = 0 # how many times it was (re)sent
 
     def __init__( self ):
         self.ptype  = None
@@ -54,6 +56,8 @@ class Packet(object):
         self.reply_to = 0
         self.private_signature = None
         self.private_signature_start = 0
+        self.ack_count = 0 # Used in ack processing, see PubAck, etc
+        self.send_count = 0 # how many times it was (re)sent
     
     def get_qos(self):
         return (self.pflags >> 1) & 0x3
@@ -63,6 +67,8 @@ class Packet(object):
         self.pflags |= (qos & 0x3) << 1
 
     def send(self):
+        self.send_count += 1
+
         topic = self.topic
         if isinstance(topic, str):
 	        topic = topic.encode()

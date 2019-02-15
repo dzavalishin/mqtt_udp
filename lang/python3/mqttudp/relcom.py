@@ -9,6 +9,8 @@ import sys
 __outgoing = {}
 __out_lock = threading.Lock()
 
+MAX_RESEND_COUNT = 3
+MIN_LOW_QOS_ACK = 2 # acks with -1 QoS
 
 def send_publish_qos( topic, value, qos ):
     global __outgoing
@@ -48,7 +50,7 @@ def send_publish_qos( topic, value, qos ):
 def recv_packet(pkt):
     if pkt.ptype == me.PacketType.PubAck:
         #print( "ack " + str(pkt.reply_to) + "\t\t" + str(pkt.addr) )
-        print( "ack " + str(pkt.reply_to) )
+        print( "ack " + str(pkt.reply_to) + " QoS " + str(pkt.get_qos()) )
 
         if pkt.reply_to == 0:
             print("pkt.reply_to = 0")
@@ -59,8 +61,16 @@ def recv_packet(pkt):
         __out_lock.acquire()
 
         if __outgoing.__contains__( pkt.reply_to ):
-            __outgoing.pop(pkt.reply_to)
-            print("found")
+            sent = __outgoing.get(pkt.reply_to)
+            if sent.get_qos() == pkt.get_qos():
+                __outgoing.pop(pkt.reply_to)
+                print("found same QoS, kill")
+            elif sent.get_qos() == pkt.get_qos() + 1:
+                print("found -1 QoS, increment")
+                sent.ack_count += 1
+                if sent.ack_count >= MIN_LOW_QOS_ACK:
+                    print("-1 QoS ack count ok, kill")
+                    __outgoing.pop(pkt.reply_to)
 
         __out_lock.release()
         return
@@ -75,8 +85,20 @@ def __do_send_publish(pkt):
 def relcom_send_thread():
     while True:
         #time.sleep(0.1)
-        time.sleep(1)
+        time.sleep(0.3)
+        #time.sleep(1)
         __out_lock.acquire()
+        
+        removed_some = True # to enter while
+        while removed_some:
+            removed_some = False
+            for pkt in __outgoing.values():
+                if pkt.send_count > MAX_RESEND_COUNT:
+                    __outgoing.pop(pkt.pkt_id)
+                    print("too many resends, kill "+str(pkt.pkt_id))
+                    removed_some = True
+                    break
+
         for pkt in __outgoing.values():
             __do_send_publish(pkt)
             print("resend")
