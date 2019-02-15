@@ -51,7 +51,7 @@ It is really easy.
 ## Reasons to avoid MQTT/UDP
 
 *   You need to transfer long payloads. On some systems size of UDP datagram is limited.
-*   You need to know if datagram was delivered for sure. It is impossible with UDP.
+*   You need to know if datagram was delivered for sure. It is impossible with UDP. Though, reliable delivery subsystem is being in development now and will be available soon.
 
 ## Ways to extend MQTT/UDP
 
