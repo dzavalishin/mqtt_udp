@@ -22,7 +22,7 @@ merely an MQTT Publish packets broadcast over an UDP.
 *   Reasonably reliable (if we use it for sensors, which usually resend data every few seconds or so)
 *   Can be supported even on a hardware which can not support TCP - in fact, only UDP send is required
 *   Zero configuration - a sensor node needs no setup, it just broadcasts its data. (And, if you still need it, MQTT/UDP supports remote configuration over network.)
-*   With some extension can be used on simplex channels and/or channels with native broadcast ability (radio,RS485)
+*   Supports digital signature
 
 ## For further reading
 
