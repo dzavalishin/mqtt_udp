@@ -54,6 +54,7 @@ struct mqtt_udp_pkt
     // Internal working place, do not touch from outside of lib
 
     int         resend_count;
+    int         ack_count;
 };
 
 /**

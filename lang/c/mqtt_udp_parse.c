@@ -351,7 +351,7 @@ int mqtt_udp_dump_any_pkt( struct mqtt_udp_pkt *o )
 {
     const char *tn = ptname[ o->ptype >> 4 ];
 
-    printf( "pkt %s flags %x, id %lx from %d.%d.%d.%d",
+    printf( "pkt %10s flags %x, id %8lx from %03d.%03d.%03d.%03d",
             tn, o->pflags, (long)o->pkt_id,
             (int)(0xFF & (o->from_ip >> 24)),
             (int)(0xFF & (o->from_ip >> 16)),

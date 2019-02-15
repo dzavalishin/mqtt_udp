@@ -24,7 +24,7 @@
 static int build_and_send( struct mqtt_udp_pkt *pp );
 
 static int insert_pkt( struct mqtt_udp_pkt *pp );
-static int delete_pkt( int pkt_id );
+static int delete_pkt( int in_pkt_id, int in_qos );
 static void resend_pkts( void );
 
 // -----------------------------------------------------------------------
@@ -91,7 +91,7 @@ static int relcom_listener( struct mqtt_udp_pkt *pkt )
             mqtt_udp_global_error_handler( MQ_Err_Proto, -1, "puback reply_to 0", "relcom_listener" );
             return 0;
         }
-        delete_pkt( pkt->reply_to );
+        delete_pkt( pkt->reply_to, MQTT_UDP_FLAGS_GET_QOS(pkt->pflags) );
     }
 
     return 0;
@@ -154,9 +154,95 @@ static int build_and_send( struct mqtt_udp_pkt *pp )
 // -----------------------------------------------------------------------
 
 
-static int insert_pkt( struct mqtt_udp_pkt *pp );
-static int delete_pkt( int pkt_id );
-static void resend_pkts( void );
+// Naive fixed size array impl
+#define MAX_OUTGOING_PKT 30
+
+#define MIN_LOW_QOS_ACK  2
+
+#define MAX_RESEND_COUNT 3
+
+static struct mqtt_udp_pkt *outgoing[MAX_OUTGOING_PKT];
+
+static int insert_pkt( struct mqtt_udp_pkt *pp )
+{
+    int i;
+    for( i = 0; i < MAX_OUTGOING_PKT; i++ )
+    {
+        if( outgoing[i] == 0 )
+        {
+            outgoing[i] = pp;
+            return 0;
+        }
+    }
+
+    return mqtt_udp_global_error_handler( MQ_Err_Memory, -1, "out of outgoing slots", "insert_pkts" );
+}
+
+static int delete_pkt( int in_pkt_id, int in_qos )
+{
+    int i;
+    for( i = 0; i < MAX_OUTGOING_PKT; i++ )
+    {
+        if( outgoing[i] == 0 )
+            continue;
+
+        if( outgoing[i]->pkt_id != in_pkt_id )
+            continue;
+
+        printf( "found %d, ", in_pkt_id );
+
+        if( MQTT_UDP_FLAGS_GET_QOS(outgoing[i]->pflags) == in_qos )
+        {
+            printf("same QoS %d, kill\n", in_qos );
+            outgoing[i] = 0;
+            return 0;
+        }
+
+        if( MQTT_UDP_FLAGS_GET_QOS(outgoing[i]->pflags) == in_qos+1 )
+        {
+            printf("-1 QoS %d, count\n", in_qos );
+            outgoing[i]->ack_count++;
+
+            if( outgoing[i]->ack_count >= MIN_LOW_QOS_ACK )
+            {
+            printf("enough acks, kill\n" );
+            outgoing[i] = 0;
+            }
+
+        return 0;
+        }
+
+    }
+
+    printf( "not found %d\n", in_pkt_id );
+    return 0; // actualy is possible and ok
+}
+
+static void resend_pkts( void )
+{
+    int i;
+    for( i = 0; i < MAX_OUTGOING_PKT; i++ )
+    {
+        if( outgoing[i] == 0 )
+            continue;
+
+        outgoing[i]->resend_count++;
+        if( outgoing[i]->resend_count > MAX_RESEND_COUNT )
+        {
+            printf("too many resends for %d, kill\n", outgoing[i]->pkt_id );
+            outgoing[i] = 0;
+        }
+        else
+        {
+            printf("resend %d\n", outgoing[i]->pkt_id );
+            int rc  = build_and_send( outgoing[i] );
+            if( rc )
+                mqtt_udp_global_error_handler( MQ_Err_IO, rc, "resend error", "resend_pkts" );
+        }
+    }
+
+
+}
 
 
 
