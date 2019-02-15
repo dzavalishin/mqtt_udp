@@ -420,14 +420,20 @@ def listen(callback):
                 qos = pobj.get_qos()
                 if qos > max_qos:
                     qos = max_qos
-                send_puback( pobj.reply_to, qos )
+                if not is_packet_from_us( pobj ):
+                    send_puback( pobj.reply_to, qos )
             
 
         callback(pobj)
 
+relcom_is_packet_from_us_callback = None
 
-    
+def is_packet_from_us( pobj ):
+    if relcom_is_packet_from_us_callback != None:
+        return relcom_is_packet_from_us_callback
 
+def set_relcom_is_packet_from_us_callback( cb ):
+    relcom_is_packet_from_us_callback = cb
 
 # ------------------------------------------------------------------------
 #

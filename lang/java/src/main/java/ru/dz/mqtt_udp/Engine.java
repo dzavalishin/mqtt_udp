@@ -19,6 +19,7 @@ public class Engine {
 	
 	private static Throttle t = new Throttle();
 	private static int maxReplyQoS = 1; // By default - TODO - add to defs!
+	//private static int maxReplyQoS = 3; // for test
 
 
 	/**

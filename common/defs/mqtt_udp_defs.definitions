@@ -23,6 +23,8 @@ id(PKT_BUF_SIZE,2048)
 
 id(PKT_PACE_MSEC,50)
 
+id(DEFAULT_MAX_REPLY_QOS,1)
+
 str(SYS_CONF_PREFIX,"$SYS/conf")
 
 #include "conv_footer"

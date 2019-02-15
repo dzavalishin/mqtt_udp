@@ -18,4 +18,5 @@
 #define MQTT_PORT   1883 
 #define PKT_BUF_SIZE   2048 
 #define PKT_PACE_MSEC   50 
+#define DEFAULT_MAX_REPLY_QOS   1 
 #define SYS_CONF_PREFIX   "$SYS/conf" 

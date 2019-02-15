@@ -81,6 +81,15 @@ def __do_send_publish(pkt):
     #me.__send_pkt( me.make_publish_packet(pkt.topic, pkt.value, pkt.pflags ) )
     pkt.send()
 
+# TODO does not work :(
+def is_packet_from_us( pobj ):
+    # TODO check if this packet is sent by us
+    if __outgoing.__contains__( pobj.pkt_id ):
+        print("Our pkt, skip ACK")
+        return True
+    return False
+
+me.set_relcom_is_packet_from_us_callback( is_packet_from_us )
 
 def relcom_send_thread():
     while True:
