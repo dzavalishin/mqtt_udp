@@ -171,7 +171,8 @@ parse_ttrs:
         // Have TTR, process it
         switch(ttr_type)
         {
-        case 'n': o.pkt_id = TTR_decode_int32( ttrs ); break;
+        case 'n': o.pkt_id   = TTR_decode_int32( ttrs ); break;
+        case 'r': o.reply_to = TTR_decode_int32( ttrs ); break;
         case 's': 
             if( ttr_len <= 0 )
             {
