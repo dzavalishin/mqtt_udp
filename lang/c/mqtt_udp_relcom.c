@@ -27,6 +27,8 @@ static int insert_pkt( struct mqtt_udp_pkt *pp );
 static int delete_pkt( int in_pkt_id, int in_qos );
 static void resend_pkts( void );
 
+ARCH_MUTEX_TYPE relcom_mutex;
+
 // -----------------------------------------------------------------------
 //
 // Interface
@@ -34,12 +36,12 @@ static void resend_pkts( void );
 // -----------------------------------------------------------------------
 
 /**
- * 
+ *
  * @brief Compose and send PUBLISH packet.
- * 
+ *
  * @param topic  Message topic
  * @param data   Message value, usually text string
- * 
+ *
  * @returns 0 if ok, or error code
 **/
 int mqtt_udp_send_publish_qos( char *topic, char *data, int qos )
@@ -108,16 +110,17 @@ static int relcom_listener( struct mqtt_udp_pkt *pkt )
 
 void mqtt_udp_relcom_init(void)
 {
+    ARCH_MUTEX_INIT(relcom_mutex);
     mqtt_udp_add_packet_listener( relcom_listener );
 }
 
 
 /**
- * 
+ *
  * @brief Must be called by application once in 100 msec.
  *
  * Does housekeeping: packets resend, cleanup.
- * 
+ *
 **/
 void mqtt_udp_relcom_housekeeping( void )
 {
@@ -165,21 +168,28 @@ static struct mqtt_udp_pkt *outgoing[MAX_OUTGOING_PKT];
 
 static int insert_pkt( struct mqtt_udp_pkt *pp )
 {
+    ARCH_MUTEX_LOCK(relcom_mutex);
+
     int i;
     for( i = 0; i < MAX_OUTGOING_PKT; i++ )
     {
         if( outgoing[i] == 0 )
         {
             outgoing[i] = pp;
+            ARCH_MUTEX_UNLOCK(relcom_mutex);
             return 0;
         }
     }
+
+    ARCH_MUTEX_UNLOCK(relcom_mutex);
 
     return mqtt_udp_global_error_handler( MQ_Err_Memory, -1, "out of outgoing slots", "insert_pkts" );
 }
 
 static int delete_pkt( int in_pkt_id, int in_qos )
 {
+    ARCH_MUTEX_LOCK(relcom_mutex);
+
     int i;
     for( i = 0; i < MAX_OUTGOING_PKT; i++ )
     {
@@ -195,6 +205,7 @@ static int delete_pkt( int in_pkt_id, int in_qos )
         {
             printf("same QoS %d, kill\n", in_qos );
             outgoing[i] = 0;
+            ARCH_MUTEX_UNLOCK(relcom_mutex);
             return 0;
         }
 
@@ -209,39 +220,41 @@ static int delete_pkt( int in_pkt_id, int in_qos )
             outgoing[i] = 0;
             }
 
+        ARCH_MUTEX_UNLOCK(relcom_mutex);
         return 0;
         }
 
     }
 
+    ARCH_MUTEX_UNLOCK(relcom_mutex);
     printf( "not found %d\n", in_pkt_id );
     return 0; // actualy is possible and ok
 }
 
 static void resend_pkts( void )
 {
+    ARCH_MUTEX_LOCK(relcom_mutex);
+
     int i;
     for( i = 0; i < MAX_OUTGOING_PKT; i++ )
     {
         if( outgoing[i] == 0 )
             continue;
 
+        printf("resend %d\n", outgoing[i]->pkt_id );
+        int rc  = build_and_send( outgoing[i] );
+        if( rc )
+            mqtt_udp_global_error_handler( MQ_Err_IO, rc, "resend error", "resend_pkts" );
+
         outgoing[i]->resend_count++;
-        if( outgoing[i]->resend_count > MAX_RESEND_COUNT )
+        if( outgoing[i]->resend_count >= MAX_RESEND_COUNT )
         {
             printf("too many resends for %d, kill\n", outgoing[i]->pkt_id );
             outgoing[i] = 0;
         }
-        else
-        {
-            printf("resend %d\n", outgoing[i]->pkt_id );
-            int rc  = build_and_send( outgoing[i] );
-            if( rc )
-                mqtt_udp_global_error_handler( MQ_Err_IO, rc, "resend error", "resend_pkts" );
-        }
     }
 
-
+    ARCH_MUTEX_UNLOCK(relcom_mutex);
 }
 
 
