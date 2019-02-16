@@ -426,6 +426,12 @@ uint64_t mqtt_udp_arch_get_time_msec( void );
 void  mqtt_udp_arch_sleep_msec( uint32_t msec );
 
 
+#define ARCH_MUTEX_TYPE 	int
+#define ARCH_MUTEX_INIT(m)
+#define ARCH_MUTEX_LOCK(m)
+#define ARCH_MUTEX_UNLOCK(m)
+
+
 // --------------------------------------------------------------------------
 //
 // Packet flags
