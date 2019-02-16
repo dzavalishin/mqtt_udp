@@ -29,19 +29,12 @@ vpath %.c glue/$(GLUE)
 vpath %.c examples
 vpath %.c hmac
 
-# autoconf: 
-# .exe - executable file extension
 
+#version        = $(file < ../../common/defs/version)
+#cat := $(if $(filter $(OS),Windows_NT),type,cat) #cygwin make uses 'sh' as shell, and there's no type command
+cat := cat
+version := $(shell $(cat) ../../common/defs/version)
 
-# Package-related substitution variables
-
-#package        = MQTT-UDP-Library
-#version        = 0.1
-#tarname        = mqtt-udp-library
-#distdir        = $(tarname)-$(version)
-#prefix         = /usr/local
-
-version        = $(file < ../../common/defs/version)
 
 LIB=libmqttudp.a
 LIBV=libmqttudp.$(ARCH).$(GLUE).$(version).a
@@ -57,9 +50,9 @@ goal:: all
 #BUILD_PROGRAMS := true
 #endif
 
-ifeq ($(GLUE),mingw)
-BUILD_PROGRAMS := true
-endif
+#ifeq ($(GLUE),mingw)
+#BUILD_PROGRAMS := true
+#endif
 
 
 include makedefs
