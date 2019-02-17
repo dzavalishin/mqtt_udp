@@ -13,6 +13,7 @@ import ru.dz.mqtt_udp.util.LoopRunner;
  * @author dz
  *
  */
+@Deprecated
 public abstract class SubServer extends LoopRunner 
 {
 
