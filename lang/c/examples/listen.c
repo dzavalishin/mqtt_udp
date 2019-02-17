@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
             usage();
 
         const char *key = argv[2];
-        mqtt_udp_enable_signature( key, strlen(key) );
+        mqtt_udp_enable_signature( key, strnlen(key,PKT_BUF_SIZE) ); // here PKT_BUF_SIZE == too big 
     }
 
 #if 0

@@ -14,7 +14,7 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 public class PubAckPacket extends GenericPacket {
 
 	private PublishPacket replyToPkt;
-	private int qos;
+	//private int qos;
 
 	/**
 	 * Construct from incoming UDP data. 
@@ -36,7 +36,7 @@ public class PubAckPacket extends GenericPacket {
 	 */
 	public PubAckPacket(PublishPacket replyTo, int qos) {
 		this.replyToPkt = replyTo;
-		this.qos = qos;
+		//this.qos = qos;
 
 		setQoS(qos);
 	}

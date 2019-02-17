@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ -z "$PLATFORM" ]; then
   PLATFORM=$TRAVIS_OS_NAME;
 fi
