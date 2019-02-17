@@ -23,18 +23,18 @@ class SignatureTest(unittest.TestCase):
         #self.assertEqual( None, error_type );
         me.set_signature( "key" )
         sig = me.sign_data( "text" )
-        hex = sig.hex()
-        #print( str(type(hex)) )
-        self.assertEqual( "d0ca6177c61c975fd2f8c07d8c6528c6", hex )
+        shex = sig.hex()
+        #print( str(type(shex)) )
+        self.assertEqual( "d0ca6177c61c975fd2f8c07d8c6528c6", shex )
         print( "\ttest Sign PASSED" )
     
     
     def testTTR(self):
         me.set_signature( "key" )
         out = me.sign_and_ttr( "text" )
-        hex = out.hex()
-        #print( hex )
-        self.assertEqual( "746578747310d0ca6177c61c975fd2f8c07d8c6528c6", hex )
+        shex = out.hex()
+        #print( shex )
+        self.assertEqual( "746578747310d0ca6177c61c975fd2f8c07d8c6528c6", shex )
         print( "\ttest TTR PASSED" )
     
     #def testSharp(self):

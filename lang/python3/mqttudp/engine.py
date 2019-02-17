@@ -29,20 +29,20 @@ class PacketType(Enum):
 
 
 class Packet(object):
-    def __init__( self, ptype, topic, value, pflags, ttrs ):
-        self.ptype  = ptype
-        self.pflags = pflags
-        self.topic  = topic
-        self.value  = value
-        self.ttrs   = ttrs
-        self.addr   = None
-        self.signed = False
-        self.pkt_id = 0
-        self.reply_to = 0
-        self.private_signature = None
-        self.private_signature_start = 0
-        self.ack_count = 0 # Used in ack processing, see PubAck, etc - count of ack packets we got for this sent one
-        self.send_count = 0 # how many times it was (re)sent
+    #def __init__( self, ptype, topic, value, pflags, ttrs ):
+    #    self.ptype  = ptype
+    #    self.pflags = pflags
+    #    self.topic  = topic
+    #    self.value  = value
+    #    self.ttrs   = ttrs
+    #    self.addr   = None
+    #    self.signed = False
+    #    self.pkt_id = 0
+    #    self.reply_to = 0
+    #    self.private_signature = None
+    #    self.private_signature_start = 0
+    #    self.ack_count = 0 # Used in ack processing, see PubAck, etc - count of ack packets we got for this sent one
+    #    self.send_count = 0 # how many times it was (re)sent
 
     def __init__( self ):
         self.ptype  = None
@@ -205,27 +205,27 @@ __signature_key = None
 
 def set_signature( key ):
     global __signature_key
-    if type(key) == str:
+    if isinstance(key, str):
         key = key.encode('utf-8')
     __signature_key = key
     #print(str(type(__signature_key)))
 
 def sign_data( msg ):
-    if type(msg) == str:
+    if isinstance(msg, str):
         msg=msg.encode('utf-8')
     out = hmac.new( __signature_key, msg, digestmod=hashlib.md5 ).hexdigest()
     # hmac.digest(key, msg, digest)¶
     return bytearray.fromhex( out )
 
 def sign_and_ttr( msg, ttrs = None ):
-    if type(msg) == str:
+    if isinstance(msg, str):
         msg=msg.encode('utf-8')
     signature = sign_data( msg ) # TODO use __add_ttr( pkt, ttr_key, ttr_data )
     out = bytearray()
     out += msg
     out += b's'
-    len = 16
-    out.append(len)
+    tlen = 16
+    out.append(tlen)
     out += signature
     return out
 

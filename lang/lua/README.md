@@ -28,8 +28,8 @@ luarocks install mqttudp
 
 
 ```lua
-local mq = require "mqtt_udp_lib"
-mq.send_publish( topic, val );
+    local mq = require "mqtt_udp_lib"
+    mq.send_publish( topic, val );
 
 ```
 
@@ -37,13 +37,13 @@ mq.send_publish( topic, val );
 
 
 ```lua
-local mq = require "mqtt_udp_lib"
+    local mq = require "mqtt_udp_lib"
 
-local listener = function( ptype, topic, value, ip, port )
-    print("'"..topic.."' = '"..val.."'".."	from: ", ip, port)
-end
+    local listener = function( ptype, topic, value, ip, port )
+        print("'"..topic.."' = '"..val.."'".." from: ", ip, port)
+    end
 
-mq.listen( listener )
+    mq.listen( listener )
 ```
 
 

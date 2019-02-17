@@ -41,6 +41,9 @@ int check_sig = 0;
 
 int check_pkt(struct mqtt_udp_pkt *pkt)
 {
+    if( pkt->ptype != PTYPE_PUBLISH )
+        return 0;
+
     if(
        (0 == strcmp( topic, pkt->topic ))
        &&
@@ -70,7 +73,7 @@ void usage( void )
 
 int main(int argc, char *argv[])
 {
-    time_t start, now;
+    time_t start;
 
     long timeout = 10; // sec
 
@@ -80,7 +83,7 @@ int main(int argc, char *argv[])
             usage();
 
         const char *key = argv[2];
-        mqtt_udp_enable_signature( key, strlen(key) );
+        mqtt_udp_enable_signature( key, strnlen(key, PKT_BUF_SIZE) ); // here PKT_BUF_SIZE == too big
         check_sig = 1;
 
         argc -= 2;
@@ -120,6 +123,7 @@ int main(int argc, char *argv[])
             printf("mqtt_udp_recv err = %d\n", rc );
         }
 
+        time_t now;
         now = time(0);
         if( now > start+timeout )
         {

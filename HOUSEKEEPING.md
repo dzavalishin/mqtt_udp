@@ -9,7 +9,7 @@ cd common/defs ; make version
 cd dox/source, edit index.rst 
 cd dox ; makedox.sh 
 
-Diagrams @ https://www.websequencediagrams.com/
+Diagrams @ <https://www.websequencediagrams.com/>
 
 ## Doxygen
 
