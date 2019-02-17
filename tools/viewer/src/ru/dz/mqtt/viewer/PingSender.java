@@ -42,7 +42,8 @@ public class PingSender {
 	protected void loop() throws IOException {
 		try {
 			synchronized (this) {				
-				this.wait(1000);
+				//this.wait(1000);
+				this.wait(30*1000);
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

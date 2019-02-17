@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import ru.dz.mqtt_udp.io.IPacketAddress;
 import ru.dz.mqtt_udp.proto.TTR_ReplyTo;
 import ru.dz.mqtt_udp.proto.TaggedTailRecord;
+import ru.dz.mqtt_udp.util.ErrorType;
 import ru.dz.mqtt_udp.util.GenericPacket;
+import ru.dz.mqtt_udp.util.GlobalErrorHandler;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class PubAckPacket extends GenericPacket {
 
-	private PublishPacket replyTo;
+	private PublishPacket replyToPkt;
 	private int qos;
 
 	/**
@@ -33,13 +35,13 @@ public class PubAckPacket extends GenericPacket {
 	 * Create packet to be sent.
 	 */
 	public PubAckPacket(PublishPacket replyTo, int qos) {
-		this.replyTo = replyTo;
+		this.replyToPkt = replyTo;
 		this.qos = qos;
-		
+
 		setQoS(qos);
 	}
-	
-	
+
+
 	/*
 	 * (non-Javadoc)
 	 * @see ru.dz.mqtt_udp.IPacket#toBytes()
@@ -48,13 +50,19 @@ public class PubAckPacket extends GenericPacket {
 	public byte[] toBytes() {
 		byte[] pkt = new byte[0];
 		AbstractCollection<TaggedTailRecord> ttrs = new ArrayList<TaggedTailRecord>();
+
+		if(!replyToPkt.getPacketNumber().isPresent())
+		{
+			GlobalErrorHandler.handleError(ErrorType.Protocol, "attempt to PubAck for pkt with no id");
+			//throw new MqttProtocolException("attempt to PubAck for pkt with no id");
+		}
+		else
+		{
+			TTR_ReplyTo id = new TTR_ReplyTo(replyToPkt.getPacketNumber().get());
+			ttrs.add(id);
+		}
 		
-		//if(!replyTo.getPacketNumber().isPresent())			throw new MqttProtocolException("attempt to PubAck for pkt with no id");
-		
-		TTR_ReplyTo id = new TTR_ReplyTo(replyTo.getPacketNumber().get());
-		ttrs.add(id);
-		
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBACK, flags, ttrs );	
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBACK, flags, ttrs, this );	
 	}
 
 	/*
@@ -63,7 +71,7 @@ public class PubAckPacket extends GenericPacket {
 	 */
 	@Override
 	public int getType() {		return mqtt_udp_defs.PTYPE_PUBACK;	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see ru.dz.mqtt_udp.util.GenericPacket#toString()
@@ -71,6 +79,6 @@ public class PubAckPacket extends GenericPacket {
 	@Override
 	public String toString() {		
 		return String.format("MQTT/UDP PubAck" );
-	}	
+	}
 
 }

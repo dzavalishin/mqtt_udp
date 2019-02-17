@@ -41,6 +41,8 @@ class Packet(object):
         self.reply_to = 0
         self.private_signature = None
         self.private_signature_start = 0
+        self.ack_count = 0 # Used in ack processing, see PubAck, etc - count of ack packets we got for this sent one
+        self.send_count = 0 # how many times it was (re)sent
 
     def __init__( self ):
         self.ptype  = None
@@ -54,9 +56,59 @@ class Packet(object):
         self.reply_to = 0
         self.private_signature = None
         self.private_signature_start = 0
+        self.ack_count = 0 # Used in ack processing, see PubAck, etc
+        self.send_count = 0 # how many times it was (re)sent
     
-    def get_qos():
+    def get_qos(self):
         return (self.pflags >> 1) & 0x3
+
+    def set_qos(self, qos):
+        self.pflags &= 0x6
+        self.pflags |= (qos & 0x3) << 1
+
+    def send(self):
+        self.send_count += 1
+
+        topic = self.topic
+        if isinstance(topic, str):
+	        topic = topic.encode()
+        payload = self.value
+        if isinstance(payload, str):
+	        payload = payload.encode()
+
+        command = self.ptype.value
+        packet = bytearray()
+        packet.append(command | (self.pflags & 0xF) )
+
+        #print( str(packet))
+
+        if self.ptype == PacketType.Publish:
+            payloadlen = len(payload)
+        else:
+            payloadlen = 0
+
+        if (self.ptype == PacketType.Publish) or (self.ptype == PacketType.Subscribe):
+            topiclen = 2 + len(topic)
+        else:
+            topiclen = 0
+
+        remaining_length = topiclen + payloadlen
+        pack_remaining_length(packet, remaining_length)
+
+        if (self.ptype == PacketType.Publish) or (self.ptype == PacketType.Subscribe):
+            pack_str16(packet, topic)
+
+        if self.ptype == PacketType.Publish:
+            packet.extend(payload)
+
+        print("send id="+str(self.pkt_id))
+        packet = add_integer_ttr( packet, b'n', self.pkt_id )
+        
+        if self.reply_to != 0:
+            packet = add_integer_ttr( packet, b'r', self.reply_to )
+
+        private_send_pkt( packet )
+
 
 
 
@@ -134,11 +186,11 @@ def __add_ttr( pkt, ttr_key, ttr_data ):
     out += ttr_key
     dlen = len(ttr_data)
     out.append(dlen)
-    out += signature
+    out += ttr_data
     return out
 
 # ttr_value : int
-def __add_integer_ttr( pkt, ttr_key, ttr_value ):
+def add_integer_ttr( pkt, ttr_key, ttr_value ):
     ttr_data = struct.pack("!I", ttr_value)
     return __add_ttr( pkt, ttr_key, ttr_data )
 
@@ -233,12 +285,15 @@ def parse_ttr( tag, value, pobj, start_pos ):
     #print("TTR len="+str(len(value)))
         
         
-    if tag == 110:
+    if tag == 110: # n
         num,  = struct.unpack("!I", value)
         me = ( "PacketNumber", num ) # kill
         pobj.pkt_id = num
-    elif tag == 115:
-        #num,  = struct.unpack("I", value)
+    elif tag == 114: # r
+        num,  = struct.unpack("!I", value)
+        me = ( "ReplyTo", num ) # kill
+        pobj.reply_to = num
+    elif tag == 115: # s
         me = ( "MD5", value.hex() ) # kill
         pobj.private_signature = value
         pobj.private_signature_start = start_pos
@@ -318,6 +373,9 @@ def parse_packet(pkt):
         out.ptype = PacketType.Subscribe
         return out
 
+    if ptype == defs.PTYPE_PUBACK:
+        out.ptype = PacketType.PubAck
+        return out
 
     if ptype == defs.PTYPE_PINGREQ:
         out.ptype = PacketType.PingReq
@@ -333,7 +391,7 @@ def parse_packet(pkt):
     #for b in pkt:
     #    print( b )
     #return "?","","",0
-    put.ptype = PacketType.Unknown
+    out.ptype = PacketType.Unknown
     return out
 
 
@@ -362,14 +420,20 @@ def listen(callback):
                 qos = pobj.get_qos()
                 if qos > max_qos:
                     qos = max_qos
-                send_puback( pobj.reply_to, qos )
+                if not is_packet_from_us( pobj ):
+                    send_puback( pobj.reply_to, qos )
             
 
         callback(pobj)
 
+relcom_is_packet_from_us_callback = None
 
-    
+def is_packet_from_us( pobj ):
+    if relcom_is_packet_from_us_callback != None:
+        return relcom_is_packet_from_us_callback
 
+def set_relcom_is_packet_from_us_callback( cb ):
+    relcom_is_packet_from_us_callback = cb
 
 # ------------------------------------------------------------------------
 #
@@ -379,7 +443,7 @@ def listen(callback):
 
 
 
-def __send_pkt( pkt, ttrs = None ):
+def private_send_pkt( pkt, ttrs = None ):
     # TODO __add_ttr( pkt, ttr_key, ttr_data )
     if __signature_key != None:
         pkt = sign_and_ttr( pkt, ttrs )
@@ -390,16 +454,10 @@ def __send_pkt( pkt, ttrs = None ):
 
 
 def send_publish( topic, payload=b''):
-    if isinstance(topic, str):
-	    topic = topic.encode()
-
-    if isinstance(payload, str):
-	    payload = payload.encode()
-
     pkt = make_publish_packet(topic, payload)
     #throttle_me()
     #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
-    __send_pkt( pkt )
+    private_send_pkt( pkt )
 
 
 def __make_send_socket():
@@ -433,13 +491,21 @@ def pack_str16(packet, data):
         packet.extend(data)
 
 
-def make_publish_packet(topic, payload=b''):
-    # we assume that topic and payload are already properly encoded
-#    assert not isinstance(topic, unicode) and not isinstance(payload, unicode) and payload is not None
+def make_publish_packet(topic, payload=b'', flags = 0):
+    if isinstance(topic, str):
+	    topic = topic.encode()
+
+    if isinstance(payload, str):
+	    payload = payload.encode()
+
+    #print(qos)
 
     command = defs.PTYPE_PUBLISH
+    #flags = (qos & 0x3) << 1
     packet = bytearray()
-    packet.append(command)
+    packet.append(command | (flags & 0xF) )
+
+    #print( str(packet))
 
     payloadlen = len(payload)
     remaining_length = 2 + len(topic) + payloadlen
@@ -473,7 +539,7 @@ def send_subscribe(topic):
     if isinstance(topic, str):
         topic = topic.encode()
     pkt = make_subscribe_packet(topic)
-    __send_pkt( pkt )
+    private_send_pkt( pkt )
 
 
 #
@@ -501,7 +567,7 @@ def make_ping_packet():
 """
 def send_ping():
     #pkt = make_ping_packet()
-    __send_pkt( __make_simple_packet(defs.PTYPE_PINGREQ) )
+    private_send_pkt( __make_simple_packet(defs.PTYPE_PINGREQ) )
 
 
 """
@@ -515,8 +581,8 @@ def make_ping_responce_packet():
 
 def send_ping_responce():
     #pkt = make_ping_responce_packet()
-    #__send_pkt( pkt )
-    __send_pkt( __make_simple_packet(defs.PTYPE_PINGRESP) )
+    #private_send_pkt( pkt )
+    private_send_pkt( __make_simple_packet(defs.PTYPE_PINGRESP) )
 
 
 #
@@ -526,8 +592,8 @@ def send_ping_responce():
 
 def send_puback(reply_to, qos):
     pkt = __make_simple_packet(defs.PTYPE_PUBACK or ((qos and 0x3) << 1))
-    pkt = __add_integer_ttr( pkt, b'r', reply_to )
-    __send_pkt( pkt )
+    pkt = add_integer_ttr( pkt, b'r', reply_to )
+    private_send_pkt( pkt )
 
 
 

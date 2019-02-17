@@ -13,6 +13,7 @@ import ru.dz.mqtt_udp.util.LoopRunner;
  * @author dz
  *
  */
+@Deprecated
 public abstract class SubServer extends LoopRunner 
 {
 
@@ -159,10 +160,12 @@ public abstract class SubServer extends LoopRunner
 			PublishPacket pp = (PublishPacket) p;
 			
 			int qos = pp.getQoS();
-			if( qos > 0 )
+			if( qos != 0 )
 			{
+				System.out.println("QoS, Publish id="+pp.getPacketNumber().orElse(0));
 				int maxQos = Engine.getMaxReplyQoS();
 				qos = Integer.min(qos, maxQos);
+				new PubAckPacket(pp, qos).send();
 			}
 		}
 

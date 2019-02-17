@@ -51,11 +51,12 @@ public abstract class AbstractItem {
 
 	public boolean typeWithTopic() {
 		return (packetType == mqtt_udp_defs.PTYPE_PUBLISH) ||
-				(packetType == mqtt_udp_defs.PTYPE_PUBACK) ||
+				//(packetType == mqtt_udp_defs.PTYPE_PUBACK) ||
 				(packetType == mqtt_udp_defs.PTYPE_SUBSCRIBE) ||
-				(packetType == mqtt_udp_defs.PTYPE_SUBACK) ||
-				(packetType == mqtt_udp_defs.PTYPE_UNSUBSCRIBE) ||
-				(packetType == mqtt_udp_defs.PTYPE_UNSUBACK);
+				//(packetType == mqtt_udp_defs.PTYPE_SUBACK) ||
+				(packetType == mqtt_udp_defs.PTYPE_UNSUBSCRIBE) 
+				//|| (packetType == mqtt_udp_defs.PTYPE_UNSUBACK)
+				;
 	}
 
 	public boolean isPingOrResponce() {

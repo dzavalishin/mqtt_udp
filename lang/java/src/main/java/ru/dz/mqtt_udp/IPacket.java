@@ -106,6 +106,10 @@ public interface IPacket {
 			p = new PublishPacket(sub, (byte)flags, from);
 			break;
 
+		case mqtt_udp_defs.PTYPE_PUBACK:
+			p = new PubAckPacket(sub, (byte)flags, from);
+			break;
+
 		case mqtt_udp_defs.PTYPE_PINGREQ:
 			p = new PingReqPacket(sub, (byte)flags, from);
 			break;
@@ -220,7 +224,7 @@ public interface IPacket {
 	 * @param ttr TTRs to encode to packet
 	 * @return encoded packet to send to UDP
 	 */
-	public static byte[] encodeTotalLength(byte[] pkt, int packetType, byte flags, AbstractCollection<TaggedTailRecord> ttr ) {
+	public static byte[] encodeTotalLength(byte[] pkt, int packetType, byte flags, AbstractCollection<TaggedTailRecord> ttr, GenericPacket p ) {
 		int data_len = pkt.length;
 		
 		byte[] buf = new byte[4]; // can't sent very long packets over UDP, 16 bytes are surely ok
@@ -247,7 +251,7 @@ public interface IPacket {
 	    System.arraycopy(pkt, 0, out, bp, pkt.length );
 	    
 	    // Encode in Tagged Tail Records - packet extensions
-	    byte[] ttrbin = encodeTTR( ttr, out );
+	    byte[] ttrbin = encodeTTR( ttr, out, p );
 	    //byte[] ttrbin = out;
 	    
 	    
@@ -264,7 +268,7 @@ public interface IPacket {
 	 * @param packetBeginning Classic packet.
 	 * @return Extended packet.
 	 */
-	public static byte[] encodeTTR( AbstractCollection<TaggedTailRecord> ttrs, byte[] packetBeginning ) 
+	public static byte[] encodeTTR( AbstractCollection<TaggedTailRecord> ttrs, byte[] packetBeginning, GenericPacket p ) 
 	{
 		ArrayList<byte[]> outs = new ArrayList<>();
 
@@ -287,7 +291,12 @@ public interface IPacket {
 
 		// Add packet number to list, if none
 		if( !haveNumber )
-			outs.add(new TTR_PacketNumber().toBytes());
+		{
+			if( p.getPacketNumber().isPresent() )
+				outs.add(new TTR_PacketNumber( p.getPacketNumber().get() ).toBytes());
+			else
+				outs.add(new TTR_PacketNumber().toBytes());
+		}
 
 		int totalLen = packetBeginning.length;
 		for( byte[] bb : outs )

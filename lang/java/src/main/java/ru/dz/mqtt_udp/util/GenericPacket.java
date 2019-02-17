@@ -43,6 +43,10 @@ public abstract class GenericPacket implements IPacket {
 	 * Locally created ones have null here.
 	 */
 	protected IPacketAddress from;
+
+	private InetAddress resendAddress;
+
+	private int sentCounter = 0;
 	
 	/**
 	 * Construct packet from network.
@@ -116,12 +120,17 @@ public abstract class GenericPacket implements IPacket {
 	 */
 	public void send(DatagramSocket sock) throws IOException
 	{
+		/*
 		byte[] pkt = toBytes();
 		
 		InetAddress address = InetAddress.getByAddress(broadcast);
 		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
 		Engine.throttle();
 		sock.send(p);
+		resendAddress = address;
+		if( getQoS() != 0 ) Engine.queueForResend(this);
+		*/
+		send( sock, InetAddress.getByAddress(broadcast) );
 	}
 
 	/**
@@ -135,10 +144,34 @@ public abstract class GenericPacket implements IPacket {
 		byte[] pkt = toBytes();
 		
 		DatagramPacket p = new DatagramPacket(pkt, pkt.length, address, mqtt_udp_defs.MQTT_PORT);
+		Engine.throttle();
 		sock.send(p);
+		sentCounter++;
 		//System.out.println("UDP sent "+pkt.length);
+		resendAddress = address;
+		if( getQoS() != 0 ) Engine.queueForResend(this);
 	}
 
+
+	/**
+	 * Resend me to last used address. 
+	 * @param sock Socket must be made with sendSocket() method.
+	 * @throws IOException If unable.
+	 */
+	public void resend(DatagramSocket sock) throws IOException
+	{
+		byte[] pkt = toBytes();
+		
+		DatagramPacket p = new DatagramPacket(pkt, pkt.length, resendAddress, mqtt_udp_defs.MQTT_PORT);
+		sock.send(p);
+		sentCounter++;
+		//System.out.println("UDP resent "+pkt.length);
+	}
+	
+	
+	
+	
+	
 	
 
 	/**
@@ -298,5 +331,21 @@ public abstract class GenericPacket implements IPacket {
 	public boolean isSigned() {		return signed;	}
 
 	private void setSigned(boolean signed) {		this.signed = signed;	}
+
+	public int getSentCounter() {		return sentCounter;	}
+
+	
+	private int ackCount = 0; 
+	/**
+	 * Increment counter of ACKs we got for this packet
+	 */
+	public void incrementAckCount() {
+		ackCount++;
+		
+	}
+
+	public int getAckCount() {	return ackCount;	}
+
+
 	
 }

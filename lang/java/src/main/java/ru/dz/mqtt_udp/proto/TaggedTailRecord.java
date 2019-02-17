@@ -114,6 +114,7 @@ public abstract class TaggedTailRecord {
 		switch(tag)
 		{
 		case 'n':	return new TTR_PacketNumber( tag, rec, rawLength );
+		case 'r':	return new TTR_ReplyTo( tag, rec, rawLength );
 		case 's':	return new TTR_Signature( tag, rec, rawLength );
 		default: break;
 		}
@@ -200,4 +201,9 @@ public abstract class TaggedTailRecord {
 		return out;
 	}
 	*/
+	
+	@Override
+	public String toString() {
+		return String.format("TTR type '%c'", tag);
+	}
 }

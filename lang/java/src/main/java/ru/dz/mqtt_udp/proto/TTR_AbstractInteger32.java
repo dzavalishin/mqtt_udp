@@ -22,7 +22,7 @@ public class TTR_AbstractInteger32 extends TaggedTailRecord {
 		
 		for( int i = 0; i < Integer.BYTES; i++ )
 		{
-			n |= ((int)rec[i]) << (8*(Integer.BYTES - i - 1));
+			n |= (0xFF & ((int)rec[i])) << (8*(Integer.BYTES - i - 1));
 		}
 		
 		value = n;
