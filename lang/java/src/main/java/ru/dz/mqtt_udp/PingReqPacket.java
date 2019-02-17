@@ -34,7 +34,7 @@ public class PingReqPacket extends GenericPacket {
 	@Override
 	public byte[] toBytes() {
 		byte[] pkt = new byte[0];
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PINGREQ, flags, null );	
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PINGREQ, flags, null, this );	
 	}
 
 	/*

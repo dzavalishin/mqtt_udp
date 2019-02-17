@@ -80,10 +80,29 @@ public class PublishPacket extends TopicPacket {
 	
 	/**
 	 * Create packet to be sent.
+	 * 
+	 * @param topic Topic string.
+	 * @param value Value string.
+	 * @param QoS Required QoS, 0-3
+	 */
+	public PublishPacket(String topic, String value, int QoS ) {
+		super(null);
+		try {
+			makeMe( topic, (byte) 0, value.getBytes(MQTT_CHARSET) );
+			setQoS(QoS);
+		} catch (UnsupportedEncodingException e) {
+			throw new NoEncodingRuntimeException(e);
+		}
+	}
+	
+
+	
+	/**
+	 * Create packet to be sent.
 	 * @param topic Topic string.
 	 * @param flags Protocol flags.
 	 * @param value Value as string.
-	 */
+	 * /
 	public PublishPacket(String topic, byte flags, String value) {
 		super(null);
 		try {
@@ -91,7 +110,7 @@ public class PublishPacket extends TopicPacket {
 		} catch (UnsupportedEncodingException e) {
 			throw new NoEncodingRuntimeException(e);
 		}
-	}
+	} */
 	
 	private void makeMe(String topic, byte flags, byte[] value) {
 		this.topic = topic;
@@ -125,7 +144,7 @@ public class PublishPacket extends TopicPacket {
 		System.arraycopy(value, 0, pkt, tbytes.length + 2, value.length );
 		
 		//return IPacket.encodeTotalLength(pkt, IPacket.PT_PUBLISH);
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBLISH, flags, null );
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBLISH, flags, null, this );
 	}
 
 	@Override

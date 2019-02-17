@@ -8,7 +8,8 @@ simple too), but based on UDP and needs no broker.
 
 .. sidebar:: *Network is a broker*
 
-   Your network does most of the broker's work.
+   Your network does most of the broker's work. That is why MQTT/UDP implementation
+   can be so simple, but full featured.
 
 Fast track for impatient readers: MQTT/UDP native implementations exist in Java, 
 Python, C, Lua and PLC specific ST language. See corresponding references:
@@ -35,8 +36,13 @@ network. There are many listeners that need same data, such as:
 * in-room displays (room and outdoor temperature)
 
 All these points generate some information (local sensors, state) and need 
-some other information. By the way, CAN bus/protocol is made for quite the same requirements,
-but is not good for TCP/IP and Ethernet. Actually, to some extent, MQTT/UDP is CAN for Ethernet.
+some other information. 
+
+
+.. sidebar:: *CAN for Ethernet*
+
+    By the way, CAN bus/protocol is made for quite the same requirements,
+    but is not good for TCP/IP and Ethernet. Actually, to some extent, MQTT/UDP is CAN for Ethernet.
 
 So, MQTT/UDP is sending data with UDP broadcast. It means that every message 
 is simuloneusly sent to all possible recipients with just one network packet.

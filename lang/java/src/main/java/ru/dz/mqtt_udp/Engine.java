@@ -1,5 +1,6 @@
 package ru.dz.mqtt_udp;
 
+import ru.dz.mqtt_udp.util.GenericPacket;
 import ru.dz.mqtt_udp.util.Throttle;
 import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
@@ -39,5 +40,12 @@ public class Engine {
 	}
 	public static int getMaxReplyQoS() { return maxReplyQoS; }
 	public static void setMaxReplyQoS(int newMax) { maxReplyQoS = newMax; }
+	
+	
+	
+	public static void queueForResend(GenericPacket genericPacket) {
+		
+		
+	}
 
 }

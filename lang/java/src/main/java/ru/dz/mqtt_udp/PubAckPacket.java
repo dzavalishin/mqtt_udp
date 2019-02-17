@@ -13,7 +13,7 @@ import ru.dz.mqtt_udp.util.mqtt_udp_defs;
 
 public class PubAckPacket extends GenericPacket {
 
-	private PublishPacket replyTo;
+	private PublishPacket replyToPkt;
 	private int qos;
 
 	/**
@@ -35,7 +35,7 @@ public class PubAckPacket extends GenericPacket {
 	 * Create packet to be sent.
 	 */
 	public PubAckPacket(PublishPacket replyTo, int qos) {
-		this.replyTo = replyTo;
+		this.replyToPkt = replyTo;
 		this.qos = qos;
 
 		setQoS(qos);
@@ -51,18 +51,18 @@ public class PubAckPacket extends GenericPacket {
 		byte[] pkt = new byte[0];
 		AbstractCollection<TaggedTailRecord> ttrs = new ArrayList<TaggedTailRecord>();
 
-		if(!replyTo.getPacketNumber().isPresent())
+		if(!replyToPkt.getPacketNumber().isPresent())
 		{
 			GlobalErrorHandler.handleError(ErrorType.Protocol, "attempt to PubAck for pkt with no id");
 			//throw new MqttProtocolException("attempt to PubAck for pkt with no id");
 		}
 		else
 		{
-			TTR_ReplyTo id = new TTR_ReplyTo(replyTo.getPacketNumber().get());
+			TTR_ReplyTo id = new TTR_ReplyTo(replyToPkt.getPacketNumber().get());
 			ttrs.add(id);
 		}
 		
-		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBACK, flags, ttrs );	
+		return IPacket.encodeTotalLength(pkt, mqtt_udp_defs.PTYPE_PUBACK, flags, ttrs, this );	
 	}
 
 	/*
@@ -79,6 +79,6 @@ public class PubAckPacket extends GenericPacket {
 	@Override
 	public String toString() {		
 		return String.format("MQTT/UDP PubAck" );
-	}	
+	}
 
 }
