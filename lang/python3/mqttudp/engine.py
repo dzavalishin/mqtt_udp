@@ -557,31 +557,11 @@ def __make_simple_packet(ptype):
 # Ping support
 #
 
-"""
-def make_ping_packet():
-    command = defs.PTYPE_PINGREQ
-    packet = bytearray()
-    packet.append(command)
-    pack_remaining_length(packet, 0)
-    return packet
-"""
 def send_ping():
-    #pkt = make_ping_packet()
     private_send_pkt( __make_simple_packet(defs.PTYPE_PINGREQ) )
 
 
-"""
-def make_ping_responce_packet():
-    command = defs.PTYPE_PINGRESP
-    packet = bytearray()
-    packet.append(command)
-    pack_remaining_length(packet, 0)
-    return packet
-"""
-
 def send_ping_responce():
-    #pkt = make_ping_responce_packet()
-    #private_send_pkt( pkt )
     private_send_pkt( __make_simple_packet(defs.PTYPE_PINGRESP) )
 
 

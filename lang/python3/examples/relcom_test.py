@@ -11,7 +11,7 @@ sys.path.append('..')
 
 #import threading
 import mqttudp.engine as me
-import mqttudp.rconfig as rcfg
+#import mqttudp.rconfig as rcfg
 import mqttudp.relcom as relcom
 
 import threading
