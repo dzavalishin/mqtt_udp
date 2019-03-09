@@ -119,7 +119,9 @@ class Packet(object):
 # ------------------------------------------------------------------------
 
 __SEND_SOCKET = None
-
+__BROADCAST_ADDR = "255.255.255.255"
+__BIND_ADDR = "0.0.0.0"
+#__BIND_ADDR = socket.INADDR_ANY
 
 
 # ------------------------------------------------------------------------
@@ -135,6 +137,21 @@ def set_muted(mode: bool):
     muted = mode
 
 
+# Set address to be used as broadcast.
+# You need to call this to define which network
+# interface to use, if your computer has more 
+# than one
+
+def set_broadcast_address( baddr ):
+    global __BROADCAST_ADDR
+    __BROADCAST_ADDR = baddr
+
+
+# Set address to use for reception (bind() system call)
+
+def set_bind_address( baddr ):
+    global __BIND_ADDR
+    __BIND_ADDR = baddr
 
 # up to 3 packets can be sent with no throttle
 # most devices have some buffer and we do not
@@ -237,10 +254,6 @@ def sign_and_ttr( msg, ttrs = None ):
 # ------------------------------------------------------------------------
 
 
-
-BIND_IP = "0.0.0.0"
-#BIND_IP = socket.INADDR_ANY
-
 def make_recv_socket():
     udp_socket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -255,7 +268,7 @@ def make_recv_socket():
             if err[0] not in (errno.ENOPROTOOPT, errno.EINVAL):
                 raise
 
-    udp_socket.bind( (BIND_IP,defs.MQTT_PORT) )
+    udp_socket.bind( (__BIND_ADDR,defs.MQTT_PORT) )
     return udp_socket
 
 def recv_udp_packet(udp_socket):
@@ -442,21 +455,18 @@ def set_relcom_is_packet_from_us_callback( cb ):
 # ------------------------------------------------------------------------
 
 
-
 def private_send_pkt( pkt, ttrs = None ):
     # TODO __add_ttr( pkt, ttr_key, ttr_data )
     if __signature_key != None:
         pkt = sign_and_ttr( pkt, ttrs )
     throttle_me()
-    __SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
+    __SEND_SOCKET.sendto( pkt, (__BROADCAST_ADDR, defs.MQTT_PORT) )
 
 
 
 
 def send_publish( topic, payload=b''):
     pkt = make_publish_packet(topic, payload)
-    #throttle_me()
-    #__SEND_SOCKET.sendto( pkt, ("255.255.255.255", defs.MQTT_PORT) )
     private_send_pkt( pkt )
 
 
