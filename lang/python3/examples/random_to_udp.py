@@ -10,7 +10,7 @@ sys.path.append('..')
 #sys.path.append('../mqttudp')
 
 #import threading
-import mqttudp.engine
+import mqttudp.engine as me
 import random
 import time
 
@@ -21,10 +21,12 @@ if __name__ == "__main__":
     print( "Will send MQTT/UDP packets with random number as a payload" )
     print( "Topic is '"+TOPIC+"'" )
 
+    #me.set_broadcast_address( "192.168.255.255" )
+
     while True:
         n = str(random.randint(0, 9))
         print( "Send "+n )
-        mqttudp.engine.send_publish( TOPIC, n )
+        me.send_publish( TOPIC, n )
         time.sleep(2)
 
 

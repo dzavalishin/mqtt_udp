@@ -88,7 +88,16 @@ Set minimum time between packets sent, msec::
 
    set_throttle(msec: int)
 
+Set network address to listen at (choose incoming packets network interface). Address must 
+be equal to address of some network interface::
 
+   set_bind_address( "192.168.1.1" )
+
+Set network address to broadcast to (choose outgoing packets network interface). Address must
+be broadcast address for some of existing network interfaces. Ask local network administrator
+if unsure::
+
+   set_broadcast_address( "192.168.1.255" )
 
 .. index:: single: OpenHAB
 

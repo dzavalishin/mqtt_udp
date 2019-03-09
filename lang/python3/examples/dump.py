@@ -26,4 +26,9 @@ def recv_packet(pkt):
 if __name__ == "__main__":
     print( "Will dump all MQTT/UDP packets recv'd" )
 
+    #me.set_bind_address( "192.168.1.100" )
+    #me.set_bind_address( "fe80::cc0e:5f41:9089:d43c%5:" )
+
+    #me.set_broadcast_address( "192.168.255.255" )
+
     me.listen(recv_packet)
