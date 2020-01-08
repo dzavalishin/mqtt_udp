@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For MQTT/UDP
+#######################################
+ 
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+ 
+#Blink KEYWORD1
+ 
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+ 
+mqtt_udp_send_publish KEYWORD2
+mqtt_udp_send_ping_request KEYWORD2
+mqtt_udp_send_ping_responce KEYWORD2
+ 
+#######################################
+# Constants (LITERAL1)
+#######################################
+#ON LITERAL1    
+#OFF LITERAL1
