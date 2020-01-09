@@ -11,6 +11,10 @@
 
 EthernetUDP udp;
 
+uint8_t mac[6] = {0x02, 0x01, 0x02, 0x03, 0x04, 0x05};
+
+
+
 OneWire  ds(9);  // on pin 9
 #define MAX_DS1820_SENSORS 2
 byte addr[MAX_DS1820_SENSORS][8];
@@ -32,16 +36,44 @@ void init_1wire( void )
 
   Serial.println("Got 1W 0");
   have_1w = 1;
+  /*
+    if ( !ds.search(addr[1]))
+    {
+      Serial.println("No 1W 1");
+      ds.reset_search();
+      //delay(250);
+      //return;
+    }
 
-  if ( !ds.search(addr[1]))
+    Serial.println("Got 1W 1");
+  */
+  if ( OneWire::crc8( addr[0], 7) != addr[0][7])
   {
-    Serial.println("No 1W 1");
-    ds.reset_search();
-    delay(250);
+    Serial.println("1W CRC is not valid");
+    have_1w = 0;
     return;
   }
 
-  Serial.println("Got 1W 1");
+  // We have some 1w device, use as MAC addr
+  Serial.println( "1w MAC");
+
+  for ( int i = 0; i < 5; i++)
+  {
+    char b = addr[0][i + 2];
+    mac[i + 1] = b;
+    if (i) Serial.print( ":");
+    Serial.print( b & 0xFF, 16 );
+  }
+
+  Serial.println("");
+
+  if ( (addr[0][0] != 0x10) && (addr[0][0] != 0x28) )
+  {
+    Serial.print("Device is not a DS18S20 family device: 0x" );
+    Serial.println( addr[0][0], 16 );
+    have_1w = 0;
+    return;
+  }
 
 }
 
@@ -54,20 +86,6 @@ void read_1wire( void )
 
   if (!have_1w) return;
 
-  if ( OneWire::crc8( addr[0], 7) != addr[0][7])
-  {
-    Serial.println("1W CRC is not valid");
-    have_1w = 0;
-    return;
-  }
-
-  if ( (addr[0][0] != 0x10) && (addr[0][0] != 0x28) )
-  {
-    Serial.print("Device is not a DS18S20 family device: 0x" );
-    Serial.println( addr[0][0], 16 );
-    have_1w = 0;
-    return;
-  }
 
   //ds.reset();
   //ds.select(addr[0]);
@@ -127,8 +145,6 @@ void setup() {
 
   Serial.println("Init Ethernet");
 
-  uint8_t mac[6] = {0x02, 0x01, 0x02, 0x03, 0x04, 0x05};
-
   //Ethernet.begin(mac, IPAddress(192, 168, 2, 177));
 #if 1
   Ethernet.begin(mac);
@@ -162,7 +178,7 @@ void loop() {
     Serial.print("Sending... ");
     mqtt_udp_send( 0, "FromArduino", temp_data );
   }
-  
+
   //udp.stop();
   delay(1000);
   return;
