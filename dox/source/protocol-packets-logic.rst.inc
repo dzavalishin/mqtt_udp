@@ -2,7 +2,7 @@
 Differences from MQTT
 ---------------------
 
-MQTT/UDP is based on classic MQTT, but differs a bit. Frist of all, just a subset of
+MQTT/UDP is based on classic MQTT, but differs a bit. First of all, just a subset of
 packet types used and, of course, as there is no broker there is no need for CONNECT,
 CONNACK or DISCONNECT.
 
@@ -17,9 +17,9 @@ present in some MQTT packets.
 Current implementation also ignores packet flags completely, but it will change later.
 
 Most implementations support Tagged Tail Records addition to the protocol, which
-extends and replaces variable header in an extencible and flexible way.
+extends and replaces variable header in an extensible and flexible way.
 
-Tagged tail records can be used to add any kinds of addiyional information to 
+Tagged tail records can be used to add any kinds of additional information to 
 the classic MQTT packets, but the most noticeable use of TTRs in MQTT/UDP is
 digital signature.
 
