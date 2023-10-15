@@ -46,7 +46,7 @@ type PacketProcessor interface {
  * 
  * @return 0 on success or error code.
 **/
-func Parse_any_pkt( pkt [] byte, from_ip net.UDPAddr,  process_pkt PacketProcessor ) error {
+func Parse_any_pkt( pkt [] byte, from_ip net.UDPAddr ) error {
 	var plen = len(pkt)
     var err error  = nil;
 
@@ -188,9 +188,9 @@ parse_ttrs:
     }
 //#endif
 
-    mqtt_udp_recv_reply( &o );
-    mqtt_udp_call_packet_listeners( &o );
-    callback( &o );
+    recv_reply( &o );
+    mcall_packet_listeners( &o );
+    //callback( &o );
 
 /*cleanup:
     //if( o.topic ) free( o.topic );
