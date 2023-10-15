@@ -65,12 +65,12 @@ func send_publish_qos(topic []byte, data []byte, qos int) error {
 	var rc = insert_pkt(pp)
 	if rc != nil {
 		// Still attempt to send!
-		build_and_send(&pp)
+		build_and_send(pp)
 
 		return rc
 	}
 
-	return build_and_send(&pp)
+	return build_and_send(pp)
 }
 
 // -----------------------------------------------------------------------
@@ -79,7 +79,7 @@ func send_publish_qos(topic []byte, data []byte, qos int) error {
 //
 // -----------------------------------------------------------------------
 
-func relcom_listener(pkt *proto.MqttPacket) error {
+func (p relcom_packet_processor) Process(pkt proto.MqttPacket) error {
 	if pkt.GetType() == misc.PUBACK {
 		log.Printf("got ack to %d\n", pkt.GetReplyTo())
 		if pkt.GetReplyTo() == 0 {
@@ -91,6 +91,11 @@ func relcom_listener(pkt *proto.MqttPacket) error {
 
 	return nil
 }
+
+type relcom_packet_processor struct {
+}
+
+var rpp relcom_packet_processor
 
 // -----------------------------------------------------------------------
 //
@@ -106,7 +111,7 @@ func relcom_listener(pkt *proto.MqttPacket) error {
 
 func RelcomInit() {
 	//ARCH_MUTEX_INIT(relcom_mutex)
-	add_packet_listener(relcom_listener)
+	proto.AddPacketListener(rpp)
 }
 
 /**
@@ -126,13 +131,13 @@ func relcom_housekeeping() {
 //
 // -----------------------------------------------------------------------
 
-func build_and_send(pp *proto.MqttPacket) error {
+func build_and_send(pp proto.MqttPacket) error {
 	var buf []byte = make([]byte, misc.PKT_BUF_SIZE)
 	var out_size int
 	//int rc;
 	//mqtt_udp_dump_any_pkt( &p );
 	var rc error
-	out_size, rc = proto.BuildAnyPkt(buf, pp)
+	out_size, rc = pp.BuildAnyPkt(buf)
 	if rc != nil {
 		return rc
 	}
@@ -228,7 +233,7 @@ func resend_pkts() {
 		}
 
 		log.Printf("resend %d\n", outgoing[i].GetId())
-		var rc = build_and_send(outgoing[i])
+		var rc = build_and_send(*outgoing[i])
 		if rc != nil {
 			misc.DetailedGlobalErrorHandler(misc.IO, rc, "resend error", "resend_pkts")
 		}

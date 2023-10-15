@@ -46,7 +46,7 @@ type PacketProcessor interface {
  * 
  * @return 0 on success or error code.
 **/
-func mqtt_udp_parse_any_pkt( pkt [] byte, from_ip net.UDPAddr,  process_pkt PacketProcessor ) error {
+func Parse_any_pkt( pkt [] byte, from_ip net.UDPAddr,  process_pkt PacketProcessor ) error {
 	var plen = len(pkt)
     var err error  = nil;
 
@@ -109,7 +109,7 @@ func mqtt_udp_parse_any_pkt( pkt [] byte, from_ip net.UDPAddr,  process_pkt Pack
     if( CHEWED + tlen > o.total + 2 )
         return mqtt_udp_global_error_handler( MQ_Err_Proto, -4, "packet topic len > pkt len", "" );
 
-    o.topic = malloc( tlen+2 );
+    o.topic = make(string, tlen+2 );
     if( o.topic == 0 ) return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
     strlcpy( o.topic, pkt, tlen+1 );
     //o.topic_len = strnlen( o.topic, MAX_SZ );
@@ -204,45 +204,6 @@ parse_ttrs:
 
 
 
-
-
-
-
-/// List of callbacks to call for incoming packets.
-type listeners_list struct {
-    next  * listeners_list;    ///< Next list element or 0.
-    listener PacketProcessor;           ///< Callback to call for incoming packet.
-};
-
-listeners * listeners_list  = nil;
-
-/**
- * 
- * @brief Register one more listener to get incoming packets.
- * 
- * Used by mqtt_udp lib itself to connect subsystems.
- * 
- * @param listener Callback to call when packet arrives.
- * 
-**/
-func mqtt_udp_add_packet_listener( listener PacketProcessor ) {
-    var lp listeners_list = new(listeners_list)
-
-    lp.next = listeners;
-    lp.listener = listener;
-
-    listeners = lp;
-}
-
-/// Pass packet to all listeners
-func ( pkt * MqttPacket ) call_packet_listeners( ) {
-    lp * listeners_list;
-    for lp = listeners ; lp ; lp = lp.next {
-        //int rc = 
-        lp.listener( pkt );
-        //if( rc ) break;
-    }
-}
 
 
 

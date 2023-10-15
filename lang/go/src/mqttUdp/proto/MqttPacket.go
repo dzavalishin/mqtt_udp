@@ -126,7 +126,7 @@ var packet_number_generator int
  * @return length of packet
  *
 **/
-func (p *MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
+func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	var blen = len(buf)
 	//int rc;
 	// TODO check for consistency - if pkt has to have topic & value and has it
@@ -139,7 +139,7 @@ func (p *MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	var bp = 0
 	var out_len = 0
 
-	buf[bp] = (p.packetType & 0xF0) | (p.packetFlags & 0x0F)
+	buf[bp] = byte(int(p.packetType)&0xF0) | (p.packetFlags & 0x0F)
 	bp++
 	blen--
 

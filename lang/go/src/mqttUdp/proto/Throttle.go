@@ -70,7 +70,7 @@ func SetThrottle(msec int) {
  * Will put caller asleep to make sure packets are sent in a right pace.
  *
  */
-func mqtt_udp_throttle() {
+func Throttle() {
 
 	if throttle == 0 {
 		return
