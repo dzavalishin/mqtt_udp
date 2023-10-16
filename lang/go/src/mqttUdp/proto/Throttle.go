@@ -63,13 +63,13 @@ func SetThrottle(msec int) {
 	}
 }
 
-/**
- *
- * @brief Must be called in packet send code.
- *
- * Will put caller asleep to make sure packets are sent in a right pace.
- *
- */
+/*
+
+Must be called in packet send code.
+
+ Will put caller asleep to make sure packets are sent in a right pace.
+
+*/
 func Throttle() {
 
 	if throttle == 0 {
@@ -77,7 +77,6 @@ func Throttle() {
 	}
 
 	// Let max_seq_packets come through with no pause.
-
 	last_send_count++
 
 	var last_send_count_delta uint64 = last_send_count

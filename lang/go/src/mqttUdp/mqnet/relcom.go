@@ -22,24 +22,18 @@ import (
 
 var relcom_mutex sync.Mutex
 
-//#define MQTT_UDP_FLAGS_GET_QOS(pflags)  (((pflags) >> 1) & 0x3) ///< Get QoS field from flags
-//#define MQTT_UDP_FLAGS_SET_QOS(pflags, qos) ( (pflags) &= 0x6, (pflags) |= (((qos) & 0x3) << 1) ) ///< Set QoS field of flags
-
 // -----------------------------------------------------------------------
 //
 // Interface
 //
 // -----------------------------------------------------------------------
 
-/**
- *
- * @brief Compose and send PUBLISH packet.
- *
- * @param topic  Message topic
- * @param data   Message value, usually text string
- *
- * @returns 0 if ok, or error code
-**/
+/*
+Compose and send PUBLISH packet.
+
+@param topic  Message topic
+@param data   Message value, usually text string
+*/
 func send_publish_qos(topic []byte, data []byte, qos int) error {
 
 	var pp proto.MqttPacket = proto.NewMqttPacket(misc.PUBLISH, topic, data)
@@ -134,7 +128,6 @@ func relcom_housekeeping() {
 func build_and_send(pp proto.MqttPacket) error {
 	var buf []byte = make([]byte, misc.PKT_BUF_SIZE)
 	var out_size int
-	//int rc;
 	//mqtt_udp_dump_any_pkt( &p );
 	var rc error
 	out_size, rc = pp.BuildAnyPkt(buf)
@@ -154,11 +147,9 @@ func build_and_send(pp proto.MqttPacket) error {
 // -----------------------------------------------------------------------
 
 // Naive fixed size array impl
-var MAX_OUTGOING_PKT = 30
-
-var MIN_LOW_QOS_ACK = 2
-
-var MAX_RESEND_COUNT = 3
+const MAX_OUTGOING_PKT = 30
+const MIN_LOW_QOS_ACK = 2
+const MAX_RESEND_COUNT = 3
 
 var outgoing []*proto.MqttPacket = make([]*proto.MqttPacket, MAX_OUTGOING_PKT)
 
@@ -178,7 +169,6 @@ func insert_pkt(pp proto.MqttPacket) error {
 	relcom_mutex.Unlock()
 
 	return misc.GlobalErrorHandler(misc.Memory, "out of outgoing slots", "insert_pkts")
-	//return "out of outgoing slots"
 }
 
 func delete_pkt(in_pkt_id int, in_qos int) error {

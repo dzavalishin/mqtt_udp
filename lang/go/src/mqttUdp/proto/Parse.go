@@ -251,10 +251,7 @@ func (o *MqttPacket) Dump() {
 
 	fmt.Printf("pkt %10s flags %x, id %8x from %s",
 		tn, o.packetFlags, o.pkt_id, from)
-	/*int(0xFF&(o.from_ip>>24)),
-	int(0xFF&(o.from_ip>>16)),
-	int(0xFF&(o.from_ip>>8)),
-	int(0xFF&(o.from_ip))) */
+	/*int(0xFF&(o.from_ip>>24)),	int(0xFF&(o.from_ip>>16)),	int(0xFF&(o.from_ip>>8)),	int(0xFF&(o.from_ip))) */
 
 	if len(o.topic) > 0 {
 		fmt.Printf(" topic '%s'", o.topic)

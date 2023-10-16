@@ -2,6 +2,7 @@ package mqnet
 
 import (
 	"log"
+	"mqttUdp/misc"
 	"mqttUdp/proto"
 	"net"
 )
@@ -18,7 +19,7 @@ func listenUdp(acceptor proto.MqttUdpInput) {
 	defer udpServer.Close()
 
 	for {
-		buf := make([]byte, 1024)
+		buf := make([]byte, misc.PKT_BUF_SIZE)
 		len, addr, err := udpServer.ReadFrom(buf)
 		process(&addr, buf[0:len], acceptor)
 		if err != nil {

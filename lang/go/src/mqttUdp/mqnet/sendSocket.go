@@ -35,23 +35,8 @@ func send_pkt(data []byte, len int) error {
 }
 
 func send_pkt_fd(conn *net.UDPConn, data []byte, len int) error {
-	//struct sockaddr_in addr;
 
-	/*
-	   struct sockaddr_in serverAddr;
-	   socklen_t addr_size;
-
-
-	   serverAddr.sin_family = AF_INET;
-	   serverAddr.sin_port = htons( MQTT_PORT );
-	   serverAddr.sin_addr.s_addr = inet_addr("255.255.255.255");
-	   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
-
-	   addr_size = sizeof serverAddr;
-	*/
 	proto.Throttle() // Speed limit
-
-	//ssize_t rc = sendto( fd, data, len, 0, (struct sockaddr *)&serverAddr, addr_size);
 
 	addr := net.UDPAddr{
 		Port: 1883,

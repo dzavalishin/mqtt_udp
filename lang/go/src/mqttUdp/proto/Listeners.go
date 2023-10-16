@@ -1,22 +1,22 @@
 package proto
 
-/// List of callbacks to call for incoming packets.
+// List of callbacks to call for incoming packets.
 type listeners_list struct {
-	next     *listeners_list ///< Next list element or 0.
-	listener PacketProcessor ///< Callback to call for incoming packet.
+	next     *listeners_list // Next list element or 0.
+	listener PacketProcessor // Callback to call for incoming packet.
 }
 
 var listeners *listeners_list = nil
 
-/**
- *
- * @brief Register one more listener to get incoming packets.
- *
- * Used by mqtt_udp lib itself to connect subsystems.
- *
- * @param listener Callback to call when packet arrives.
- *
-**/
+/*
+
+ Register one more listener to get incoming packets.
+
+ Used by mqtt_udp lib itself to connect subsystems.
+
+ listener Callback to call when packet arrives.
+
+*/
 func AddPacketListener(listener PacketProcessor) {
 	var lp *listeners_list = new(listeners_list)
 
@@ -26,7 +26,7 @@ func AddPacketListener(listener PacketProcessor) {
 	listeners = lp
 }
 
-/// Pass packet to all listeners
+// Pass packet to all listeners
 func (pkt MqttPacket) call_packet_listeners() {
 	var lp *listeners_list
 	for lp = listeners; lp != nil; lp = lp.next {

@@ -13,18 +13,17 @@ package proto
  *
 **/
 
-/**
- *
- * @brief Compare topic name against wildcard or topic name.
- *
- * @param filter     Topic name or wildcard to compare with.
- *
- * @param topicName  Topic name to compare.
- *
- * @return true if topicName matches filter.
- *
-**/
-func mqtt_udp_match(filter string, topicName string) bool {
+/*
+
+ Compare topic name against wildcard or topic name.
+
+ @param filter     Topic name or wildcard to compare with.
+ @param topicName  Topic name to compare.
+
+ @return true if topicName matches filter.
+
+*/
+func MatchTopic(filter string, topicName string) bool {
 
 	var tc = 0
 	var fc = 0
