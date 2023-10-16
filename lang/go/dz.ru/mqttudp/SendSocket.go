@@ -13,7 +13,7 @@ func getSendSocket() *net.UDPConn {
 		//var u *net.UDPConn = nil
 
 		addr := net.UDPAddr{
-			Port: 1883, // TODO const
+			Port: MQTT_PORT,
 			IP:   net.ParseIP("255.255.255.255"),
 		}
 
