@@ -110,6 +110,15 @@ func (pkt MqttPacket) IncResendCount() {
 	pkt.resend_count++
 }
 
+func (pkt MqttPacket) Send() error {
+	return build_and_send(pkt)
+}
+
+func Publish(topic string, value string) {
+	p := NewMqttPacket(PUBLISH, []byte(topic), []byte(value))
+	p.Send()
+}
+
 // -----------------------------------------------------------------------
 // Build
 // -----------------------------------------------------------------------

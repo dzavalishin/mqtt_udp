@@ -4,6 +4,8 @@ type PType int
 
 // TODO must be generated
 
+const MQTT_PORT = 1883
+
 const (
 	CONNECT     PType = 0x10
 	CONNACK     PType = 0x20

@@ -101,8 +101,9 @@ var rpp relcom_packet_processor
  *
 **/
 
-func RelcomInit() {
+func init() {
 	//ARCH_MUTEX_INIT(relcom_mutex)
+	//log.Println("RelCom init")
 	AddPacketListener(rpp)
 }
 

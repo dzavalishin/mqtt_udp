@@ -11,6 +11,10 @@ type myServer struct {
 }
 
 func main() {
+	fmt.Println("Send MQTT/UDP packet")
+
+	mqttudp.Publish("fromGoLang", "hello world")
+
 	fmt.Println("Start listening to MQTT/UDP traffic")
 
 	var s myServer
