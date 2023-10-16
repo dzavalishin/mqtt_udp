@@ -203,7 +203,7 @@ parse_ttrs:
 	//#endif
 
 	recv_reply(&o)
-	mcall_packet_listeners(&o)
+	o.call_packet_listeners()
 	//callback( &o );
 
 cleanup:
@@ -314,4 +314,32 @@ func (o *MqttPacket) Dump() {
 	}
 
 	log.Printf("\n")
+}
+
+/**
+ *
+ * @brief Default packet processing, called from mqtt_udp_parse_any_pkt()
+ *
+ * * Reply to ping
+ *
+ * @todo Reply to SUBSCRIBE? Not sure.
+ * @todo Reply with PUBACK for PUBLISH with QoS
+ * @todo Error handling
+ *
+**/
+
+func recv_reply(pkt *MqttPacket) {
+	//int fd = mqtt_udp_get_send_fd();
+
+	switch pkt.packetType {
+	case misc.PINGREQ:
+		// TODO err check
+		//if( fd > 0 ) mqtt_udp_send_ping_responce( fd, pkt->from_ip );
+		// TODO mqtt_udp_send_ping_responce()
+		break
+	//case PTYPE_SUBSCRIBE:
+	//case PTYPE_PUBLISH:
+	default:
+		break
+	}
 }
