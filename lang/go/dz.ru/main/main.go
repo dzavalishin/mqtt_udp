@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"dz.ru/mqttudp"
 )
@@ -10,36 +11,17 @@ type myServer struct {
 }
 
 func main() {
-	fmt.Println("Hello, World!")
+	fmt.Println("Start listening to MQTT/UDP traffic")
 
 	var s myServer
-	//s = new(&myServer)
 
 	mqttudp.SubServer(s)
 
-	/*
-		udpServer, err := net.ListenPacket("udp", ":1053")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer udpServer.Close()
-
-		for {
-			buf := make([]byte, 1024)
-			len, addr, err := udpServer.ReadFrom(buf)
-			process(addr, buf[0:len])
-			if err != nil {
-				continue
-			}
-		} */
+	time.Sleep(2 * time.Hour)
 
 }
 
 func (s myServer) Accept(packet mqttudp.MqttPacket) {
-	fmt.Println("got pkt ", packet)
+	//fmt.Println("got pkt ", packet)
+	packet.Dump()
 }
-
-/*
-func process(addr net.Addr, data []byte) {
-
-} */

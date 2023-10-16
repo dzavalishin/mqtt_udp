@@ -10,7 +10,7 @@ func SubServer(acceptor MqttUdpInput) {
 }
 
 func listenUdp(acceptor MqttUdpInput) {
-	udpServer, err := net.ListenPacket("udp", ":1053")
+	udpServer, err := net.ListenPacket("udp", ":1883")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,5 +28,6 @@ func listenUdp(acceptor MqttUdpInput) {
 }
 
 func process(addr *net.Addr, data []byte, acceptor MqttUdpInput) {
+	//fmt.Println("Got UDP pkt from", *addr)
 	Parse_any_pkt(data, addr, acceptor)
 }
