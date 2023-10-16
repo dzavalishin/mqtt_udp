@@ -40,8 +40,7 @@ type PacketProcessor interface {
  *
  * @brief Parse incoming packet.
  *
- * Call callback function with resulting packet. Note that packet
- * and it's contents will be deallocated after return from callback.
+ * Call callback function with resulting packet.
  *
  * @param pkt       Incoming binary packet data from UDP packet.
  * @param plen      Incoming packet data length.
@@ -50,7 +49,7 @@ type PacketProcessor interface {
  *
  * @return 0 on success or error code.
 **/
-func Parse_any_pkt(raw []byte, from_ip net.UDPAddr) error {
+func Parse_any_pkt(raw []byte, from_ip net.Addr, acceptor MqttUdpInput) error {
 	var plen = len(raw)
 	var err error = nil
 
@@ -205,6 +204,7 @@ parse_ttrs:
 	recv_reply(&o)
 	o.call_packet_listeners()
 	//callback( &o );
+	acceptor.Accept(o)
 
 cleanup:
 	/*
@@ -240,15 +240,15 @@ func mqtt_udp_decode_size(pkt []byte, pos *int) int {
 
 // / Decode fixed 2-byte integer.
 func mqtt_udp_decode_topic_len(pkt []byte) int {
-	return int(pkt[0]<<8) | int(pkt[1])
+	return int(pkt[0])<<8 | int(pkt[1])
 }
 
 func ttr_decode_int32(data []byte) int {
 	var v int = 0
 
-	v = int(data[0] << 24)
-	v |= int(data[1] << 16)
-	v |= int(data[2] << 8)
+	v = int(data[0]) << 24
+	v |= int(data[1]) << 16
+	v |= int(data[2]) << 8
 	v |= int(data[3])
 
 	return v
@@ -295,7 +295,7 @@ func (o *MqttPacket) Dump() {
 	var tn = ptname[o.packetType>>4]
 
 	log.Printf("pkt %10s flags %x, id %8x from %s",
-		tn, o.packetFlags, o.pkt_id, o.from_ip.String())
+		tn, o.packetFlags, o.pkt_id, (*o.from_ip).String())
 	/*int(0xFF&(o.from_ip>>24)),
 	int(0xFF&(o.from_ip>>16)),
 	int(0xFF&(o.from_ip>>8)),

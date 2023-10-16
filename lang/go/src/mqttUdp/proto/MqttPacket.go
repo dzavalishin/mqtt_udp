@@ -20,7 +20,7 @@ import (
 )
 
 type MqttPacket struct {
-	from_ip *net.UDPAddr ///< Sender IP address
+	from_ip *net.Addr ///< Sender IP address
 
 	packetType  misc.PType ///< packet type. Upper 4 bits, not shifted.
 	packetFlags byte       ///< Packet flags (QoS, etc). Lower 4 bits.
@@ -40,6 +40,10 @@ type MqttPacket struct {
 
 	resend_count int
 	ack_count    int
+}
+
+type MqttUdpInput interface {
+	Accept(packet MqttPacket)
 }
 
 func (p *MqttPacket) Clear() {
@@ -213,7 +217,7 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 		packet_number_generator++
 	}
 
-	var rc = encode_int32_TTR(&bp, &blen, 'n', p.pkt_id)
+	var rc = encode_int32_TTR(buf, &bp, &blen, 'n', uint32(p.GetId()))
 	if rc != nil {
 		return 0, rc
 	}
@@ -244,62 +248,65 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	return out_len, nil
 }
 
-/*
 // -----------------------------------------------------------------------
 // TTRs
 // -----------------------------------------------------------------------
 
-func encode_TTR( buf [] byte, bp * int, ttype byte, data [] byte  ) {
-	dlen = len(data);
+func encode_TTR(buf []byte, bp *int, blen *int, ttype byte, data []byte) error {
+	var dlen = len(data)
 
-    //if( *blen < 2 )         return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
+	if *blen < 2 {
+		return misc.GlobalErrorHandler(misc.Memory, "out of memory", "")
+	}
 
-    // TTR type byte
-    *(*bp)++ = type;
+	// TTR type byte
+	buf[*bp] = ttype
+	(*bp)++
 
-    // TTR content len
-    used = 0;
-    int rc = pack_len( *bp, blen, &used, dlen );
-    if( rc ) return rc;
-    *bp += used;
+	// TTR content len
+	//var used = 0
+	var used, rc = pack_len(buf[*bp:], dlen)
+	if rc != nil {
+		return rc
+	}
 
-    if( *blen < dlen )
-        return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "" );
+	*bp += used
 
-    //TTR content
-    memcpy( *bp, data, dlen );
-    *bp += dlen;
+	if *blen < dlen {
+		return misc.GlobalErrorHandler(misc.Memory, "out of memory", "")
+	}
 
-    return 0;
+	//TTR content
+	//memcpy(*bp, data, dlen)
+	copy(buf[*bp:], data)
+	*bp += dlen
+
+	return nil
 }
 
-int encode_int32_TTR( char **bp, size_t *blen, char type, uint32_t value )
-{
-    const int bytes = 4; // 32 bits
-    char out[bytes];
-    int i;
+func encode_int32_TTR(buf []byte, bp *int, blen *int, ttype byte, value uint32) error {
+	const bytes = 4 // 32 bits
+	var out []byte = make([]byte, bytes)
 
-    for( i = 0; i < bytes; i++ )
-		out[i] = (char)(value >> (8*(bytes - i - 1)) );
+	var i int
+	for i = 0; i < bytes; i++ {
+		out[i] = byte(value >> (8 * (bytes - i - 1)))
+	}
 
-    return encode_TTR( bp, blen, type, out, sizeof out );
+	return encode_TTR(buf, bp, blen, ttype, out)
 }
 
-func encode_int64_TTR( buf [] byte, bp * int, size_t *blen, type byte, uint64_t value ) int, error
-{
-    const int bytes = 8; // 64 bits
-    char out[bytes];
-    int i;
+func encode_int64_TTR(buf []byte, bp *int, blen *int, ttype byte, value uint64) error {
+	const bytes = 8 // 64 bits
+	var out []byte = make([]byte, bytes)
 
-    for( i = 0; i < bytes; i++ )
-		out[i] = (char)(value >> (8*(bytes - i - 1)) );
+	var i int
+	for i = 0; i < bytes; i++ {
+		out[i] = byte(value >> (8 * (bytes - i - 1)))
+	}
 
-    return encode_TTR( bp, blen, type, out, sizeof out );
+	return encode_TTR(buf, bp, blen, ttype, out)
 }
-
-
-
-*/
 
 // -----------------------------------------------------------------------
 // Bits

@@ -144,7 +144,7 @@ func build_and_send(pp proto.MqttPacket) error {
 
 	//mqtt_udp_dump( buf, out_size );
 
-	return send_pkt(getSendSocket(), buf, out_size)
+	return send_pkt(buf, out_size)
 }
 
 // -----------------------------------------------------------------------
