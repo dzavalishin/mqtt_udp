@@ -1,23 +1,23 @@
 package mqttudp
 
+type Listener func(pkt MqttPacket) error
+
 // List of callbacks to call for incoming packets.
 type listeners_list struct {
 	next     *listeners_list // Next list element or 0.
-	listener PacketProcessor // Callback to call for incoming packet.
+	listener Listener        // Callback to call for incoming packet.
 }
 
 var listeners *listeners_list = nil
 
 /*
+Register one more listener to get incoming packets.
 
- Register one more listener to get incoming packets.
+Used by mqtt_udp lib itself to connect subsystems.
 
- Used by mqtt_udp lib itself to connect subsystems.
-
- listener Callback to call when packet arrives.
-
+listener Callback to call when packet arrives.
 */
-func AddPacketListener(listener PacketProcessor) {
+func AddPacketListener(listener Listener) {
 	var lp *listeners_list = new(listeners_list)
 
 	lp.next = listeners
@@ -31,7 +31,7 @@ func (pkt MqttPacket) call_packet_listeners() {
 	var lp *listeners_list
 	for lp = listeners; lp != nil; lp = lp.next {
 		//int rc =
-		lp.listener.Process(pkt)
+		lp.listener(pkt) // TODO rc
 		//if( rc ) break;
 	}
 }

@@ -71,7 +71,7 @@ func send_publish_qos(topic []byte, data []byte, qos int) error {
 //
 // -----------------------------------------------------------------------
 
-func (p relcom_packet_processor) Process(pkt MqttPacket) error {
+func Process(pkt MqttPacket) error {
 	if pkt.GetType() == PUBACK {
 		log.Printf("got ack to %d\n", pkt.GetReplyTo())
 		if pkt.GetReplyTo() == 0 {
@@ -83,11 +83,6 @@ func (p relcom_packet_processor) Process(pkt MqttPacket) error {
 
 	return nil
 }
-
-type relcom_packet_processor struct {
-}
-
-var rpp relcom_packet_processor
 
 // -----------------------------------------------------------------------
 //
@@ -104,7 +99,7 @@ var rpp relcom_packet_processor
 func init() {
 	//ARCH_MUTEX_INIT(relcom_mutex)
 	//log.Println("RelCom init")
-	AddPacketListener(rpp)
+	AddPacketListener(Process)
 }
 
 /**

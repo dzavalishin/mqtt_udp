@@ -1,9 +1,9 @@
 package mqttudp
 
 import (
-	"crypto/md5"
 	"fmt"
 	"net"
+	"reflect"
 )
 
 /**
@@ -28,9 +28,7 @@ import (
 
 //#define MQTT_UDP_PKT_HAS_ID(pkt)  ((pkt.pflags) & 0x6)
 
-type PacketProcessor interface {
-	Process(pkt MqttPacket) error
-}
+//type PacketProcessor interface {	Process(pkt MqttPacket) error }
 
 /*
 Parse incoming packet.
@@ -213,10 +211,10 @@ func ttr_decode_int32(data []byte) int {
 func ttr_check_signature(buf []byte, pkt_len int, in_signature []byte) bool {
 
 	//var us_signature [MD5_DIGEST_SIZE]byte
-	us_signature := md5.Sum(buf[0:pkt_len]) // mqtt_udp_hmac_md5(pkt_start, pkt_len, us_signature)
+	us_signature := hmac_md5(buf[0:pkt_len]) // md5.Sum(buf[0:pkt_len]) // mqtt_udp_hmac_md5(pkt_start, pkt_len, us_signature)
 
 	//var ok = !memcmp(in_signature, us_signature, MD5_DIGEST_SIZE)
-	var ok = us_signature == [16]byte(in_signature)
+	var ok = reflect.DeepEqual(us_signature, in_signature)
 	if !ok {
 		GlobalErrorHandler(Proto, "Incorrect signature", "")
 	}

@@ -15,7 +15,6 @@ package mqttudp
 **/
 
 import (
-	"crypto/md5"
 	"net"
 )
 
@@ -213,20 +212,21 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	}
 	//* TODO TTR
 	// NB! This is a signature TTR, it must me the last one.
+	if IsSignatureEnabled() {
+		// Will sign
+		if blen < SIGNATURE_TTR_SIZE {
+			return 0, GlobalErrorHandler(Memory, "out of memory", "signature")
+		}
 
-	// Will sign
-	if blen < SIGNATURE_TTR_SIZE {
-		return 0, GlobalErrorHandler(Memory, "out of memory", "signature")
+		hash := hmac_md5(buf[0:bp]) // md5.Sum(buf[0:bp])
+
+		buf[bp+0] = 's'
+		buf[bp+1] = (0x7F & MD5_DIGEST_SIZE)
+		copy(buf[bp+2:bp+2+MD5_DIGEST_SIZE], hash[:])
+
+		bp += SIGNATURE_TTR_SIZE
+		blen -= SIGNATURE_TTR_SIZE
 	}
-
-	hash := md5.Sum(buf[0:bp])
-
-	buf[bp+0] = 's'
-	buf[bp+1] = (0x7F & MD5_DIGEST_SIZE)
-	copy(buf[bp+2:bp+2+MD5_DIGEST_SIZE], hash[:])
-
-	bp += SIGNATURE_TTR_SIZE
-	blen -= SIGNATURE_TTR_SIZE
 	//*/
 	return bp, nil
 }

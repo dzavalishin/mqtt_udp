@@ -26,5 +26,49 @@ const (
 const PKT_BUF_SIZE = 4096
 const MAX_SZ = PKT_BUF_SIZE - 2
 
+// -----------------------------------------------------------------------
+// Signature
+// -----------------------------------------------------------------------
+
 const MD5_DIGEST_SIZE = 16
 const SIGNATURE_TTR_SIZE = MD5_DIGEST_SIZE + 2 // Signature TTR needs this many bytes
+
+// -----------------------------------------------------------------------
+// Remote config
+// -----------------------------------------------------------------------
+
+const SYS_CONF_PREFIX = "$SYS/conf"
+
+// Types of configuration items
+type RConfigItemType int
+
+const (
+	MQ_CFG_TYPE_BOOL   RConfigItemType = 1
+	MQ_CFG_TYPE_STRING RConfigItemType = 2
+	MQ_CFG_TYPE_INT32  RConfigItemType = 3
+)
+
+/*
+Kinds of configuration items.
+
+Used by host-faced code for internal processing.
+Does not affect network communications.
+*/
+type RConfigItemKind int
+
+const (
+	MQ_CFG_KIND_OTHER RConfigItemKind = 0
+	MQ_CFG_KIND_TOPIC RConfigItemKind = 1 // Topics device works with, R/W
+	MQ_CFG_KIND_INFO  RConfigItemKind = 2 // Read-Only
+	MQ_CFG_KIND_NODE  RConfigItemKind = 3 // Node info, R/W
+)
+
+type RConfigItem struct {
+	itype RConfigItemType // Item (.value field) data type (string, bool, number, other)
+	kind  RConfigItemKind // Item kind, not processed by network code
+	name  string          // Human readable name for this config parameter
+	topic string          // MQTT/UDP topic name for this config parameter
+	//mqtt_udp_rconfig_item_value_t       value;  ///< Current value
+	//mqtt_udp_rconfig_item_value_t       opaque; ///< user data item, not processed by MQTT/UDP code at all
+	s string // Current value
+}
