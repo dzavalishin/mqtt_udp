@@ -15,6 +15,7 @@ package proto
 **/
 
 import (
+	"crypto/md5"
 	"mqttUdp/misc"
 	"net"
 )
@@ -22,19 +23,19 @@ import (
 type MqttPacket struct {
 	from_ip *net.Addr ///< Sender IP address
 
-	packetType  misc.PType ///< packet type. Upper 4 bits, not shifted.
-	packetFlags byte       ///< Packet flags (QoS, etc). Lower 4 bits.
+	packetType  misc.PType // packet type. Upper 4 bits, not shifted.
+	packetFlags byte       // Packet flags (QoS, etc). Lower 4 bits.
 
-	total int ///< Length of the rest of pkt down from here.
+	total int // Length of the rest of pkt down from here.
 
-	pkt_id int ///< Packet ID, supported by TTR ('n').
+	pkt_id int // Packet ID, supported by TTR ('n').
 
-	topic []byte ///< Topic string
-	value []byte ///< Value string
+	topic []byte // Topic string
+	value []byte // Value string
 
-	is_signed bool ///< This packet has correct digital signature
+	is_signed bool // This packet has correct digital signature
 
-	reply_to int ///< ID of packet we reply to
+	reply_to int // ID of packet we reply to
 
 	// Internal working place, do not touch from outside of lib
 
@@ -96,10 +97,7 @@ func (pkt MqttPacket) GetAckCount() int {
 	return pkt.ack_count
 }
 
-/**
- * Increment ack counter
-**/
-
+// Increment ack counter
 func (pkt MqttPacket) IncAckCount() {
 	pkt.ack_count++
 }
@@ -108,6 +106,7 @@ func (pkt MqttPacket) GetResendCount() int {
 	return pkt.resend_count
 }
 
+// Increment resend counter
 func (pkt MqttPacket) IncResendCount() {
 	pkt.resend_count++
 }
@@ -116,20 +115,17 @@ func (pkt MqttPacket) IncResendCount() {
 // Build
 // -----------------------------------------------------------------------
 
-//static int32_t packet_number_generator;
-
 var packet_number_generator int
 
-/**
- * @brief Build outgoing binary packet representation.
- *
- * @param buf      Buffer to put resulting packet to
- * @param p        Packet to encode
- * @param out_len  Resulting length of build packet in bytes
- *
- * @return length of packet
- *
-**/
+/*
+Build outgoing binary packet representation.
+
+@param buf      Buffer to put resulting packet to
+@param p        Packet to encode
+@param out_len  Resulting length of build packet in bytes
+
+@return length of packet
+*/
 func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	var blen = len(buf)
 	//int rc;
@@ -141,7 +137,6 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	var dlen = len(p.value)
 
 	var bp = 0
-	var out_len = 0
 
 	buf[bp] = byte(int(p.packetType)&0xF0) | (p.packetFlags & 0x0F)
 	bp++
@@ -149,8 +144,6 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 
 	// MQTT payload size, not incl TTRs
 	var total = tlen + dlen + 2
-
-	// Not supported in MQTT/UDP: if(MQTT_UDP_FLAGS_HAS_ID(p->pflags)) total += 2;
 
 	var used = 0
 	var err error
@@ -165,15 +158,6 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 		return 0, misc.GlobalErrorHandler(misc.Memory, "out of memory", "")
 	}
 
-	/* Not supported in MQTT/UDP
-	   if(MQTT_UDP_FLAGS_HAS_ID(p->pflags))
-	   {
-	       *bp++ = (p->pkt_id >> 8) & 0xFF;
-	       *bp++ = p->pkt_id & 0xFF;
-	       blen -= 2;
-	   }
-	*/
-
 	if tlen > 0 {
 		// Encode topic len
 		buf[bp] = byte((tlen >> 8) & 0xFF)
@@ -182,7 +166,6 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 		bp++
 		blen -= 2
 
-		//var topic * byte = p.topic
 		var topic = 0
 		//NB! Must be UTF-8
 		for tlen > 0 {
@@ -196,7 +179,6 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 			blen--
 		}
 
-		//const char *data = p.value
 		var data = 0
 		for dlen > 0 {
 			dlen--
@@ -222,30 +204,23 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 		return 0, rc
 	}
 
-	/* TODO
-	    // NB! This is a signature TTR, it must me the last one.
+	// NB! This is a signature TTR, it must me the last one.
 
-	    // Signature TTR needs this many bytes
-	//#define SIGNATURE_TTR_SIZE (MD5_DIGEST_SIZE+2)
-	    if(mqtt_udp_hmac_md5 != 0)
-	    {
-	        // Will sign
-	        if( blen < SIGNATURE_TTR_SIZE )
-	            return mqtt_udp_global_error_handler( MQ_Err_Memory, -12, "out of memory", "signature" );
+	// Will sign
+	if blen < misc.SIGNATURE_TTR_SIZE {
+		return 0, misc.GlobalErrorHandler(misc.Memory, "out of memory", "signature")
+	}
 
-	        //unsigned char signature[MD5_DIGEST_SIZE];
-	        unsigned char *signature = (unsigned char *)bp+2;
-	        mqtt_udp_hmac_md5( (unsigned char *)buf, bp-buf, signature );
-	        bp[0] = 's';
-	        bp[1] = ( 0x7F & MD5_DIGEST_SIZE );
-	        //bp[1] = MD5_DIGEST_SIZE;
+	hash := md5.Sum(buf[0:bp])
 
-	        bp += SIGNATURE_TTR_SIZE;
-	        blen -= SIGNATURE_TTR_SIZE;
-	    }
-	*/
+	buf[bp+0] = 's'
+	buf[bp+1] = (0x7F & misc.MD5_DIGEST_SIZE)
+	copy(buf[bp+2:bp+2+misc.MD5_DIGEST_SIZE], hash[:])
 
-	return out_len, nil
+	bp += misc.SIGNATURE_TTR_SIZE
+	blen -= misc.SIGNATURE_TTR_SIZE
+
+	return bp, nil
 }
 
 // -----------------------------------------------------------------------
