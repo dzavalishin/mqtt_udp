@@ -6,8 +6,10 @@ import (
 
 var signature_key []byte
 
-// / User request to start using digital signature.
-func mqtt_udp_enable_signature(key []byte) error {
+func IsSignatureEnabled() bool { return signature_key != nil }
+
+// User request to start using digital signature.
+func EnableSignature(key []byte) error {
 	if key == nil {
 		signature_key = nil // Turn OFF
 		return nil
@@ -48,8 +50,8 @@ func do_hmac_md5(key []byte, text []byte) []byte {
 	 * and text is the data being protected
 	 */
 
-	var k_ipad [KEY_IOPAD_SIZE]byte /* inner padding - key XORd with ipad  */
-	var k_opad [KEY_IOPAD_SIZE]byte /* outer padding - key XORd with opad */
+	var k_ipad [KEY_IOPAD_SIZE]byte // inner padding - key XORd with ipad
+	var k_opad [KEY_IOPAD_SIZE]byte // outer padding - key XORd with opad
 
 	/* start out by storing key in pads */
 	//memset( k_ipad, 0, sizeof(k_ipad));
