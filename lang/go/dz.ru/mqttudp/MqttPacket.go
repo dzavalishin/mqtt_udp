@@ -155,7 +155,7 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 
 	var used = 0
 	var err error
-	used, err = pack_len(buf, total)
+	used, err = pack_len(buf[1:], total)
 	if err != nil {
 		return 0, err
 	}
@@ -211,7 +211,7 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	if rc != nil {
 		return 0, rc
 	}
-
+	//* TODO TTR
 	// NB! This is a signature TTR, it must me the last one.
 
 	// Will sign
@@ -227,7 +227,7 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 
 	bp += SIGNATURE_TTR_SIZE
 	blen -= SIGNATURE_TTR_SIZE
-
+	//*/
 	return bp, nil
 }
 
