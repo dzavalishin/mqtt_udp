@@ -1,6 +1,7 @@
 package proto
 
 import (
+	"crypto/md5"
 	"fmt"
 	"mqttUdp/misc"
 	"net"
@@ -20,7 +21,7 @@ import (
 **/
 
 // / Sanity check size
-const MAX_SZ = 4096 // TODO move me
+//const MAX_SZ = 4096 // TODO move me
 
 // -----------------------------------------------------------------------
 // parse
@@ -87,7 +88,7 @@ func Parse_any_pkt(raw []byte, from_ip *net.Addr, acceptor MqttUdpInput) error {
 	tlen = decode_topic_len(raw[pkt:])
 	pkt += 2
 
-	if tlen > MAX_SZ {
+	if tlen > misc.MAX_SZ {
 		return misc.GlobalErrorHandler(misc.Proto, "packet too long", "")
 	}
 
@@ -100,7 +101,7 @@ func Parse_any_pkt(raw []byte, from_ip *net.Addr, acceptor MqttUdpInput) error {
 	pkt += tlen
 
 	vlen = o.total - pkt + 2
-	if vlen > MAX_SZ {
+	if vlen > misc.MAX_SZ {
 		return misc.GlobalErrorHandler(misc.Proto, "packet value len > pkt len", "")
 	}
 
@@ -145,6 +146,7 @@ parse_ttrs:
 				}
 			}
 			o.is_signed = false // TODO TTR_check_signature(pstart, ttr_start-pstart, ttrs)
+			//o.is_signed = TTR_check_signature(raw, ttrs_start, ttrs[ttr_pos:])
 			break
 		default:
 			break
@@ -176,7 +178,7 @@ parse_ttrs:
 //
 // -----------------------------------------------------------------------
 
-// / Decode payload size dynamic length int
+// Decode payload size dynamic length int
 func decode_size(pkt []byte, pos *int) int {
 	var ret int = 0
 
@@ -193,7 +195,7 @@ func decode_size(pkt []byte, pos *int) int {
 	}
 }
 
-// / Decode fixed 2-byte integer.
+// Decode fixed 2-byte integer.
 func decode_topic_len(pkt []byte) int {
 	return int(pkt[0])<<8 | int(pkt[1])
 }
@@ -209,22 +211,19 @@ func ttr_decode_int32(data []byte) int {
 	return v
 }
 
-/*
-func ttr_check_signature(pkt_start *byte, pkt_len int, in_signature *byte) bool {
-	// Not set up, can't check
-	if mqtt_udp_hmac_md5 == 0 {
-		return false
-	}
+func ttr_check_signature(buf []byte, pkt_len int, in_signature []byte) bool {
 
-	var us_signature [MD5_DIGEST_SIZE]byte
-	mqtt_udp_hmac_md5(pkt_start, pkt_len, us_signature)
+	//var us_signature [MD5_DIGEST_SIZE]byte
+	us_signature := md5.Sum(buf[0:pkt_len]) // mqtt_udp_hmac_md5(pkt_start, pkt_len, us_signature)
 
-	var ok = !memcmp(in_signature, us_signature, MD5_DIGEST_SIZE)
+	//var ok = !memcmp(in_signature, us_signature, MD5_DIGEST_SIZE)
+	var ok = us_signature == [16]byte(in_signature)
 	if !ok {
-		GlobalErrorHandler(misc.Proto, "Incorrect signature", "")
+		misc.GlobalErrorHandler(misc.Proto, "Incorrect signature", "")
 	}
-	return true
-} */
+
+	return true // TODO must return ok?
+}
 
 // -----------------------------------------------------------------------
 //

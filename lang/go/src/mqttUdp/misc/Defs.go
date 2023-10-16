@@ -22,5 +22,7 @@ const (
 )
 
 const PKT_BUF_SIZE = 4096
+const MAX_SZ = PKT_BUF_SIZE - 2
+
 const MD5_DIGEST_SIZE = 16
 const SIGNATURE_TTR_SIZE = MD5_DIGEST_SIZE + 2 // Signature TTR needs this many bytes
