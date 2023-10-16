@@ -29,25 +29,23 @@ import "time"
 var last_send_time time.Time = time.Now() // TODO must assign some invalid value
 var last_send_count uint64 = 0
 
-/**
- * Up to 3 packets can be sent with no throttle
- * most devices have some buffer and we do not
- * want to calc time each send.
- **/
-var max_seq_packets uint64 = 10
+/*
+ Up to 3 packets can be sent with no throttle.
+ Most devices have some recv buffer and we do not
+ want to calc time each send.
+*/
+var max_seq_packets uint64 = 3
 
-/**
- * Time between outgoing packets
- */
+// Time between outgoing packets, msec
 var throttle uint64 = 100
 
-/**
- *
- * Set packet send rate.
- *
- * @param msec average time in milliseconds between packets. Set to 0 to turn throttling off.
- *
- */
+/*
+
+  Set packet send rate.
+
+  @param msec average time in milliseconds between packets. Set to 0 to turn throttling off.
+
+*/
 func SetThrottle(msec int) {
 	throttle = uint64(msec)
 
