@@ -98,7 +98,10 @@ func Parse_any_pkt(raw []byte, from_ip net.Addr, acceptor MqttUdpInput) error {
 
 	// Packets with topic?
 	switch o.packetType {
-	case misc.SUBSCRIBE | misc.PUBLISH:
+	case misc.SUBSCRIBE:
+		break
+
+	case misc.PUBLISH:
 		break
 
 	default:
@@ -116,10 +119,10 @@ func Parse_any_pkt(raw []byte, from_ip net.Addr, acceptor MqttUdpInput) error {
 		return misc.GlobalErrorHandler(misc.Proto, "packet topic len > pkt len", "")
 	}
 
-	o.topic = make([]byte, tlen+2)
+	/*o.topic = make([]byte, tlen+2)
 	if o.topic == nil {
 		return misc.GlobalErrorHandler(misc.Memory, "out of memory", "")
-	}
+	}*/
 	//strlcpy(o.topic, pkt, tlen+1)
 	o.topic = raw[pkt : pkt+tlen]
 	//o.topic_len = strnlen( o.topic, MAX_SZ );
@@ -138,10 +141,10 @@ func Parse_any_pkt(raw []byte, from_ip net.Addr, acceptor MqttUdpInput) error {
 	}
 
 	//vlen++; // strlcpy needs place for zero
-	o.value = make([]byte, vlen+2)
+	/*o.value = make([]byte, vlen+2)
 	if o.value == nil {
 		return misc.GlobalErrorHandler(misc.Memory, "out of memory", "")
-	}
+	}*/
 	//strlcpy(o.value, pkt, vlen+1)
 	o.value = raw[pkt : pkt+vlen]
 	//o.value_len = strnlen( o.value, MAX_SZ );
@@ -204,7 +207,9 @@ parse_ttrs:
 	recv_reply(&o)
 	o.call_packet_listeners()
 	//callback( &o );
-	acceptor.Accept(o)
+	if acceptor != nil {
+		acceptor.Accept(o)
+	}
 
 cleanup:
 	/*
