@@ -2,7 +2,7 @@ package proto_test
 
 import (
 	//"log"
-	"fmt"
+
 	"mqttUdp/proto"
 	"testing"
 )
@@ -12,7 +12,8 @@ type myServer struct {
 }
 
 func (s myServer) Accept(packet proto.MqttPacket) {
-	fmt.Println("got pkt ", packet)
+	//fmt.Println("got pkt ", packet)
+	packet.Dump()
 }
 
 func Test_Parse_Publish(t *testing.T) {

@@ -20,7 +20,7 @@ func listenUdp(acceptor proto.MqttUdpInput) {
 	for {
 		buf := make([]byte, 1024)
 		len, addr, err := udpServer.ReadFrom(buf)
-		process(addr, buf[0:len], acceptor)
+		process(&addr, buf[0:len], acceptor)
 		if err != nil {
 			continue
 		}
@@ -28,6 +28,6 @@ func listenUdp(acceptor proto.MqttUdpInput) {
 
 }
 
-func process(addr net.Addr, data []byte, acceptor proto.MqttUdpInput) {
+func process(addr *net.Addr, data []byte, acceptor proto.MqttUdpInput) {
 	proto.Parse_any_pkt(data, addr, acceptor)
 }
