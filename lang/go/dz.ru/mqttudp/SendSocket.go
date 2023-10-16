@@ -1,7 +1,6 @@
 package mqttudp
 
 import (
-	"fmt"
 	"log"
 	"net"
 )
@@ -43,7 +42,7 @@ func send_pkt_fd(conn *net.UDPConn, data []byte, len int) error {
 		IP:   net.ParseIP("255.255.255.255"),
 	}*/
 
-	fmt.Println("Sending pkt ", data[0:len])
+	//fmt.Println("Sending pkt ", data[0:len])
 
 	//_, err := conn.WriteToUDP(data[0:len], nil) //&addr)
 	_, err := conn.Write(data[0:len])
