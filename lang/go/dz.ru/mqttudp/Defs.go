@@ -70,5 +70,6 @@ type RConfigItem struct {
 	topic string          // MQTT/UDP topic name for this config parameter
 	//mqtt_udp_rconfig_item_value_t       value;  ///< Current value
 	//mqtt_udp_rconfig_item_value_t       opaque; ///< user data item, not processed by MQTT/UDP code at all
-	s string // Current value
+	s      string // Current value
+	Opaque string
 }

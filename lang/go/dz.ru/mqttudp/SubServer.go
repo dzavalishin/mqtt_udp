@@ -3,6 +3,9 @@ package mqttudp
 import (
 	"log"
 	"net"
+
+	//"github.com/projecthunt/reuseable"
+	"github.com/libp2p/go-reuseport"
 )
 
 func SubServer(acceptor MqttUdpInput) {
@@ -10,7 +13,8 @@ func SubServer(acceptor MqttUdpInput) {
 }
 
 func listenUdp(acceptor MqttUdpInput) {
-	udpServer, err := net.ListenPacket("udp", ":1883")
+	//udpServer, err := net.ListenPacket("udp", ":1883")
+	udpServer, err := reuseport.ListenPacket("udp", ":1883")
 	if err != nil {
 		log.Fatal(err)
 	}
