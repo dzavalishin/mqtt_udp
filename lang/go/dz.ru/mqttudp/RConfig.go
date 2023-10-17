@@ -179,9 +179,10 @@ func find_by_full_topic(topic string) int {
 
 	//log.Printf("prefix '%s'\n", topic_prefix );
 	topic_prefix_len := len(topic_prefix)
+	topic_len := len(topic)
 
 	//if strncmp(topic_prefix, topic, topic_prefix_len) {		return -1	}
-	if topic_prefix == topic[0:topic_prefix_len] {
+	if topic_len < topic_prefix_len || topic_prefix == topic[0:topic_prefix_len] {
 		return -1
 	}
 
