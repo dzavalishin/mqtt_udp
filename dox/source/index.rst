@@ -45,7 +45,7 @@ Packets and general logic
 API Reference
 =============
 
-MQTT/UDP is implemented in five languages, but implementations differ. Most 
+MQTT/UDP is implemented in six languages, but implementations differ. Most 
 complete and fast developing are Java and Python versions. Others
 follow a bit later. Please see `map of languages and features <https://github.com/dzavalishin/mqtt_udp/wiki/Features-and-languages-map>`_ on a project Wiki.
 
@@ -56,6 +56,8 @@ follow a bit later. Please see `map of languages and features <https://github.co
 .. include:: api-ref-python.rst.inc
 
 .. include:: api-ref-lua.rst.inc
+
+.. include:: api-ref-go.rst.inc
 
 .. include:: api-ref-codesys.rst.inc
 
