@@ -8,6 +8,8 @@
  *
  * Passive remote configuration.
  *
+ * This code represents side that is being configured remotely.
+ *
  * Device keeps configuration items locally in file/flash/nvram.
  * Configuration software (for example, /tools/viewer) requests
  * list of configurable topics (SUBSCRIBE $SYS/#) and device
