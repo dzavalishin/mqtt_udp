@@ -111,3 +111,9 @@ lang/java/remoteconf.prop
 lang/python3/.vscode/settings.json
 lang/python3/examples/mqtt_gate.log
 lang/python3/examples/remote_config.ini
+lang/c/mqtt_udp_clock
+lang/c/mqtt_udp_dump
+lang/c/mqtt_udp_listen
+lang/c/mqtt_udp_rconfig
+lang/c/mqtt_udp_subscribe
+lang/c/mqtt_udp_waitmsg

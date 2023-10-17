@@ -28,10 +28,35 @@ func AddPacketListener(listener Listener) {
 
 // Pass packet to all listeners
 func (pkt MqttPacket) call_packet_listeners() {
+	// Send default replies first
+	recv_reply(&pkt)
+
 	var lp *listeners_list
 	for lp = listeners; lp != nil; lp = lp.next {
 		//int rc =
 		lp.listener(pkt) // TODO rc
 		//if( rc ) break;
+	}
+}
+
+/*
+Default packet processing, called from Parse_any_pkt()
+
+Reply to ping
+
+	@todo Reply to SUBSCRIBE? Not sure.
+	@todo Reply with PUBACK for PUBLISH with QoS
+*/
+func recv_reply(pkt *MqttPacket) {
+
+	switch pkt.packetType {
+	case PINGREQ:
+		// TODO err check
+		PingResponce()
+		break
+	//case PTYPE_SUBSCRIBE:
+	//case PTYPE_PUBLISH:
+	default:
+		break
 	}
 }

@@ -109,7 +109,12 @@ func init_rconfig() {
 // Must read from local storage or write to local storage
 // config item at pos
 func rconfig_rw_callback(pos int, write bool) {
-	//printf("asked to %s item %d\n", write ? "save" : "load", pos );
+
+	var op string = "load"
+	if write {
+		op = "save"
+	}
+	fmt.Printf("asked to %s item %d\n", op, pos)
 
 	if (pos < 0) || (pos >= cap(rconfig_list)) {
 		return // -1
@@ -133,6 +138,7 @@ func rconfig_rw_callback(pos int, write bool) {
 	} else {
 		// RConfig asks saved or default setting for item
 		if len(i.Opaque) != 0 {
+			fmt.Printf("RCONF will set item %d to %s\n", pos, i.Opaque)
 			mqttudp.RConfigSetString(pos, i.Opaque)
 		}
 	}

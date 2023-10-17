@@ -6,8 +6,7 @@
  *
  * Copyright (C) 2017-2023 Dmitry Zavalishin, dz@dz.ru
  *
- * @file
- * @brief Passive remote configuration.
+ * Passive remote configuration.
  *
  * Device keeps configuration items locally in file/flash/nvram.
  * Configuration software (for example, /tools/viewer) requests
@@ -15,7 +14,7 @@
  * responds with PUBLISH for all configuration topics. Config
  * software then can set config parameters values with PUBLISH.
  *
- * @see ru.dz.mqtt_udp.config.Controller Java class
+ * @see ru.dz.mqtt_udp.config.Controller Java class for reference
  *
 **/
 
@@ -26,6 +25,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 )
 
 type RConfigCallback func(pos int, write bool)
@@ -101,33 +101,28 @@ func RConfigSetString(pos int, str string) error {
 		return GlobalErrorHandler(Invalid, "R/O", str)
 	}
 
-	item := rconfig_list[pos]
+	rconfig_list[pos].s = str
 
-	item.s = str
 	return nil
 }
 
-/**
- *
- * @brief Process incoming packets.
- *
- * Process PUBLISH and SUBSCRIBE requests for config items.
- *
- * @param pkt Packet to process.
- *
- * @return 0 on success, or error code.
- *
-**/
+/*
+Process incoming packets.
+
+Process PUBLISH and SUBSCRIBE requests for config items.
+
+@param pkt Packet to process.
+*/
 func rconfig_listener(pkt MqttPacket) error {
 
-	log.Printf("rconf\n")
+	//log.Printf("rconf\n")
 
 	// Got request
 	if pkt.GetType() == SUBSCRIBE {
 		// is `$SYS/#` or `$SYS/conf/#` or `$SYS/conf/{our MAC}/`
 		//if( 0 == strcmp( pkt.topic, SYS_WILD ) ) { rconfig_send_topic_list(); return 0; }
 		if MatchTopic(string(pkt.topic), topic_prefix) {
-			log.Printf("send all\n")
+			log.Printf("RCONF send all\n")
 			rconfig_send_topic_list()
 			return nil
 		}
@@ -136,7 +131,7 @@ func rconfig_listener(pkt MqttPacket) error {
 		if pos < 0 {
 			return nil
 		}
-		log.Printf("rconf got subscribe '%s' pos = %d\n", pkt.topic, pos)
+		log.Printf("RCONF got subscribe '%s' pos = %d\n", pkt.topic, pos)
 		rconfig_send_topic_by_pos(pos)
 	}
 
@@ -147,11 +142,11 @@ func rconfig_listener(pkt MqttPacket) error {
 			return nil
 		}
 
-		log.Printf("rconf set '%s'='%s' pos = %d\n", pkt.topic, pkt.value, pos)
+		log.Printf("RCONF set '%s'='%s' pos = %d\n", pkt.topic, pkt.value, pos)
 
 		rc := RConfigSetString(pos, string(pkt.value))
 		if rc != nil {
-			DetailedGlobalErrorHandler(Other, rc, "rconfig_set_string failed", string(pkt.value))
+			DetailedGlobalErrorHandler(Other, rc, "RConfigSetString failed", string(pkt.value))
 		}
 
 		//rc =
@@ -218,8 +213,7 @@ func rconfig_send_topic_by_pos(pos int) {
 
 	Publish(topic, val)
 
-	log.Printf("'%s'='%s'\n", topic, val)
-
+	log.Printf("RCONF publish '%s'='%s'\n", topic, val)
 }
 
 /**
@@ -266,6 +260,12 @@ func rconfig_read_all() {
 	}
 }
 
+// -----------------------------------------------------------------------
+//
+// Node ID
+//
+// -----------------------------------------------------------------------
+
 func getMacAddr() (string, error) {
 	ifas, err := net.Interfaces()
 	if err != nil {
@@ -275,7 +275,7 @@ func getMacAddr() (string, error) {
 	for _, ifa := range ifas {
 		a := ifa.HardwareAddr.String()
 		if a != "" {
-			return a, nil
+			return strings.ReplaceAll(a, ":", ""), nil
 		}
 	}
 	return "", errors.New("no MAC address?")

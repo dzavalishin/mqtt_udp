@@ -33,5 +33,5 @@ func listenUdp(acceptor MqttUdpInput) {
 
 func process(addr *net.Addr, data []byte, acceptor MqttUdpInput) {
 	//fmt.Println("Got UDP pkt from", *addr)
-	Parse_any_pkt(data, addr, acceptor)
+	ParseAndProcess(data, addr, acceptor)
 }
