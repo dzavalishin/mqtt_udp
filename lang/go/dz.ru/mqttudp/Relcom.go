@@ -115,27 +115,6 @@ func relcom_housekeeping() {
 
 // -----------------------------------------------------------------------
 //
-// Send
-//
-// -----------------------------------------------------------------------
-
-func build_and_send(pp MqttPacket) error {
-	var buf []byte = make([]byte, PKT_BUF_SIZE)
-	var out_size int
-	//mqtt_udp_dump_any_pkt( &p );
-	var rc error
-	out_size, rc = pp.BuildAnyPkt(buf)
-	if rc != nil {
-		return rc
-	}
-
-	//mqtt_udp_dump( buf, out_size );
-
-	return send_pkt(buf, out_size)
-}
-
-// -----------------------------------------------------------------------
-//
 // Outgoing list
 //
 // -----------------------------------------------------------------------

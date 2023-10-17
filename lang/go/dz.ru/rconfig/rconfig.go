@@ -33,8 +33,8 @@ func main() {
 	mqttudp.SubServer(s)
 
 	for {
-		fmt.Println("Send MQTT/UDP packet")
-		mqttudp.Publish("fromGoLang", "hello world")
+		//fmt.Println("Send MQTT/UDP packet")
+		//mqttudp.Publish("fromGoLang", "hello world")
 		time.Sleep(2 * time.Second)
 	}
 

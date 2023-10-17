@@ -1,7 +1,6 @@
 package mqttudp
 
 import (
-	"fmt"
 	"log"
 	"net"
 )
@@ -43,7 +42,7 @@ func send_pkt_fd(conn *net.UDPConn, data []byte, len int) error {
 		IP:   net.ParseIP("255.255.255.255"),
 	}*/
 
-	fmt.Println("Sending pkt ", data[0:len])
+	//fmt.Println("Sending pkt ", data[0:len])
 
 	//_, err := conn.WriteToUDP(data[0:len], nil) //&addr)
 	_, err := conn.Write(data[0:len])
@@ -74,3 +73,26 @@ func send_pkt_addr( int fd, char *data, size_t len, uint32_t ip_addr ) error
 
     return (rc != len) ? EIO : 0;
 } */
+
+// -----------------------------------------------------------------------
+//
+// Send
+//
+// -----------------------------------------------------------------------
+
+func build_and_send(pp MqttPacket) error {
+	var buf []byte = make([]byte, PKT_BUF_SIZE)
+	var out_size int
+
+	pp.Dump()
+
+	var rc error
+	out_size, rc = pp.BuildAnyPkt(buf)
+	if rc != nil {
+		return rc
+	}
+
+	//mqtt_udp_dump( buf, out_size );
+
+	return send_pkt(buf, out_size)
+}
