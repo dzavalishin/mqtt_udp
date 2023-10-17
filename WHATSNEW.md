@@ -2,6 +2,8 @@
 
 ### Libraries
 
+*          Go language implementation
+*          MicroPython implementation
 *          Lua - NodeMCu version
 *          Subscribe, Ping and Ping reply packet type
 *          New async codesys impl
