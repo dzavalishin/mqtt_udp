@@ -125,28 +125,7 @@ parse_ttrs:
 			return o, GlobalErrorHandler(Proto, "TTR len <= 0", "")
 		}
 
-		//fmt.Printf("TTR type = %c 0x%X len=%d\n", ttr_type, ttr_type, ttr_len)
-		// Have TTR, process it
-		switch ttr_type {
-		case 'n':
-			o.pkt_id = ttr_decode_int32(ttrs[ttr_pos:])
-			break
-		case 'r':
-			o.reply_to = ttr_decode_int32(ttrs[ttr_pos:])
-			break
-		case 's':
-			if ttr_len < 16 {
-				err = GlobalErrorHandler(Proto, "signature TTR len < 16", "")
-				if err != nil {
-					return o, err
-				}
-			}
-			o.is_signed = false // TODO TTR_check_signature(pstart, ttr_start-pstart, ttrs)
-			//o.is_signed = TTR_check_signature(raw, ttrs_start, ttrs[ttr_pos:])
-			break
-		default:
-			break
-		}
+		processTTR(&o, ttr_type, ttrs[ttr_pos:])
 
 		ttr_pos += ttr_len
 
@@ -169,6 +148,36 @@ parse_ttrs:
 	}
 
 	return o, err
+}
+
+func processTTR(o *MqttPacket, ttrType byte, value []byte) error {
+	var err error = nil
+	//fmt.Printf("TTR type = %c 0x%X len=%d\n", ttr_type, ttr_type, ttr_len)
+	// Have TTR, process it
+	switch ttrType {
+	case 'n':
+		o.pkt_id = ttr_decode_int32(value)
+		break
+	case 'r':
+		o.reply_to = ttr_decode_int32(value)
+		break
+	case 'p':
+		o.proto_time = ttr_decode_int64(value)
+		break
+	case 's':
+		if len(value) < 16 {
+			err = GlobalErrorHandler(Proto, "signature TTR len < 16", "")
+			if err != nil {
+				return err
+			}
+		}
+		o.is_signed = false // TODO TTR_check_signature(pstart, ttr_start-pstart, ttrs)
+		//o.is_signed = TTR_check_signature(raw, ttrs_start, ttrs[ttr_pos:])
+		break
+	default:
+		break
+	}
+	return nil
 }
 
 /*
@@ -235,7 +244,26 @@ func ttr_decode_int32(data []byte) int {
 	return v
 }
 
+func ttr_decode_int64(data []byte) uint64 {
+	var v uint64 = 0
+
+	v = uint64(data[0])<<24 + 32
+	v |= uint64(data[1])<<16 + 32
+	v |= uint64(data[2])<<8 + 32
+	v |= uint64(data[3]) << 32
+	v |= uint64(data[4]) << 24
+	v |= uint64(data[5]) << 16
+	v |= uint64(data[6]) << 8
+	v |= uint64(data[7])
+
+	return v
+}
+
 func ttr_check_signature(buf []byte, pkt_len int, in_signature []byte) bool {
+
+	if !IsSignatureEnabled() {
+		return true
+	}
 
 	//var us_signature [MD5_DIGEST_SIZE]byte
 	us_signature := hmac_md5(buf[0:pkt_len]) // md5.Sum(buf[0:pkt_len]) // mqtt_udp_hmac_md5(pkt_start, pkt_len, us_signature)
