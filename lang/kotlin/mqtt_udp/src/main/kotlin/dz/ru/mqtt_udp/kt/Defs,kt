@@ -1,0 +1,25 @@
+package dz.ru.mqtt_udp.kt;
+/* This code is generated, do not change */
+class mqtt_udp_defs {
+val PACKAGE_VERSION_MAJOR : int = 0;
+val PACKAGE_VERSION_MINOR : int= 5;
+val PTYPE_CONNECT = 0x10;
+val PTYPE_CONNACK = 0x20;
+val PTYPE_PUBLISH = 0x30;
+val PTYPE_PUBACK = 0x40;
+val PTYPE_PUBREC = 0x50;
+val PTYPE_PUBREL = 0x60;
+val PTYPE_PUBCOMP = 0x70;
+val PTYPE_SUBSCRIBE = 0x80;
+val PTYPE_SUBACK = 0x90;
+val PTYPE_UNSUBSCRIBE = 0xA0;
+val PTYPE_UNSUBACK = 0xB0;
+val PTYPE_PINGREQ = 0xC0;
+val PTYPE_PINGRESP = 0xD0;
+val PTYPE_DISCONNECT = 0xE0;
+val MQTT_PORT = 1883;
+val PKT_BUF_SIZE = 2048;
+val PKT_PACE_MSEC = 50;
+val DEFAULT_MAX_REPLY_QOS = 1;
+val SYS_CONF_PREFIX = "$SYS/conf";
+}

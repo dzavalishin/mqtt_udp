@@ -1,4 +1,4 @@
-package ru.dz.mqtt_udp.clock
+package ru.dz.mqtt_udp.kt.clock
 
 
 /**

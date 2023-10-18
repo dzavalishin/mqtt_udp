@@ -1,10 +1,12 @@
-package ru.dz.mqtt_udp.clock
+//package ru.dz.mqtt_udp.clock
 
-import ru.dz.mqtt_udp.PublishPacket
-import java.text.SimpleDateFormat
-import java.util.Date
+//import ru.dz.mqtt_udp.PublishPacket
+//import java.text.SimpleDateFormat
+//import java.util.Date
 
-val TOPIC = "\$SYS/clock";
+import ru.dz.mqtt_udp.kt.clock
+
+//val TOPIC = "\$SYS/clock";
 
 /**
  * Main.
@@ -13,7 +15,7 @@ fun main(args : Array<String>)
 {
 	println("MQTT/UDP Clock");
 	//println("MQTT/UDP Clock: publish \$SYS/time once a minute");
-	
+/*
 	while(true)
 	{
 		//val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
@@ -25,5 +27,5 @@ fun main(args : Array<String>)
 		pp.send();
 		Thread.sleep(1_000*60);
 	}
-	
+ */		
 }
