@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttUdp", "MqttUdp\MqttUdp.csproj", "{00F39748-B4F5-4E80-A000-7F981554C908}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo", "Demo\Demo.csproj", "{A192037E-555A-474D-A918-81DECCBC5FE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttUdp.Tests", "MqttUdp.Tests\MqttUdp.Tests.csproj", "{5A5FDE28-1944-4A86-80E4-A4C5765CC141}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00F39748-B4F5-4E80-A000-7F981554C908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00F39748-B4F5-4E80-A000-7F981554C908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00F39748-B4F5-4E80-A000-7F981554C908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00F39748-B4F5-4E80-A000-7F981554C908}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A192037E-555A-474D-A918-81DECCBC5FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A192037E-555A-474D-A918-81DECCBC5FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A192037E-555A-474D-A918-81DECCBC5FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A192037E-555A-474D-A918-81DECCBC5FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A5FDE28-1944-4A86-80E4-A4C5765CC141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A5FDE28-1944-4A86-80E4-A4C5765CC141}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A5FDE28-1944-4A86-80E4-A4C5765CC141}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A5FDE28-1944-4A86-80E4-A4C5765CC141}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49F96B19-BEFA-4431-824B-EE5A98A0B905}
+	EndGlobalSection
+EndGlobal
