@@ -1,5 +1,7 @@
 package mqttudp
 
+import "time"
+
 /**
  *
  * MQTT/UDP project
@@ -31,11 +33,8 @@ Build outgoing binary packet representation.
 */
 func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	var blen = len(buf)
-	//int rc;
 	// TODO check for consistency - if pkt has to have topic & value and has it
 
-	//tlen = p.topic != nil ? len(p->topic_len) : 0;
-	//dlen = p->value != nil ? len(p->value_len) : 0;
 	var tlen = len(p.topic)
 	var dlen = len(p.value)
 
@@ -110,6 +109,12 @@ func (p MqttPacket) BuildAnyPkt(buf []byte) (int, error) {
 	if rc != nil {
 		return 0, rc
 	}
+
+	rc = encode_int64_TTR(buf, &bp, &blen, 'p', uint64(getUnixTimeMsec()))
+	if rc != nil {
+		return 0, rc
+	}
+
 	//* TODO TTR
 	// NB! This is a signature TTR, it must me the last one.
 	if IsSignatureEnabled() {
@@ -221,4 +226,8 @@ func pack_len(buf []byte, data_len int) (int, error) {
 			return used, nil
 		}
 	}
+}
+
+func getUnixTimeMsec() int64 {
+	return time.Now().UnixMilli()
 }

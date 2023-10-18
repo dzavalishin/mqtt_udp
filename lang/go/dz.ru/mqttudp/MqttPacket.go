@@ -26,7 +26,8 @@ type MqttPacket struct {
 
 	total int // Length of the rest of pkt down from here.
 
-	pkt_id int // Packet ID, supported by TTR ('n').
+	pkt_id     int    // Packet ID, supported by TTR ('n').
+	proto_time uint64 // Packet sen time - TTR ('p')
 
 	topic []byte // Topic string
 	value []byte // Value string
@@ -57,6 +58,7 @@ func (p *MqttPacket) Clear() {
 	p.reply_to = 0
 	p.resend_count = 0
 	p.ack_count = 0
+	p.proto_time = 0
 }
 
 func (pkt *MqttPacket) Get_QOS() int {

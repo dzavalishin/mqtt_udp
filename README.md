@@ -193,3 +193,8 @@ mq.listen( listener )
 
 Download [LuaRock](http://luarocks.org/modules/dzavalishin/mqttudp)
 
+
+### Go
+
+There is a Go language implementation, see lang/go for details
+
